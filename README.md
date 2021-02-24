@@ -14,6 +14,7 @@ Add your own name (do not add the names for others!) to the section below.
 
 | 📸 | Name | Email |
 |---|---|---|
+| <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3532/avatar.png?width=90" width="50">  | Cassandra Visser | C.M.S.Visser@student.tudelft.nl |
 | <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3096/avatar.png?width=400" width="50px"/> | Gijs van de Linde | G.vandeLinde@student.tudelft.nl |
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
