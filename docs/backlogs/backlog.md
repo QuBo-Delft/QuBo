@@ -13,10 +13,11 @@
 - As a lecturer I want to delete inappropriate questions quickly so that they don't interfere with my lecture.
 - As a lecturer I want to receive two separate codes, one for students and one with moderation rights, so that I can keep the board secure.
 ---
+- As a student I want to see questions that students have asked so that I don't ask the same question again.
 - As a student I want to ask questions during a lecture so that the lecturer can answer them.
 - As a student I want to see answered questions separately so that I can easily check whether my question has been answered.
 ---
-- As a TA I want to join a question board using a code that is reserved for administrators so that I can easily join a lecture's question board.
+- As a TA I want to join a question board using a code that is reserved for administrators so that I can moderate it.
 - As a TA I want to delete certain questions so that the questions on the board stay relevant.
 ---
 ### Should have
@@ -32,6 +33,7 @@
 - As a student I want to have new questions appear automatically so that I don't have to manually refresh the question board.
 - As a student I want to delete my own questions so that they won't interfere with the lecture in case they are no longer relevant.
 - As a student I want to indicate how I experience the pace of the lecture in a continuous fashion so that the lecturer can take that into account.
+- As a student I want to change my pace vote so that my pace vote accurately reflects how I experience the pace of the lecture.
 ---
 - As a TA I want to have new questions appear automatically so that I don't have to manually refresh the question board.
 - As a TA I want to add written answers to questions during and after lectures so that I can respond to easy questions myself or summarise the lecturer's verbal answers in textual form.
@@ -42,14 +44,22 @@
 - As a lecturer I want to schedule question boards to open and close as specified so that I don't need to manually do that.
 - As a lecturer I want to see the most popular questions based upon multiple factors so that I can answer those questions first.
 - As a lecturer I want to set up a poll and receive statistics so that I can directly ask my students questions during the lecture.
+- As a lecturer I want to close a poll once the voting has concluded so that the results are accurate.
+- As a lecturer I want to delete a poll once it is no longer necessary so that it does not clutter the interface.
+- As a lecturer I want to change the colours of the interface so that the application will be more appealing to use.
 ---
 - As a student I want to modify my own questions to add details or rephrase it so that I can keep my question relevant and clear.
 - As a student I want to ask follow-up questions so that it is clear that these questions are related.
 - As a student I want to be able to participate in spite of vision impairment so that I am also able to ask questions.
 - As a student I want to join question boards using the lecture codes after the lectures so that I can see all questions and written answers, if any.
 - As a student I want to see the questions that have been answered last at the top of the list of answered questions so that the relevant questions show up first.
+- As a student I want to respond to polls so that I can answer questions the lecturer has asked in real time.
+- As a student I want to change my poll answers so that I can correct my response.
+- As a student I want to view poll results after the poll has been closed so that I can see what other students have answered.
+- As a student I want to change the colours of the interface so that the application will be more appealing to use.
 ---
 - As a TA I want to rephrase certain questions so that the questions are clear to the lecturer.
+- As a TA I want to change the colours of the interface so that the application will be more appealing to use.
 ---
 ### Won't have
 ---
