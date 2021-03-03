@@ -4,9 +4,9 @@
 ### General Information
 ---
 Date:           04 March 2021\
-Main focus:     
+Main focus:     Work Distribution and Finalizing Preparation\
 Chair:          Dorothy\
-Notetaker:      Gijs\
+Notetaker:      Gijs
   
   
 ### Opening
