@@ -40,6 +40,9 @@ public class QuestionBoard {
     @Column(name = "endTime", nullable = false)
     private Timestamp endTime;
 
+    @OneToMany(mappedBy = "questionBoard")
+    private Set<Question> questions;
+
     /**
      * Create a new QuestionBoard instance.
      *
@@ -107,5 +110,13 @@ public class QuestionBoard {
 
     public void setEndTime(Timestamp endTime) {
         this.endTime = endTime;
+    }
+
+    public Set<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(Set<Question> questions) {
+        this.questions = questions;
     }
 }
