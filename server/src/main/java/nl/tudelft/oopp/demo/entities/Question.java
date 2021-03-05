@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.demo.entities;
 
 import java.sql.Timestamp;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -37,6 +39,10 @@ public class Question {
 
     @Column(name = "timestamp")
     private Timestamp timestamp;
+
+    @OneToMany(mappedBy = "question")
+    private Set<QuestionVote> votes;
+
 
     /**
      * Create a new QuestionBoard instance.
@@ -106,5 +112,13 @@ public class Question {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Set<QuestionVote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Set<QuestionVote> votes) {
+        this.votes = votes;
     }
 }
