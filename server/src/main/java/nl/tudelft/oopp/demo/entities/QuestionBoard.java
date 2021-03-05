@@ -43,6 +43,9 @@ public class QuestionBoard {
     @OneToMany(mappedBy = "questionBoard")
     private Set<Question> questions;
 
+    @OneToMany(mappedBy = "questionBoard")
+    private Set<PaceVote> paceVotes;
+
     /**
      * Create a new QuestionBoard instance.
      *
@@ -118,5 +121,13 @@ public class QuestionBoard {
 
     public void setQuestions(Set<Question> questions) {
         this.questions = questions;
+    }
+
+    public Set<PaceVote> getPaceVotes() {
+        return paceVotes;
+    }
+
+    public void setPaceVotes(Set<PaceVote> paceVotes) {
+        this.paceVotes = paceVotes;
     }
 }
