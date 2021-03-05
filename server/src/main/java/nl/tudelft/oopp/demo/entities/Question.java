@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -39,6 +40,9 @@ public class Question {
 
     @Column(name = "timestamp")
     private Timestamp timestamp;
+
+    @OneToOne(mappedBy = "question")
+    private Answer answer;
 
     @OneToMany(mappedBy = "question")
     private Set<QuestionVote> votes;
@@ -120,5 +124,13 @@ public class Question {
 
     public void setVotes(Set<QuestionVote> votes) {
         this.votes = votes;
+    }
+
+    public Answer getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(Answer answer) {
+        this.answer = answer;
     }
 }
