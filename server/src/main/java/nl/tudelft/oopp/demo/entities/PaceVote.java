@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "question_votes")
+@Table(name = "pace_votes")
 public class PaceVote {
     @Id
     @GeneratedValue(generator = "UUID")
