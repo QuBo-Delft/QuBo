@@ -11,4 +11,8 @@ public class QuestionBoardService {
     @Autowired
     private QuestionBoardRepository questionBoardRepository;
 
+    public QuestionBoard saveBoard(QuestionBoard board) {
+        questionBoardRepository.save(board);
+        return board;
+    }
 }
