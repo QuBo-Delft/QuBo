@@ -27,6 +27,6 @@ public class QuestionBoardController {
     @RequestMapping(value = "/api/board/{boardid}/questions", method = GET)
     @ResponseBody
     public Set<Question> retrieveQuestionListByBoardId(@PathVariable("boardid") UUID boardId) {
-        return questionBoardService.retrieveQuestions(boardId);
+        return questionBoardService.getQuestionsByBoardId(boardId);
     }
 }

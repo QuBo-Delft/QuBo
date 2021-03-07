@@ -26,7 +26,7 @@ public class QuestionBoardService {
      * @param boardId the board id.
      * @return the set of questions for this specific board.
      */
-    public Set<Question> retrieveQuestions(UUID boardId) {
+    public Set<Question> getQuestionsByBoardId(UUID boardId) {
         // 400 is thrown upon bad formatting automatically
         QuestionBoard qb = repository.getById(boardId);
         if (qb == null) {
