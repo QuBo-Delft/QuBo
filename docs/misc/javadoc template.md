@@ -4,12 +4,12 @@
   
 ## Template
   
-/**
-     * {The method is briefly described here.}
-     *
-     * @param x1                    {The parameter description.}
-     * @param longParameterName     {The parameter description.}
-     * @return {The returned data is described here.}
+/**  
+     * {The method is briefly described here.}  
+     *  
+     * @param x1                    {The parameter description.}  
+     * @param longParameterName     {The parameter description.}  
+     * @return {The returned data is described here.}  
      */
   
 ---
