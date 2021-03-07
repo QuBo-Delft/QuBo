@@ -1,10 +1,8 @@
 # Javadoc Template
   
----
-  
 ## Template
   
-/**  
+     /**  
      * {The method is briefly described here.}  
      *  
      * @param x1                    {The parameter description.}  
