@@ -19,10 +19,10 @@ public class QuestionBoardController {
     QuestionBoardService questionBoardService;
 
     /**
-     * GET endpoint to retrieve list of questions in that board.
+     * GET endpoint to retrieve the list of questions of this QuestionBoard.
      *
-     * @param boardId id property of a board.
-     * @return list of questions in this board.
+     * @param boardId   ID property of a board.
+     * @return The list of questions of this board.
      */
     @RequestMapping(value = "/api/board/{boardid}/questions", method = GET)
     @ResponseBody

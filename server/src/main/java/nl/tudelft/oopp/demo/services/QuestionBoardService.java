@@ -23,8 +23,8 @@ public class QuestionBoardService {
     /**
      * Retrieve questions set from database.
      *
-     * @param boardId the board id.
-     * @return the set of questions for this specific board.
+     * @param boardId The board id.
+     * @return The set of questions of this specific board.
      */
     public Set<Question> getQuestionsByBoardId(UUID boardId) {
         // 400 is thrown upon bad formatting automatically
