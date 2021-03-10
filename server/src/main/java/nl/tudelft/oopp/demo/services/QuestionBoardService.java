@@ -27,11 +27,9 @@ public class QuestionBoardService {
      * @return The set of questions of this specific board.
      */
     public Set<Question> getQuestionsByBoardId(UUID boardId) {
-        // 400 is thrown upon bad formatting automatically
         QuestionBoard qb = repository.getById(boardId);
         if (qb == null) {
-            // Throw 404 when board does not exist
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+            return null;
         }
         // Find questions belonging to this board
         return questionRepository.getQuestionByQuestionBoard(qb);

@@ -7,10 +7,12 @@ import java.util.UUID;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.services.QuestionBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 public class QuestionBoardController {
@@ -27,6 +29,12 @@ public class QuestionBoardController {
     @RequestMapping(value = "/api/board/{boardid}/questions", method = GET)
     @ResponseBody
     public Set<Question> retrieveQuestionListByBoardId(@PathVariable("boardid") UUID boardId) {
-        return questionBoardService.getQuestionsByBoardId(boardId);
+        // 400 is thrown upon bad formatting automatically
+        Set<Question> ql = questionBoardService.getQuestionsByBoardId(boardId);
+        // Throw 404 when board does not exist
+        if (ql == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        return ql;
     }
 }
