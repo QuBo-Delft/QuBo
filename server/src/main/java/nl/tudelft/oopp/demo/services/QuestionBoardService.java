@@ -10,15 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import nl.tudelft.oopp.demo.bindingmodels.QuestionBoardBindingModel;
+import nl.tudelft.oopp.demo.entities.QuestionBoard;
+import nl.tudelft.oopp.demo.repositories.QuestionBoardRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class QuestionBoardService {
     @Autowired
-    private QuestionBoardRepository repository;
+    private QuestionBoardRepository questionBoardRepository;
 
     @Autowired
     private QuestionRepository questionRepository;
-
 
     /**
      * Retrieve questions set from database.
@@ -33,6 +37,16 @@ public class QuestionBoardService {
         }
         // Find questions belonging to this board
         return questionRepository.getQuestionByQuestionBoard(qb);
-    }
 
+    /**
+     * Reflect binding model of question board and save it to the DB.
+     *
+     * @param boardModel    The board model.
+     * @return The QuestionBoard that was created.
+     */
+    public QuestionBoard saveBoard(QuestionBoardBindingModel boardModel) {
+        QuestionBoard board = boardModel.reflect();
+        questionBoardRepository.save(board);
+        return board;
+    }
 }
