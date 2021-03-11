@@ -16,9 +16,9 @@ public class GetTextDialog {
     /**
      * This method gets user's text input after clicking submission button.
      *
-     * @param title the title of dialog.
-     * @param message  the message to be displayed.
-     * @return the user text input.
+     * @param title     The title of dialog.
+     * @param message   The message to be displayed.
+     * @return The user's text input.
      */
     public static String display(String title, String message) {
         Stage window = new Stage();

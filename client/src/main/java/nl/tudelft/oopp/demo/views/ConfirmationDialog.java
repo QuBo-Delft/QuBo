@@ -12,11 +12,11 @@ public class ConfirmationDialog {
     static boolean answer;
 
     /**
-     * This method gets user's choice after clicking yes or no button.
+     * This method gets user's choice after clicking Tes or No button.
      *
-     * @param title the title of window.
-     * @param message the message to be displayed.
-     * @return true iff the user clicked "yes".
+     * @param title     The title of window.
+     * @param message   The message to be displayed.
+     * @return True iff the user clicked "yes".
      */
     public static boolean display(String title, String message) {
         Stage window = new Stage();
