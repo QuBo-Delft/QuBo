@@ -1,5 +1,4 @@
 ## Agenda
----
 
 ### General Information
 ---
