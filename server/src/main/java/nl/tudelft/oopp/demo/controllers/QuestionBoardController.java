@@ -20,33 +20,48 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * The type Question board controller
+ * used for requests starting with /api/board.
+ */
 @Controller
+@RequestMapping("/api/board")
 public class QuestionBoardController {
 
     @Autowired
-    QuestionBoardService questionBoardService;
+    QuestionBoardService service;
+
+    /**
+     * POST endpoint to create questionBoard on backend.
+     *
+     * @param qb    The binding model passed by the client containing information to be used
+     *           in creating a new QuestionBoard on the backend.
+     * @return the question board
+     */
+    @RequestMapping(method = POST, consumes = "application/json")
+    @ResponseBody
+    public QuestionBoard createBoard(@RequestBody QuestionBoardBindingModel qb) {
+        return service.saveBoard(qb);
+    }
 
     /**
      * GET endpoint to retrieve the list of questions of this QuestionBoard.
+     * Throw 400 upon wrong UUID formatting.
+     * Throw 404 upon requesting non-existent boardid.
      *
-     * @param boardId ID property of a board.
+     * @param boardId   ID property of a board.
      * @return The list of questions of this board.
      */
-    @RequestMapping(value = "/api/board/{boardid}/questions", method = GET)
+    @RequestMapping(value = "/{boardid}/questions", method = GET)
     @ResponseBody
     public Set<Question> retrieveQuestionListByBoardId(@PathVariable("boardid") UUID boardId) {
         // 400 is thrown upon bad formatting automatically
-        Set<Question> ql = questionBoardService.getQuestionsByBoardId(boardId);
+        Set<Question> ql = service.getQuestionsByBoardId(boardId);
         // Throw 404 when board does not exist
         if (ql == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }
         return ql;
     }
-
-    @RequestMapping(value = "/api/board", method = POST, consumes = "application/json")
-    @ResponseBody
-    public QuestionBoard createBoard(@RequestBody QuestionBoardBindingModel qb) {
-        return questionBoardService.saveBoard(qb);
-    }
 }
+

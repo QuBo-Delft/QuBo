@@ -21,10 +21,26 @@ public class QuestionBoardService {
     private QuestionRepository questionRepository;
 
     /**
-     * Retrieve questions set from database.
+     * Save board to database.
+     * First reflects binding model of question board,
+     * then save it to the database.
      *
-     * @param boardId The board id.
-     * @return The set of questions of this specific board.
+     * @param boardModel    The board model.
+     * @return The QuestionBoard that was created.
+     */
+    public QuestionBoard saveBoard(QuestionBoardBindingModel boardModel) {
+        QuestionBoard board = boardModel.reflect();
+        questionBoardRepository.save(board);
+        return board;
+    }
+
+    /**
+     * Retrieve questions set from database.
+     * First retrieves QuestionBoard object and then
+     * retrieves Question objects mapped to said QuestionBoard.
+     *
+     * @param boardId   The board id.
+     * @return The set of questions of this specific board or null if the board is not found.
      */
     public Set<Question> getQuestionsByBoardId(UUID boardId) {
         QuestionBoard qb = questionBoardRepository.getById(boardId);
@@ -35,15 +51,4 @@ public class QuestionBoardService {
         return questionRepository.getQuestionByQuestionBoard(qb);
     }
 
-    /**
-     * Reflect binding model of question board and save it to the DB.
-     *
-     * @param boardModel The board model.
-     * @return The QuestionBoard that was created.
-     */
-    public QuestionBoard saveBoard(QuestionBoardBindingModel boardModel) {
-        QuestionBoard board = boardModel.reflect();
-        questionBoardRepository.save(board);
-        return board;
-    }
 }
