@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.demo.services;
 
+import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.demo.repositories.QuestionRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +22,21 @@ public class QuestionBoardService {
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     /**
      * Save board to database.
-     * Checks if
-     * First reflects binding model of question board,
-     * then save it to the database.
+     * Converts the binding model to a QuestionBoard entity,
+     * generates a random moderator code, and saves
+     * it into the database.
      *
      * @param boardModel    The board model.
      * @return The QuestionBoard that was created.
      */
     public QuestionBoard saveBoard(QuestionBoardBindingModel boardModel) {
-        QuestionBoard board = boardModel.reflect();
+        QuestionBoard board = modelMapper.map(boardModel, QuestionBoard.class);
+        board.setModeratorCode(UUID.randomUUID());
         questionBoardRepository.save(board);
         return board;
     }
