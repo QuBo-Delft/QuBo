@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;
 
-import nl.tudelft.oopp.demo.bindingmodels.QuestionBoardBindingModel;
+import nl.tudelft.oopp.demo.dtos.bindingmodels.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.repositories.QuestionBoardRepository;
@@ -34,7 +34,7 @@ public class QuestionBoardService {
      * @param boardModel    The board model.
      * @return The QuestionBoard that was created.
      */
-    public QuestionBoard saveBoard(QuestionBoardBindingModel boardModel) {
+    public QuestionBoard saveBoard(QuestionBoardCreationBindingModel boardModel) {
         QuestionBoard board = modelMapper.map(boardModel, QuestionBoard.class);
         board.setModeratorCode(UUID.randomUUID());
         questionBoardRepository.save(board);

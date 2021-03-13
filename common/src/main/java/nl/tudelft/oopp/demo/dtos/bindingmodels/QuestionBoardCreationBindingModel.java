@@ -1,9 +1,8 @@
-package nl.tudelft.oopp.demo.bindingmodels;
+package nl.tudelft.oopp.demo.dtos.bindingmodels;
 
 import java.sql.Timestamp;
-import nl.tudelft.oopp.demo.entities.QuestionBoard;
 
-public class QuestionBoardBindingModel {
+public class QuestionBoardCreationBindingModel {
 
     private String title;
     private Timestamp startTime;
@@ -17,10 +16,13 @@ public class QuestionBoardBindingModel {
      * @param startTime The start time.
      * @param endTime   The end time.
      */
-    public QuestionBoardBindingModel(String title, Timestamp startTime, Timestamp endTime) {
+    public QuestionBoardCreationBindingModel(String title, Timestamp startTime, Timestamp endTime) {
         this.title = title;
         this.startTime = startTime;
         this.endTime = endTime;
+    }
+
+    public QuestionBoardCreationBindingModel() {
     }
 
     public String getTitle() {

@@ -6,7 +6,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.Set;
 import java.util.UUID;
 
-import nl.tudelft.oopp.demo.bindingmodels.QuestionBoardBindingModel;
+import nl.tudelft.oopp.demo.dtos.bindingmodels.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.services.QuestionBoardService;
@@ -40,7 +40,7 @@ public class QuestionBoardController {
      */
     @RequestMapping(method = POST, consumes = "application/json")
     @ResponseBody
-    public QuestionBoard createBoard(@RequestBody QuestionBoardBindingModel qb) {
+    public QuestionBoard createBoard(@RequestBody QuestionBoardCreationBindingModel qb) {
         return service.saveBoard(qb);
     }
 
