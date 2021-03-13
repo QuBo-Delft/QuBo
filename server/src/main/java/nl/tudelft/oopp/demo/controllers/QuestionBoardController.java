@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import nl.tudelft.oopp.demo.dtos.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.demo.dtos.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.bindingmodels.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
@@ -15,6 +16,7 @@ import nl.tudelft.oopp.demo.services.QuestionBoardService;
 
 import org.modelmapper.ModelMapper;
 
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -83,14 +85,19 @@ public class QuestionBoardController {
      */
     @RequestMapping(value = "/{boardid}/questions", method = GET)
     @ResponseBody
-    public Set<Question> retrieveQuestionListByBoardId(@PathVariable("boardid") UUID boardId) {
+    public Set<QuestionDetailsDto> retrieveQuestionListByBoardId(
+        @PathVariable("boardid") UUID boardId) {
         // 400 is thrown upon bad formatting automatically
         Set<Question> ql = service.getQuestionsByBoardId(boardId);
         // Throw 404 when board does not exist
         if (ql == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }
-        return ql;
+
+        Set<QuestionDetailsDto> dtoSet = modelMapper.map(ql,
+            new TypeToken<Set<QuestionDetailsDto>>() {
+            }.getType());
+        return dtoSet;
     }
 }
 
