@@ -1,9 +1,10 @@
 package nl.tudelft.oopp.demo.mappings.questionboard;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.sql.Timestamp;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;

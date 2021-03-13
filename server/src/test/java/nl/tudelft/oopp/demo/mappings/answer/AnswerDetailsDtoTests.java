@@ -1,10 +1,11 @@
 package nl.tudelft.oopp.demo.mappings.answer;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.sql.Timestamp;
 import java.util.UUID;
 import nl.tudelft.oopp.demo.dtos.answer.AnswerDetailsDto;
 import nl.tudelft.oopp.demo.entities.Answer;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
