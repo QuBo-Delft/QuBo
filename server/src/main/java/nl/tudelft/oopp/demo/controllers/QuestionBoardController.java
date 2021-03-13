@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import nl.tudelft.oopp.demo.dtos.QuestionBoardCreationDto;
+import nl.tudelft.oopp.demo.dtos.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.dtos.bindingmodels.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
@@ -62,12 +63,14 @@ public class QuestionBoardController {
      */
     @RequestMapping(value = "/{boardid}", method = GET)
     @ResponseBody
-    public QuestionBoard retrieveQuestionBoardDetails(@PathVariable("boardid") UUID boardId) {
+    public QuestionBoardDetailsDto retrieveQuestionBoardDetails(
+        @PathVariable("boardid") UUID boardId) {
         QuestionBoard qb = service.getBoardById(boardId);
         if (qb == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }
-        return qb;
+        QuestionBoardDetailsDto dto = modelMapper.map(qb, QuestionBoardDetailsDto.class);
+        return dto;
     }
 
     /**
