@@ -22,6 +22,7 @@ public class QuestionBoardService {
 
     /**
      * Save board to database.
+     * Checks if
      * First reflects binding model of question board,
      * then save it to the database.
      *
@@ -32,6 +33,16 @@ public class QuestionBoardService {
         QuestionBoard board = boardModel.reflect();
         questionBoardRepository.save(board);
         return board;
+    }
+
+    /**
+     * Looks for QuestionBoard in database.
+     *
+     * @param boardId   The board id provided by the URL.
+     * @return The requested QuestionBoard, or if not existent null.
+     */
+    public QuestionBoard getBoardById(UUID boardId) {
+        return questionBoardRepository.getById(boardId);
     }
 
     /**
@@ -50,5 +61,4 @@ public class QuestionBoardService {
         // Find questions belonging to this board
         return questionRepository.getQuestionByQuestionBoard(qb);
     }
-
 }
