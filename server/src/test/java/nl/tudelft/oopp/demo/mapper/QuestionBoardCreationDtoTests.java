@@ -2,7 +2,7 @@ package nl.tudelft.oopp.demo.mapper;
 
 import java.sql.Timestamp;
 import java.util.UUID;
-import nl.tudelft.oopp.demo.dtos.QuestionBoardCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;

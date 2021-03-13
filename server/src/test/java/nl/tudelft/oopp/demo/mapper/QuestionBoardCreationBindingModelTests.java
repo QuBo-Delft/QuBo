@@ -1,9 +1,7 @@
 package nl.tudelft.oopp.demo.mapper;
 
 import java.sql.Timestamp;
-import java.util.UUID;
-import nl.tudelft.oopp.demo.dtos.QuestionBoardDetailsDto;
-import nl.tudelft.oopp.demo.dtos.bindingmodels.QuestionBoardCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;

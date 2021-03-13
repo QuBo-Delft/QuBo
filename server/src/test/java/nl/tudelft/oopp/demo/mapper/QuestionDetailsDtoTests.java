@@ -3,7 +3,7 @@ package nl.tudelft.oopp.demo.mapper;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.UUID;
-import nl.tudelft.oopp.demo.dtos.QuestionDetailsDto;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.entities.Answer;
 import nl.tudelft.oopp.demo.entities.Question;
 import static org.junit.jupiter.api.Assertions.assertEquals;

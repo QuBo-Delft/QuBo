@@ -1,26 +1,28 @@
-package nl.tudelft.oopp.demo.dtos;
+package nl.tudelft.oopp.demo.dtos.questionboard;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
-public class QuestionBoardDetailsDto {
-    private UUID id;
+public class QuestionBoardCreationBindingModel {
 
     private String title;
-
     private Timestamp startTime;
-
     private Timestamp endTime;
 
-    public QuestionBoardDetailsDto() {
+
+    /**
+     * Instantiates a new Question board binding model.
+     *
+     * @param title     The title.
+     * @param startTime The start time.
+     * @param endTime   The end time.
+     */
+    public QuestionBoardCreationBindingModel(String title, Timestamp startTime, Timestamp endTime) {
+        this.title = title;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
+    public QuestionBoardCreationBindingModel() {
     }
 
     public String getTitle() {

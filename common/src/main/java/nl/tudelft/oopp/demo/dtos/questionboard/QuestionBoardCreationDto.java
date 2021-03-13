@@ -1,28 +1,36 @@
-package nl.tudelft.oopp.demo.dtos.bindingmodels;
+package nl.tudelft.oopp.demo.dtos.questionboard;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
-public class QuestionBoardCreationBindingModel {
+public class QuestionBoardCreationDto {
+    private UUID id;
+
+    private UUID moderatorCode;
 
     private String title;
+
     private Timestamp startTime;
+
     private Timestamp endTime;
 
-
-    /**
-     * Instantiates a new Question board binding model.
-     *
-     * @param title     The title.
-     * @param startTime The start time.
-     * @param endTime   The end time.
-     */
-    public QuestionBoardCreationBindingModel(String title, Timestamp startTime, Timestamp endTime) {
-        this.title = title;
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public QuestionBoardCreationDto() {
     }
 
-    public QuestionBoardCreationBindingModel() {
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getModeratorCode() {
+        return moderatorCode;
+    }
+
+    public void setModeratorCode(UUID moderatorCode) {
+        this.moderatorCode = moderatorCode;
     }
 
     public String getTitle() {

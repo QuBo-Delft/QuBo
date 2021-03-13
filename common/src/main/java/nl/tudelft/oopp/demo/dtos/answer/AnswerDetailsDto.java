@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo.dtos;
+package nl.tudelft.oopp.demo.dtos.answer;
 
 import java.sql.Timestamp;
 import java.util.UUID;

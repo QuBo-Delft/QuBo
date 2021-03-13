@@ -2,7 +2,7 @@ package nl.tudelft.oopp.demo.services;
 
 import java.util.Set;
 import java.util.UUID;
-import nl.tudelft.oopp.demo.dtos.bindingmodels.QuestionBoardCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.repositories.QuestionBoardRepository;

@@ -6,10 +6,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.Set;
 import java.util.UUID;
 
-import nl.tudelft.oopp.demo.dtos.QuestionBoardCreationDto;
-import nl.tudelft.oopp.demo.dtos.QuestionBoardDetailsDto;
-import nl.tudelft.oopp.demo.dtos.QuestionDetailsDto;
-import nl.tudelft.oopp.demo.dtos.bindingmodels.QuestionBoardCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.services.QuestionBoardService;
