@@ -23,10 +23,6 @@ public class QuestionBoardBindingModel {
         this.endTime = endTime;
     }
 
-    public QuestionBoard reflect() {
-        return new QuestionBoard(this.title, this.startTime, this.endTime);
-    }
-
     public String getTitle() {
         return title;
     }
