@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo.mapper;
+package nl.tudelft.oopp.demo.mappings.question;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
