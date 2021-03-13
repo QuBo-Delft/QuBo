@@ -6,10 +6,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.Set;
 import java.util.UUID;
 
+import nl.tudelft.oopp.demo.dtos.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.bindingmodels.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.services.QuestionBoardService;
+
+import org.modelmapper.ModelMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +34,9 @@ public class QuestionBoardController {
     @Autowired
     QuestionBoardService service;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     /**
      * POST endpoint to create questionBoard on backend.
      *
@@ -40,8 +46,10 @@ public class QuestionBoardController {
      */
     @RequestMapping(method = POST, consumes = "application/json")
     @ResponseBody
-    public QuestionBoard createBoard(@RequestBody QuestionBoardCreationBindingModel qb) {
-        return service.saveBoard(qb);
+    public QuestionBoardCreationDto createBoard(@RequestBody QuestionBoardCreationBindingModel qb) {
+        QuestionBoard board = service.saveBoard(qb);
+        QuestionBoardCreationDto dto = modelMapper.map(board, QuestionBoardCreationDto.class);
+        return dto;
     }
 
     /**
