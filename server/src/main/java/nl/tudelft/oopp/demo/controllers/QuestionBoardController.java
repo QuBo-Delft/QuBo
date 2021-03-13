@@ -45,6 +45,24 @@ public class QuestionBoardController {
     }
 
     /**
+     * GET endpoint that provides client with QuestionBoard based on requested UUID.
+     * Throw 400 upon wrong UUID formatting.
+     * Throw 404 upon requesting non-existent boardid.
+     *
+     * @param boardId   ID property of a board.
+     * @return The question board with this specific UUID.
+     */
+    @RequestMapping(value = "/{boardid}", method = GET)
+    @ResponseBody
+    public QuestionBoard retrieveQuestionBoardDetails(@PathVariable("boardid") UUID boardId) {
+        QuestionBoard qb = service.getBoardById(boardId);
+        if (qb == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        return qb;
+    }
+
+    /**
      * GET endpoint to retrieve the list of questions of this QuestionBoard.
      * Throw 400 upon wrong UUID formatting.
      * Throw 404 upon requesting non-existent boardid.
