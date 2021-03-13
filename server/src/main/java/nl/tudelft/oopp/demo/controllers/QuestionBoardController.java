@@ -17,7 +17,6 @@ import nl.tudelft.oopp.demo.services.QuestionBoardService;
 import org.modelmapper.ModelMapper;
 
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,16 +33,20 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/board")
 public class QuestionBoardController {
 
-    @Autowired
-    QuestionBoardService service;
+    private final QuestionBoardService service;
 
-    @Autowired
-    ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
+    public QuestionBoardController(QuestionBoardService service,
+                                   ModelMapper modelMapper) {
+        this.service = service;
+        this.modelMapper = modelMapper;
+    }
 
     /**
      * POST endpoint to create questionBoard on backend.
      *
-     * @param qb    The binding model passed by the client containing information to be used
+     * @param qb The binding model passed by the client containing information to be used
      *           in creating a new QuestionBoard on the backend.
      * @return the question board
      */
@@ -60,7 +63,7 @@ public class QuestionBoardController {
      * Throw 400 upon wrong UUID formatting.
      * Throw 404 upon requesting non-existent boardid.
      *
-     * @param boardId   ID property of a board.
+     * @param boardId ID property of a board.
      * @return The question board with this specific UUID.
      */
     @RequestMapping(value = "/{boardid}", method = GET)
@@ -80,7 +83,7 @@ public class QuestionBoardController {
      * Throw 400 upon wrong UUID formatting.
      * Throw 404 upon requesting non-existent boardid.
      *
-     * @param boardId   ID property of a board.
+     * @param boardId ID property of a board.
      * @return The list of questions of this board.
      */
     @RequestMapping(value = "/{boardid}/questions", method = GET)
