@@ -6,6 +6,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
@@ -52,7 +54,8 @@ public class QuestionBoardController {
      */
     @RequestMapping(method = POST, consumes = "application/json")
     @ResponseBody
-    public QuestionBoardCreationDto createBoard(@RequestBody QuestionBoardCreationBindingModel qb) {
+    public QuestionBoardCreationDto createBoard(
+        @Valid @RequestBody QuestionBoardCreationBindingModel qb) {
         QuestionBoard board = service.saveBoard(qb);
         QuestionBoardCreationDto dto = modelMapper.map(board, QuestionBoardCreationDto.class);
         return dto;
