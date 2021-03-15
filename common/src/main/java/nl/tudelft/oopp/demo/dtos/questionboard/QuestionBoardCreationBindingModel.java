@@ -1,11 +1,17 @@
 package nl.tudelft.oopp.demo.dtos.questionboard;
 
 import java.sql.Timestamp;
+import javax.validation.constraints.NotNull;
 
 public class QuestionBoardCreationBindingModel {
 
+    @NotNull
     private String title;
+
+    @NotNull
     private Timestamp startTime;
+
+    @NotNull
     private Timestamp endTime;
 
 
