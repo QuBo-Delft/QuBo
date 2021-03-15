@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.demo.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;
@@ -40,9 +41,11 @@ public class QuestionBoard {
     @Column(name = "endTime", nullable = false)
     private Timestamp endTime;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "questionBoard")
     private Set<Question> questions;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "questionBoard")
     private Set<PaceVote> paceVotes;
 

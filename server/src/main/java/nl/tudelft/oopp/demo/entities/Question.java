@@ -48,7 +48,7 @@ public class Question {
 
 
     /**
-     * Create a new QuestionBoard instance.
+     * Create a new Question instance.
      *
      * @param questionBoard The question board where this question is asked.
      * @param text          The text of the question.
@@ -64,7 +64,7 @@ public class Question {
     }
 
     /**
-     * Create a new QuestionBoard instance and generate a secretCode automatically.
+     * Create a new Question instance and generate a secretCode automatically.
      *
      * @param questionBoard The question board where this question is asked.
      * @param text          The text of the question.
