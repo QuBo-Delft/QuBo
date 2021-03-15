@@ -20,7 +20,7 @@ public class AnswerDetailsDtoTests {
 
     @Test
     public void mapFromAnswerToAnswerDetailsDto() {
-        //Arrange
+        // Arrange
         Answer answer = new Answer();
         answer.setId(UUID.fromString("93c8f1d7-7265-4596-9320-ae34895ff64a"));
         answer.setText("Answer Text");

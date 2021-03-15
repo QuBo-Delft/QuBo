@@ -20,7 +20,7 @@ public class QuestionBoardDetailsDtoTests {
 
     @Test
     public void mapFromQuestionBoardToQuestionBoardDetailsDto() {
-        //Arrange
+        // Arrange
         QuestionBoard qb = new QuestionBoard();
         qb.setId(UUID.fromString("8e80cddb-72ec-44c2-a702-a4d9b54a6961"));
         qb.setModeratorCode(UUID.fromString("a228b64c-feea-4aef-9ddc-9c3484562188"));

@@ -22,7 +22,7 @@ public class QuestionDetailsDtoTests {
 
     @Test
     public void mapFromQuestionToQuestionDetailsDto() {
-        //Arrange
+        // Arrange
         Question q = new Question();
         q.setId(UUID.fromString("8e80cddb-72ec-44c2-a702-a4d9b54a6961"));
         q.setText("Question Text");

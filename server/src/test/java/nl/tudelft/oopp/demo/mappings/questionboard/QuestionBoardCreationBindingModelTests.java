@@ -19,7 +19,7 @@ public class QuestionBoardCreationBindingModelTests {
 
     @Test
     public void mapFromQuestionBoardCreationBindingModelToQuestionBoard() {
-        //Arrange
+        // Arrange
         QuestionBoardCreationBindingModel model = new QuestionBoardCreationBindingModel();
         model.setTitle("Test QuestionBoard");
         model.setStartTime(Timestamp.valueOf("2021-03-01 00:02:00"));
