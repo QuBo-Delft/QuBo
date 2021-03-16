@@ -6,12 +6,17 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.Set;
 import java.util.UUID;
 
-import nl.tudelft.oopp.demo.bindingmodels.QuestionBoardBindingModel;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.services.QuestionBoardService;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
+
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,20 +33,29 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/board")
 public class QuestionBoardController {
 
-    @Autowired
-    QuestionBoardService service;
+    private final QuestionBoardService service;
+
+    private final ModelMapper modelMapper;
+
+    public QuestionBoardController(QuestionBoardService service,
+                                   ModelMapper modelMapper) {
+        this.service = service;
+        this.modelMapper = modelMapper;
+    }
 
     /**
      * POST endpoint to create questionBoard on backend.
      *
-     * @param qb    The binding model passed by the client containing information to be used
+     * @param qb The binding model passed by the client containing information to be used
      *           in creating a new QuestionBoard on the backend.
      * @return the question board
      */
     @RequestMapping(method = POST, consumes = "application/json")
     @ResponseBody
-    public QuestionBoard createBoard(@RequestBody QuestionBoardBindingModel qb) {
-        return service.saveBoard(qb);
+    public QuestionBoardCreationDto createBoard(@RequestBody QuestionBoardCreationBindingModel qb) {
+        QuestionBoard board = service.saveBoard(qb);
+        QuestionBoardCreationDto dto = modelMapper.map(board, QuestionBoardCreationDto.class);
+        return dto;
     }
 
     /**
@@ -49,17 +63,19 @@ public class QuestionBoardController {
      * Throw 400 upon wrong UUID formatting.
      * Throw 404 upon requesting non-existent boardid.
      *
-     * @param boardId   ID property of a board.
+     * @param boardId ID property of a board.
      * @return The question board with this specific UUID.
      */
     @RequestMapping(value = "/{boardid}", method = GET)
     @ResponseBody
-    public QuestionBoard retrieveQuestionBoardDetails(@PathVariable("boardid") UUID boardId) {
+    public QuestionBoardDetailsDto retrieveQuestionBoardDetails(
+        @PathVariable("boardid") UUID boardId) {
         QuestionBoard qb = service.getBoardById(boardId);
         if (qb == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }
-        return qb;
+        QuestionBoardDetailsDto dto = modelMapper.map(qb, QuestionBoardDetailsDto.class);
+        return dto;
     }
 
     /**
@@ -67,19 +83,24 @@ public class QuestionBoardController {
      * Throw 400 upon wrong UUID formatting.
      * Throw 404 upon requesting non-existent boardid.
      *
-     * @param boardId   ID property of a board.
+     * @param boardId ID property of a board.
      * @return The list of questions of this board.
      */
     @RequestMapping(value = "/{boardid}/questions", method = GET)
     @ResponseBody
-    public Set<Question> retrieveQuestionListByBoardId(@PathVariable("boardid") UUID boardId) {
+    public Set<QuestionDetailsDto> retrieveQuestionListByBoardId(
+        @PathVariable("boardid") UUID boardId) {
         // 400 is thrown upon bad formatting automatically
         Set<Question> ql = service.getQuestionsByBoardId(boardId);
         // Throw 404 when board does not exist
         if (ql == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }
-        return ql;
+
+        Set<QuestionDetailsDto> dtoSet = modelMapper.map(ql,
+            new TypeToken<Set<QuestionDetailsDto>>() {
+            }.getType());
+        return dtoSet;
     }
 }
 

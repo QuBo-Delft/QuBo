@@ -1,2 +1,4 @@
 rootProject.name = 'repository-template'
 include 'client', 'server'
+include 'common'
+
