@@ -31,7 +31,7 @@
 
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
-        <property name="max" value="100"/>
+        <property name="max" value="150"/>
         <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
     </module>
 
@@ -72,7 +72,7 @@
                       value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT,
                     INSTANCE_INIT"/>
         </module>
-        <module name="WhitespaceAround">
+        <!-- <module name="WhitespaceAround">
             <property name="allowEmptyConstructors" value="true"/>
             <property name="allowEmptyLambdas" value="true"/>
             <property name="allowEmptyMethods" value="true"/>
@@ -82,7 +82,7 @@
                      value="WhitespaceAround: ''{0}'' is not followed by whitespace. Empty blocks may only be represented as '{}' when not part of a multi-block statement (4.1.3)"/>
             <message key="ws.notPreceded"
                      value="WhitespaceAround: ''{0}'' is not preceded with whitespace."/>
-        </module>
+        </module> -->
         <module name="OneStatementPerLine"/>
         <module name="MultipleVariableDeclarations"/>
         <module name="ArrayTypeStyle"/>
@@ -189,17 +189,17 @@
             <property name="lineWrappingIndentation" value="4"/>
             <property name="arrayInitIndent" value="4"/>
         </module>
-        <module name="AbbreviationAsWordInName">
+        <!-- <module name="AbbreviationAsWordInName">
             <property name="ignoreFinal" value="false"/>
             <property name="allowedAbbreviationLength" value="1"/>
-        </module>
+        </module> -->
         <module name="OverloadMethodsDeclarationOrder"/>
         <module name="VariableDeclarationUsageDistance"/>
-        <module name="CustomImportOrder">
+        <!-- <module name="CustomImportOrder">
             <property name="sortImportsInGroupAlphabetically" value="true"/>
             <property name="separateLineBetweenGroups" value="true"/>
             <property name="customImportOrderRules" value="STATIC###THIRD_PARTY_PACKAGE"/>
-        </module>
+        </module> -->
         <module name="MethodParamPad"/>
         <module name="NoWhitespaceBefore">
             <property name="tokens"
