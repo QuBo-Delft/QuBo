@@ -48,4 +48,5 @@ public class QuestionBoardCreationBindingModel {
     public void setEndTime(Timestamp endTime) {
         this.endTime = endTime;
     }
+
 }
