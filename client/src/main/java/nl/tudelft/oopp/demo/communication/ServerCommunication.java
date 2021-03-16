@@ -1,5 +1,8 @@
 package nl.tudelft.oopp.demo.communication;
 
+import com.google.gson.Gson;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -8,6 +11,67 @@ import java.net.http.HttpResponse;
 public class ServerCommunication {
 
     private static HttpClient client = HttpClient.newBuilder().build();
+    private static String subURL = "http://localhost:8080/";
+
+    /**
+     * Retrieves an http response from the server by sending an http request.
+     *
+     * @param request       The http request to be sent to be server.
+     * @return The http response returned.
+     * @throws Exception    if communication with the server fails.
+     */
+    private static HttpResponse<String> sendRequest(HttpRequest request) {
+        HttpResponse<String> response = null;
+
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    /**
+     * Retrieves an http response from the server by sending an http post request.
+     *
+     * @param fullURL         The full url of the request.
+     * @param requestBody     The request body of JSON form.
+     * @param headers         The http headers of the request.
+     * @return The http response returned.
+     */
+    private static HttpResponse<String> post(String fullURL, String requestBody, String... headers) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .uri(URI.create(fullURL))
+                .headers(headers)
+                .build();
+
+        HttpResponse<String> response = sendRequest(request);
+
+        return response;
+    }
+
+    /**
+     * The method sends a request to the server to create a question board.
+     *
+     * @param board     The QuestionBoardCreationBindingModel object that contains details of a question board.
+     * @return The http response returned.
+     */
+    public static HttpResponse<String> createBoardRequest(QuestionBoardCreationBindingModel board) {
+        String fullURL = subURL+"api/board";
+
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(board);
+        HttpResponse<String> res = post(fullURL, requestBody, "Content-Type", "application/json;charset=UTF-8");
+
+        if (res == null || res.statusCode() != 200) {
+            return null;
+        }
+
+        return res;
+    }
+
 
     /**
      * Retrieves a quote from the server.
