@@ -24,12 +24,10 @@ public class BoardCreationController {
     private DatePicker endDate = null;
 
     /**
-     * Once the user clicked the "create now" button,
-     * this method will be invoked to request to create
-     * a question board (open immediately) on the server.
-     * If request was unsuccessful, pop up an alert dialog.
+     * Once the user clicked the "create now" button, this method will be invoked to request to create
+     * a question board (open immediately) on the server. If the request was unsuccessful, pop up an alert dialog.
      *
-     * @param actionEvent       The click button event.
+     * @param actionEvent   The click button event.
      */
     public void createNowBtnClicked(ActionEvent actionEvent) {
         String titleStr = title.getText();
@@ -62,12 +60,10 @@ public class BoardCreationController {
 
 
     /**
-     * Once the user clicked the "schedule" button,
-     * this method will be invoked to request to create
-     * a question board (open and close as scheduled) on the server.
-     * If request was unsuccessful, pop up an alert dialog.
+     * Once the user clicked the "schedule" button, this method will be invoked to request to create
+     * a question board (open and close as scheduled) on the server. If the request was unsuccessful, pop up an alert dialog.
      *
-     * @param actionEvent       The click button event.
+     * @param actionEvent   The click button event.
      */
     public void scheduleBtnClicked(ActionEvent actionEvent) {
         String titleStr = title.getText();
