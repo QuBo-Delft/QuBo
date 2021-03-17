@@ -80,7 +80,7 @@ public class QuestionBoardController {
     }
 
     /**
-     * GET endpoint that provides client with the QuestionBoard with the specified moderator code.
+     * GET endpoint that provides the client with the QuestionBoard associated with the specified moderator code.
      * Throw 400 upon wrong UUID formatting.
      * Throw 404 upon requesting a non-existent moderator code.
      *
