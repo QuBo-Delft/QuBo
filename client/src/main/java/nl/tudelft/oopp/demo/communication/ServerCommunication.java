@@ -82,14 +82,16 @@ public class ServerCommunication {
     }
 
     /**
-     * Retrieves the board ID of the Question Board associated with the specified moderator code.
+     * Retrieves the board details of the Question Board associated with the specified moderator code from
+     *      the server.
      * Communicates with the /api/board/moderator?code={moderatorCode} server endpoint.
      *
-     * @param moderatorCode     The code belonging to the Question Board whose ID should be retrieved.
-     * @return Returns the board ID.
+     * @param moderatorCode     The code belonging to the Question Board whose details should be retrieved.
+     * @return Returns a QuestionBoardDetailsDto containing the details of the Question Board or null
+     *      if this does not exist.
      */
-    public static UUID retrieveBoardId(UUID moderatorCode) {
-        //Create a request and response object, sends the request, and retrieves the response
+    public static QuestionBoardDetailsDto retrieveBoardDetailsThroughModCode(UUID moderatorCode) {
+        //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
                 .uri(URI.create(subUrl + "/api/board/moderator?code=" + moderatorCode)).build();
         HttpResponse<String> response = sendRequest(request);
@@ -102,7 +104,7 @@ public class ServerCommunication {
         //Convert the JSON response to a UUID and return this
         Gson gson = new Gson();
 
-        return gson.fromJson(response.body(), UUID.class);
+        return gson.fromJson(response.body(), QuestionBoardDetailsDto.class);
     }
 
     /**
@@ -120,19 +122,12 @@ public class ServerCommunication {
         HttpResponse<String> response = sendRequest(request);
 
         //Check if it is a moderator code instead of a board ID and retrieve the details of the
-        //corresponding Question Board
+        //corresponding Question Board. Return null if the code does not exist.
         if (response.statusCode() == 404) {
-            boardID = retrieveBoardId(boardID);
-
-            //If the moderator code existed, return the details of the Question Board
-            if (boardID != null) {
-                return retrieveBoardDetails(boardID);
-            }
-            //Return null if the code was invalid
-            return null;
+            return retrieveBoardDetailsThroughModCode(boardID);
         }
 
-        //Convert the JSON response to a QuestionBoardDetailsDto
+        //Convert the JSON response to a QuestionBoardDetailsDto object
         Gson gson = new Gson();
         QuestionBoardDetailsDto details = gson.fromJson(response.body(), QuestionBoardDetailsDto.class);
 
