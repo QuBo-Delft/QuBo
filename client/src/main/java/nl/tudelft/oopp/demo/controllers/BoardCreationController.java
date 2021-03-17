@@ -93,11 +93,11 @@ public class BoardCreationController {
      * @param qd    The QuestionBoardCreationDto object to be transferred to the controller
      *              of QuestionBoardCodes.
      *
-     * @throws IOException if the fxml file is not found.
      */
-    private void loadQuestionBoardCodes(QuestionBoardCreationDto qd) {
+    public void loadQuestionBoardCodes(QuestionBoardCreationDto qd) {
         // Create an FXMLLoader of QuestionBoardCodes.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/QuestionBoardCodes.fxml"));
+
         Parent root = null;
         try {
             root = (Parent) loader.load();
@@ -115,9 +115,11 @@ public class BoardCreationController {
 
         // Check if root is null
         if (root == null) {
-            AlertDialog.display("", "Cannot display codes");
+            AlertDialog.display("", "Unable to display the codes");
             return;
         }
+
+        // Display the scene
         stage.setScene(new Scene(root));
         stage.show();
 
