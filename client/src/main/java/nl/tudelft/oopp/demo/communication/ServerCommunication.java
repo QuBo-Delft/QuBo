@@ -35,16 +35,16 @@ public class ServerCommunication {
     /**
      * Retrieves an http response from the server by sending an http post request.
      *
-     * @param fullURL         The full url of the request.
+     * @param full_url         The full url of the request.
      * @param requestBody     The request body of JSON form.
      * @param headers         The http headers of the request.
      * @return The http response returned.
      */
-    private static HttpResponse<String> post(String fullURL, String requestBody, String... headers) {
+    private static HttpResponse<String> post(String full_url, String requestBody, String... headers) {
         
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .uri(URI.create(fullURL))
+                .uri(URI.create(full_url))
                 .headers(headers)
                 .build();
 
@@ -60,11 +60,11 @@ public class ServerCommunication {
      * @return The http response returned.
      */
     public static HttpResponse<String> createBoardRequest(QuestionBoardCreationBindingModel board) {
-        String fullURL = suburl + "api/board";
+        String full_url = suburl + "api/board";
 
         Gson gson = new Gson();
         String requestBody = gson.toJson(board);
-        HttpResponse<String> res = post(fullURL, requestBody, "Content-Type", 
+        HttpResponse<String> res = post(full_url, requestBody, "Content-Type", 
                                         "application/json;charset=UTF-8");
 
         if (res == null || res.statusCode() != 200) {
