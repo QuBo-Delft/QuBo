@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class ConfirmationDialog {
 
-    static boolean answer;
+    private static boolean answer;
 
     /**
      * This method creates a dialog window with a question as the message of the window. 
