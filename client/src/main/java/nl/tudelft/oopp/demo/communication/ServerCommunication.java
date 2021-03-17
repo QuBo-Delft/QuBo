@@ -13,7 +13,7 @@ import java.util.UUID;
 public class ServerCommunication {
 
     private static HttpClient client = HttpClient.newBuilder().build();
-    private static String suburl = "http://localhost:8080/";
+    private static String subUrl = "http://localhost:8080/";
 
     /**
      * Retrieves an http response from the server by sending an http request.
@@ -67,7 +67,7 @@ public class ServerCommunication {
      * @return The http response returned.
      */
     public static HttpResponse<String> createBoardRequest(QuestionBoardCreationBindingModel board) {
-        String fullUrl = suburl + "api/board";
+        String fullUrl = subUrl + "api/board";
 
         //Convert the QuestionBoardCreationBindingModel to JSON
         Gson gson = new Gson();
@@ -92,15 +92,15 @@ public class ServerCommunication {
      * @param moderatorCode     The code belonging to the Question Board whose ID should be retrieved.
      * @return Returns the board ID.
      */
-    public static UUID retrieveBoardID(UUID moderatorCode) {
+    public static UUID retrieveBoardId(UUID moderatorCode) {
 
         //Create a request and response object, sends the request, and retrieves the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(suburl + "/api/board/moderator?code=" + moderatorCode)).build();
+                .uri(URI.create(subUrl + "/api/board/moderator?code=" + moderatorCode)).build();
         HttpResponse<String> response = sendRequest(request);
 
         //If the code was not a moderator code, return null
-        if(response.statusCode() != 200){
+        if (response.statusCode() != 200) {
             return null;
         }
 
@@ -116,19 +116,19 @@ public class ServerCommunication {
      *
      * @param boardID   The ID of the Question Board whose details should be retrieved.
      * @return Returns a QuestionBoardDetailsDto containing the details of the Question Board or null
-     * if this does not exist.
+     *      if this does not exist.
      */
     public static QuestionBoardDetailsDto retrieveBoardDetails(UUID boardID) {
 
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(suburl + "api/board/" + boardID)).build();
+                .uri(URI.create(subUrl + "api/board/" + boardID)).build();
         HttpResponse<String> response = sendRequest(request);
 
         //Check if it is a moderator code instead of a board ID and retrieve the details of the
         //corresponding Question Board
         if (response.statusCode() == 404) {
-            boardID = retrieveBoardID(boardID);
+            boardID = retrieveBoardId(boardID);
 
             //If the moderator code existed, return the details of the Question Board
             if (boardID != null) {
