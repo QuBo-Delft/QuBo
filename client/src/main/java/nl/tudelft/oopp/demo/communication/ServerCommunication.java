@@ -13,9 +13,9 @@ import java.util.UUID;
 
 public class ServerCommunication {
 
-    private static HttpClient client = HttpClient.newBuilder().build();
-    private static String subUrl = "http://localhost:8080/";
-    private static Gson gson = new GsonBuilder()
+    private static final HttpClient client = HttpClient.newBuilder().build();
+    private static final String subUrl = "http://localhost:8080/";
+    private static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         .create();
 
@@ -24,7 +24,6 @@ public class ServerCommunication {
      *
      * @param request       The http request to be sent to be server.
      * @return The http response returned.
-     * @throws Exception if communication with the server fails.
      */
     private static HttpResponse<String> sendRequest(HttpRequest request) {
         //Instantiate a response object
@@ -147,7 +146,6 @@ public class ServerCommunication {
     /**
      * Retrieves a quote from the server.
      * @return the body of a get request to the server.
-     * @throws Exception if communication with the server fails.
      */
     public static String getQuote() {
         HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://localhost:8080/quote")).build();
