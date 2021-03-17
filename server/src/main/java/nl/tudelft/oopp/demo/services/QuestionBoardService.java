@@ -61,6 +61,16 @@ public class QuestionBoardService {
     }
 
     /**
+     * Looks for QuestionBoard with the specified moderator code in the database.
+     *
+     * @param moderatorCode The moderator code.
+     * @return The requested QuestionBoard, or null if nonexistent.
+     */
+    public QuestionBoard getBoardByModeratorCode(UUID moderatorCode) {
+        return questionBoardRepository.getByModeratorCode(moderatorCode);
+    }
+
+    /**
      * Retrieve questions set from database.
      * First retrieves QuestionBoard object and then
      * retrieves Question objects mapped to said QuestionBoard.
