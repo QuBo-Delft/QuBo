@@ -8,11 +8,11 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 
 public class BoardCodesController {
     @FXML
-    Label boardTitle;
+    private Label boardTitle;
     @FXML
-    Label adminCode;
+    private Label adminCode;
     @FXML
-    Label studentCode;
+    private Label studentCode;
 
     /**
      * Displays question board codes.
