@@ -3,6 +3,7 @@ package nl.tudelft.oopp.demo.views;
 import javafx.scene.control.Alert;
 
 public class AlertDialog {
+    
     /**
      * This is an alert dialog that will pop up when called with alert title and message.
      *
@@ -11,6 +12,7 @@ public class AlertDialog {
      */
     public static void display(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

@@ -25,7 +25,8 @@ public class BoardCreationController {
 
     /**
      * Once the user clicked the "create now" button, this method will be invoked to request to create
-     * a question board (open immediately) on the server. If the request was unsuccessful, pop up an alert dialog.
+     * a question board (open immediately) on the server. If the request was unsuccessful, pop up an 
+     * alert dialog.
      *
      * @param actionEvent   The click button event.
      */
@@ -33,7 +34,8 @@ public class BoardCreationController {
         String titleStr = title.getText();
         // Check if title is empty
         if (titleStr.length() == 0) {
-            AlertDialog.display("No title", "Please enter a meaningful title for the lecture");
+            AlertDialog.display("No title", 
+                                "Please enter a meaningful title for the lecture");
             return;
         }
 
@@ -43,11 +45,13 @@ public class BoardCreationController {
         // End time needs to be reconsidered
         Timestamp endTime = startTime;
 
-        QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel(titleStr, startTime, endTime);
+        QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel(
+            titleStr, startTime, endTime);
 
         HttpResponse<String> res = ServerCommunication.createBoardRequest(board);
         if (res == null) {
-            AlertDialog.display("Unsuccessful request", "Sorry, the request has failed, please try again");
+            AlertDialog.display("Unsuccessful request", 
+                                "Sorry, the request has failed, please try again");
             return;
         }
 
@@ -61,7 +65,8 @@ public class BoardCreationController {
 
     /**
      * Once the user clicked the "schedule" button, this method will be invoked to request to create
-     * a question board (open and close as scheduled) on the server. If the request was unsuccessful, pop up an alert dialog.
+     * a question board (open and close as scheduled) on the server. If the request was unsuccessful, 
+     * pop up an alert dialog.
      *
      * @param actionEvent   The click button event.
      */
