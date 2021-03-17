@@ -16,7 +16,7 @@ public class BoardCodesController {
     private Label studentCode;
 
     /**
-     * This method aims to make this window to display the student code, the moderator code, 
+     * This method aims to make a window to display the student code, the moderator code, 
      * and the title of the question board just created.
      *
      * @param qb    The QuestionBoardCreationDto that contains the data of a question board.

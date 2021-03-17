@@ -94,7 +94,7 @@ public class BoardCreationController {
     }
 
     /**
-     * This method aims to load the page that displays student code and moderator code.
+     * This method aims to load the page that displays the student code and moderator code.
      *
      * @param qd    The QuestionBoardCreationDto object to be transferred to the controller
      *              of QuestionBoardCodes.
@@ -128,7 +128,6 @@ public class BoardCreationController {
         // Display the scene
         stage.setScene(new Scene(root));
         stage.show();
-
     }
 
 }
