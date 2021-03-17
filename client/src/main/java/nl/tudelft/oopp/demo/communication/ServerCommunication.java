@@ -3,6 +3,7 @@ package nl.tudelft.oopp.demo.communication;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 
 import java.net.URI;
@@ -65,14 +66,14 @@ public class ServerCommunication {
      * @param board     The QuestionBoardCreationBindingModel object that contains details of a question board.
      * @return The http response returned.
      */
-    public static HttpResponse<String> createBoardRequest(QuestionBoardCreationBindingModel board) {
+    public static QuestionBoardCreationDto createBoardRequest(QuestionBoardCreationBindingModel board) {
         String fullUrl = subUrl + "api/board";
 
         //Convert the QuestionBoardCreationBindingModel to JSON
         String requestBody = gson.toJson(board);
 
         //Send the post request and retrieve the response from the server
-        HttpResponse<String> res = post(fullUrl, requestBody, "Content-Type", 
+        HttpResponse<String> res = post(fullUrl, requestBody, "Content-Type",
                                         "application/json;charset=UTF-8");
 
         //Check if the request was sent and received properly and return null if this is not the case.
@@ -80,7 +81,7 @@ public class ServerCommunication {
             return null;
         }
 
-        return res;
+        return gson.fromJson(res.body(), QuestionBoardCreationDto.class);
     }
 
     /**
