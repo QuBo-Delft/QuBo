@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.UUID;
 
 public class ServerCommunication {
 
@@ -83,6 +84,30 @@ public class ServerCommunication {
         return res;
     }
 
+    /**
+     * Retrieves the board ID of the Question Board associated with the specified moderator code.
+     * Communicates with the /api/board/moderator?code={moderatorCode} server endpoint.
+     *
+     * @param moderatorCode     The code belonging to the Question Board whose ID should be retrieved.
+     * @return Returns the board ID.
+     */
+    public static UUID retrieveBoardID(UUID moderatorCode) {
+
+        //Create a request and response object, sends the request, and retrieves the response
+        HttpRequest request = HttpRequest.newBuilder().GET()
+                .uri(URI.create(suburl + "/api/board/moderator?code=" + moderatorCode)).build();
+        HttpResponse<String> response = sendRequest(request);
+
+        //If the code was not a moderator code, return null
+        if(response.statusCode() != 200){
+            return null;
+        }
+
+        //Convert the JSON response to a UUID and return this
+        Gson gson = new Gson();
+
+        return gson.fromJson(response.body(), UUID.class);
+    }
 
     /**
      * Retrieves a quote from the server.
