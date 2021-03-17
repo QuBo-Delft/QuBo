@@ -23,6 +23,7 @@ public class ServerCommunication {
     private static HttpResponse<String> sendRequest(HttpRequest request) {
         HttpResponse<String> response = null;
 
+        //Send the request to the server and retrieve the response
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
