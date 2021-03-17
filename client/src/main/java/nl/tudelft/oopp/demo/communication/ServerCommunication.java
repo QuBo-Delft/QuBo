@@ -2,6 +2,7 @@ package nl.tudelft.oopp.demo.communication;
 
 import com.google.gson.Gson;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -107,6 +108,41 @@ public class ServerCommunication {
         Gson gson = new Gson();
 
         return gson.fromJson(response.body(), UUID.class);
+    }
+
+    /**
+     * Retrieves the details of the Question Board with specified board ID from the server.
+     * Communicates with the /api/board/{boardID} server endpoint.
+     *
+     * @param boardID   The ID of the Question Board whose details should be retrieved.
+     * @return Returns a QuestionBoardDetailsDto containing the details of the Question Board or null
+     * if this does not exist.
+     */
+    public static QuestionBoardDetailsDto retrieveBoardDetails(UUID boardID) {
+
+        //Create a request and response object, send the request, and retrieve the response
+        HttpRequest request = HttpRequest.newBuilder().GET()
+                .uri(URI.create(suburl + "api/board/" + boardID)).build();
+        HttpResponse<String> response = sendRequest(request);
+
+        //Check if it is a moderator code instead of a board ID and retrieve the details of the
+        //corresponding Question Board
+        if (response.statusCode() == 404) {
+            boardID = retrieveBoardID(boardID);
+
+            //If the moderator code existed, return the details of the Question Board
+            if (boardID != null) {
+                return retrieveBoardDetails(boardID);
+            }
+            //Return null if the code was invalid
+            return null;
+        }
+
+        //Convert the JSON response to a QuestionBoardDetailsDto
+        Gson gson = new Gson();
+        QuestionBoardDetailsDto details = gson.fromJson(response.body(), QuestionBoardDetailsDto.class);
+
+        return details;
     }
 
     /**
