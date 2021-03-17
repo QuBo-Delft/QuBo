@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 public class GetTextDialog {
 
-    static String userInput;
+    private static String userInput;
 
     /**
      * This method creates a dialog window which allows users to enter text. 
