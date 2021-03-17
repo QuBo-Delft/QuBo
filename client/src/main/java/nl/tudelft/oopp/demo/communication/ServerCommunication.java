@@ -64,8 +64,7 @@ public class ServerCommunication {
      * @param board     The QuestionBoardCreationBindingModel object that contains details of a question board.
      * @return The http response returned.
      */
-    public static HttpResponse<String> 
-    createBoardRequest(QuestionBoardCreationBindingModel board) {
+    public static HttpResponse<String> createBoardRequest(QuestionBoardCreationBindingModel board) {
         String fullUrl = suburl + "api/board";
 
         //Convert the QuestionBoardCreationBindingModel to JSON
