@@ -45,6 +45,8 @@ Notetaker:      Dorothy
 - Should we use a "development" branch or can we just merge into the master branch?
 - Are we using enough GitLab features?
 - Are we using milestones in the correct way?
+- How should we be testing the server communication methods for the frontend?
+- How should we be testing the views through Unit Testing?
   
 - Would it be a good idea to have a manual "close question board" option instead of entering an end time?
 - Should students be allowed to ask questions before the question board opens?
