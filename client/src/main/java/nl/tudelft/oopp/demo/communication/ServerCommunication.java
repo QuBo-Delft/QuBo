@@ -23,7 +23,6 @@ public class ServerCommunication {
      * @throws Exception if communication with the server fails.
      */
     private static HttpResponse<String> sendRequest(HttpRequest request) {
-        
         //Instantiate a response object
         HttpResponse<String> response = null;
 
@@ -46,7 +45,6 @@ public class ServerCommunication {
      * @return The http response returned.
      */
     private static HttpResponse<String> post(String fullUrl, String requestBody, String... headers) {
-        
         //Set up the request Object
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -54,10 +52,8 @@ public class ServerCommunication {
                 .headers(headers)
                 .build();
 
-        //Send the request and retrieve the response from the server.
-        HttpResponse<String> response = sendRequest(request);
-
-        return response;
+        //Send the request, and retrieve and return the response from the server
+        return sendRequest(request);
     }
 
     /**
@@ -93,7 +89,6 @@ public class ServerCommunication {
      * @return Returns the board ID.
      */
     public static UUID retrieveBoardId(UUID moderatorCode) {
-
         //Create a request and response object, sends the request, and retrieves the response
         HttpRequest request = HttpRequest.newBuilder().GET()
                 .uri(URI.create(subUrl + "/api/board/moderator?code=" + moderatorCode)).build();
@@ -119,7 +114,6 @@ public class ServerCommunication {
      *      if this does not exist.
      */
     public static QuestionBoardDetailsDto retrieveBoardDetails(UUID boardID) {
-
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
                 .uri(URI.create(subUrl + "api/board/" + boardID)).build();
