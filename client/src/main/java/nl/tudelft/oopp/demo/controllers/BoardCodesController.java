@@ -7,6 +7,7 @@ import javafx.scene.input.ClipboardContent;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 
 public class BoardCodesController {
+    
     @FXML
     private Label boardTitle;
     @FXML
@@ -15,9 +16,10 @@ public class BoardCodesController {
     private Label studentCode;
 
     /**
-     * Displays question board codes.
+     * This method aims to make this window to display the student code, the moderator code, 
+     * and the title of the question board just created.
      *
-     * @param qb Requested question board to display details of
+     * @param qb    The QuestionBoardCreationDto that contains the data of a question board.
      */
     public void displayCodes(QuestionBoardCreationDto qb) {
         boardTitle.setText(qb.getTitle());
@@ -26,8 +28,8 @@ public class BoardCodesController {
     }
 
     /**
-     * Action event after clicking the button for copying the admin code.
-     * Copies code to the user's system clipboard.
+     * This method aims to copy the admin code to the user's system clipboard
+     * after clicking the button for copying the admin code.
      */
     public void copyAdminCode() {
         Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -37,8 +39,8 @@ public class BoardCodesController {
     }
 
     /**
-     * Action event after clicking the button for copying the student code.
-     * Copies code to the user's system clipboard.
+     * This method aims to copy the student code to the user's system clipboard
+     * after clicking the button for copying the student code.
      */
     public void copyStudentCode() {
         Clipboard clipboard = Clipboard.getSystemClipboard();
