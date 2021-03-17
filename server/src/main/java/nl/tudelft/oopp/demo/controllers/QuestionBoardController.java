@@ -6,6 +6,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -52,7 +55,8 @@ public class QuestionBoardController {
      */
     @RequestMapping(method = POST, consumes = "application/json")
     @ResponseBody
-    public QuestionBoardCreationDto createBoard(@RequestBody QuestionBoardCreationBindingModel qb) {
+    public QuestionBoardCreationDto createBoard(
+        @Valid @RequestBody QuestionBoardCreationBindingModel qb) {
         QuestionBoard board = service.saveBoard(qb);
         QuestionBoardCreationDto dto = modelMapper.map(board, QuestionBoardCreationDto.class);
         return dto;
@@ -71,6 +75,27 @@ public class QuestionBoardController {
     public QuestionBoardDetailsDto retrieveQuestionBoardDetails(
         @PathVariable("boardid") UUID boardId) {
         QuestionBoard qb = service.getBoardById(boardId);
+        if (qb == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        QuestionBoardDetailsDto dto = modelMapper.map(qb, QuestionBoardDetailsDto.class);
+        return dto;
+    }
+
+    /**
+     * GET endpoint that provides the client with the QuestionBoard associated with the specified
+     *      moderator code.
+     * Throw 400 upon wrong UUID formatting.
+     * Throw 404 upon requesting a non-existent moderator code.
+     *
+     * @param moderatorCode Moderator code of a board.
+     * @return The question board with the specified moderator code.
+     */
+    @RequestMapping(value = "/moderator", method = GET)
+    @ResponseBody
+    public QuestionBoardDetailsDto retrieveQuestionBoardByModeratorCode(
+        @RequestParam("code") UUID moderatorCode) {
+        QuestionBoard qb = service.getBoardByModeratorCode(moderatorCode);
         if (qb == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }

@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.demo.communication;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 
@@ -14,6 +15,9 @@ public class ServerCommunication {
 
     private static HttpClient client = HttpClient.newBuilder().build();
     private static String subUrl = "http://localhost:8080/";
+    private static Gson gson = new GsonBuilder()
+        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+        .create();
 
     /**
      * Retrieves an http response from the server by sending an http request.
@@ -66,7 +70,6 @@ public class ServerCommunication {
         String fullUrl = subUrl + "api/board";
 
         //Convert the QuestionBoardCreationBindingModel to JSON
-        Gson gson = new Gson();
         String requestBody = gson.toJson(board);
 
         //Send the post request and retrieve the response from the server
