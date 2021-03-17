@@ -14,7 +14,7 @@ import java.net.http.HttpResponse;
 import java.util.Date;
 import java.sql.Timestamp;
 
-public class QuestionBoardCreationController {
+public class BoardCreationController {
 
     @FXML
     private TextField title = null;
