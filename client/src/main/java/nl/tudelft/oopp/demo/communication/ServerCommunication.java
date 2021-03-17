@@ -96,8 +96,8 @@ public class ServerCommunication {
                 .uri(URI.create(subUrl + "/api/board/moderator?code=" + moderatorCode)).build();
         HttpResponse<String> response = sendRequest(request);
 
-        //If the code was not a moderator code, return null
-        if (response.statusCode() != 200) {
+        //If the code was not a moderator code or the response was null, return null
+        if (response == null || response.statusCode() != 200) {
             return null;
         }
 
@@ -121,10 +121,17 @@ public class ServerCommunication {
                 .uri(URI.create(subUrl + "api/board/" + boardID)).build();
         HttpResponse<String> response = sendRequest(request);
 
+        //Check if the response object is null in which case null is returned
+        if (response == null) {
+            return null;
+        }
         //Check if it is a moderator code instead of a board ID and retrieve the details of the
-        //corresponding Question Board. Return null if the code does not exist.
+        //corresponding Question Board. Return null if the code does not exist or if the response
+        //did not have status code 200.
         if (response.statusCode() == 404) {
             return retrieveBoardDetailsThroughModCode(boardID);
+        } else if (response.statusCode() != 200) {
+            return null;
         }
 
         //Convert the JSON response to a QuestionBoardDetailsDto object
