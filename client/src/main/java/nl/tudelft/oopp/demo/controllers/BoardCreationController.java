@@ -86,4 +86,41 @@ public class BoardCreationController {
 
         // TODO: we need two datePickers in the fxml
     }
+
+    /**
+     * This method aims to load the page that displays student code and moderator code.
+     *
+     * @param qd    The QuestionBoardCreationDto object to be transferred to the controller
+     *              of QuestionBoardCodes.
+     *
+     * @throws IOException if the fxml file is not found.
+     */
+    private void loadQuestionBoardCodes(QuestionBoardCreationDto qd) {
+        // Create an FXMLLoader of QuestionBoardCodes.fxml
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/QuestionBoardCodes.fxml"));
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Get the controller of QuestionBoardCodes
+        BoardCodesController controller = loader.getController();
+
+        // Transfer the data for QuestionBoardCodes
+        controller.displayCodes(qd);
+
+        Stage stage = new Stage();
+
+        // Check if root is null
+        if (root == null) {
+            AlertDialog.display("", "Cannot display codes");
+            return;
+        }
+        stage.setScene(new Scene(root));
+        stage.show();
+
+    }
+
 }
