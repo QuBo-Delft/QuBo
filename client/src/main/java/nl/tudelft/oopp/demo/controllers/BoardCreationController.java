@@ -14,7 +14,7 @@ import java.net.http.HttpResponse;
 import java.util.Date;
 import java.sql.Timestamp;
 
-public class BoardCreationController {
+public class QuestionBoardCreationController {
 
     @FXML
     private TextField title = null;
@@ -24,14 +24,15 @@ public class BoardCreationController {
     private DatePicker endDate = null;
 
     /**
-     * Once the user clicked the "create now" button, this method will be invoked to request to create
-     * a question board (open immediately) on the server. If the request was unsuccessful, pop up an 
-     * alert dialog.
+     * Once the user clicks the "create now" button, this method will be invoked 
+     * to create a question board that opens immediately on the server. 
+     * If the request was unsuccessful, an alert dialog is shown to the user
      *
      * @param actionEvent   The click button event.
      */
     public void createNowBtnClicked(ActionEvent actionEvent) {
         String titleStr = title.getText();
+        
         // Check if title is empty
         if (titleStr.length() == 0) {
             AlertDialog.display("No title", 
@@ -48,13 +49,17 @@ public class BoardCreationController {
         QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel(
             titleStr, startTime, endTime);
 
+        //Send the request and retrieve the response
         HttpResponse<String> res = ServerCommunication.createBoardRequest(board);
+
+        //Alert the user if the creation of the question board has failed
         if (res == null) {
-            AlertDialog.display("Unsuccessful request", 
-                                "Sorry, the request has failed, please try again");
+            AlertDialog.display("Unsuccessful Request", 
+                                "The question board could not be created, please try again");
             return;
         }
 
+        //Convert the response object to a QuestionBoardCreationDto
         Gson gson = new Gson();
         QuestionBoardCreationDto qb = gson.fromJson(res.body(), QuestionBoardCreationDto.class);
 
@@ -64,19 +69,21 @@ public class BoardCreationController {
 
 
     /**
-     * Once the user clicked the "schedule" button, this method will be invoked to request to create
-     * a question board (open and close as scheduled) on the server. If the request was unsuccessful, 
-     * pop up an alert dialog.
+     * Once the user clicks the "schedule" button, this method will be invoked to create
+     * a question board, that opens and closes as scheduled, on the server. 
+     * If the request was unsuccessful, an alert dialog is shown to the user.
      *
      * @param actionEvent   The click button event.
      */
     public void scheduleBtnClicked(ActionEvent actionEvent) {
         String titleStr = title.getText();
+
         // Check if title is empty
         if (titleStr.length() == 0) {
             AlertDialog.display("No title", "Please enter a meaningful title for the lecture");
             return;
         }
+
         // TODO: we need two datePickers in the fxml
     }
 }

@@ -18,9 +18,11 @@ public class ServerCommunication {
      *
      * @param request       The http request to be sent to be server.
      * @return The http response returned.
-     * @throws Exception    if communication with the server fails.
+     * @throws Exception if communication with the server fails.
      */
     private static HttpResponse<String> sendRequest(HttpRequest request) {
+        
+        //Instantiate a response object
         HttpResponse<String> response = null;
 
         //Send the request to the server and retrieve the response
@@ -43,12 +45,14 @@ public class ServerCommunication {
      */
     private static HttpResponse<String> post(String fullUrl, String requestBody, String... headers) {
         
+        //Set up the request Object
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .uri(URI.create(fullUrl))
                 .headers(headers)
                 .build();
 
+        //Send the request and retrieve the response from the server.
         HttpResponse<String> response = sendRequest(request);
 
         return response;
@@ -60,14 +64,19 @@ public class ServerCommunication {
      * @param board     The QuestionBoardCreationBindingModel object that contains details of a question board.
      * @return The http response returned.
      */
-    public static HttpResponse<String> createBoardRequest(QuestionBoardCreationBindingModel board) {
+    public static HttpResponse<String> 
+    createBoardRequest(QuestionBoardCreationBindingModel board) {
         String fullUrl = suburl + "api/board";
 
+        //Convert the QuestionBoardCreationBindingModel to JSON
         Gson gson = new Gson();
         String requestBody = gson.toJson(board);
+
+        //Send the post request and retrieve the response from the server
         HttpResponse<String> res = post(fullUrl, requestBody, "Content-Type", 
                                         "application/json;charset=UTF-8");
 
+        //Check if the request was sent and received properly and return null if this is not the case.
         if (res == null || res.statusCode() != 200) {
             return null;
         }

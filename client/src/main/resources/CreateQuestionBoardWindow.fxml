@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.demo.controllers.BoardCreationController">
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.demo.controllers.QuestionBoardCreationController">
    <AnchorPane prefHeight="503.0" prefWidth="865.0">
          <Pane layoutX="61.0" layoutY="80.0" prefHeight="474.0" prefWidth="823.0">
                <Label layoutX="23.0" layoutY="17.0" mouseTransparent="true" prefHeight="44.0" prefWidth="780.0" text="Create Question Board">
