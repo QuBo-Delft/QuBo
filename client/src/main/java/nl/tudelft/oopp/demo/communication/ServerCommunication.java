@@ -104,8 +104,6 @@ public class ServerCommunication {
         }
 
         //Convert the JSON response to a UUID and return this
-        Gson gson = new Gson();
-
         return gson.fromJson(response.body(), QuestionBoardDetailsDto.class);
     }
 
@@ -137,7 +135,6 @@ public class ServerCommunication {
         }
 
         //Convert the JSON response to a QuestionBoardDetailsDto object
-        Gson gson = new Gson();
         QuestionBoardDetailsDto details = gson.fromJson(response.body(), QuestionBoardDetailsDto.class);
 
         return details;
