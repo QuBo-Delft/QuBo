@@ -6,7 +6,8 @@ mainClassName = "nl.tudelft.oopp.demo.MainApp"
 
 dependencies {
     compile project(path: ':common')
-
+    implementation 'com.google.code.gson:gson:2.8.5'
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
     testCompile("org.junit.jupiter:junit-jupiter-api:5.6.0")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.6.0")
 }
