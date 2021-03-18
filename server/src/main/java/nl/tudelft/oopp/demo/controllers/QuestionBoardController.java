@@ -8,14 +8,18 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.demo.entities.PaceVote;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
+import nl.tudelft.oopp.demo.services.PaceVoteService;
 import nl.tudelft.oopp.demo.services.QuestionBoardService;
 import nl.tudelft.oopp.demo.services.QuestionService;
 
@@ -41,6 +45,7 @@ public class QuestionBoardController {
 
     private final QuestionBoardService service;
     private final QuestionService questionService;
+    private final PaceVoteService paceVoteService;
 
     private final ModelMapper modelMapper;
 
@@ -49,13 +54,16 @@ public class QuestionBoardController {
      *
      * @param service         The QuestionBoardService.
      * @param questionService The QuestionService.
+     * @param paceVoteService The PaceVoteService
      * @param modelMapper     The ModelMapper.
      */
     public QuestionBoardController(QuestionBoardService service,
                                    QuestionService questionService,
+                                   PaceVoteService paceVoteService,
                                    ModelMapper modelMapper) {
         this.service = service;
         this.questionService = questionService;
+        this.paceVoteService = paceVoteService;
         this.modelMapper = modelMapper;
     }
 
@@ -158,6 +166,23 @@ public class QuestionBoardController {
         Question question = questionService.createQuestion(model, boardId);
         QuestionCreationDto dto = modelMapper.map(question, QuestionCreationDto.class);
         return dto;
+    }
+
+
+    /**
+     * POST endpoint for registering PaceVotes.
+     *
+     * @param boardId       The board ID.
+     * @param paceVoteModel The PaceVote model.
+     * @return The paceVote DTO.
+     */
+    @RequestMapping(value = "/{boardid}/pace", method = POST, consumes = "application/json")
+    @ResponseBody
+    public PaceVoteCreationDto registerPaceVote(
+            @PathVariable("boardid") UUID boardId,
+            @Valid @RequestBody PaceVoteCreationBindingModel paceVoteModel) {
+        PaceVote paceVote = paceVoteService.registerVote(boardId, paceVoteModel);
+        return modelMapper.map(paceVote, PaceVoteCreationDto.class);
     }
 }
 
