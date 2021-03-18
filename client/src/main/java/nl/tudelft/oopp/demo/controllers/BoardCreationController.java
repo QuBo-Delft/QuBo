@@ -54,22 +54,18 @@ public class BoardCreationController {
         QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel(
             titleStr, startTime, endTime);
 
-        // Send the request and retrieve the response
-        HttpResponse<String> res = ServerCommunication.createBoardRequest(board);
+        // Send the request and retrieve the QuestionBoardCreationDto
+        QuestionBoardCreationDto questionBoardDto = ServerCommunication.createBoardRequest(board);
 
         // Alert the user if the creation of the question board has failed
-        if (res == null) {
+        if (questionBoardDto == null) {
             AlertDialog.display("Unsuccessful Request", 
                                 "The question board could not be created, please try again");
             return;
         }
 
-        // Convert the response object to a QuestionBoardCreationDto
-        Gson gson = new Gson();
-        QuestionBoardCreationDto qb = gson.fromJson(res.body(), QuestionBoardCreationDto.class);
-
         // Load the page that displays student code and moderator code
-        loadQuestionBoardCodes(qb);
+        loadQuestionBoardCodes(questionBoardDto);
 
     }
 
