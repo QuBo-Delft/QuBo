@@ -47,7 +47,7 @@ public class MainApp {
      *      will be created.
      */
     private static void showWorkingEndpoints(QuestionBoardCreationBindingModel model) {
-        //Create the Question Board and map the returned data into a QuestionBoardCreationDto
+        //Create the Question Board and map the returned data onto a QuestionBoardCreationDto
         QuestionBoardCreationDto questionBoard = ServerCommunication.createBoardRequest(model);
 
         //Print the JSON representation of questionBoard to the terminal
