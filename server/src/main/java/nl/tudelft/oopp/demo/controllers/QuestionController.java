@@ -70,8 +70,8 @@ public class QuestionController {
      * @param questionId    The question id.
      * @param moderatorCode The moderator code.
      * @throws NotFoundException if there is no board with moderatorCode or question with questionId.
-     * @throws ForbiddenException if moderatorCode doesn't hold with board question is in.
-     * @return the answer details dto.
+     * @throws ForbiddenException if the board associated with the moderatorCode does not hold the question.
+     * @return The answer details dto.
      */
     @RequestMapping(value = "{questionid}/answer", method = POST, consumes = "application/json")
     @ResponseBody

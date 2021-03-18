@@ -62,11 +62,12 @@ public class AnswerService {
         if (!boardContainingQuestion.equals(qb)) {
             return null;
         }
-        // Make answer and save to DB
+        // Create answer and save to DB
         Answer answer = modelMapper.map(answerModel, Answer.class);
         answer.setQuestion(questionToAnswer);
         answer.setTimestamp(Timestamp.from(Instant.now()));
         answerRepository.save(answer);
+
         return answer;
     }
 }

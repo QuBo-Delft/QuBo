@@ -26,7 +26,7 @@ public class AnswerCreationBindingModelTests {
     public void mapFromAnswerToAnswerDetailsDto() {
         // Arrange
         AnswerCreationBindingModel model = new AnswerCreationBindingModel();
-        model.setText("Test question");
+        model.setText("Test answer");
 
         // Act
         Answer answer = mapper.map(model, Answer.class);
