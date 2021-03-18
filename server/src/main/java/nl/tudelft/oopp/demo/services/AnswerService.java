@@ -1,13 +1,14 @@
 package nl.tudelft.oopp.demo.services;
 
 import nl.tudelft.oopp.demo.dtos.answer.AnswerCreationBindingModel;
-import nl.tudelft.oopp.demo.dtos.answer.AnswerDetailsDto;
 import nl.tudelft.oopp.demo.entities.Answer;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.repositories.AnswerRepository;
 import nl.tudelft.oopp.demo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.demo.repositories.QuestionRepository;
+import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
+import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -48,26 +49,38 @@ public class AnswerService {
      * Only works if question exists and moderatorCode
      * is correct for the board this question exists in.
      *
-     * @param qb                The provided QuestionBoard.
-     * @param moderatorCode     The provided moderator code.
-     * @param questionToAnswer  The provided Question.
+     * @param moderatorCode     The provided QuestionBoard.
+     * @param questionId        The provided moderator code.
      * @param answerModel       The answer model.
      * @return The answer created in the database.
+     * @throws NotFoundException if the question or board don't exists in the DB.
+     * @throws ForbiddenException if the moderator code's board
+     *      doesn't align with the question's assigned board.
      */
-    public Answer answerQuestion(
-            QuestionBoard qb, UUID moderatorCode,
-            Question questionToAnswer, AnswerCreationBindingModel answerModel) {
-        QuestionBoard boardContainingQuestion = questionToAnswer.getQuestionBoard();
-        // Checks whether moderatorCode is valid for the board this question was asked in.
-        if (!boardContainingQuestion.equals(qb)) {
-            return null;
+    public Answer addAnswerToQuestion(
+            UUID moderatorCode, UUID questionId,
+            AnswerCreationBindingModel answerModel) {
+        QuestionBoard board = questionBoardRepository.getByModeratorCode(moderatorCode);
+        if (board == null) {
+            // Requested board does not exist.
+            throw new NotFoundException("Question board does not exist");
         }
+        Question question = questionRepository.getQuestionById(questionId);
+        if (question == null) {
+            // Requested question does not exist.
+            throw new NotFoundException("Question does not exist");
+        }
+        QuestionBoard boardContainingQuestion = question.getQuestionBoard();
+        if (!boardContainingQuestion.equals(board)) {
+            // Moderator code is not correct for the board the question was asked in.
+            throw new ForbiddenException("Incorrect moderatorCode for Question");
+        }
+
         // Create answer and save to DB
         Answer answer = modelMapper.map(answerModel, Answer.class);
-        answer.setQuestion(questionToAnswer);
+        answer.setQuestion(question);
         answer.setTimestamp(Timestamp.from(Instant.now()));
         answerRepository.save(answer);
-
         return answer;
     }
 }

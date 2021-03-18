@@ -1,20 +1,16 @@
 package nl.tudelft.oopp.demo.controllers;
 
 import nl.tudelft.oopp.demo.dtos.answer.AnswerCreationBindingModel;
-import nl.tudelft.oopp.demo.dtos.answer.AnswerDetailsDto;
-import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
-import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
+import nl.tudelft.oopp.demo.dtos.answer.AnswerCreationDto;
 import nl.tudelft.oopp.demo.entities.Answer;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
-import nl.tudelft.oopp.demo.repositories.QuestionRepository;
 import nl.tudelft.oopp.demo.services.AnswerService;
 import nl.tudelft.oopp.demo.services.QuestionBoardService;
 import nl.tudelft.oopp.demo.services.QuestionService;
 import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,7 +34,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final QuestionBoardService questionBoardService;
     private final AnswerService answerService;
 
     private final ModelMapper modelMapper;
@@ -48,15 +43,13 @@ public class QuestionController {
      * Creates an instance of a Question controller.
      *
      * @param questionService      The question service.
-     * @param questionBoardService The question board service.
      * @param answerService        The answer service.
      * @param modelMapper          The model mapper.
      */
     public QuestionController(
-            QuestionService questionService, QuestionBoardService questionBoardService,
-            AnswerService answerService, ModelMapper modelMapper) {
+            QuestionService questionService, AnswerService answerService,
+            ModelMapper modelMapper) {
         this.questionService = questionService;
-        this.questionBoardService = questionBoardService;
         this.answerService = answerService;
         this.modelMapper = modelMapper;
     }
@@ -75,22 +68,12 @@ public class QuestionController {
      */
     @RequestMapping(value = "{questionid}/answer", method = POST, consumes = "application/json")
     @ResponseBody
-    public AnswerDetailsDto answerQuestion(
+    public AnswerCreationDto addAnswerToQuestion(
             @Valid @RequestBody AnswerCreationBindingModel answerModel,
             @PathVariable("questionid") UUID questionId,
             @RequestParam("code") UUID moderatorCode) {
-        QuestionBoard qb = questionBoardService.getBoardByModeratorCode(moderatorCode);
-        Question question = questionService.getQuestionById(questionId);
-        // Check whether questionBoard and Question exist
-        if (qb == null || question == null) {
-            throw new NotFoundException();
-        }
-        Answer answer = answerService.answerQuestion(qb, moderatorCode, question, answerModel);
-        // Check whether moderatorCode is valid in board of requested question.
-        if (answer == null) {
-            throw new ForbiddenException();
-        }
-        return modelMapper.map(answer, AnswerDetailsDto.class);
+        Answer answer = answerService.addAnswerToQuestion(moderatorCode, questionId, answerModel);
+        return modelMapper.map(answer, AnswerCreationDto.class);
     }
 
 
