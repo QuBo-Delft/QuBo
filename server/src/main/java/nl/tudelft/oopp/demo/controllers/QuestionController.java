@@ -76,18 +76,13 @@ public class QuestionController {
             @RequestParam("code") UUID moderatorCode) {
         // Retrieve question and board moderator rights hold for
         Question question = questionService.getQuestionById(questionId);
-        QuestionBoard board = questionBoardService.getBoardByModeratorCode(moderatorCode);
         if (question == null) {
             // Requested question does not exist
             throw new NotFoundException("Question does not exist");
         }
-        if (board == null) {
-            // Requested board does not exist
-            throw new NotFoundException("Question board does not exist");
-        }
+        QuestionBoard board = question.getQuestionBoard();
         // Check whether moderator code is correct for the board the question was asked in
-        QuestionBoard boardContainingQuestion = question.getQuestionBoard();
-        if (!boardContainingQuestion.equals(board)) {
+        if (!board.getModeratorCode().equals(moderatorCode)) {
             throw new ForbiddenException("Incorrect moderatorCode for Question");
         }
         // Answer the question
