@@ -5,11 +5,13 @@ import nl.tudelft.oopp.demo.entities.PaceVote;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.repositories.PaceVoteRepository;
 import nl.tudelft.oopp.demo.repositories.QuestionBoardRepository;
+import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -45,9 +47,18 @@ public class PaceVoteService {
      */
     public PaceVote registerVote(UUID boardId, PaceVoteCreationBindingModel paceVoteModel) {
         QuestionBoard board = questionBoardRepository.getById(boardId);
+        // Check if QuestionBoard with this ID exists
         if (board == null) {
             throw new NotFoundException("Question board does not exist");
         }
+
+        // Check if board is active
+        Instant now = Instant.now();
+        if (now.isBefore(board.getStartTime().toInstant())
+                || now.isAfter(board.getEndTime().toInstant())) {
+            throw new ForbiddenException("Question board is not active");
+        }
+
         PaceVote vote = modelMapper.map(paceVoteModel, PaceVote.class);
         vote.setQuestionBoard(board);
         paceVoteRepository.save(vote);
