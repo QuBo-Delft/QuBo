@@ -92,4 +92,15 @@ public class QuestionService {
         this.questionRepository.deleteQuestionById(id);
     }
 
+    /**
+     * Checks if a user has permission to modify a question by verifying whether a code is
+     * either the secret code of a question, or the moderator code of its board.
+     *
+     * @param question The question.
+     * @return Whether the user can modify the question if they provide the given code.
+     */
+    public boolean canModifyQuestion(Question question, UUID code) {
+        return code.equals(question.getSecretCode())
+            || code.equals(question.getQuestionBoard().getModeratorCode());
+    }
 }
