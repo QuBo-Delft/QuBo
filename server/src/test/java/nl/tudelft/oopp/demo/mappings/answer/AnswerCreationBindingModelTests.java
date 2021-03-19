@@ -17,7 +17,7 @@ public class AnswerCreationBindingModelTests {
     }
 
     @Test
-    public void mapFromAnswerToAnswerDetailsDto() {
+    public void mapFromAnswerCreationBindingModelToAnswer() {
         // Arrange
         AnswerCreationBindingModel model = new AnswerCreationBindingModel();
         model.setText("Test answer");
