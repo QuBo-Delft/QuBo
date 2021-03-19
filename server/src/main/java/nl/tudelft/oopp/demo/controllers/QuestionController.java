@@ -34,6 +34,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final QuestionBoardService questionBoardService;
     private final AnswerService answerService;
 
     private final ModelMapper modelMapper;
@@ -42,14 +43,15 @@ public class QuestionController {
     /**
      * Creates an instance of a Question controller.
      *
-     * @param questionService      The question service.
-     * @param answerService        The answer service.
-     * @param modelMapper          The model mapper.
+     * @param questionService   The question service.
+     * @param answerService     The answer service.
+     * @param modelMapper       The model mapper.
      */
     public QuestionController(
-            QuestionService questionService, AnswerService answerService,
-            ModelMapper modelMapper) {
+            QuestionService questionService, QuestionBoardService questionBoardService,
+            AnswerService answerService, ModelMapper modelMapper) {
         this.questionService = questionService;
+        this.questionBoardService = questionBoardService;
         this.answerService = answerService;
         this.modelMapper = modelMapper;
     }
@@ -72,8 +74,26 @@ public class QuestionController {
             @Valid @RequestBody AnswerCreationBindingModel answerModel,
             @PathVariable("questionid") UUID questionId,
             @RequestParam("code") UUID moderatorCode) {
-        Answer answer = answerService.addAnswerToQuestion(moderatorCode, questionId, answerModel);
-        return modelMapper.map(answer, AnswerCreationDto.class);
+        // Retrieve question and board moderator rights hold for
+        Question question = questionService.getQuestionById(questionId);
+        QuestionBoard board = questionBoardService.getBoardByModeratorCode(moderatorCode);
+        if (question == null) {
+            // Requested question does not exist
+            throw new NotFoundException("Question does not exist");
+        }
+        if (board == null) {
+            // Requested board does not exist
+            throw new NotFoundException("Question board does not exist");
+        }
+        // Check whether moderator code is correct for the board the question was asked in
+        QuestionBoard boardContainingQuestion = question.getQuestionBoard();
+        if (!boardContainingQuestion.equals(board)) {
+            throw new ForbiddenException("Incorrect moderatorCode for Question");
+        }
+        // Answer the question
+        Answer answer = answerService.addAnswerToQuestion(answerModel,question);
+        AnswerCreationDto dto = modelMapper.map(answer, AnswerCreationDto.class);
+        return dto;
     }
 
 

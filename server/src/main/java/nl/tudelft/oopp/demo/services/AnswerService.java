@@ -45,38 +45,14 @@ public class AnswerService {
     }
 
     /**
-     * Answer question of questionID with provided answer.
-     * Only works if question exists and moderatorCode
-     * is correct for the board this question exists in.
+     * Answer provided question with answer created from provided answerModel.
+     * Saves answer to the database.
      *
-     * @param moderatorCode     The provided QuestionBoard.
-     * @param questionId        The provided moderator code.
-     * @param answerModel       The answer model.
+     * @param answerModel   The answer model.
+     * @param question      The question to answer to.
      * @return The answer created in the database.
-     * @throws NotFoundException if the question or board don't exists in the DB.
-     * @throws ForbiddenException if the moderator code's board
-     *      doesn't align with the question's assigned board.
      */
-    public Answer addAnswerToQuestion(
-            UUID moderatorCode, UUID questionId,
-            AnswerCreationBindingModel answerModel) {
-        QuestionBoard board = questionBoardRepository.getByModeratorCode(moderatorCode);
-        if (board == null) {
-            // Requested board does not exist.
-            throw new NotFoundException("Question board does not exist");
-        }
-        Question question = questionRepository.getQuestionById(questionId);
-        if (question == null) {
-            // Requested question does not exist.
-            throw new NotFoundException("Question does not exist");
-        }
-        QuestionBoard boardContainingQuestion = question.getQuestionBoard();
-        if (!boardContainingQuestion.equals(board)) {
-            // Moderator code is not correct for the board the question was asked in.
-            throw new ForbiddenException("Incorrect moderatorCode for Question");
-        }
-
-        // Create answer and save to DB
+    public Answer addAnswerToQuestion(AnswerCreationBindingModel answerModel, Question question) {
         Answer answer = modelMapper.map(answerModel, Answer.class);
         answer.setQuestion(question);
         answer.setTimestamp(Timestamp.from(Instant.now()));
