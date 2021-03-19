@@ -26,7 +26,7 @@ public class QuestionBoardDetailsDtoTests {
         qb.setModeratorCode(UUID.fromString("a228b64c-feea-4aef-9ddc-9c3484562188"));
         qb.setTitle("Test QuestionBoard");
         qb.setStartTime(Timestamp.valueOf("2021-03-01 00:02:00"));
-        qb.setEndTime(Timestamp.valueOf("2021-03-01 10:00:00"));
+        qb.setClosed(true);
 
         // Act
         QuestionBoardDetailsDto dto = mapper.map(qb, QuestionBoardDetailsDto.class);
@@ -35,6 +35,6 @@ public class QuestionBoardDetailsDtoTests {
         assertEquals(qb.getId(), dto.getId());
         assertEquals(qb.getTitle(), dto.getTitle());
         assertEquals(qb.getStartTime(), dto.getStartTime());
-        assertEquals(qb.getEndTime(), dto.getEndTime());
+        assertEquals(qb.isClosed(), dto.isClosed());
     }
 }

@@ -48,7 +48,7 @@ public class QuestionService {
      * @return The newly-created question.
      * @throws NotFoundException  if the board doesn't exist.
      * @throws ForbiddenException if the startTime of the board is after the current time or
-     *                            the endTime is before the current time.
+     *                            the board is closed.
      */
     public Question createQuestion(QuestionCreationBindingModel model, UUID boardId) {
         QuestionBoard board = questionBoardRepository.getById(boardId);
@@ -59,7 +59,7 @@ public class QuestionService {
         Instant now = Instant.now();
 
         if (now.isBefore(board.getStartTime().toInstant())
-            || now.isAfter(board.getEndTime().toInstant())) {
+            || board.isClosed()) {
             throw new ForbiddenException("Question board is not active");
         }
 

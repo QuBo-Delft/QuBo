@@ -48,11 +48,8 @@ public class BoardCreationController {
         Date currentDate = new Date();
         Timestamp startTime = new Timestamp(currentDate.getTime());
 
-        // End time needs to be reconsidered
-        Timestamp endTime = startTime;
-
         QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel(
-            titleStr, startTime, endTime);
+            titleStr, startTime);
 
         // Send the request and retrieve the QuestionBoardCreationDto
         QuestionBoardCreationDto questionBoardDto = ServerCommunication.createBoardRequest(board);

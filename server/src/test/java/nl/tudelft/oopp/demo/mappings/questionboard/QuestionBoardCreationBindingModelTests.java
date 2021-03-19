@@ -23,7 +23,6 @@ public class QuestionBoardCreationBindingModelTests {
         QuestionBoardCreationBindingModel model = new QuestionBoardCreationBindingModel();
         model.setTitle("Test QuestionBoard");
         model.setStartTime(Timestamp.valueOf("2021-03-01 00:02:00"));
-        model.setEndTime(Timestamp.valueOf("2021-03-01 10:00:00"));
 
         // Act
         QuestionBoard qb = mapper.map(model, QuestionBoard.class);
@@ -31,6 +30,5 @@ public class QuestionBoardCreationBindingModelTests {
         // Assert
         assertEquals(model.getTitle(), qb.getTitle());
         assertEquals(model.getStartTime(), qb.getStartTime());
-        assertEquals(model.getEndTime(), qb.getEndTime());
     }
 }
