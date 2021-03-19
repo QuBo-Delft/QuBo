@@ -11,21 +11,16 @@ public class QuestionBoardCreationBindingModel {
     @NotNull
     private Timestamp startTime;
 
-    @NotNull
-    private Timestamp endTime;
-
 
     /**
      * Instantiates a new Question board binding model.
      *
      * @param title     The title.
      * @param startTime The start time.
-     * @param endTime   The end time.
      */
-    public QuestionBoardCreationBindingModel(String title, Timestamp startTime, Timestamp endTime) {
+    public QuestionBoardCreationBindingModel(String title, Timestamp startTime) {
         this.title = title;
         this.startTime = startTime;
-        this.endTime = endTime;
     }
 
     public QuestionBoardCreationBindingModel() {
@@ -45,14 +40,6 @@ public class QuestionBoardCreationBindingModel {
 
     public void setStartTime(Timestamp startTime) {
         this.startTime = startTime;
-    }
-
-    public Timestamp getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Timestamp endTime) {
-        this.endTime = endTime;
     }
 
 }
