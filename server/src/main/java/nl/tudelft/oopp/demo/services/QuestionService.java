@@ -82,4 +82,14 @@ public class QuestionService {
     public Question getQuestionById(UUID questionId) {
         return questionRepository.getQuestionById(questionId);
     }
+
+    /**
+     * Deletes a question from the database.
+     *
+     * @param id The id of the question to be deleted.
+     */
+    public void deleteQuestionById(UUID id) {
+        this.questionRepository.deleteQuestionById(id);
+    }
+
 }
