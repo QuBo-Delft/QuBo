@@ -46,8 +46,8 @@ public class QuestionController {
      * @param modelMapper     The model mapper.
      */
     public QuestionController(
-            QuestionService questionService, AnswerService answerService,
-            ModelMapper modelMapper) {
+        QuestionService questionService, AnswerService answerService,
+        ModelMapper modelMapper) {
         this.questionService = questionService;
         this.answerService = answerService;
         this.modelMapper = modelMapper;
@@ -67,9 +67,9 @@ public class QuestionController {
     @RequestMapping(value = "{questionid}/answer", method = POST, consumes = "application/json")
     @ResponseBody
     public AnswerCreationDto addAnswerToQuestion(
-            @Valid @RequestBody AnswerCreationBindingModel answerModel,
-            @PathVariable("questionid") UUID questionId,
-            @RequestParam("code") UUID moderatorCode) {
+        @Valid @RequestBody AnswerCreationBindingModel answerModel,
+        @PathVariable("questionid") UUID questionId,
+        @RequestParam("code") UUID moderatorCode) {
         // Retrieve question and board moderator rights hold for
         Question question = questionService.getQuestionById(questionId);
         if (question == null) {
