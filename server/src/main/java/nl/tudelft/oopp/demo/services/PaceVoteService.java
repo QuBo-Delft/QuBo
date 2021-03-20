@@ -55,7 +55,7 @@ public class PaceVoteService {
         // Check if board is active
         Instant now = Instant.now();
         if (now.isBefore(board.getStartTime().toInstant())
-                || now.isAfter(board.getEndTime().toInstant())) {
+                || board.isClosed()) {
             throw new ForbiddenException("Question board is not active");
         }
 
