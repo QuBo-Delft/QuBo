@@ -178,7 +178,7 @@ public class BoardCreationController {
         Calendar c2 = Calendar.getInstance();
         c1.setTime(startTime);
         c2.setTime(new Date());
-        return c1.compareTo(c2) > 0;
+        return c1.compareTo(c2) >= 0;
     }
 
 }
