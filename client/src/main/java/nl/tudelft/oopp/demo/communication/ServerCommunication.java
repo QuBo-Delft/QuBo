@@ -63,6 +63,23 @@ public class ServerCommunication {
     }
 
     /**
+     * Retrieves an HTTP response from the server by sending an HTTP delete request.
+     *
+     * @param fullUrl   The URL corresponding to the server endpoint.
+     * @return The HTTP response returned.
+     */
+    private static HttpResponse<String> delete(String fullUrl) {
+        //Set up the request Object
+        HttpRequest request = HttpRequest.newBuilder()
+            .DELETE()
+            .uri(URI.create(fullUrl))
+            .build();
+
+        //Send the request, and retrieve and return the response from the server
+        return sendRequest(request);
+    }
+
+    /**
      * The method sends a request to the server to create a question board.
      *
      * @param board     The QuestionBoardCreationBindingModel object that contains details of a question board.
