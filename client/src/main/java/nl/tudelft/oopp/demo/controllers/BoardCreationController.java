@@ -94,8 +94,8 @@ public class BoardCreationController {
             e.printStackTrace();
         }
 
-        // Check if the start time is after the current time or it is null
-        if (startTime == null || !startTimeIsBeforeCurrentTime(startTime)) {
+        // Check if the start time is after the current time or is null
+        if (startTime == null || !isStartTimeIsBeforeCurrentTime(startTime)) {
             AlertDialog.display("Invalid Start Time",
                     "The start time is before the current time, please try again");
             return;
@@ -106,9 +106,9 @@ public class BoardCreationController {
     }
 
     /**
-     * This method aims to send and process question board creation request.
+     * This method aims to send and process a question board creation request.
      *
-     * @param titleStr      The string of the title of the question board.
+     * @param titleStr      The title of the question board.
      * @param startTime     The start time of the question board.
      */
     private void sendAndProcessBoardCreationRequest(String titleStr, Date startTime) {
@@ -173,7 +173,7 @@ public class BoardCreationController {
      * @param startTime     The start time of the question board.
      * @return true if and only the start time is after the current time.
      */
-    private boolean startTimeIsBeforeCurrentTime(Date startTime) {
+    private boolean isStartTimeBeforeCurrentTime(Date startTime) {
         Calendar c1 = Calendar.getInstance();
         Calendar c2 = Calendar.getInstance();
         c1.setTime(startTime);
