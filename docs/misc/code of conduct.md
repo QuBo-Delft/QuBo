@@ -22,6 +22,13 @@
   
 11. Tasks must be distributed fairly in a way that everyone spends an almost equal (±10%) amount of time on the project. The distribution of tasks will be discussed in the weekly meetings.
   
+12. All group members are expected to stay up-to-date with the current state of the project on GitLab. They are therefore expected to at least check GitLab for Merge Requests once a day.
+  
+13. Harassment is harsh or unwelcome behaviour, either through actions or words, that create an intimidating, hostile, or offensive environment for an individual or a group of people. This kind of behaviour will not be tolerated and shall immediately be reported to the TA.
+  
+14. Comments or behaviour, like described under section 13, that discriminate against certain group members on stereotypes or prejudices, is prohibited and shall immediately be reported to the TA. This includes, but is not limited to, racial slurs, mimicking or mocking, exclusion and homophobic behaviour.
+  
 **If a team member breaks the Code of Conduct:**
 - 1st offence: Warning during agenda meeting.
 - 2nd offence: Offence will be reported to the TA.
+- 3rd+ offence: Offence will immediately be reported to the TA and further actions will be taken based on his opinion.
