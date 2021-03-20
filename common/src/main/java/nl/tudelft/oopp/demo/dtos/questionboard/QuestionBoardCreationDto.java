@@ -12,8 +12,6 @@ public class QuestionBoardCreationDto {
 
     private Timestamp startTime;
 
-    private Timestamp endTime;
-
     public QuestionBoardCreationDto() {
     }
 
@@ -47,13 +45,5 @@ public class QuestionBoardCreationDto {
 
     public void setStartTime(Timestamp startTime) {
         this.startTime = startTime;
-    }
-
-    public Timestamp getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Timestamp endTime) {
-        this.endTime = endTime;
     }
 }

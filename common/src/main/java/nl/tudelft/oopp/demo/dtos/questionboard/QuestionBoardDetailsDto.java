@@ -10,7 +10,7 @@ public class QuestionBoardDetailsDto {
 
     private Timestamp startTime;
 
-    private Timestamp endTime;
+    private boolean closed;
 
     public QuestionBoardDetailsDto() {
     }
@@ -39,11 +39,11 @@ public class QuestionBoardDetailsDto {
         this.startTime = startTime;
     }
 
-    public Timestamp getEndTime() {
-        return endTime;
+    public boolean isClosed() {
+        return closed;
     }
 
-    public void setEndTime(Timestamp endTime) {
-        this.endTime = endTime;
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 }

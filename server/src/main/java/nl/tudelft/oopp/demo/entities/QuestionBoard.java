@@ -37,8 +37,8 @@ public class QuestionBoard {
     @Column(name = "startTime", nullable = false)
     private Timestamp startTime;
 
-    @Column(name = "endTime", nullable = false)
-    private Timestamp endTime;
+    @Column(name = "closed", nullable = false)
+    private boolean closed;
 
     @OneToMany(mappedBy = "questionBoard")
     private Set<Question> questions;
@@ -52,13 +52,12 @@ public class QuestionBoard {
      * @param moderatorCode A secret code to be used by moderators.
      * @param title         The title of the question board.
      * @param startTime     The start time of the question board.
-     * @param endTime       The end time of the question board.
      */
-    public QuestionBoard(UUID moderatorCode, String title, Timestamp startTime, Timestamp endTime) {
+    public QuestionBoard(UUID moderatorCode, String title, Timestamp startTime) {
         this.moderatorCode = moderatorCode;
         this.title = title;
         this.startTime = startTime;
-        this.endTime = endTime;
+        this.closed = false;
     }
 
     /**
@@ -66,10 +65,9 @@ public class QuestionBoard {
      *
      * @param title     The title of the question board.
      * @param startTime The start time of the question board.
-     * @param endTime   The end time of the question board.
      */
-    public QuestionBoard(String title, Timestamp startTime, Timestamp endTime) {
-        this(UUID.randomUUID(), title, startTime, endTime);
+    public QuestionBoard(String title, Timestamp startTime) {
+        this(UUID.randomUUID(), title, startTime);
     }
 
     public QuestionBoard() {
@@ -107,12 +105,12 @@ public class QuestionBoard {
         this.startTime = startTime;
     }
 
-    public Timestamp getEndTime() {
-        return endTime;
+    public boolean isClosed() {
+        return closed;
     }
 
-    public void setEndTime(Timestamp endTime) {
-        this.endTime = endTime;
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     public Set<Question> getQuestions() {
