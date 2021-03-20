@@ -164,4 +164,18 @@ public class BoardCreationController {
         stage.show();
     }
 
+    /**
+     * This method aims to check whether the start time is after the current time.
+     *
+     * @param startTime     The start time of the question board.
+     * @return true if and only the start time is after the current time.
+     */
+    private boolean startTimeIsBeforeCurrentTime(Date startTime) {
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        c1.setTime(startTime);
+        c2.setTime(new Date());
+        return c1.compareTo(c2) > 0;
+    }
+
 }
