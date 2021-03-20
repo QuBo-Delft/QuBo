@@ -1,9 +1,9 @@
 package nl.tudelft.oopp.demo.repositories;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.transaction.Transactional;
 import nl.tudelft.oopp.demo.entities.Question;
 
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
@@ -15,4 +15,7 @@ public interface QuestionRepository extends JpaRepository<Question, QuestionBoar
     Set<Question> getQuestionByQuestionBoard(QuestionBoard boardId);
 
     Question getQuestionById(UUID questionId);
+
+    @Transactional
+    void deleteQuestionById(UUID id);
 }

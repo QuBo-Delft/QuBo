@@ -2,6 +2,7 @@ package nl.tudelft.oopp.demo.controllers;
 
 import nl.tudelft.oopp.demo.dtos.answer.AnswerCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.answer.AnswerCreationDto;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.entities.Answer;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
@@ -12,6 +13,7 @@ import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,6 +84,37 @@ public class QuestionController {
         // Answer the question
         Answer answer = answerService.addAnswerToQuestion(answerModel, question);
         AnswerCreationDto dto = modelMapper.map(answer, AnswerCreationDto.class);
+        return dto;
+    }
+
+
+    /**
+     * DELETE endpoint for deleting questions.
+     *
+     * @param questionId The question id.
+     * @param code       The secret code of the question or the moderator code of its board.
+     * @return The details of the deleted question.
+     * @throws NotFoundException  if there is no question with this questionId.
+     * @throws ForbiddenException if the provided code is neither the secret code of the given
+     *                            question nor the moderator code of its board.
+     */
+    @RequestMapping(value = "{questionid}", method = DELETE)
+    @ResponseBody
+    public QuestionDetailsDto deleteQuestion(
+        @PathVariable("questionid") UUID questionId,
+        @RequestParam("code") UUID code) {
+        Question question = questionService.getQuestionById(questionId);
+        if (question == null) {
+            // Requested question does not exist
+            throw new NotFoundException("Question does not exist");
+        }
+        if (!questionService.canModifyQuestion(question, code)) {
+            throw new ForbiddenException("The provided code is neither the secret code of this "
+                + "question nor the moderator code of its board.");
+        }
+
+        QuestionDetailsDto dto = modelMapper.map(question, QuestionDetailsDto.class);
+        questionService.deleteQuestionById(question.getId());
         return dto;
     }
 
