@@ -184,7 +184,7 @@ public class ServerCommunication {
 
         //Check if the response object is null or if the status code is not equal to 200,
         //in which case null is returned
-        if (response == null || response.statusCode()!= 200) {
+        if (response == null || response.statusCode() != 200) {
             return null;
         }
 
