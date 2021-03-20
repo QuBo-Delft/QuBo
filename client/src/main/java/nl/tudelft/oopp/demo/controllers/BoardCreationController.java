@@ -25,11 +25,15 @@ import java.sql.Timestamp;
 public class BoardCreationController {
 
     @FXML
-    private TextField title = null;
+    private TextField title;
     @FXML
-    private DatePicker startDate = null;
+    private DatePicker startDate;
     @FXML
-    private DatePicker endDate = null;
+    private Spinner<Integer> hoursSpinner;
+    @FXML
+    private Spinner<Integer> minutesSpinner;
+
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
 
     /**
      * Once the user clicks the "create now" button, this method will be invoked 
@@ -65,7 +69,6 @@ public class BoardCreationController {
 
         // Check if title is empty
         if (titleStr.length() == 0) {
-            AlertDialog.display("No title", "Please enter a meaningful title for the lecture");
             AlertDialog.display("No Title Input", "Please enter a meaningful title for the lecture");
             return;
         }
@@ -134,7 +137,7 @@ public class BoardCreationController {
      *              of QuestionBoardCodes.
      *
      */
-    public void loadQuestionBoardCodes(QuestionBoardCreationDto qd) {
+    private void loadQuestionBoardCodes(QuestionBoardCreationDto qd) {
         // Create an FXMLLoader of QuestionBoardCodes.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/QuestionBoardCodes.fxml"));
 
