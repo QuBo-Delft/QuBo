@@ -20,11 +20,13 @@ public class QuestionCreationBindingModelTests {
         // Arrange
         QuestionCreationBindingModel model = new QuestionCreationBindingModel();
         model.setText("Test question");
+        model.setAuthorName("Someone");
 
         // Act
         Question question = mapper.map(model, Question.class);
 
         // Assert
         assertEquals(model.getText(), question.getText());
+        assertEquals(model.getAuthorName(), question.getAuthorName());
     }
 }

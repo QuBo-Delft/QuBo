@@ -9,6 +9,10 @@ public class QuestionCreationBindingModel {
     @Length(min = 8)
     private String text;
 
+    @NotNull
+    @Length(min = 1)
+    private String authorName;
+
     public QuestionCreationBindingModel() {
     }
 
@@ -18,5 +22,13 @@ public class QuestionCreationBindingModel {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 }

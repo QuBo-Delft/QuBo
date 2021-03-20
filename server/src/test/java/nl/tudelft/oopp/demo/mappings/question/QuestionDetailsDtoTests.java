@@ -26,6 +26,7 @@ public class QuestionDetailsDtoTests {
         Question q = new Question();
         q.setId(UUID.fromString("8e80cddb-72ec-44c2-a702-a4d9b54a6961"));
         q.setText("Question Text");
+        q.setAuthorName("Someone");
         q.setTimestamp(Timestamp.valueOf("2021-03-01 00:02:00"));
 
         HashSet<Answer> answerSet = new HashSet<>();
@@ -40,6 +41,7 @@ public class QuestionDetailsDtoTests {
         // Assert
         assertEquals(q.getId(), dto.getId());
         assertEquals(q.getText(), dto.getText());
+        assertEquals(q.getAuthorName(), dto.getAuthorName());
         assertEquals(q.getTimestamp(), dto.getTimestamp());
         assertEquals(q.getAnswers().size(), dto.getAnswers().size());
     }
