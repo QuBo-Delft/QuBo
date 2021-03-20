@@ -35,6 +35,9 @@ public class Question {
     @Column(name = "text", nullable = false)
     private String text;
 
+    @Column(name = "author_name", nullable = false)
+    private String authorName;
+
     @Column(name = "secret_code", nullable = false)
     private UUID secretCode;
 
@@ -116,6 +119,14 @@ public class Question {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
     public Set<QuestionVote> getVotes() {
