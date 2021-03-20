@@ -3,12 +3,14 @@ package nl.tudelft.oopp.demo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.views.QuoteDisplay;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.UUID;
 
 public class MainApp {
 
@@ -71,5 +73,14 @@ public class MainApp {
         System.out.println("Retrieved the Question Board details\n  through the moderator code:"
             + gson.toJson(ServerCommunication
                 .retrieveBoardDetailsThroughModCode(questionBoard.getModeratorCode())));
+
+        //Print the JSON representation of the dto returned by the addQuestion method called using the ID of the
+        //ID of the questionBoard.
+        String questionText = "Has this question been added successfully?";
+        UUID boardId = questionBoard.getId();
+        QuestionCreationDto questionCodes = ServerCommunication
+            .addQuestion(boardId, questionText, "author");
+        System.out.println("Added a question to the Question Board\n"
+            + gson.toJson(questionCodes));
     }
 }
