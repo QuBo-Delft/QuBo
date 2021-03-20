@@ -116,10 +116,29 @@ public class BoardCreationController {
 
     }
 
+    /**
+     * This method aims to send and process question board creation request.
+     *
+     * @param titleStr      The string of the title of the question board.
+     * @param startTime     The start time of the question board.
+     */
+    private void sendAndProcessBoardCreationRequest(String titleStr, Date startTime) {
+        Timestamp startTimeStamp = new Timestamp(startTime.getTime());
+        QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel(
+                titleStr, startTimeStamp);
+
+        // Send the request and retrieve the QuestionBoardCreationDto
+        QuestionBoardCreationDto questionBoardDto = ServerCommunication.createBoardRequest(board);
+
+        // Alert the user if the creation of the question board has failed
+        if (questionBoardDto == null) {
+            AlertDialog.display("Unsuccessful Request",
+                    "The question board could not be created, please try again");
             return;
         }
 
-        // TODO: we need two datePickers in the fxml
+        // Load the page that displays student code and moderator code
+        loadQuestionBoardCodes(questionBoardDto);
     }
 
     /**
