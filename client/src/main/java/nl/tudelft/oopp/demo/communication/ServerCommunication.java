@@ -2,6 +2,8 @@ package nl.tudelft.oopp.demo.communication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
@@ -55,6 +57,23 @@ public class ServerCommunication {
                 .uri(URI.create(fullUrl))
                 .headers(headers)
                 .build();
+
+        //Send the request, and retrieve and return the response from the server
+        return sendRequest(request);
+    }
+
+    /**
+     * Retrieves an HTTP response from the server by sending an HTTP delete request.
+     *
+     * @param fullUrl   The URL corresponding to the server endpoint.
+     * @return The HTTP response returned.
+     */
+    private static HttpResponse<String> delete(String fullUrl) {
+        //Set up the request Object
+        HttpRequest request = HttpRequest.newBuilder()
+            .DELETE()
+            .uri(URI.create(fullUrl))
+            .build();
 
         //Send the request, and retrieve and return the response from the server
         return sendRequest(request);
@@ -139,6 +158,64 @@ public class ServerCommunication {
         QuestionBoardDetailsDto details = gson.fromJson(response.body(), QuestionBoardDetailsDto.class);
 
         return details;
+    }
+
+    /**
+     * Adds a question with specified text and author to the board.
+     * Communicates with the /api/board/{boardid}/question server endpoint.
+     *
+     * @param boardId   The ID of the Question Board whose details should be retrieved.
+     * @param text      The content of the question.
+     * @param author    The name of the author of the question.
+     * @return Returns a QuestionCreationDto that contains the ID and secret code associated
+     *      with the question.
+     */
+    public static QuestionCreationDto addQuestion(UUID boardId, String text, String author) {
+        //Instantiate a QuestionCreationBindingModel
+        QuestionCreationBindingModel questionModel = new QuestionCreationBindingModel();
+        questionModel.setText(text);
+        questionModel.setAuthorName(author);
+
+        //Create a request and response object, send the request, and retrieve the response
+        String fullUrl = subUrl + "api/board/" + boardId + "/question";
+        String requestBody = gson.toJson(questionModel);
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //Check if the response object is null or if the status code is not equal to 200,
+        //in which case null is returned
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        //Convert the JSON response to a QuestionBoardDetailsDto object
+        QuestionCreationDto questionCodes = gson.fromJson(response.body(), QuestionCreationDto.class);
+
+        return questionCodes;
+    }
+
+    /**
+     * Deletes the question from the board.
+     * Communicates with the /api/question/{questionid}?code={code} server endpoint.
+     *
+     * @param questionId    The ID of the question that should be deleted.
+     * @param code          The moderator code associated with the board or the question's secret code.
+     * @return Returns true if, and only if, the question was deleted from the board.
+     */
+    public static boolean deleteQuestion(UUID questionId, UUID code) {
+        //Set up the variables required by the delete helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "?code=" + code;
+
+        //Send the request to delete the question from the board and retrieve the response
+        HttpResponse<String> response = delete(fullUrl);
+
+        //Check if the question has been deleted properly
+        //Return false if this was not the case
+        if (response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

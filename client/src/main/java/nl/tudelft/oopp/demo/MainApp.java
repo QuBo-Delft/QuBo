@@ -3,12 +3,14 @@ package nl.tudelft.oopp.demo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.views.QuoteDisplay;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.UUID;
 
 public class MainApp {
 
@@ -49,27 +51,50 @@ public class MainApp {
         //Create the Question Board and map the returned data onto a QuestionBoardCreationDto
         QuestionBoardCreationDto questionBoard = ServerCommunication.createBoardRequest(model);
 
+        UUID boardId = questionBoard.getId();
+        UUID moderatorCode = questionBoard.getModeratorCode();
+
         //Print the JSON representation of questionBoard to the terminal
         System.out.println("Created a Question Board\n  QuestionBoardCreationDto:"
             + gson.toJson(questionBoard));
 
         //Print the JSON representation of the DTO returned by retrieveBoardDetails called using the ID of
         //questionBoard
-        if (questionBoard.getId() != null) {
-            System.out.println("Retrieved the Question Board details\n  through the Board ID:"
-                + gson.toJson(ServerCommunication.retrieveBoardDetails(questionBoard.getId())));
-        }
+        System.out.println("Retrieved the Question Board details\n  through the Board ID:"
+            + gson.toJson(ServerCommunication.retrieveBoardDetails(boardId)));
 
         //Print the JSON representation of the DTO returned by retrieveBoardDetail called using the moderator
         //code of questionBoard
         System.out.println("Retrieved the Question Board details\n  through the Moderator Code using "
             + "retrieveBoardDetails:"
-            + gson.toJson(ServerCommunication.retrieveBoardDetails(questionBoard.getModeratorCode())));
+            + gson.toJson(ServerCommunication.retrieveBoardDetails(moderatorCode)));
 
         //Print the JSON representation of the dto returned by retrieveBoardDetailsThroughModCode called using
         //the moderator code of questionBoard
         System.out.println("Retrieved the Question Board details\n  through the moderator code:"
             + gson.toJson(ServerCommunication
-                .retrieveBoardDetailsThroughModCode(questionBoard.getModeratorCode())));
+                .retrieveBoardDetailsThroughModCode(moderatorCode)));
+
+        //Print the JSON representation of the dto returned by the addQuestion method called using the ID of the
+        //ID of the questionBoard.
+        String questionText = "Has this question been added successfully?";
+        QuestionCreationDto questionCodes = ServerCommunication
+            .addQuestion(boardId, questionText, "author");
+        System.out.println("Added a question to the Question Board\n    "
+            + gson.toJson(questionCodes));
+
+        //Delete the question from the question board and print true if the question was deleted successfully
+        UUID questionId = questionCodes.getId();
+        UUID secretCode = questionCodes.getSecretCode();
+        System.out.println("The question has been deleted: " + ServerCommunication
+            .deleteQuestion(questionId, secretCode));
+
+        //Create a second question and delete this question through the moderator code of the QuestionBoard
+        QuestionCreationDto questionTwo = ServerCommunication
+            .addQuestion(boardId, questionText, "author");
+        UUID questionTwoId = questionTwo.getId();
+
+        System.out.println("The question has been deleted: " + ServerCommunication
+            .deleteQuestion(questionTwoId, moderatorCode));
     }
 }
