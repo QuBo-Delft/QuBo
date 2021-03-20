@@ -2,6 +2,8 @@ package nl.tudelft.oopp.demo.communication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
@@ -139,6 +141,40 @@ public class ServerCommunication {
         QuestionBoardDetailsDto details = gson.fromJson(response.body(), QuestionBoardDetailsDto.class);
 
         return details;
+    }
+
+    /**
+     * Adds a question with specified text and author to the board.
+     * Communicates with the /api/board/{boardid}/question server endpoint.
+     *
+     * @param boardId   The ID of the Question Board whose details should be retrieved.
+     * @param text      The content of the question.
+     * @param author    The name of the author of the question.
+     * @return Returns a QuestionCreationDto that contains the ID and secret code associated
+     *      with the question.
+     */
+    public static QuestionCreationDto addQuestion(UUID boardId, String text, String author) {
+        //Instantiate a QuestionCreationBindingModel
+        QuestionCreationBindingModel questionModel = new QuestionCreationBindingModel();
+        questionModel.setText(text);
+        questionModel.setAuthorName(author);
+
+        //Create a request and response object, send the request, and retrieve the response
+        String fullUrl = subUrl + "api/board/" + boardId + "/question";
+        String requestBody = gson.toJson(questionModel);
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //Check if the response object is null or if the status code is not equal to 200,
+        //in which case null is returned
+        if (response == null || response.statusCode()!= 200) {
+            return null;
+        }
+
+        //Convert the JSON response to a QuestionBoardDetailsDto object
+        QuestionCreationDto questionCodes = gson.fromJson(response.body(), QuestionCreationDto.class);
+
+        return questionCodes;
     }
 
     /**
