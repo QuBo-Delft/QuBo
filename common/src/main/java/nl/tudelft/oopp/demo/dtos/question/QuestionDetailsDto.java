@@ -10,6 +10,8 @@ public class QuestionDetailsDto {
 
     private String text;
 
+    private String authorName;
+
     private Timestamp timestamp;
 
     private Set<AnswerDetailsDto> answers;
@@ -47,5 +49,13 @@ public class QuestionDetailsDto {
 
     public void setAnswers(Set<AnswerDetailsDto> answers) {
         this.answers = answers;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 }
