@@ -14,7 +14,7 @@ public class QuestionVoteService {
     private final QuestionRepository questionRepository;
 
     /**
-     * Creates an instance of the PaceVoteService.
+     * Creates an instance of the QuestionVoteService.
      *
      * @param questionVoteRepository The QuestionVoteRepository.
      * @param questionRepository     The QuestionRepository.
