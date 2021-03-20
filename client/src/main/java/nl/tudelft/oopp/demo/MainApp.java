@@ -33,7 +33,6 @@ public class MainApp {
         QuestionBoardCreationBindingModel model = new QuestionBoardCreationBindingModel();
         model.setTitle("This is a demo Question Board");
         model.setStartTime(Timestamp.from(Instant.now()));
-        model.setEndTime(Timestamp.from(Instant.now()));
 
         //Display the behaviour of working endpoints
         showWorkingEndpoints(model);
