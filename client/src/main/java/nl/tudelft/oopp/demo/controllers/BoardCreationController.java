@@ -80,6 +80,42 @@ public class BoardCreationController {
         // Check if title is empty
         if (titleStr.length() == 0) {
             AlertDialog.display("No title", "Please enter a meaningful title for the lecture");
+            AlertDialog.display("No Title Input", "Please enter a meaningful title for the lecture");
+            return;
+        }
+
+        // Get the start date input in string format
+        String date = startDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        // Get the minutes input
+        int minutes = minutesSpinner.getValue();
+        // Get the minutes input in string format
+        String minutesStr = minutes < 10 ? "0" + minutes : String.valueOf(minutes);
+
+        // Get the hours input
+        int hours = hoursSpinner.getValue();
+        // Get the hours input in string format
+        String hoursStr = hours < 10 ? "0" + minutes : String.valueOf(minutes);
+
+        // Get start time from its string format
+        Date startTime = null;
+        try {
+            startTime = dateFormat.parse(date + " " + hoursStr + "-" + minutesStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // Check if the start time is after the current time or it is null
+        if (startTime == null || !startTimeIsBeforeCurrentTime(startTime)) {
+            AlertDialog.display("Invalid Start Time",
+                    "The start time is before the current time, please try again");
+            return;
+        }
+
+        sendAndProcessBoardCreationRequest(titleStr, startTime);
+
+    }
+
             return;
         }
 
