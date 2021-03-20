@@ -11,6 +11,11 @@ import javafx.stage.Stage;
 
 public class SceneDisplay extends Application {
 
+    /**
+     *
+     * @param primaryStage  The stage.
+     * @throws IOException if the resource is not found.
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -24,6 +29,11 @@ public class SceneDisplay extends Application {
         primaryStage.show();
     }
 
+    /**
+     * The entry point of application.
+     *
+     * @param args  The input arguments.
+     */
     public static void main(String[] args) {
         launch(args);
     }
