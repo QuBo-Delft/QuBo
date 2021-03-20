@@ -84,7 +84,7 @@ public class BoardCreationController {
         // Get the hours input
         int hours = hoursSpinner.getValue();
         // Get the hours input in string format
-        String hoursStr = hours < 10 ? "0" + minutes : String.valueOf(minutes);
+        String hoursStr = hours < 10 ? "0" + hours : String.valueOf(hours);
 
         // Get start time from its string format
         Date startTime = null;
