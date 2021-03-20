@@ -95,7 +95,7 @@ public class BoardCreationController {
         }
 
         // Check if the start time is after the current time or is null
-        if (startTime == null || !isStartTimeIsBeforeCurrentTime(startTime)) {
+        if (startTime == null || !isStartTimeBeforeCurrentTime(startTime)) {
             AlertDialog.display("Invalid Start Time",
                     "The start time is before the current time, please try again");
             return;
