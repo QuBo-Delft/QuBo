@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo.testScenes;
+package nl.tudelft.oopp.demo.test;
 
 import java.io.IOException;
 import java.net.URL;
