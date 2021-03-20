@@ -72,4 +72,14 @@ public class QuestionService {
 
         return question;
     }
+
+    /**
+     * Gets question by id.
+     *
+     * @param questionId The question id.
+     * @return The question by id.
+     */
+    public Question getQuestionById(UUID questionId) {
+        return questionRepository.getQuestionById(questionId);
+    }
 }

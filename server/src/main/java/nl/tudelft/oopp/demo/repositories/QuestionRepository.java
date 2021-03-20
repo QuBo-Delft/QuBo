@@ -13,4 +13,6 @@ import org.springframework.stereotype.Repository;
 @Repository("QuestionRepository")
 public interface QuestionRepository extends JpaRepository<Question, QuestionBoard> {
     Set<Question> getQuestionByQuestionBoard(QuestionBoard boardId);
+
+    Question getQuestionById(UUID questionId);
 }
