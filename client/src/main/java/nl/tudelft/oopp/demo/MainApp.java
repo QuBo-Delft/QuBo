@@ -80,7 +80,22 @@ public class MainApp {
         UUID boardId = questionBoard.getId();
         QuestionCreationDto questionCodes = ServerCommunication
             .addQuestion(boardId, questionText, "author");
-        System.out.println("Added a question to the Question Board\n"
+        System.out.println("Added a question to the Question Board\n    "
             + gson.toJson(questionCodes));
+
+        //Delete the question from the question board and print true if the question was deleted successfully
+        UUID questionId = questionCodes.getId();
+        UUID secretCode = questionCodes.getSecretCode();
+        System.out.println("The question has been deleted: " + ServerCommunication
+            .deleteQuestion(questionId, secretCode));
+
+        //Create a second question and delete this question through the moderator code of the QuestionBoard
+        ;QuestionCreationDto questionTwo = ServerCommunication
+            .addQuestion(boardId, questionText, "author");
+        UUID questionTwoId = questionTwo.getId();
+        UUID moderatorCode = questionBoard.getModeratorCode();
+
+        System.out.println("The question has been deleted: " + ServerCommunication
+            .deleteQuestion(questionTwoId, moderatorCode));
     }
 }
