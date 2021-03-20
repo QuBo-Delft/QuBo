@@ -195,6 +195,30 @@ public class ServerCommunication {
     }
 
     /**
+     * Deletes the question from the board.
+     * Communicates with the /api/question/{questionid}?code={code} server endpoint.
+     *
+     * @param questionId    The ID of the question that should be deleted.
+     * @param code          The moderator code associated with the board or the question's secret code.
+     * @return Returns true if, and only if, the question was deleted from the board.
+     */
+    public static boolean deleteQuestion(UUID questionId, UUID code) {
+        //Set up the variables required by the delete helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "?code=" + code;
+
+        //Send the request to delete the question from the board and retrieve the response
+        HttpResponse<String> response = delete(fullUrl);
+
+        //Check if the question has been deleted properly
+        //Return false if this was not the case
+        if (response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Retrieves a quote from the server.
      * @return the body of a get request to the server.
      */
