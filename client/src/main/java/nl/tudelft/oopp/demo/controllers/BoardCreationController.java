@@ -43,29 +43,12 @@ public class BoardCreationController {
         
         // Check if title is empty
         if (titleStr.length() == 0) {
-            AlertDialog.display("No title", 
+            AlertDialog.display("No Title Input",
                                 "Please enter a meaningful title for the lecture");
             return;
         }
 
-        Date currentDate = new Date();
-        Timestamp startTime = new Timestamp(currentDate.getTime());
-
-        QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel(
-            titleStr, startTime);
-
-        // Send the request and retrieve the QuestionBoardCreationDto
-        QuestionBoardCreationDto questionBoardDto = ServerCommunication.createBoardRequest(board);
-
-        // Alert the user if the creation of the question board has failed
-        if (questionBoardDto == null) {
-            AlertDialog.display("Unsuccessful Request", 
-                                "The question board could not be created, please try again");
-            return;
-        }
-
-        // Load the page that displays student code and moderator code
-        loadQuestionBoardCodes(questionBoardDto);
+        sendAndProcessBoardCreationRequest(titleStr, new Date());
 
     }
 
