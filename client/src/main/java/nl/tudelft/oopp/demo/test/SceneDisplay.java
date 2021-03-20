@@ -12,6 +12,16 @@ import javafx.stage.Stage;
 public class SceneDisplay extends Application {
 
     /**
+     * The entry point of application.
+     *
+     * @param args  The input arguments.
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    /**
+     * The start method that loads a scene.
      *
      * @param primaryStage  The stage.
      * @throws IOException if the resource is not found.
@@ -20,7 +30,7 @@ public class SceneDisplay extends Application {
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader();
 
-        // By changing the resource path, it is able to display an specific fxml file
+        // By giving the resource path, it is able to display an specific fxml file
         URL xmlUrl = getClass().getResource("/QuestionBoardCodes.fxml");
         loader.setLocation(xmlUrl);
         Parent root = loader.load();
@@ -29,12 +39,4 @@ public class SceneDisplay extends Application {
         primaryStage.show();
     }
 
-    /**
-     * The entry point of application.
-     *
-     * @param args  The input arguments.
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
 }
