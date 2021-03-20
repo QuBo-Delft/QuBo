@@ -34,24 +34,21 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final QuestionBoardService questionBoardService;
     private final AnswerService answerService;
 
     private final ModelMapper modelMapper;
 
-
     /**
      * Creates an instance of a Question controller.
      *
-     * @param questionService   The question service.
-     * @param answerService     The answer service.
-     * @param modelMapper       The model mapper.
+     * @param questionService The question service.
+     * @param answerService   The answer service.
+     * @param modelMapper     The model mapper.
      */
     public QuestionController(
-            QuestionService questionService, QuestionBoardService questionBoardService,
-            AnswerService answerService, ModelMapper modelMapper) {
+            QuestionService questionService, AnswerService answerService,
+            ModelMapper modelMapper) {
         this.questionService = questionService;
-        this.questionBoardService = questionBoardService;
         this.answerService = answerService;
         this.modelMapper = modelMapper;
     }
@@ -60,13 +57,12 @@ public class QuestionController {
     /**
      * POST endpoint for answering questions.
      *
-     *
      * @param answerModel   The answer model.
      * @param questionId    The question id.
      * @param moderatorCode The moderator code.
-     * @throws NotFoundException if there is no board with moderatorCode or question with questionId.
-     * @throws ForbiddenException if the board associated with the moderatorCode does not hold the question.
      * @return The answer details dto.
+     * @throws NotFoundException  if there is no board with moderatorCode or question with questionId.
+     * @throws ForbiddenException if the board associated with the moderatorCode does not hold the question.
      */
     @RequestMapping(value = "{questionid}/answer", method = POST, consumes = "application/json")
     @ResponseBody
@@ -86,7 +82,7 @@ public class QuestionController {
             throw new ForbiddenException("Incorrect moderatorCode for Question");
         }
         // Answer the question
-        Answer answer = answerService.addAnswerToQuestion(answerModel,question);
+        Answer answer = answerService.addAnswerToQuestion(answerModel, question);
         AnswerCreationDto dto = modelMapper.map(answer, AnswerCreationDto.class);
         return dto;
     }
