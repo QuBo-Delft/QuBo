@@ -7,6 +7,7 @@ import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -216,6 +217,33 @@ public class ServerCommunication {
         }
 
         return true;
+    }
+
+    /**
+     * Adds a vote to a question
+     * Communicates with the /api/question/{questionid}/vote server endpoint.
+     *
+     * @param questionId    The ID of the question to which a vote should be added.
+     * @return Returns a QuestionVoteCreationDto associated with the created question vote.
+     */
+    public static QuestionVoteCreationDto addQuestionVote(UUID questionId) {
+        //Set up the parameters that need to be passed to the post helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "/vote";
+        String requestBody = gson.toJson(questionId);
+
+        //Send the request to add a vote, and retrieve the response
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        //Convert the response to a QuestionVoteCreationDto and return this
+        QuestionVoteCreationDto questionVote = gson.fromJson(response.body(), QuestionVoteCreationDto.class);
+
+        return questionVote;
     }
 
     /**
