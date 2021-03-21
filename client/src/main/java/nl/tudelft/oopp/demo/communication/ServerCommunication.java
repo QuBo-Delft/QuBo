@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
@@ -158,6 +159,26 @@ public class ServerCommunication {
         QuestionBoardDetailsDto details = gson.fromJson(response.body(), QuestionBoardDetailsDto.class);
 
         return details;
+    }
+
+    /**
+     * Retrieves the question list of the specified board.
+     * Communicates with the /api/board/{boardid}/questions server endpoint.
+     *
+     * @param boardId   The ID of the Question Board whose question list should be retrieved.
+     * @return Returns an array of QuestionDetailsDtos.
+     */
+    public static QuestionDetailsDto[] retrieveQuestions(UUID boardId) {
+        //Send the request to retrieve the questions of the question board, and retrieve the response
+        HttpRequest request = HttpRequest.newBuilder().GET()
+            .uri(URI.create(subUrl + "api/board/" + boardId + "/questions"))
+            .build();
+        HttpResponse<String> response = sendRequest(request);
+
+        //Convert the response to an array of QuestionDetailsDtos and return this
+        QuestionDetailsDto[] questionArray = gson.fromJson(response.body(), QuestionDetailsDto[].class);
+
+        return questionArray;
     }
 
     /**
