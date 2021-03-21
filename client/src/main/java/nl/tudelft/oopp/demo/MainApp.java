@@ -89,6 +89,11 @@ public class MainApp {
         QuestionVoteCreationDto questionVote = ServerCommunication.addQuestionVote(questionId);
         System.out.println("A vote has been added to the question\n    " + gson.toJson(questionVote));
 
+        //Delete the vote that was just created
+        UUID voteId = questionVote.getId();
+        System.out.println("The vote has been deleted: " + ServerCommunication
+            .deleteQuestionVote(questionId, voteId));
+
         //Delete the question from the question board and print true if the question was deleted successfully
         UUID secretCode = questionCodes.getSecretCode();
         System.out.println("The question has been deleted: " + ServerCommunication
