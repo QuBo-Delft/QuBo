@@ -2,6 +2,9 @@ package nl.tudelft.oopp.demo.communication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
@@ -216,6 +219,34 @@ public class ServerCommunication {
         }
 
         return true;
+    }
+
+    /**
+     * Adds a pace vote to the question board.
+     * Communicated with the /api/board/{boardid}/pace server endpoint.
+     */
+    public static PaceVoteCreationDto addPaceVote(UUID boardId, PaceType paceType) {
+        //Create a PaceVoteCreationBindingModel with the specified pace type
+        PaceVoteCreationBindingModel paceModel = new PaceVoteCreationBindingModel();
+        paceModel.setPaceType(paceType);
+
+        //Set up the variables needed to call the post method
+        String requestBody = gson.toJson(paceModel);
+        String fullUrl = subUrl + "/api/board/" + boardId + "/pace";
+
+        //Request the pace vote creation, and retrieve the response
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        //Convert the response body to a PaceVoteCreationDto and return this
+        PaceVoteCreationDto paceVote = gson.fromJson(response.body(), PaceVoteCreationDto.class);
+
+        return paceVote;
     }
 
     /**
