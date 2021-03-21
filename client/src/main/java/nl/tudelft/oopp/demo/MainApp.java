@@ -85,31 +85,31 @@ public class MainApp {
         System.out.println("Added a question to the Question Board\n    "
             + gson.toJson(questionCodes));
 
-        UUID questionId = questionCodes.getId();
-        UUID secretCode = questionCodes.getSecretCode();
-
         //Add another question
         QuestionCreationDto questionTwo = ServerCommunication
             .addQuestion(boardId, questionText, "author");
         System.out.println("Added a question to the Question Board\n    "
             + gson.toJson(questionTwo));
 
-        UUID questionTwoId = questionTwo.getId();
-
         //Retrieve the questions associated with the question board and log them to the console
         QuestionDetailsDto[] questionList = ServerCommunication.retrieveQuestions(boardId);
 
         System.out.print("The questions in this question board are:\n");
-        for(QuestionDetailsDto question : questionList) {
+        for (QuestionDetailsDto question : questionList) {
             System.out.println("    " + gson.toJson(question) + "\n");
         }
 
         //Delete questionCodes from the question board and print true if the question was deleted successfully
+        UUID questionId = questionCodes.getId();
+        UUID secretCode = questionCodes.getSecretCode();
+
         System.out.println("The question has been deleted: " + ServerCommunication
             .deleteQuestion(questionId, secretCode));
 
-        //Delete questionTwo through the moderator code of the QuestionBoard and print true if the question was deleted
-        //successfully
+        //Delete questionTwo through the moderator code of the QuestionBoard and print true if the question was
+        //deleted successfully
+        UUID questionTwoId = questionTwo.getId();
+
         System.out.println("The question has been deleted: " + ServerCommunication
             .deleteQuestion(questionTwoId, moderatorCode));
     }
