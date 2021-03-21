@@ -103,5 +103,10 @@ public class MainApp {
         PaceType paceType = PaceType.JUST_RIGHT;
         PaceVoteCreationDto paceVote = ServerCommunication.addPaceVote(boardId, paceType);
         System.out.println("The pace vote has been added\n " + gson.toJson(paceVote));
+
+        //Delete a pace vote from the question board
+        UUID paceVoteId = paceVote.getId();
+        System.out.println("The pace vote has been deleted: " + ServerCommunication
+            .deletePaceVote(boardId, paceVoteId));
     }
 }

@@ -257,13 +257,13 @@ public class ServerCommunication {
      * Deletes a pace vote with specified ID from the question board.
      * Communicated with the /api/board/{boardid}/pace/{pacevoteid} server endpoint.
      *
-     * @param boardId   The question board from which the pace vote should be deleted.
-     * @param paceVote  The pace vote that should be deleted.
+     * @param boardId       The question board from which the pace vote should be deleted.
+     * @param paceVoteId    The ID of the pace vote that should be deleted.
      * @return True if, and only if, the deletion was successful.
      */
-    public boolean deletePaceVote(UUID boardId, PaceVoteCreationDto paceVote) {
+    public static boolean deletePaceVote(UUID boardId, UUID paceVoteId) {
         //Set up the URL that will be sent to the delete helper method
-        String fullUrl = subUrl + "/api/board/" + boardId + "/pace/" + paceVote.getId();
+        String fullUrl = subUrl + "/api/board/" + boardId + "/pace/" + paceVoteId;
 
         //Send the request to the server and receive the response
         HttpResponse<String> response = delete(fullUrl);
