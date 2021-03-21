@@ -3,11 +3,14 @@ package nl.tudelft.oopp.demo.controllers;
 import nl.tudelft.oopp.demo.dtos.answer.AnswerCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.answer.AnswerCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
 import nl.tudelft.oopp.demo.entities.Answer;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
+import nl.tudelft.oopp.demo.entities.QuestionVote;
 import nl.tudelft.oopp.demo.services.AnswerService;
 import nl.tudelft.oopp.demo.services.QuestionService;
+import nl.tudelft.oopp.demo.services.QuestionVoteService;
 import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
@@ -34,6 +37,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final QuestionVoteService questionVoteService;
     private final AnswerService answerService;
 
     private final ModelMapper modelMapper;
@@ -41,14 +45,18 @@ public class QuestionController {
     /**
      * Creates an instance of a Question controller.
      *
-     * @param questionService The question service.
-     * @param answerService   The answer service.
-     * @param modelMapper     The model mapper.
+     * @param questionService     The question service.
+     * @param questionVoteService The Question vote service.
+     * @param answerService       The answer service.
+     * @param modelMapper         The model mapper.
      */
     public QuestionController(
-        QuestionService questionService, AnswerService answerService,
+        QuestionService questionService,
+        QuestionVoteService questionVoteService,
+        AnswerService answerService,
         ModelMapper modelMapper) {
         this.questionService = questionService;
+        this.questionVoteService = questionVoteService;
         this.answerService = answerService;
         this.modelMapper = modelMapper;
     }
@@ -118,5 +126,18 @@ public class QuestionController {
         return dto;
     }
 
-
+    /**
+     * POST endpoint for registering QuestionVotes.
+     *
+     * @param questionId The question ID.
+     * @return The QuestionVote DTO.
+     */
+    @RequestMapping(value = "/{questionid}/vote", method = POST)
+    @ResponseBody
+    public QuestionVoteCreationDto registerQuestionVote(
+        @PathVariable("questionid") UUID questionId) {
+        QuestionVote vote = questionVoteService.registerVote(questionId);
+        QuestionVoteCreationDto dto = modelMapper.map(vote, QuestionVoteCreationDto.class);
+        return dto;
+    }
 }
