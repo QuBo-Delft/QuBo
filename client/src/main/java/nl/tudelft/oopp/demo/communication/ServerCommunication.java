@@ -80,6 +80,27 @@ public class ServerCommunication {
     }
 
     /**
+     * Retrieves an HTTP response from the server by sending an HTTP put request.
+     *
+     * @param fullUrl       The URL corresponding to the server endpoint.
+     * @param requestBody   The body of the request. This should contain the information that should be sent to
+     *      the server.
+     * @param headers       The headers that the put request should use.
+     * @return The HTTP response returned.
+     */
+    private static HttpResponse<String> put(String fullUrl, String requestBody, String... headers) {
+        //Set up the request Object
+        HttpRequest request = HttpRequest.newBuilder()
+            .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+            .uri(URI.create(fullUrl))
+            .headers(headers)
+            .build();
+
+        //Send the request, and retrieve and return the response from the server
+        return sendRequest(request);
+    }
+
+    /**
      * The method sends a request to the server to create a question board.
      *
      * @param board     The QuestionBoardCreationBindingModel object that contains details of a question board.
