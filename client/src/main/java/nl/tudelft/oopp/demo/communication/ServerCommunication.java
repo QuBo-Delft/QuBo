@@ -224,6 +224,9 @@ public class ServerCommunication {
     /**
      * Adds a pace vote to the question board.
      * Communicated with the /api/board/{boardid}/pace server endpoint.
+     *
+     * @param boardId   The ID of the question board to which a pace vote should be added.
+     * @param paceType  The type of pace vote that should be added.
      */
     public static PaceVoteCreationDto addPaceVote(UUID boardId, PaceType paceType) {
         //Create a PaceVoteCreationBindingModel with the specified pace type
