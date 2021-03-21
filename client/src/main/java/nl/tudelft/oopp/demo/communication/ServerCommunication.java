@@ -169,7 +169,7 @@ public class ServerCommunication {
      * @return Returns an array of QuestionDetailsDtos.
      */
     public static QuestionDetailsDto[] retrieveQuestions(UUID boardId) {
-        //Create a request and response object, send the request, and retrieve the response
+        //Send the request to retrieve the questions of the question board, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
             .uri(URI.create(subUrl + "api/board/" + boardId + "/questions"))
             .build();
