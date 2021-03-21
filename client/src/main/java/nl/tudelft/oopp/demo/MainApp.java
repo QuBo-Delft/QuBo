@@ -3,6 +3,8 @@ package nl.tudelft.oopp.demo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
@@ -96,5 +98,10 @@ public class MainApp {
 
         System.out.println("The question has been deleted: " + ServerCommunication
             .deleteQuestion(questionTwoId, moderatorCode));
+
+        //Add a pace vote to the question board
+        PaceType paceType = PaceType.JUST_RIGHT;
+        PaceVoteCreationDto paceVote = ServerCommunication.addPaceVote(boardId, paceType);
+        System.out.println("The pace vote has been added\n " + gson.toJson(paceVote));
     }
 }
