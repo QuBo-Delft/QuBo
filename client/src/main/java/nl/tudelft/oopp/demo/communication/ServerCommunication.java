@@ -220,7 +220,7 @@ public class ServerCommunication {
     }
 
     /**
-     * Adds a vote to a question
+     * Adds a vote to a question.
      * Communicates with the /api/question/{questionid}/vote server endpoint.
      *
      * @param questionId    The ID of the question to which a vote should be added.
@@ -244,6 +244,29 @@ public class ServerCommunication {
         QuestionVoteCreationDto questionVote = gson.fromJson(response.body(), QuestionVoteCreationDto.class);
 
         return questionVote;
+    }
+
+    /**
+     * Deletes a question vote from the specified question.
+     * Communicates with the /api/question/{questionid}/vote/{voteid} server endpoint.
+     *
+     * @param questionId    The ID of the question from which a vote should be deleted.
+     * @param voteId        The ID of the vote that should be deleted.
+     * @return Returns true if, and only if, the vote has been deleted successfully.
+     */
+    public static boolean deleteQuestionVote(UUID questionId, UUID voteId) {
+        //Set up the parameter required to call the delete helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "/vote/" + voteId;
+
+        //Send the request to delete the vote, and retrieve the response
+        HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
