@@ -83,9 +83,18 @@ public class MainApp {
         System.out.println("Added a question to the Question Board\n    "
             + gson.toJson(questionCodes));
 
-        //Delete the question from the question board and print true if the question was deleted successfully
+        //Edit the question that was just created through the question secret code, and print true if it was
+        //edited successfully.
         UUID questionId = questionCodes.getId();
         UUID secretCode = questionCodes.getSecretCode();
+        System.out.println("The question has been edited: " + ServerCommunication
+            .editQuestion(questionId, secretCode, "What is life?"));
+
+        //Edit the question through the moderator code, and print true if it was edited successfully.
+        System.out.println("The question has been edited\n    through the moderator code: "
+            + ServerCommunication.editQuestion(questionId, moderatorCode, "Is the universe infinitely large?"));
+
+        //Delete the question from the question board and print true if the question was deleted successfully
         System.out.println("The question has been deleted: " + ServerCommunication
             .deleteQuestion(questionId, secretCode));
 
