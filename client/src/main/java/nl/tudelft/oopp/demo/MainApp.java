@@ -6,6 +6,7 @@ import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
 import nl.tudelft.oopp.demo.views.QuoteDisplay;
 
 import java.sql.Timestamp;
@@ -83,8 +84,12 @@ public class MainApp {
         System.out.println("Added a question to the Question Board\n    "
             + gson.toJson(questionCodes));
 
-        //Delete the question from the question board and print true if the question was deleted successfully
+        //Add a vote to questionCodes
         UUID questionId = questionCodes.getId();
+        QuestionVoteCreationDto questionVote = ServerCommunication.addQuestionVote(questionId);
+        System.out.println("A vote has been added to the question\n    " + gson.toJson(questionVote));
+
+        //Delete the question from the question board and print true if the question was deleted successfully
         UUID secretCode = questionCodes.getSecretCode();
         System.out.println("The question has been deleted: " + ServerCommunication
             .deleteQuestion(questionId, secretCode));
