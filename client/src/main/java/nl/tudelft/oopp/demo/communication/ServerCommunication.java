@@ -85,15 +85,14 @@ public class ServerCommunication {
      * @param fullUrl       The URL corresponding to the server endpoint.
      * @param requestBody   The body of the request. This should contain the information that should be sent to
      *      the server.
-     * @param headers       The headers that the put request should use.
      * @return The HTTP response returned.
      */
-    private static HttpResponse<String> put(String fullUrl, String requestBody, String... headers) {
+    private static HttpResponse<String> put(String fullUrl, String requestBody) {
         //Set up the request Object
         HttpRequest request = HttpRequest.newBuilder()
             .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
             .uri(URI.create(fullUrl))
-            .headers(headers)
+            .headers("Content-Type", "application/json;charset=UTF-8")
             .build();
 
         //Send the request, and retrieve and return the response from the server
@@ -213,6 +212,32 @@ public class ServerCommunication {
         QuestionCreationDto questionCodes = gson.fromJson(response.body(), QuestionCreationDto.class);
 
         return questionCodes;
+    }
+
+    /**
+     * Edits the text of a question
+     * Communicates with the /api/question/{questionid}?code={code} server endpoint.
+     *
+     * @param questionId    The ID of the question whose text should be modified.
+     * @param code          The moderator code associated with the question board that contains the question or
+     *      the question secret code.
+     * @param text          The new question text.
+     * @return Returns true if, and only if, the request was successful
+     */
+    public static boolean editQuestion(UUID questionId, UUID code, String text) {
+        //Set up the parameters required by the put helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "?code=" + code;
+        String requestBody = gson.toJson(text);
+
+        //Send the put request to edit the question and retrieve the response
+        HttpResponse<String> response = put(fullUrl, requestBody);
+
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
