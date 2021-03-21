@@ -74,7 +74,7 @@ public class MainApp {
         //the moderator code of questionBoard
         System.out.println("Retrieved the Question Board details\n  through the moderator code:"
             + gson.toJson(ServerCommunication
-            .retrieveBoardDetailsThroughModCode(moderatorCode)));
+                .retrieveBoardDetailsThroughModCode(moderatorCode)));
 
         //Print the JSON representation of the dto returned by the addQuestion method called using the
         //ID of the questionBoard.
@@ -101,7 +101,7 @@ public class MainApp {
 
         System.out.print("The questions in this question board are:\n");
         for(QuestionDetailsDto question : questionList) {
-            System.out.println(gson.toJson(question) + "\n");
+            System.out.println("    " + gson.toJson(question) + "\n");
         }
 
         //Delete questionCodes from the question board and print true if the question was deleted successfully
