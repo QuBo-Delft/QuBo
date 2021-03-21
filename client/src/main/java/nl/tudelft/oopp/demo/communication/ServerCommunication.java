@@ -227,6 +227,7 @@ public class ServerCommunication {
      *
      * @param boardId   The ID of the question board to which a pace vote should be added.
      * @param paceType  The type of pace vote that should be added.
+     * @return A PaceVoteCreationDto with the ID of the pace vote.
      */
     public static PaceVoteCreationDto addPaceVote(UUID boardId, PaceType paceType) {
         //Create a PaceVoteCreationBindingModel with the specified pace type
@@ -250,6 +251,29 @@ public class ServerCommunication {
         PaceVoteCreationDto paceVote = gson.fromJson(response.body(), PaceVoteCreationDto.class);
 
         return paceVote;
+    }
+
+    /**
+     * Deletes a pace vote with specified ID from the question board.
+     * Communicated with the /api/board/{boardid}/pace/{pacevoteid} server endpoint.
+     *
+     * @param boardId   The question board from which the pace vote should be deleted.
+     * @param paceVote  The pace vote that should be deleted.
+     * @return True if, and only if, the deletion was successful.
+     */
+    public boolean deletePaceVote(UUID boardId, PaceVoteCreationDto paceVote) {
+        //Set up the URL that will be sent to the delete helper method
+        String fullUrl = subUrl + "/api/board/" + boardId + "/pace/" + paceVote.getId();
+
+        //Send the request to the server and receive the response
+        HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
