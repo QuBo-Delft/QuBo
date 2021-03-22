@@ -3,14 +3,16 @@ package nl.tudelft.oopp.demo.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class StudentViewController {
     @FXML
-    private ListView<StudentViewController.CustomThing> questionList;
+    private ListView<CustomThing> questionList;
 
     @FXML
     private void initialize() {
@@ -26,12 +28,15 @@ public class StudentViewController {
     private static class CustomThing {
         private String name;
         private int price;
+
         public String getName() {
             return name;
         }
+
         public int getPrice() {
             return price;
         }
+
         public CustomThing(String name, int price) {
             super();
             this.name = name;
@@ -39,7 +44,7 @@ public class StudentViewController {
         }
     }
 
-    private class CustomListCell extends ListCell<StudentViewController.CustomThing> {
+    private class CustomListCell extends ListCell<CustomThing> {
         private HBox content;
         private Text name;
         private Text price;
@@ -48,8 +53,8 @@ public class StudentViewController {
             super();
             name = new Text();
             price = new Text();
-            VBox vBox = new VBox(name, price);
-            content = new HBox(new Label("[Graphic]"), vBox);
+            VBox vbox = new VBox(name, price);
+            content = new HBox(new Label("[Graphic]"), vbox);
             content.setSpacing(10);
         }
 
