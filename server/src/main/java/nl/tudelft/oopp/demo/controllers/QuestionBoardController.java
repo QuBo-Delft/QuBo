@@ -137,7 +137,7 @@ public class QuestionBoardController {
 
     /**
      * GET endpoint that provides the client with the QuestionBoard associated with the specified
-     *      moderator code.
+     * moderator code.
      * Throw 400 upon wrong UUID formatting.
      * Throw 404 upon requesting a non-existent moderator code.
      *
@@ -211,8 +211,8 @@ public class QuestionBoardController {
     @RequestMapping(value = "/{boardid}/pace", method = POST, consumes = "application/json")
     @ResponseBody
     public PaceVoteCreationDto registerPaceVote(
-            @PathVariable("boardid") UUID boardId,
-            @Valid @RequestBody PaceVoteCreationBindingModel paceVoteModel) {
+        @PathVariable("boardid") UUID boardId,
+        @Valid @RequestBody PaceVoteCreationBindingModel paceVoteModel) {
         PaceVote paceVote = paceVoteService.registerVote(boardId, paceVoteModel);
         return modelMapper.map(paceVote, PaceVoteCreationDto.class);
     }
