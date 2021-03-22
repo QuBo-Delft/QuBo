@@ -1,0 +1,53 @@
+.root {
+    -fx-background-color: EBE7DB;
+}
+
+#QuBo {
+    -fx-font-size: 45;
+    -fx-font-family: "BahnSchrift";
+    -fx-text-fill: A23605;
+}
+
+#join-button {
+    -fx-background-color: E87920;
+    -fx-background-radius: 8;
+    -fx-min-height: 40;
+    -fx-min-width: 80;
+
+    -fx-font-weight: bold;
+    -fx-font-family: "BahnSchrift";
+    -fx-font-size: 17;
+    -fx-text-fill: F0DED7;
+}
+
+#create-qb-button {
+    -fx-background-color: EEA24D;
+    -fx-background-radius: 4;
+    -fx-min-height: 50;
+    -fx-min-width: 130;
+
+    -fx-font-weight: bold;
+    -fx-font-family: "BahnSchrift";
+    -fx-font-size: 14;
+    -fx-text-fill: F0DED7;
+}
+
+#or {
+    -fx-font-weight: bold;
+    -fx-font-family: "BahnSchrift";
+    -fx-font-size: 17;
+    -fx-text-fill: A23605;
+}
+
+.text-field {
+    -fx-border-color: C0B6A9;
+    -fx-border-radius: 5;
+    -fx-max-width: 200;
+    -fx-min-height: 20;
+}
+
+#errorMessageLabel {
+    -fx-font-style: italic;
+    -fx-font-family: "Bahnschrift";
+    -fx-text-fill: DF4D1C;
+}
