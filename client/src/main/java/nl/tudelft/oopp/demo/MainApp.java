@@ -29,8 +29,8 @@ public class MainApp {
     public static void main(String[] args) {
         //Display working views
 
-        //Display a window that gives quotes when a button is clicked
-        QuoteDisplay.main(new String[0]);
+        //Display the application homepage
+        SceneDisplay.main(new String[0]);
 
         //Create a QuestionBoardCreationBindingModel to create a Question Board
         QuestionBoardCreationBindingModel model = new QuestionBoardCreationBindingModel();
