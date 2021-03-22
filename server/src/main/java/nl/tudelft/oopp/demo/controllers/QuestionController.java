@@ -148,12 +148,13 @@ public class QuestionController {
 
     /**
      * Delete question vote question vote details dto.
-     * throws 404 when vote does not exists.
-     * throws 404 when vote's question doesn't match the provided question.
      *
      * @param questionId The question ID.
      * @param voteId     The vote ID.
      * @return The QuestionVoteDetailsDto based on the deleted QuestionVote.
+     * @throws ResponseStatusException 404 if vote does not exist.
+     * @throws ResponseStatusException 404 if the vote's question ID
+     *                                 doesn't match the provided question ID.
      */
     @RequestMapping(value = "/{questionid}/vote/{voteid}", method = DELETE)
     @ResponseBody
@@ -169,7 +170,7 @@ public class QuestionController {
         // Check if questionId corresponds with this vote's questionId
         if (!questionId.equals(vote.getQuestion().getId())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This Question was not voted on"
-                + " with this QuesitonVote");
+                + " with this QuestionVote");
         }
         QuestionVoteDetailsDto dto = modelMapper.map(vote, QuestionVoteDetailsDto.class);
         questionVoteService.deleteVote(vote);
