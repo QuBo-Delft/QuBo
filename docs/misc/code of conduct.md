@@ -40,7 +40,7 @@
   
 20. In the case of a disaster (e.g. broken master branch), all directly affected should be notified immediately. In the case of assistance being required, everyone who is available or able to make time must help out.
   
-21. Meetings are to be held online on Discord, as meeting physically is currently not possible because of the epidemic.
+21. Meetings are to be held online on Discord, as meeting physically is currently not possible because of the pandemic.
   
 **If a team member breaks the Code of Conduct:**
 - 1st offence: Warning during agenda meeting.
