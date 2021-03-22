@@ -40,12 +40,13 @@ public class PaceVoteService {
      * Method for registering PaceVotes by
      * adding a new PaceVote to the database.
      *
-     * @param boardId       The board ID.
      * @param paceVoteModel The pace vote model.
+     * @param boardId       The board ID.
      * @return The PaceVote object that was just registered.
-     * @throws NotFoundException when QuestionBoard provided does not exist.
+     * @throws NotFoundException if the provided QuestionBoard does not exist.
+     * @throws ForbiddenException if the QuestionBoard is not active.
      */
-    public PaceVote registerVote(UUID boardId, PaceVoteCreationBindingModel paceVoteModel) {
+    public PaceVote registerVote(PaceVoteCreationBindingModel paceVoteModel, UUID boardId) {
         QuestionBoard board = questionBoardRepository.getById(boardId);
         // Check if QuestionBoard with this ID exists
         if (board == null) {
@@ -64,5 +65,26 @@ public class PaceVoteService {
         paceVoteRepository.save(vote);
         return vote;
     }
+
+    /**
+     * Gets PaceVote by id.
+     *
+     * @param paceVoteId the pace vote id.
+     * @return corresponding PaceVote object or null.
+     */
+    public PaceVote getById(UUID paceVoteId) {
+        return paceVoteRepository.getById(paceVoteId);
+    }
+
+    /**
+     * Delete PaceVote from database.
+     *
+     * @param vote The vote that is to be deleted.
+     */
+    public void deleteVote(PaceVote vote) {
+        // Delete paceVote from database
+        this.paceVoteRepository.deletePaceVoteById(vote.getId());
+    }
+
 
 }

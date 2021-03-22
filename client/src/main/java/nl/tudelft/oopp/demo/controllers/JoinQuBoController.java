@@ -36,7 +36,7 @@ public class JoinQuBoController {
     void createButtonClicked(ActionEvent event) throws IOException {
         Stage primaryStage = new Stage();
         FXMLLoader loader = new FXMLLoader();
-        URL xmlUrl = getClass().getResource("/CreateQuestionBoardWindow.fxml");
+        URL xmlUrl = getClass().getResource("/CreateQuBo.fxml");
         loader.setLocation(xmlUrl);
         Parent root = loader.load();
 
