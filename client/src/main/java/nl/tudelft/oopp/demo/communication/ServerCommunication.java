@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteDetailsDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
@@ -291,6 +292,12 @@ public class ServerCommunication {
 
         //If the request was unsuccessful, return false
         if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        //Check if the deleted pace vote had the same ID
+        PaceVoteDetailsDto deletedVote = gson.fromJson(response.body(), PaceVoteDetailsDto.class);
+        if (deletedVote.getId() != paceVoteId) {
             return false;
         }
 

@@ -98,7 +98,7 @@ public class MainApp {
 
         System.out.print("The questions in this question board are:\n");
         for (QuestionDetailsDto question : questionList) {
-            System.out.println("    " + gson.toJson(question) + "\n");
+            System.out.print("    " + gson.toJson(question) + "\n");
         }
 
         //Delete questionCodes from the question board and print true if the question was deleted successfully
