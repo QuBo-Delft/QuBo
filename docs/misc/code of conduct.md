@@ -28,6 +28,20 @@
   
 14. Comments or behaviour, like described under section 13, that discriminate against certain group members on stereotypes or prejudices, is prohibited and shall immediately be reported to the TA. This includes, but is not limited to, racial slurs, mimicking or mocking, exclusion and homophobic behaviour.
   
+15. English is to be spoken during all meetings. This prevents the exclusion of those not sharing the same first language or cultural background. It also ensures professionalism.
+  
+16. All group members should be reasonably reachable between 9 am till 5 pm CET (UTC/GMT+1).
+  
+16. All group members are expected to have at least one free evening from Monday till Friday. They are also expected to have one free time slot during the weekend for a meeting to be planned.
+  
+18. Everyone is required to act as note taker and chair at least once during TA meetings.
+  
+19. All group members are expected to follow the right issue and merge request templates when creating them. It is also expected that they follow the proper code and commenting style, discussed with the group
+  
+20. In the case of a disaster (e.g. broken master branch), all directly affected should be notified immediately. In the case of assistance being required, everyone who is available or able to make time must help out.
+  
+21. Meetings are to be held online on Discord, as meeting physically is currently not possible because of the epidemic.
+  
 **If a team member breaks the Code of Conduct:**
 - 1st offence: Warning during agenda meeting.
 - 2nd offence: Offence will be reported to the TA.
