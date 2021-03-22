@@ -148,10 +148,10 @@ public class CreateQuBoController {
             e.printStackTrace();
         }
 
-        // Get the controller of QuestionBoardCodes
+        // Get the controller of QuBoCodes
         QuBoCodesController controller = loader.getController();
 
-        // Transfer the data for QuestionBoardCodes
+        // Transfer the data for QuBoCodes
         controller.displayCodes(qd);
 
         Stage stage = new Stage();
