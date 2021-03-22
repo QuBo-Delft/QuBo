@@ -8,13 +8,20 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.demo.entities.PaceVote;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
+import nl.tudelft.oopp.demo.services.PaceVoteService;
 import nl.tudelft.oopp.demo.services.QuestionBoardService;
+import nl.tudelft.oopp.demo.services.QuestionService;
 
 import org.modelmapper.ModelMapper;
 
@@ -37,12 +44,26 @@ import org.springframework.web.server.ResponseStatusException;
 public class QuestionBoardController {
 
     private final QuestionBoardService service;
+    private final QuestionService questionService;
+    private final PaceVoteService paceVoteService;
 
     private final ModelMapper modelMapper;
 
+    /**
+     * Creates an instance of a QuestionBoardController.
+     *
+     * @param service         The QuestionBoardService.
+     * @param questionService The QuestionService.
+     * @param paceVoteService The PaceVoteService
+     * @param modelMapper     The ModelMapper.
+     */
     public QuestionBoardController(QuestionBoardService service,
+                                   QuestionService questionService,
+                                   PaceVoteService paceVoteService,
                                    ModelMapper modelMapper) {
         this.service = service;
+        this.questionService = questionService;
+        this.paceVoteService = paceVoteService;
         this.modelMapper = modelMapper;
     }
 
@@ -126,6 +147,42 @@ public class QuestionBoardController {
             new TypeToken<Set<QuestionDetailsDto>>() {
             }.getType());
         return dtoSet;
+    }
+
+    /**
+     * POST endpoint to ask a question.
+     * Throw 400 upon wrong UUID formatting.
+     * Throw 404 upon requesting non-existent boardid.
+     *
+     * @param boardId ID property of a board.
+     * @param model   The binding model passed by the client containing the question text.
+     * @return The newly-created question.
+     */
+    @RequestMapping(value = "/{boardid}/question", method = POST, consumes = "application/json")
+    @ResponseBody
+    public QuestionCreationDto createQuestion(
+        @PathVariable("boardid") UUID boardId,
+        @Valid @RequestBody QuestionCreationBindingModel model) {
+        Question question = questionService.createQuestion(model, boardId);
+        QuestionCreationDto dto = modelMapper.map(question, QuestionCreationDto.class);
+        return dto;
+    }
+
+
+    /**
+     * POST endpoint for registering PaceVotes.
+     *
+     * @param boardId       The board ID.
+     * @param paceVoteModel The PaceVote model.
+     * @return The paceVote DTO.
+     */
+    @RequestMapping(value = "/{boardid}/pace", method = POST, consumes = "application/json")
+    @ResponseBody
+    public PaceVoteCreationDto registerPaceVote(
+            @PathVariable("boardid") UUID boardId,
+            @Valid @RequestBody PaceVoteCreationBindingModel paceVoteModel) {
+        PaceVote paceVote = paceVoteService.registerVote(boardId, paceVoteModel);
+        return modelMapper.map(paceVote, PaceVoteCreationDto.class);
     }
 }
 

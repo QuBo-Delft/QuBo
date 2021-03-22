@@ -1,18 +1,17 @@
 package nl.tudelft.oopp.demo.mappings.question;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.UUID;
-import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.entities.Answer;
 import nl.tudelft.oopp.demo.entities.Question;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 
-public class QuestionDetailsDtoTests {
+public class QuestionCreationDtoTests {
     private ModelMapper mapper;
 
     @BeforeEach
@@ -25,8 +24,8 @@ public class QuestionDetailsDtoTests {
         // Arrange
         Question q = new Question();
         q.setId(UUID.fromString("8e80cddb-72ec-44c2-a702-a4d9b54a6961"));
+        q.setSecretCode(UUID.fromString("e6f316f7-9000-4a29-bcbd-8b517ced267c"));
         q.setText("Question Text");
-        q.setAuthorName("Someone");
         q.setTimestamp(Timestamp.valueOf("2021-03-01 00:02:00"));
 
         HashSet<Answer> answerSet = new HashSet<>();
@@ -36,13 +35,10 @@ public class QuestionDetailsDtoTests {
         q.setAnswers(answerSet);
 
         // Act
-        QuestionDetailsDto dto = mapper.map(q, QuestionDetailsDto.class);
+        QuestionCreationDto dto = mapper.map(q, QuestionCreationDto.class);
 
         // Assert
         assertEquals(q.getId(), dto.getId());
-        assertEquals(q.getText(), dto.getText());
-        assertEquals(q.getAuthorName(), dto.getAuthorName());
-        assertEquals(q.getTimestamp(), dto.getTimestamp());
-        assertEquals(q.getAnswers().size(), dto.getAnswers().size());
+        assertEquals(q.getSecretCode(), dto.getSecretCode());
     }
 }

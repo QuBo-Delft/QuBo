@@ -1,19 +1,16 @@
 package nl.tudelft.oopp.demo.mappings.answer;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.sql.Timestamp;
+import java.util.UUID;
 import nl.tudelft.oopp.demo.dtos.answer.AnswerCreationDto;
-import nl.tudelft.oopp.demo.dtos.answer.AnswerDetailsDto;
 import nl.tudelft.oopp.demo.entities.Answer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class AnswerDetailsDtoTests {
+public class AnswerCreationDtoTests {
     private ModelMapper mapper;
 
     @BeforeEach
@@ -22,19 +19,15 @@ public class AnswerDetailsDtoTests {
     }
 
     @Test
-    public void mapFromAnswerToAnswerDetailsDto() {
+    public void mapFromAnswerToAnswerCreationDto() {
         // Arrange
         Answer answer = new Answer();
         answer.setId(UUID.fromString("93c8f1d7-7265-4596-9320-ae34895ff64a"));
-        answer.setTimestamp(Timestamp.from(Instant.now()));
-        answer.setText("Test");
 
         // Act
-        AnswerDetailsDto dto = mapper.map(answer, AnswerDetailsDto.class);
+        AnswerCreationDto dto = mapper.map(answer, AnswerCreationDto.class);
 
         // Assert
         assertEquals(answer.getId(), dto.getId());
-        assertEquals(answer.getTimestamp(), dto.getTimestamp());
-        assertEquals(answer.getText(), dto.getText());
     }
 }

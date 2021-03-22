@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,16 +35,19 @@ public class Question {
     @Column(name = "text", nullable = false)
     private String text;
 
+    @Column(name = "author_name", nullable = false)
+    private String authorName;
+
     @Column(name = "secret_code", nullable = false)
     private UUID secretCode;
 
     @Column(name = "timestamp")
     private Timestamp timestamp;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Answer> answers;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<QuestionVote> votes;
 
 
@@ -115,6 +119,14 @@ public class Question {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
     public Set<QuestionVote> getVotes() {
