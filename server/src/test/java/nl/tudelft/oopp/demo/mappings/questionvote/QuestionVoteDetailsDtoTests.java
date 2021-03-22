@@ -11,23 +11,23 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QuestionVoteDetailsDtoTests {
-        private ModelMapper mapper;
+    private ModelMapper mapper;
 
-        @BeforeEach
-        public void setUp() {
-            mapper = new ModelMapper();
-        }
+    @BeforeEach
+    public void setUp() {
+        mapper = new ModelMapper();
+    }
 
-        @Test
-        public void mapQuestionVoteToQuestionVoteDetailsDto() {
-            // Arrange
-            QuestionVote questionVote = new QuestionVote();
-            questionVote.setId(UUID.fromString("144d4d04-2e12-4c69-8845-1225582e2b4d"));
+    @Test
+    public void mapQuestionVoteToQuestionVoteDetailsDto() {
+        // Arrange
+        QuestionVote questionVote = new QuestionVote();
+        questionVote.setId(UUID.fromString("144d4d04-2e12-4c69-8845-1225582e2b4d"));
 
-            // Act
-            QuestionVoteDetailsDto dto = mapper.map(questionVote, QuestionVoteDetailsDto.class);
+        // Act
+        QuestionVoteDetailsDto dto = mapper.map(questionVote, QuestionVoteDetailsDto.class);
 
-            // Assert
-            assertEquals(dto.getId(), questionVote.getId());
-        }
+        // Assert
+        assertEquals(dto.getId(), questionVote.getId());
+    }
 }
