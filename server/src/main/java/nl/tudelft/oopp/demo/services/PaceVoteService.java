@@ -43,8 +43,8 @@ public class PaceVoteService {
      * @param paceVoteModel The pace vote model.
      * @param boardId       The board ID.
      * @return The PaceVote object that was just registered.
-     * @throws NotFoundException if QuestionBoard provided does not exist.
-     * @throws ForbiddenException if
+     * @throws NotFoundException if the provided QuestionBoard does not exist.
+     * @throws ForbiddenException if the QuestionBoard is not active.
      */
     public PaceVote registerVote(PaceVoteCreationBindingModel paceVoteModel, UUID boardId) {
         QuestionBoard board = questionBoardRepository.getById(boardId);
