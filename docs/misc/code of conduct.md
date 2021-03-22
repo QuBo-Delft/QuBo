@@ -36,7 +36,7 @@
   
 18. Everyone is required to act as note taker and chair at least once during TA meetings.
   
-19. All group members are expected to follow the right issue and merge request templates when creating them. It is also expected that they follow the proper code and commenting style, discussed with the group
+19. All group members are expected to follow the right issue and merge request templates when creating them. It is also expected that they follow the proper code and commenting style, discussed with the group.
   
 20. In the case of a disaster (e.g. broken master branch), all directly affected should be notified immediately. In the case of assistance being required, everyone who is available or able to make time must help out.
   
