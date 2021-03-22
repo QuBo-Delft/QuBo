@@ -44,6 +44,9 @@
     -fx-border-radius: 5;
     -fx-max-width: 200;
     -fx-min-height: 20;
+
+    -fx-focus-color: D9AC82;
+    -fx-faint-focus-color: E5A86D;
 }
 
 #errorMessageLabel {
