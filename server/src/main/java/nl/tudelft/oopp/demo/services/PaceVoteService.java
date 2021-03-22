@@ -66,4 +66,25 @@ public class PaceVoteService {
         return vote;
     }
 
+    /**
+     * Gets PaceVote by id.
+     *
+     * @param paceVoteId the pace vote id.
+     * @return corresponding PaceVote object or null.
+     */
+    public PaceVote getById(UUID paceVoteId) {
+        return paceVoteRepository.getById(paceVoteId);
+    }
+
+    /**
+     * Delete PaceVote from database.
+     *
+     * @param vote The vote that is to be deleted.
+     */
+    public void deleteVote(PaceVote vote) {
+        // Delete paceVote from database
+        this.paceVoteRepository.deletePaceVoteById(vote.getId());
+    }
+
+
 }
