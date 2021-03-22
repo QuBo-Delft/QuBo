@@ -4,6 +4,7 @@ import nl.tudelft.oopp.demo.dtos.answer.AnswerCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.answer.AnswerCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.demo.entities.Answer;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
@@ -14,13 +15,17 @@ import nl.tudelft.oopp.demo.services.QuestionVoteService;
 import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
@@ -140,4 +145,35 @@ public class QuestionController {
         QuestionVoteCreationDto dto = modelMapper.map(vote, QuestionVoteCreationDto.class);
         return dto;
     }
+
+    /**
+     * Delete question vote question vote details dto.
+     * throws 404 when vote does not exists.
+     * throws 404 when vote's question doesn't match the provided question.
+     *
+     * @param questionId The question ID.
+     * @param voteId     The vote ID.
+     * @return The QuestionVoteDetailsDto based on the deleted QuestionVote.
+     */
+    @RequestMapping(value = "/{questionid}/vote/{voteid}", method = DELETE)
+    @ResponseBody
+    public QuestionVoteDetailsDto deleteQuestionVote(
+        @PathVariable("questionid") UUID questionId,
+        @PathVariable("voteid") UUID voteId) {
+        // verify request
+        QuestionVote vote = questionVoteService.getQuestionVoteById(voteId);
+        // Check if vote exists
+        if (vote == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find QuestionVote");
+        }
+        // Check if questionId corresponds with this vote's questionId
+        if (!questionId.equals(vote.getQuestion().getId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This Question was not voted on"
+                + " with this QuesitonVote");
+        }
+        QuestionVoteDetailsDto dto = modelMapper.map(vote, QuestionVoteDetailsDto.class);
+        questionVoteService.deleteVote(vote);
+        return dto;
+    }
+
 }
