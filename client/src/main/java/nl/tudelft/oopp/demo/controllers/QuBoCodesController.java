@@ -6,7 +6,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 
-public class BoardCodesController {
+public class QuBoCodesController {
     
     @FXML
     private Label boardTitle;

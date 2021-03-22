@@ -22,7 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.sql.Timestamp;
 
-public class BoardCreationController {
+public class CreateQuBoController {
 
     @FXML
     private TextField title;
@@ -138,18 +138,18 @@ public class BoardCreationController {
      *
      */
     private void loadQuestionBoardCodes(QuestionBoardCreationDto qd) {
-        // Create an FXMLLoader of QuestionBoardCodes.fxml
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/QuestionBoardCodes.fxml"));
+        // Create an FXMLLoader of QuBoCodes.fxml
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/QuBoCodes.fxml"));
 
         Parent root = null;
         try {
-            root = (Parent) loader.load();
+            root = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         // Get the controller of QuestionBoardCodes
-        BoardCodesController controller = loader.getController();
+        QuBoCodesController controller = loader.getController();
 
         // Transfer the data for QuestionBoardCodes
         controller.displayCodes(qd);

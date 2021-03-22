@@ -16,9 +16,9 @@ import java.net.URL;
 import java.util.UUID;
 
 /**
- * Controller for the JoinQuestionBoard.fxml
+ * Controller for the JoinQuBo.fxml
  */
-public class JoinQuestionBoardController {
+public class JoinQuBoController {
 
     @FXML // fx:id="questionBoardCode"
     private TextField questionBoardCode;
