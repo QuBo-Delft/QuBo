@@ -179,9 +179,9 @@ public class QuestionBoardController {
     @RequestMapping(value = "/{boardid}/pace", method = POST, consumes = "application/json")
     @ResponseBody
     public PaceVoteCreationDto registerPaceVote(
-            @PathVariable("boardid") UUID boardId,
-            @Valid @RequestBody PaceVoteCreationBindingModel paceVoteModel) {
-        PaceVote paceVote = paceVoteService.registerVote(boardId, paceVoteModel);
+        @PathVariable("boardid") UUID boardId,
+        @Valid @RequestBody PaceVoteCreationBindingModel paceVoteModel) {
+        PaceVote paceVote = paceVoteService.registerVote(paceVoteModel, boardId);
         return modelMapper.map(paceVote, PaceVoteCreationDto.class);
     }
 }

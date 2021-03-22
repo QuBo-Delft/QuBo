@@ -40,12 +40,13 @@ public class PaceVoteService {
      * Method for registering PaceVotes by
      * adding a new PaceVote to the database.
      *
-     * @param boardId       The board ID.
      * @param paceVoteModel The pace vote model.
+     * @param boardId       The board ID.
      * @return The PaceVote object that was just registered.
-     * @throws NotFoundException when QuestionBoard provided does not exist.
+     * @throws NotFoundException if QuestionBoard provided does not exist.
+     * @throws ForbiddenException if
      */
-    public PaceVote registerVote(UUID boardId, PaceVoteCreationBindingModel paceVoteModel) {
+    public PaceVote registerVote(PaceVoteCreationBindingModel paceVoteModel, UUID boardId) {
         QuestionBoard board = questionBoardRepository.getById(boardId);
         // Check if QuestionBoard with this ID exists
         if (board == null) {
