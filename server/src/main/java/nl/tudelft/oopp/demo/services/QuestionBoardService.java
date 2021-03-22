@@ -95,9 +95,8 @@ public class QuestionBoardService {
      *
      * @param boardId The board id.
      * @return The updated QuestionBoard
-     * @throws NotFoundException  if the board doesn't exist.
-     * @throws ForbiddenException if the startTime of the board is after the current time or
-     *                            the board is closed.
+     * @throws NotFoundException if the board doesn't exist.
+     * @throws ConflictException if the board is already closed.
      */
     public QuestionBoard closeBoard(UUID boardId) {
         QuestionBoard qb = questionBoardRepository.getById(boardId);
