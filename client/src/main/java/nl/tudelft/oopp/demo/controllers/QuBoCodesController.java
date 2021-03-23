@@ -59,6 +59,7 @@ public class QuBoCodesController {
         content.putString(adminCode.getText());
         clipboard.setContent(content);
 
+        //Shows adminCopySuccessful label for 1 second and hides it again
         if (!adminCopySuccessful.isVisible()) {
             adminCopySuccessful.setVisible(true);
             pause.setOnFinished(e -> adminCopySuccessful.setVisible(false));
@@ -75,6 +76,7 @@ public class QuBoCodesController {
         content.putString(studentCode.getText());
         clipboard.setContent(content);
 
+        //Shows studentCopySuccessful label for 1 second and hides it again
         if (!studentCopySuccessful.isVisible()) {
             studentCopySuccessful.setVisible(true);
             pause.setOnFinished(e -> studentCopySuccessful.setVisible(false));
@@ -83,7 +85,7 @@ public class QuBoCodesController {
     }
 
     /**
-     * This method takes you back to the homepage after clicking the Back to Homepage button.
+     * This method takes you back to JoinQuBo after clicking the Back to Homepage button.
      */
     public void backToHome() throws IOException {
         Stage primaryStage = new Stage();
@@ -92,8 +94,10 @@ public class QuBoCodesController {
         loader.setLocation(xmlUrl);
         Parent root = loader.load();
 
+        //Close current stage
         Stage stage = (Stage) backToHome.getScene().getWindow();
         stage.close();
+        //Show new stage
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
