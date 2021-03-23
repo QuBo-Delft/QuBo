@@ -34,8 +34,9 @@ public class QuBoCodesController {
     public void copyAdminCode() {
         Clipboard clipboard = Clipboard.getSystemClipboard();
         ClipboardContent content = new ClipboardContent();
-        content.putString(adminCode.toString());
+        content.putString(adminCode.getText());
         clipboard.setContent(content);
+
     }
 
     /**
@@ -45,7 +46,7 @@ public class QuBoCodesController {
     public void copyStudentCode() {
         Clipboard clipboard = Clipboard.getSystemClipboard();
         ClipboardContent content = new ClipboardContent();
-        content.putString(studentCode.toString());
+        content.putString(studentCode.getText());
         clipboard.setContent(content);
     }
 
