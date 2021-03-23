@@ -112,5 +112,9 @@ public class MainApp {
 
         System.out.println("The question has been deleted: " + ServerCommunication
             .deleteQuestion(questionTwoId, moderatorCode));
+
+        //Close question board
+        System.out.println("The fact that this question board has been close is: " +
+                ServerCommunication.closeBoardRequest(boardId, moderatorCode));
     }
 }
