@@ -3,7 +3,9 @@ package nl.tudelft.oopp.demo.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -18,16 +20,16 @@ import javafx.scene.control.MenuItem;
 
 public class StudentViewController {
     @FXML
-    private ListView<CustomThing> questionList;
+    private ListView<Question> questionList;
 
     /**
      * Code that is run upon loading StudentView.fxml
      */
     @FXML
     private void initialize() {
-        ObservableList<StudentViewController.CustomThing> data = FXCollections.observableArrayList();
-        data.addAll(new StudentViewController.CustomThing(2, "What is life?"),
-                new StudentViewController.CustomThing(42,"Trolley problem."
+        ObservableList<Question> data = FXCollections.observableArrayList();
+        data.addAll(new Question(2, "What is life?"),
+                new Question(42,"Trolley problem."
                         + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
                         + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
                         + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
@@ -36,7 +38,7 @@ public class StudentViewController {
         questionList.setCellFactory(listView -> new CustomListCell());
     }
 
-    private static class CustomThing {
+    private static class Question {
         private int upvoteNumber;
         private String questionContent;
 
@@ -48,14 +50,13 @@ public class StudentViewController {
             return questionContent;
         }
 
-        public CustomThing(int upvoteNumber, String questionContent) {
-            super();
+        public Question(int upvoteNumber, String questionContent) {
             this.upvoteNumber = upvoteNumber;
             this.questionContent = questionContent;
         }
     }
 
-    private class CustomListCell extends ListCell<CustomThing> {
+    private class CustomListCell extends ListCell<Question> {
         private GridPane content;
         private Label upvoteNumber;
         private Text questionContent;
@@ -93,10 +94,15 @@ public class StudentViewController {
                     +  questionList.getPadding().getRight();
             questionContent.wrappingWidthProperty().bind(questionList.widthProperty()
                     .subtract(paddingWidth + 120));
+
+            //Set alignment of children in the GridPane
+            upvote.setAlignment(Pos.TOP_CENTER);
+            GridPane.setValignment(options, VPos.TOP);
+            GridPane.setHalignment(options, HPos.RIGHT);
         }
 
         @Override
-        protected void updateItem(StudentViewController.CustomThing item, boolean empty) {
+        protected void updateItem(Question item, boolean empty) {
             super.updateItem(item, empty);
             //If the item was not null and empty was false, add content to the graphic
             if (item != null && !empty) {
