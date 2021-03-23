@@ -338,9 +338,9 @@ public class ServerCommunication {
      * Mark the question from the board as answered.
      *
      * @param questionId    The ID of the question to be marked as answered.
-     * @param code          The moderator code that associated with the board
-     *                      where the the question is on or the question's secret code.
-     * @return true if and only the question has been marked as answered successfully.
+     * @param code          The moderator code that is associated with the board
+     *                      the question is part of, or the question's secret code.
+     * @return True if and only the question has been marked as answered successfully.
      */
     public static boolean markQuestionAsAnswered(UUID questionId, UUID code) {
         //Set up the variables required by the patch helper method
