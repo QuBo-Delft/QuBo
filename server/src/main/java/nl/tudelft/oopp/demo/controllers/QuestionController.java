@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +33,7 @@ import javax.validation.Valid;
 
 import java.util.UUID;
 
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 
 /**
  * The Question controller
@@ -221,7 +223,6 @@ public class QuestionController {
      * @throws ResponseStatusException 404 if the question was not found in database.
      * @throws ResponseStatusException 403 if the provided moderatorCode is not authorized
      *                                 to mark this question as answered.
-     * @throws ConflictException       if the question was already marked as answered.
      */
     @RequestMapping(value = "{questionid}/answer", method = PATCH)
     @ResponseBody
