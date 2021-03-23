@@ -15,6 +15,13 @@ import java.util.UUID;
 
 public class SceneLoader {
 
+    /**
+     * This method aims to load the page that displays the student code and moderator code.
+     *
+     * @param qd    The QuestionBoardCreationDto object to be transferred to the controller
+     *              of QuestionBoardCodes.
+     *
+     */
     public static void loadQuestionBoardCodes(QuestionBoardCreationDto qd) {
         // Create an FXMLLoader of QuBoCodes.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/QuBoCodes.fxml"));
