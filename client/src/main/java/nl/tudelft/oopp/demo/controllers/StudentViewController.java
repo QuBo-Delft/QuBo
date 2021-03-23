@@ -98,7 +98,8 @@ public class StudentViewController {
         @Override
         protected void updateItem(StudentViewController.CustomThing item, boolean empty) {
             super.updateItem(item, empty);
-            if (item != null && !empty) { // <== test for null item and empty parameter
+            //If the item was not null and empty was false, add content to the graphic
+            if (item != null && !empty) {
                 upvoteNumber.setText(Integer.toString(item.getUpvoteNumber()));
                 questionContent.setText(item.getQuestionContent());
                 setGraphic(content);
