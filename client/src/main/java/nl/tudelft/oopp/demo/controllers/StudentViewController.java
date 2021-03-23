@@ -4,12 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -65,17 +60,17 @@ public class StudentViewController {
             upvoteNumber = new Label();
             questionContent = new Text();
 
-            Button upvoteTriangle = new Button("up");
+            //Create the Vbox for placing the upvote button and upvote number
+            ToggleButton upvoteTriangle = new ToggleButton("up");
             VBox upvote = new VBox(upvoteTriangle, upvoteNumber);
             upvote.setSpacing(5);
             upvote.setAlignment(Pos.CENTER);
 
+            //Create options menu with edit and delete options
             MenuButton options = new MenuButton();
             options.getItems().addAll(new MenuItem("Edit"), new MenuItem("Delete"));
 
-            double paddingWidth = questionList.getPadding().getLeft() +
-                    questionList.getPadding().getRight();
-
+            //Create GridPane and add nodes to it
             content = new GridPane();
             ColumnConstraints col2 = new ColumnConstraints();
             col2.setHgrow(Priority.ALWAYS);
@@ -88,6 +83,9 @@ public class StudentViewController {
             content.addColumn( 1, questionContent);
             content.addColumn( 2, options);
 
+            //Make questionContent resize with width of cell
+            double paddingWidth = questionList.getPadding().getLeft() +
+                    questionList.getPadding().getRight();
             questionContent.wrappingWidthProperty().bind(questionList.widthProperty().subtract(
                     paddingWidth + 120));
         }
