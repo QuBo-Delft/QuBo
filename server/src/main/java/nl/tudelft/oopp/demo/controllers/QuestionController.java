@@ -186,13 +186,13 @@ public class QuestionController {
     /**
      * PATCH endpoint for marking Questions as answered.
      *
-     * @param questionId    The ID of the question that is to be marked.
-     * @param moderatorCode The moderator code for the board this question is in.
-     * @return QuestionDetailsDto after the marked question.
-     * @throws ResponseStatusException 404 if question was not found in database.
+     * @param questionId    The ID of the question that is to be marked as answered.
+     * @param moderatorCode The moderator code of the board this question is in.
+     * @return The QuestionDetailsDto after marking the question as answered.
+     * @throws ResponseStatusException 404 if the question was not found in database.
      * @throws ResponseStatusException 403 if the provided moderatorCode is not authorized
      *                                 to mark this question as answered.
-     * @throws ConflictException       if question was already marked as answered.
+     * @throws ConflictException       if the question was already marked as answered.
      */
     @RequestMapping(value = "{questionid}/answer", method = PATCH)
     @ResponseBody
@@ -205,7 +205,7 @@ public class QuestionController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question does not exist");
 
         }
-        // Check if the moderatorCode is valid for this Question
+        // Check if the moderatorCode is valid for the question board the question is in
         if (!moderatorCode.equals(question.getQuestionBoard().getModeratorCode())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided moderatorCode is not valid "
                 + "for this Question");
