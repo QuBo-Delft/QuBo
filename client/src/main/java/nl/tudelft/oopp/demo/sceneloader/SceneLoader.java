@@ -53,6 +53,12 @@ public class SceneLoader {
         stage.show();
     }
 
+    /**
+     * This method aims to load the page that displays the student view of a QuBo.
+     *
+     * @param qd    The QuestionBoardCreationDto object that brings data for the
+     *              student view of a QuBo.
+     */
     public static void loadStudentView(QuestionBoardDetailsDto qd) {
         // Create an FXMLLoader of StudentView.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/StudentView.fxml"));
