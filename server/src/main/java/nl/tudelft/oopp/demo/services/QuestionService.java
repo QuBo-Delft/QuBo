@@ -14,6 +14,7 @@ import nl.tudelft.oopp.demo.services.exceptions.ConflictException;
 import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.expression.spel.ast.QualifiedIdentifier;
 import org.springframework.stereotype.Service;
 
 
@@ -119,11 +120,12 @@ public class QuestionService {
     /**
      * Marks a question as answered.
      *
-     * @param question The question to be marked as answered.
+     * @param questionId The ID of the question to be marked as answered.
      * @return The question that was just marked as answered.
      * @throws ConflictException if the question was already marked as answered.
      */
-    public Question markAsAnswered(Question question) {
+    public Question markAsAnswered(UUID questionId) {
+        Question question = questionRepository.getQuestionById(questionId);
         if (question.isAnswered()) {
             throw new ConflictException("Question was already marked as answered");
         }

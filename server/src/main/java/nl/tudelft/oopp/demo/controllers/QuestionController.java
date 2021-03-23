@@ -240,7 +240,7 @@ public class QuestionController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided moderatorCode is not valid "
                 + "for this Question");
         }
-        Question markedQuestion = questionService.markAsAnswered(question);
+        Question markedQuestion = questionService.markAsAnswered(questionId);
         QuestionDetailsDto dto = modelMapper.map(markedQuestion, QuestionDetailsDto.class);
         return dto;
     }
