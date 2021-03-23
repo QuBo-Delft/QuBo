@@ -1,7 +1,9 @@
 package nl.tudelft.oopp.demo.controllers;
 
+import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.Set;
@@ -103,6 +105,36 @@ public class QuestionBoardController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }
         QuestionBoardDetailsDto dto = modelMapper.map(qb, QuestionBoardDetailsDto.class);
+        return dto;
+    }
+
+    /**
+     * PATCH endpoint that closes a QuestionBoard.
+     * Throw 400 upon wrong UUID formatting.
+     * Throw 404 upon requesting non-existent boardid.
+     * Throw 403 if the provided moderator code is incorrect.
+     * Throw 409 if the board is already closed.
+     *
+     * @param boardId       ID property of a board.
+     * @param moderatorCode The moderator code of the board.
+     * @return The details of the closed QuestionBoard.
+     */
+    @RequestMapping(value = "/{boardid}/close", method = PATCH)
+    @ResponseBody
+    public QuestionBoardDetailsDto closeQuestionBoard(
+        @PathVariable("boardid") UUID boardId,
+        @RequestParam("code") UUID moderatorCode) {
+        QuestionBoard qb = service.getBoardById(boardId);
+        if (qb == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        if (!qb.getModeratorCode().equals(moderatorCode)) {
+            throw new ForbiddenException("Invalid moderator code");
+        }
+
+        QuestionBoard closed = this.service.closeBoard(boardId);
+
+        QuestionBoardDetailsDto dto = modelMapper.map(closed, QuestionBoardDetailsDto.class);
         return dto;
     }
 
