@@ -2,9 +2,14 @@ package nl.tudelft.oopp.demo.communication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteDetailsDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
+import nl.tudelft.oopp.demo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
@@ -93,6 +98,26 @@ public class ServerCommunication {
                 .method("PATCH", HttpRequest.BodyPublishers.ofString("{}"))
                 .header("Content-Type", "application/json")
                 .build();
+
+        //Return the http response
+        return  sendRequest(request);
+    }
+
+    /**
+     * Retrieves an HTTP response from the server by sending an HTTP put request.
+     *
+     * @param fullUrl       The URL corresponding to the server endpoint.
+     * @param requestBody   The body of the request. This should contain the information that should be sent to
+     *      the server.
+     * @return The HTTP response returned.
+     */
+    private static HttpResponse<String> put(String fullUrl, String requestBody) {
+        //Set up the request Object
+        HttpRequest request = HttpRequest.newBuilder()
+            .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+            .uri(URI.create(fullUrl))
+            .headers("Content-Type", "application/json;charset=UTF-8")
+            .build();
 
         //Send the request, and retrieve and return the response from the server
         return sendRequest(request);
@@ -255,6 +280,35 @@ public class ServerCommunication {
     }
 
     /**
+     * Edits the text of a question
+     * Communicates with the /api/question/{questionid}?code={code} server endpoint.
+     *
+     * @param questionId    The ID of the question whose text should be modified.
+     * @param code          The moderator code associated with the question board that contains the question or
+     *      the question secret code.
+     * @param text          The new question text.
+     * @return Returns true if, and only if, the request was successful
+     */
+    public static boolean editQuestion(UUID questionId, UUID code, String text) {
+        //Set up the parameters required by the put helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "?code=" + code;
+
+        QuestionEditingBindingModel editedQuestion = new QuestionEditingBindingModel();
+        editedQuestion.setText(text);
+        String requestBody = gson.toJson(editedQuestion);
+
+        //Send the put request to edit the question and retrieve the response
+        HttpResponse<String> response = put(fullUrl, requestBody);
+
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Deletes the question from the board.
      * Communicates with the /api/question/{questionid}?code={code} server endpoint.
      *
@@ -272,6 +326,67 @@ public class ServerCommunication {
         //Check if the question has been deleted properly
         //Return false if this was not the case
         if (response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Adds a pace vote to the question board.
+     * Communicated with the /api/board/{boardid}/pace server endpoint.
+     *
+     * @param boardId   The ID of the question board to which a pace vote should be added.
+     * @param paceType  The type of pace vote that should be added.
+     * @return A PaceVoteCreationDto with the ID of the pace vote.
+     */
+    public static PaceVoteCreationDto addPaceVote(UUID boardId, PaceType paceType) {
+        //Create a PaceVoteCreationBindingModel with the specified pace type
+        PaceVoteCreationBindingModel paceModel = new PaceVoteCreationBindingModel();
+        paceModel.setPaceType(paceType);
+
+        //Set up the variables needed to call the post method
+        String requestBody = gson.toJson(paceModel);
+        String fullUrl = subUrl + "/api/board/" + boardId + "/pace";
+
+        //Request the pace vote creation, and retrieve the response
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        //Convert the response body to a PaceVoteCreationDto and return this
+        PaceVoteCreationDto paceVote = gson.fromJson(response.body(), PaceVoteCreationDto.class);
+
+        return paceVote;
+    }
+
+    /**
+     * Deletes a pace vote with specified ID from the question board.
+     * Communicated with the /api/board/{boardid}/pace/{pacevoteid} server endpoint.
+     *
+     * @param boardId       The question board from which the pace vote should be deleted.
+     * @param paceVoteId    The ID of the pace vote that should be deleted.
+     * @return True if, and only if, the deletion was successful.
+     */
+    public static boolean deletePaceVote(UUID boardId, UUID paceVoteId) {
+        //Set up the URL that will be sent to the delete helper method
+        String fullUrl = subUrl + "/api/board/" + boardId + "/pace/" + paceVoteId;
+
+        //Send the request to the server and receive the response
+        HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        //Check if the deleted pace vote had the same ID
+        PaceVoteDetailsDto deletedVote = gson.fromJson(response.body(), PaceVoteDetailsDto.class);
+        if (!deletedVote.getId().equals(paceVoteId)) {
             return false;
         }
 
