@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
-
+//To run these tests, one must first run DemoApplication.java in the server folder as these tests require
+//a connection to the server.
 public class ServerCommunicationTest {
 
     //Tests if the createBoardRequest method returns a QuestionBoardCreationDto with the same
@@ -39,6 +41,51 @@ public class ServerCommunicationTest {
 
         //Assert
         assertNull(quBo);
+    }
+
+    //Test if the closeBoardRequest method returns true if it is called with the ID and moderator
+    //code of an existing question board.
+    @Test
+    public void testCloseBoardRequestValidRequest() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+        //Act
+        boolean isClosed = ServerCommunication.closeBoardRequest(quBo.getId(), quBo.getModeratorCode());
+
+        //Assert
+        assertTrue(isClosed);
+    }
+
+    //Test if the closeBoardRequest method returns false if it is called with the ID of an existing
+    //question board, but with an invalid code.
+    @Test
+    public void testCloseBoardRequestInvalidCode() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+        //Act
+        boolean isClosed = ServerCommunication.closeBoardRequest(quBo.getId(), UUID.randomUUID());
+
+        //Assert
+        assertFalse(isClosed);
+    }
+
+    //Test if the closeBoardRequest method returns false if it is called with UUIDs that do not
+    //correspond to those of an existing question board nor its moderator code.
+    @Test
+    public void testCloseBoardRequestInvalidRequest() {
+        //Act
+        boolean isClosed = ServerCommunication.closeBoardRequest(UUID.randomUUID(), UUID.randomUUID());
+
+        //Assert
+        assertFalse(isClosed);
     }
 
     @Test
