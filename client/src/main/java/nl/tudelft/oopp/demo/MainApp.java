@@ -3,13 +3,10 @@ package nl.tudelft.oopp.demo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
-import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
-import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
-import nl.tudelft.oopp.demo.views.QuoteDisplay;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -95,7 +92,7 @@ public class MainApp {
             .editQuestion(questionId, secretCode, "What is life?"));
 
         //Edit the question through the moderator code, and print true if it was edited successfully.
-        System.out.println("The question has been edited\n    through the moderator code: "
+        System.out.println("The question has been edited through the moderator code: "
             + ServerCommunication.editQuestion(questionId, moderatorCode, "Is the universe infinitely large?"));
 
         //Add another question

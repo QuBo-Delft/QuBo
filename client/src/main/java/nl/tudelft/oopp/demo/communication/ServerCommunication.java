@@ -9,6 +9,7 @@ import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteDetailsDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
+import nl.tudelft.oopp.demo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
@@ -252,7 +253,10 @@ public class ServerCommunication {
     public static boolean editQuestion(UUID questionId, UUID code, String text) {
         //Set up the parameters required by the put helper method
         String fullUrl = subUrl + "/api/question/" + questionId + "?code=" + code;
-        String requestBody = gson.toJson(text);
+
+        QuestionEditingBindingModel editedQuestion = new QuestionEditingBindingModel();
+        editedQuestion.setText(text);
+        String requestBody = gson.toJson(editedQuestion);
 
         //Send the put request to edit the question and retrieve the response
         HttpResponse<String> response = put(fullUrl, requestBody);
