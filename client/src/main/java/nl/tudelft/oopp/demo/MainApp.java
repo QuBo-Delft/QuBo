@@ -132,7 +132,7 @@ public class MainApp {
         System.out.println("The pace vote has been deleted: " + ServerCommunication
             .deletePaceVote(boardId, paceVoteId));
 
-        //Close question board
+        //Close the question board
         System.out.println("The fact that this question board has been close is: " +
                 ServerCommunication.closeBoardRequest(boardId, moderatorCode));
 

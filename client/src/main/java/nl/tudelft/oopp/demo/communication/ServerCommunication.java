@@ -99,7 +99,7 @@ public class ServerCommunication {
                 .header("Content-Type", "application/json")
                 .build();
 
-        //Return the http response
+        //Send the request, and return the http response
         return  sendRequest(request);
     }
 
