@@ -59,7 +59,7 @@ public class QuBoCodesController {
         content.putString(adminCode.getText());
         clipboard.setContent(content);
 
-        if (!adminCopySuccessful.isVisible()){
+        if (!adminCopySuccessful.isVisible()) {
             adminCopySuccessful.setVisible(true);
             pause.setOnFinished(e -> adminCopySuccessful.setVisible(false));
             pause.play();
@@ -75,7 +75,7 @@ public class QuBoCodesController {
         content.putString(studentCode.getText());
         clipboard.setContent(content);
 
-        if(!studentCopySuccessful.isVisible()){
+        if (!studentCopySuccessful.isVisible()) {
             studentCopySuccessful.setVisible(true);
             pause.setOnFinished(e -> studentCopySuccessful.setVisible(false));
             pause.play();
