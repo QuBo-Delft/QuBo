@@ -1,11 +1,15 @@
 package nl.tudelft.oopp.demo.repositories;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.entities.QuestionVote;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,5 +69,65 @@ public class QuestionVoteRepositoryTests {
 
         // Assert
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void getQuestionVoteById_withCorrectId_returnsQuestionVote() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.from(Instant.now()));
+        board.setTitle("Test board");
+        questionBoardRepository.save(board);
+
+        Question question = new Question();
+        question.setAuthorName("Author");
+        question.setText("Test question");
+        question.setSecretCode(UUID.randomUUID());
+        question.setTimestamp(Timestamp.from(Instant.now()));
+        question.setQuestionBoard(board);
+        questionRepository.save(question);
+
+        QuestionVote vote = new QuestionVote();
+        vote.setQuestion(question);
+        questionVoteRepository.save(vote);
+
+        // Act
+        QuestionVote result = questionVoteRepository.getQuestionVoteById(vote.getId());
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(vote.getId(), result.getId());
+        assertEquals(vote.getQuestion().getId(), result.getQuestion().getId());
+        assertEquals(vote.getQuestion().getQuestionBoard().getId(),
+            result.getQuestion().getQuestionBoard().getId());
+    }
+
+    @Test
+    public void getQuestionVoteById_withNonexistentId_returnsNull() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.from(Instant.now()));
+        board.setTitle("Test board");
+        questionBoardRepository.save(board);
+
+        Question question = new Question();
+        question.setAuthorName("Author");
+        question.setText("Test question");
+        question.setSecretCode(UUID.randomUUID());
+        question.setTimestamp(Timestamp.from(Instant.now()));
+        question.setQuestionBoard(board);
+        questionRepository.save(question);
+
+        QuestionVote vote = new QuestionVote();
+        vote.setQuestion(question);
+        questionVoteRepository.save(vote);
+
+        // Act
+        QuestionVote result = questionVoteRepository.getQuestionVoteById(UUID.randomUUID());
+
+        // Assert
+        assertNull(result);
     }
 }
