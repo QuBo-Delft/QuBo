@@ -59,7 +59,6 @@ public class QuestionRepositoryTests {
         board.setModeratorCode(UUID.randomUUID());
         board.setStartTime(Timestamp.from(Instant.now()));
         board.setTitle("Test board");
-        board.setModeratorCode(UUID.randomUUID());
         questionBoardRepository.save(board);
 
         Question question = new Question();
