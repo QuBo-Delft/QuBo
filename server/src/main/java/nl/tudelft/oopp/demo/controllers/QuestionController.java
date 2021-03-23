@@ -190,7 +190,7 @@ public class QuestionController {
      * @param moderatorCode The moderator code for the board this question is in.
      * @return QuestionDetailsDto after the marked question.
      * @throws ResponseStatusException 404 if question was not found in database.
-     * @throws ForbiddenException      if the provided moderatorCode is not authorized
+     * @throws ResponseStatusException 403 if the provided moderatorCode is not authorized
      *                                 to mark this question as answered.
      * @throws ConflictException       if question was already marked as answered.
      */
@@ -203,10 +203,12 @@ public class QuestionController {
         if (question == null) {
             // Requested question does not exist
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question does not exist");
+
         }
         // Check if the moderatorCode is valid for this Question
         if (!moderatorCode.equals(question.getQuestionBoard().getModeratorCode())) {
-            throw new ForbiddenException("The provided moderatorCode is not valid for this Question");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided moderatorCode is not valid "
+                + "for this Question");
         }
         Question markedQuestion = questionService.markAsAnswered(question);
         QuestionDetailsDto dto = modelMapper.map(markedQuestion, QuestionDetailsDto.class);
