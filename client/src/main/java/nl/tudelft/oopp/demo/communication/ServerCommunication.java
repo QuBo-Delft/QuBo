@@ -81,6 +81,24 @@ public class ServerCommunication {
     }
 
     /**
+     * Retrieves an HTTP response from the server by sending an HTTP patch request.
+     *
+     * @param fullUrl   The URL corresponding to the server endpoint.
+     * @return The http response.
+     */
+    private static HttpResponse<String> patch(String fullUrl) {
+        //Set up the request Object
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(fullUrl))
+                .method("PATCH", HttpRequest.BodyPublishers.ofString("{}"))
+                .header("Content-Type", "application/json")
+                .build();
+
+        //Send the request, and retrieve and return the response from the server
+        return sendRequest(request);
+    }
+
+    /**
      * The method sends a request to the server to create a question board.
      *
      * @param board     The QuestionBoardCreationBindingModel object that contains details of a question board.
