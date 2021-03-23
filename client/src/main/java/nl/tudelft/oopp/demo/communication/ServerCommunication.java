@@ -139,7 +139,7 @@ public class ServerCommunication {
         HttpResponse<String> res = post(fullUrl, requestBody, "Content-Type",
                                         "application/json;charset=UTF-8");
 
-        //Check if the request was sent and received properly and return null if this is not the case.
+        //If the request was unsuccessful, return null
         if (res == null || res.statusCode() != 200) {
             return null;
         }
@@ -161,6 +161,7 @@ public class ServerCommunication {
         //Send the http patch request and retrieve the response
         HttpResponse<String> response = patch(fullUrl);
 
+        //If the request was unsuccessful, return false
         if (response == null || response.statusCode() != 200) {
             return false;
         }
@@ -183,7 +184,7 @@ public class ServerCommunication {
                 .uri(URI.create(subUrl + "/api/board/moderator?code=" + moderatorCode)).build();
         HttpResponse<String> response = sendRequest(request);
 
-        //If the code was not a moderator code or the response was null, return null
+        //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
             return null;
         }
@@ -239,6 +240,11 @@ public class ServerCommunication {
             .build();
         HttpResponse<String> response = sendRequest(request);
 
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
         //Convert the response to an array of QuestionDetailsDtos and return this
         QuestionDetailsDto[] questionArray = gson.fromJson(response.body(), QuestionDetailsDto[].class);
 
@@ -267,8 +273,7 @@ public class ServerCommunication {
         HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
             "application/json;charset=UTF-8");
 
-        //Check if the response object is null or if the status code is not equal to 200,
-        //in which case null is returned
+        //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
             return null;
         }
@@ -323,9 +328,8 @@ public class ServerCommunication {
         //Send the request to delete the question from the board and retrieve the response
         HttpResponse<String> response = delete(fullUrl);
 
-        //Check if the question has been deleted properly
-        //Return false if this was not the case
-        if (response.statusCode() != 200) {
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
             return false;
         }
 
