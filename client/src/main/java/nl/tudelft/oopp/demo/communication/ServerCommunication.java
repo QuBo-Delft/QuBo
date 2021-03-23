@@ -86,6 +86,24 @@ public class ServerCommunication {
     }
 
     /**
+     * Retrieves an HTTP response from the server by sending an HTTP patch request.
+     *
+     * @param fullUrl   The URL corresponding to the server endpoint.
+     * @return The http response.
+     */
+    private static HttpResponse<String> patch(String fullUrl) {
+        //Set up the request Object
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(fullUrl))
+                .method("PATCH", HttpRequest.BodyPublishers.ofString("{}"))
+                .header("Content-Type", "application/json")
+                .build();
+
+        //Send the request, and return the http response
+        return  sendRequest(request);
+    }
+
+    /**
      * Retrieves an HTTP response from the server by sending an HTTP put request.
      *
      * @param fullUrl       The URL corresponding to the server endpoint.
@@ -127,6 +145,27 @@ public class ServerCommunication {
         }
 
         return gson.fromJson(res.body(), QuestionBoardCreationDto.class);
+    }
+
+    /**
+     * This method aims to close a question board corresponding to a specific boardId and moderatorCode.
+     *
+     * @param boardId           The board id of a question board to be closed.
+     * @param moderatorCode     The moderator code of this question board.
+     * @return true if and only if the question board was closed successfully.
+     */
+    public static boolean closeBoardRequest(UUID boardId, UUID moderatorCode) {
+        // Construct the full url for closing a question board
+        String fullUrl = subUrl + "api/board/" + boardId + "/close?code=" + moderatorCode;
+
+        //Send the http patch request and retrieve the response
+        HttpResponse<String> response = patch(fullUrl);
+
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
