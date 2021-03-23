@@ -78,7 +78,7 @@ public class SceneLoader {
 
         // Check if the return questions are null
         if (questions == null) {
-            AlertDialog.display("", "Unable to display the codes");
+            AlertDialog.display("", "Unable to display the student view");
             return;
         }
 
@@ -86,7 +86,7 @@ public class SceneLoader {
 
         // Check if root is null
         if (root == null) {
-            AlertDialog.display("", "Unable to display the codes");
+            AlertDialog.display("", "Unable to display the student view");
             return;
         }
 
