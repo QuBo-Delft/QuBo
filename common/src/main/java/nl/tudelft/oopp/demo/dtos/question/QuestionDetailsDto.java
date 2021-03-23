@@ -14,6 +14,8 @@ public class QuestionDetailsDto {
 
     private Timestamp timestamp;
 
+    private boolean answered;
+
     private Set<AnswerDetailsDto> answers;
 
     public QuestionDetailsDto() {
@@ -57,5 +59,13 @@ public class QuestionDetailsDto {
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    public boolean isAnswered() {
+        return answered;
+    }
+
+    public void setAnswered(boolean answered) {
+        this.answered = answered;
     }
 }
