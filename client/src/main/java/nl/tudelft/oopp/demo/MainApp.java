@@ -3,7 +3,10 @@ package nl.tudelft.oopp.demo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.views.QuoteDisplay;
@@ -28,8 +31,8 @@ public class MainApp {
     public static void main(String[] args) {
         //Display working views
 
-        //Display a window that gives quotes when a button is clicked
-        QuoteDisplay.main(new String[0]);
+        //Display the application homepage
+        SceneDisplay.main(new String[0]);
 
         //Create a QuestionBoardCreationBindingModel to create a Question Board
         QuestionBoardCreationBindingModel model = new QuestionBoardCreationBindingModel();
@@ -63,7 +66,7 @@ public class MainApp {
         System.out.println("Retrieved the Question Board details\n  through the Board ID:"
             + gson.toJson(ServerCommunication.retrieveBoardDetails(boardId)));
 
-        //Print the JSON representation of the DTO returned by retrieveBoardDetail called using the moderator
+        //Print the JSON representation of the DTO returned by retrieveBoardDetails called using the moderator
         //code of questionBoard
         System.out.println("Retrieved the Question Board details\n  through the Moderator Code using "
             + "retrieveBoardDetails:"
@@ -75,11 +78,12 @@ public class MainApp {
             + gson.toJson(ServerCommunication
                 .retrieveBoardDetailsThroughModCode(moderatorCode)));
 
-        //Print the JSON representation of the dto returned by the addQuestion method called using the ID of the
+        //Print the JSON representation of the dto returned by the addQuestion method called using the
         //ID of the questionBoard.
         String questionText = "Has this question been added successfully?";
         QuestionCreationDto questionCodes = ServerCommunication
             .addQuestion(boardId, questionText, "author");
+
         System.out.println("Added a question to the Question Board\n    "
             + gson.toJson(questionCodes));
 
@@ -94,13 +98,26 @@ public class MainApp {
         System.out.println("The question has been edited\n    through the moderator code: "
             + ServerCommunication.editQuestion(questionId, moderatorCode, "Is the universe infinitely large?"));
 
-        //Delete the question from the question board and print true if the question was deleted successfully
+        //Add another question
+        QuestionCreationDto questionTwo = ServerCommunication
+            .addQuestion(boardId, questionText, "author");
+        System.out.println("Added a question to the Question Board\n    "
+            + gson.toJson(questionTwo));
+
+        //Retrieve the questions associated with the question board and log them to the console
+        QuestionDetailsDto[] questionList = ServerCommunication.retrieveQuestions(boardId);
+
+        System.out.print("The questions in this question board are:\n");
+        for (QuestionDetailsDto question : questionList) {
+            System.out.print("    " + gson.toJson(question) + "\n");
+        }
+
+        //Delete questionCodes from the question board and print true if the question was deleted successfully
         System.out.println("The question has been deleted: " + ServerCommunication
             .deleteQuestion(questionId, secretCode));
 
-        //Create a second question and delete this question through the moderator code of the QuestionBoard
-        QuestionCreationDto questionTwo = ServerCommunication
-            .addQuestion(boardId, questionText, "author");
+        //Delete questionTwo through the moderator code of the QuestionBoard and print true if the question was
+        //deleted successfully
         UUID questionTwoId = questionTwo.getId();
 
         System.out.println("The question has been deleted: " + ServerCommunication

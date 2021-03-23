@@ -1,13 +1,13 @@
-package nl.tudelft.oopp.demo.test;
-
-import java.io.IOException;
-import java.net.URL;
+package nl.tudelft.oopp.demo;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class SceneDisplay extends Application {
 
@@ -31,12 +31,11 @@ public class SceneDisplay extends Application {
         FXMLLoader loader = new FXMLLoader();
 
         // By giving the resource path, it is able to display an specific fxml file
-        URL xmlUrl = getClass().getResource("/QuBoCodes.fxml");
+        URL xmlUrl = getClass().getResource("/JoinQuBo.fxml");
         loader.setLocation(xmlUrl);
         Parent root = loader.load();
 
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
-
 }

@@ -2,8 +2,13 @@ package nl.tudelft.oopp.demo.communication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteDetailsDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
@@ -181,6 +186,26 @@ public class ServerCommunication {
     }
 
     /**
+     * Retrieves the question list of the specified board.
+     * Communicates with the /api/board/{boardid}/questions server endpoint.
+     *
+     * @param boardId   The ID of the Question Board whose question list should be retrieved.
+     * @return Returns an array of QuestionDetailsDtos.
+     */
+    public static QuestionDetailsDto[] retrieveQuestions(UUID boardId) {
+        //Send the request to retrieve the questions of the question board, and retrieve the response
+        HttpRequest request = HttpRequest.newBuilder().GET()
+            .uri(URI.create(subUrl + "api/board/" + boardId + "/questions"))
+            .build();
+        HttpResponse<String> response = sendRequest(request);
+
+        //Convert the response to an array of QuestionDetailsDtos and return this
+        QuestionDetailsDto[] questionArray = gson.fromJson(response.body(), QuestionDetailsDto[].class);
+
+        return questionArray;
+    }
+
+    /**
      * Adds a question with specified text and author to the board.
      * Communicates with the /api/board/{boardid}/question server endpoint.
      *
@@ -258,6 +283,67 @@ public class ServerCommunication {
         //Check if the question has been deleted properly
         //Return false if this was not the case
         if (response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Adds a pace vote to the question board.
+     * Communicated with the /api/board/{boardid}/pace server endpoint.
+     *
+     * @param boardId   The ID of the question board to which a pace vote should be added.
+     * @param paceType  The type of pace vote that should be added.
+     * @return A PaceVoteCreationDto with the ID of the pace vote.
+     */
+    public static PaceVoteCreationDto addPaceVote(UUID boardId, PaceType paceType) {
+        //Create a PaceVoteCreationBindingModel with the specified pace type
+        PaceVoteCreationBindingModel paceModel = new PaceVoteCreationBindingModel();
+        paceModel.setPaceType(paceType);
+
+        //Set up the variables needed to call the post method
+        String requestBody = gson.toJson(paceModel);
+        String fullUrl = subUrl + "/api/board/" + boardId + "/pace";
+
+        //Request the pace vote creation, and retrieve the response
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        //Convert the response body to a PaceVoteCreationDto and return this
+        PaceVoteCreationDto paceVote = gson.fromJson(response.body(), PaceVoteCreationDto.class);
+
+        return paceVote;
+    }
+
+    /**
+     * Deletes a pace vote with specified ID from the question board.
+     * Communicated with the /api/board/{boardid}/pace/{pacevoteid} server endpoint.
+     *
+     * @param boardId       The question board from which the pace vote should be deleted.
+     * @param paceVoteId    The ID of the pace vote that should be deleted.
+     * @return True if, and only if, the deletion was successful.
+     */
+    public static boolean deletePaceVote(UUID boardId, UUID paceVoteId) {
+        //Set up the URL that will be sent to the delete helper method
+        String fullUrl = subUrl + "/api/board/" + boardId + "/pace/" + paceVoteId;
+
+        //Send the request to the server and receive the response
+        HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        //Check if the deleted pace vote had the same ID
+        PaceVoteDetailsDto deletedVote = gson.fromJson(response.body(), PaceVoteDetailsDto.class);
+        if (deletedVote.getId() != paceVoteId) {
             return false;
         }
 
