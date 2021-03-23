@@ -3,6 +3,8 @@ package nl.tudelft.oopp.demo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
@@ -96,7 +98,7 @@ public class MainApp {
 
         System.out.print("The questions in this question board are:\n");
         for (QuestionDetailsDto question : questionList) {
-            System.out.println("    " + gson.toJson(question) + "\n");
+            System.out.print("    " + gson.toJson(question) + "\n");
         }
 
         //Delete questionCodes from the question board and print true if the question was deleted successfully
@@ -112,5 +114,15 @@ public class MainApp {
 
         System.out.println("The question has been deleted: " + ServerCommunication
             .deleteQuestion(questionTwoId, moderatorCode));
+
+        //Add a pace vote to the question board
+        PaceType paceType = PaceType.JUST_RIGHT;
+        PaceVoteCreationDto paceVote = ServerCommunication.addPaceVote(boardId, paceType);
+        System.out.println("The pace vote has been added\n " + gson.toJson(paceVote));
+
+        //Delete a pace vote from the question board
+        UUID paceVoteId = paceVote.getId();
+        System.out.println("The pace vote has been deleted: " + ServerCommunication
+            .deletePaceVote(boardId, paceVoteId));
     }
 }

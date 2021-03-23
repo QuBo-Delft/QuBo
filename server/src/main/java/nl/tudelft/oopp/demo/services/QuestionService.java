@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.repositories.QuestionBoardRepository;
@@ -81,6 +82,27 @@ public class QuestionService {
      */
     public Question getQuestionById(UUID questionId) {
         return questionRepository.getQuestionById(questionId);
+    }
+
+    /**
+     * Edits the text of a question.
+     *
+     * @param questionId The id of the question to be deleted.
+     * @param model      A model containing the new text of the question.
+     * @return The updated Question.
+     * @throws NotFoundException if the board doesn't exist.
+     */
+    public Question editQuestion(UUID questionId, QuestionEditingBindingModel model) {
+        Question question = questionRepository.getQuestionById(questionId);
+        if (question == null) {
+            throw new NotFoundException("Question does not exist");
+        }
+
+        question.setText(model.getText());
+
+        questionRepository.save(question);
+
+        return question;
     }
 
     /**
