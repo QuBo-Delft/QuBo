@@ -54,10 +54,10 @@ public class SceneLoader {
     }
 
     /**
-     * This method aims to load the page that displays the student view of a QuBo.
+     * This method aims to load the page that displays the student view of a question board.
      *
      * @param qd    The QuestionBoardCreationDto object that brings data for the
-     *              student view of a QuBo.
+     *              student view of a question board.
      */
     public static void loadStudentView(QuestionBoardDetailsDto qd) {
         // Create an FXMLLoader of StudentView.fxml
