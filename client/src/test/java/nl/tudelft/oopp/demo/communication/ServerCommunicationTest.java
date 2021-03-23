@@ -131,6 +131,66 @@ public class ServerCommunicationTest {
         assertNull(quBoDetails);
     }
 
+    //Test if the retrieveBoardDetails method returns a QuestionBoardDetailsDto that corresponds to that of the
+    //created board.
+    @Test
+    public void testRetrieveBoardDetailsValidRequest() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        //Act
+        QuestionBoardDetailsDto quBoDetails = ServerCommunication
+                .retrieveBoardDetails(quBo.getId());
+
+        //Assert
+        assertEquals(quBo.getId(), quBoDetails.getId());
+        assertEquals(quBo.getStartTime(), quBoDetails.getStartTime());
+        assertEquals(quBo.getTitle(), quBoDetails.getTitle());
+    }
+
+    //Test if the retrieveBoardDetails method returns a QuestionBoardDetailsDto that corresponds to that of the
+    //created board when called through the moderator code.
+    @Test
+    public void testRetrieveBoardDetailsModCodeRequest() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        //Act
+        QuestionBoardDetailsDto quBoDetails = ServerCommunication
+                .retrieveBoardDetails(quBo.getModeratorCode());
+
+        //Assert
+        assertEquals(quBo.getId(), quBoDetails.getId());
+        assertEquals(quBo.getStartTime(), quBoDetails.getStartTime());
+        assertEquals(quBo.getTitle(), quBoDetails.getTitle());
+    }
+
+    //Test if the retrieveBoardDetails method returns null when called with an invalid UUID
+    @Test
+    public void testRetrieveBoardDetailsInvalidRequest() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        //Act
+        QuestionBoardDetailsDto quBoDetails = ServerCommunication
+                .retrieveBoardDetails(UUID.randomUUID());
+
+        //Assert
+        assertNull(quBoDetails);
+    }
+
     @Test
     public void testRandomQuote() {
 
