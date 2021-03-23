@@ -4,12 +4,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.text.Text;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 
 public class StudentViewController {
     @FXML
@@ -22,10 +27,10 @@ public class StudentViewController {
     private void initialize() {
         ObservableList<StudentViewController.CustomThing> data = FXCollections.observableArrayList();
         data.addAll(new StudentViewController.CustomThing(2, "What is life?"),
-                new StudentViewController.CustomThing(42,"Trolley problem." +
-                        "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem." +
-                        "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem." +
-                        "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
+                new StudentViewController.CustomThing(42,"Trolley problem."
+                        + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                        + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                        + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
 
         questionList.setItems(data);
         questionList.setCellFactory(listView -> new CustomListCell());
@@ -75,19 +80,19 @@ public class StudentViewController {
             ColumnConstraints col2 = new ColumnConstraints();
             col2.setHgrow(Priority.ALWAYS);
 
-            content.setGridLinesVisible( true );
+            content.setGridLinesVisible(true);
             content.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
                     new ColumnConstraints(50));
 
-            content.addColumn( 0, upvote);
-            content.addColumn( 1, questionContent);
-            content.addColumn( 2, options);
+            content.addColumn(0, upvote);
+            content.addColumn(1, questionContent);
+            content.addColumn(2, options);
 
             //Make questionContent resize with width of cell
-            double paddingWidth = questionList.getPadding().getLeft() +
-                    questionList.getPadding().getRight();
-            questionContent.wrappingWidthProperty().bind(questionList.widthProperty().subtract(
-                    paddingWidth + 120));
+            double paddingWidth = questionList.getPadding().getLeft()
+                    +  questionList.getPadding().getRight();
+            questionContent.wrappingWidthProperty().bind(questionList.widthProperty()
+                    .subtract(paddingWidth + 120));
         }
 
         @Override
