@@ -9,7 +9,6 @@ import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
-import nl.tudelft.oopp.demo.views.QuoteDisplay;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -87,6 +86,17 @@ public class MainApp {
         System.out.println("Added a question to the Question Board\n    "
             + gson.toJson(questionCodes));
 
+        //Edit the question that was just created through the question secret code, and print true if it was
+        //edited successfully.
+        UUID questionId = questionCodes.getId();
+        UUID secretCode = questionCodes.getSecretCode();
+        System.out.println("The question has been edited: " + ServerCommunication
+            .editQuestion(questionId, secretCode, "What is life?"));
+
+        //Edit the question through the moderator code, and print true if it was edited successfully.
+        System.out.println("The question has been edited through the moderator code: "
+            + ServerCommunication.editQuestion(questionId, moderatorCode, "Is the universe infinitely large?"));
+
         //Add another question
         QuestionCreationDto questionTwo = ServerCommunication
             .addQuestion(boardId, questionText, "author");
@@ -102,9 +112,6 @@ public class MainApp {
         }
 
         //Delete questionCodes from the question board and print true if the question was deleted successfully
-        UUID questionId = questionCodes.getId();
-        UUID secretCode = questionCodes.getSecretCode();
-
         System.out.println("The question has been deleted: " + ServerCommunication
             .deleteQuestion(questionId, secretCode));
 
@@ -124,5 +131,6 @@ public class MainApp {
         UUID paceVoteId = paceVote.getId();
         System.out.println("The pace vote has been deleted: " + ServerCommunication
             .deletePaceVote(boardId, paceVoteId));
+
     }
 }
