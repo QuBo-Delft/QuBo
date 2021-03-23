@@ -41,7 +41,7 @@ public class QuBoCodesController {
 
     /**
      * This method aims to make a window to display the student code, the moderator code, 
-     * the title and start time of the question board just created.
+     * the title, and start time of the question board just created.
      *
      * @param qb    The QuestionBoardCreationDto that contains the data of a question board.
      */
