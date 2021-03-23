@@ -123,6 +123,27 @@ public class ServerCommunication {
     }
 
     /**
+     * This method aims to close a question board corresponding to a specific boardId and moderatorCode.
+     *
+     * @param boardId           The board id of a question board to be closed.
+     * @param moderatorCode     The moderator code of this question board.
+     * @return true if and only if the question board is close successfully.
+     */
+    public static boolean closeBoardRequest(UUID boardId, UUID moderatorCode) {
+        // Construct the full url for closing a question board
+        String fullUrl = subUrl + "api/board/" + boardId + "/close?code=" + moderatorCode;
+
+        //Send the http patch request and retrieve a response
+        HttpResponse<String> response = patch(fullUrl);
+
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Retrieves the board details of the Question Board associated with the specified moderator code from
      *      the server.
      * Communicates with the /api/board/moderator?code={moderatorCode} server endpoint.
