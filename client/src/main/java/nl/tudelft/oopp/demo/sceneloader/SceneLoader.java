@@ -41,7 +41,42 @@ public class SceneLoader {
         // Transfer the data for QuBoCodes
         controller.displayCodes(qd);
 
+        // Check if root is null
+        if (root == null) {
+            AlertDialog.display("", "Unable to display the codes");
+            return;
+        }
+
+        // Display the scene
         Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
+    public static void loadStudentView(QuestionBoardDetailsDto qd) {
+        // Create an FXMLLoader of StudentView.fxml
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/StudentView.fxml"));
+
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Get the controller of StudentView
+        StudentViewController controller = loader.getController();
+
+        UUID boardId = qd.getId();
+        QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(boardId);
+
+        // Check if the return questions are null
+        if (questions == null) {
+            AlertDialog.display("", "Unable to display the codes");
+            return;
+        }
+
+        // TODO: need a method to update data in studentView
 
         // Check if root is null
         if (root == null) {
