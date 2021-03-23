@@ -347,7 +347,7 @@ public class ServerCommunication {
 
         //Check if the deleted pace vote had the same ID
         PaceVoteDetailsDto deletedVote = gson.fromJson(response.body(), PaceVoteDetailsDto.class);
-        if (deletedVote.getId() != paceVoteId) {
+        if (!deletedVote.getId().equals(paceVoteId)) {
             return false;
         }
 
