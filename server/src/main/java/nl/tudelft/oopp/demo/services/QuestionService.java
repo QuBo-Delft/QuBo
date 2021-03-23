@@ -121,7 +121,7 @@ public class QuestionService {
      *
      * @param question The question to be marked as answered.
      * @return The question that was just marked as answered.
-     * @throws ConflictException if question was already marked as answered.
+     * @throws ConflictException if the question was already marked as answered.
      */
     public Question markAsAnswered(Question question) {
         if (question.isAnswered()) {
