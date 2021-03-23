@@ -147,7 +147,7 @@ public class QuestionController {
     }
 
     /**
-     * Delete question vote question vote details dto.
+     * Delete the question vote with the specified vote ID.
      *
      * @param questionId The question ID.
      * @param voteId     The vote ID.
@@ -161,13 +161,13 @@ public class QuestionController {
     public QuestionVoteDetailsDto deleteQuestionVote(
         @PathVariable("questionid") UUID questionId,
         @PathVariable("voteid") UUID voteId) {
-        // verify request
+        // Verify the request
         QuestionVote vote = questionVoteService.getQuestionVoteById(voteId);
         // Check if vote exists
         if (vote == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find QuestionVote");
         }
-        // Check if questionId corresponds with this vote's questionId
+        // Check if questionId corresponds to this vote's questionId
         if (!questionId.equals(vote.getQuestion().getId())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This Question was not voted on"
                 + " with this QuestionVote");

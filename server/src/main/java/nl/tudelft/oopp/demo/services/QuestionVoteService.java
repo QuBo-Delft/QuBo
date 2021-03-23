@@ -50,17 +50,17 @@ public class QuestionVoteService {
     }
 
     /**
-     * Get question vote by ID.
+     * Get the question vote corresponding to the voteId passed to the method.
      *
      * @param voteId The vote ID.
-     * @return QuestionVote with provided ID.
+     * @return The QuestionVote that is associated with the vote ID passed to the method.
      */
     public QuestionVote getQuestionVoteById(UUID voteId) {
         return questionVoteRepository.getQuestionVoteById(voteId);
     }
 
     /**
-     * Delete vote.
+     * Delete the vote passed to the method from the database.
      *
      * @param questionVote The QuestionVote to be deleted.
      */
