@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
@@ -53,6 +54,7 @@ public class ServerCommunicationTest {
         quBoModel.setTitle("Test Qubo");
 
         QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
         //Act
         boolean isClosed = ServerCommunication.closeBoardRequest(quBo.getId(), quBo.getModeratorCode());
 
@@ -70,6 +72,7 @@ public class ServerCommunicationTest {
         quBoModel.setTitle("Test Qubo");
 
         QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
         //Act
         boolean isClosed = ServerCommunication.closeBoardRequest(quBo.getId(), UUID.randomUUID());
 
@@ -86,6 +89,46 @@ public class ServerCommunicationTest {
 
         //Assert
         assertFalse(isClosed);
+    }
+
+    //Test if the retrieveBoardDetailsThroughModCode method returns a QuestionBoardDetailsDto
+    //that corresponds to that of the created board.
+    @Test
+    public void testRetrieveBoardDetailsThroughModCodeValidRequest() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        //Act
+        QuestionBoardDetailsDto quBoDetails = ServerCommunication
+                .retrieveBoardDetailsThroughModCode(quBo.getModeratorCode());
+
+        //Assert
+        assertEquals(quBo.getId(), quBoDetails.getId());
+        assertEquals(quBo.getStartTime(), quBoDetails.getStartTime());
+        assertEquals(quBo.getTitle(), quBoDetails.getTitle());
+    }
+
+    //Test if the retrieveBoardDetailsThroughModCode method returns null when called with a code that does not
+    //correspond to a moderator code of a question board.
+    @Test
+    public void testRetrieveBoardDetailsThroughModCodeInvalidCode() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        //Act
+        QuestionBoardDetailsDto quBoDetails = ServerCommunication
+                .retrieveBoardDetailsThroughModCode(UUID.randomUUID());
+
+        //Assert
+        assertNull(quBoDetails);
     }
 
     @Test
