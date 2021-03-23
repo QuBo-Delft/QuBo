@@ -12,17 +12,23 @@ import nl.tudelft.oopp.demo.entities.QuestionVote;
 import nl.tudelft.oopp.demo.services.AnswerService;
 import nl.tudelft.oopp.demo.services.QuestionService;
 import nl.tudelft.oopp.demo.services.QuestionVoteService;
+import nl.tudelft.oopp.demo.services.exceptions.ConflictException;
 import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
@@ -174,6 +180,36 @@ public class QuestionController {
         @PathVariable("questionid") UUID questionId) {
         QuestionVote vote = questionVoteService.registerVote(questionId);
         QuestionVoteCreationDto dto = modelMapper.map(vote, QuestionVoteCreationDto.class);
+        return dto;
+    }
+
+    /**
+     * PATCH endpoint for marking Questions as answered.
+     *
+     * @param questionId    The ID of the question that is to be marked.
+     * @param moderatorCode The moderator code for the board this question is in.
+     * @return QuestionDetailsDto after the marked question.
+     * @throws ResponseStatusException 404 if question was not found in database.
+     * @throws ForbiddenException      if the provided moderatorCode is not authorized
+     *                                 to mark this question as answered.
+     * @throws ConflictException       if question was already marked as answered.
+     */
+    @RequestMapping(value = "{questionid}/answer", method = PATCH)
+    @ResponseBody
+    public QuestionDetailsDto markQuestionAsAnswered(
+        @PathVariable("questionid") UUID questionId,
+        @RequestParam("code") UUID moderatorCode) {
+        Question question = questionService.getQuestionById(questionId);
+        if (question == null) {
+            // Requested question does not exist
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question does not exist");
+        }
+        // Check if the moderatorCode is valid for this Question
+        if (!moderatorCode.equals(question.getQuestionBoard().getModeratorCode())) {
+            throw new ForbiddenException("The provided moderatorCode is not valid for this Question");
+        }
+        Question markedQuestion = questionService.markAsAnswered(question);
+        QuestionDetailsDto dto = modelMapper.map(markedQuestion, QuestionDetailsDto.class);
         return dto;
     }
 }

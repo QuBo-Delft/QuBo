@@ -3,12 +3,14 @@ package nl.tudelft.oopp.demo.services;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
+
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.demo.repositories.QuestionRepository;
+import nl.tudelft.oopp.demo.services.exceptions.ConflictException;
 import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
@@ -112,6 +114,22 @@ public class QuestionService {
      */
     public void deleteQuestionById(UUID id) {
         this.questionRepository.deleteQuestionById(id);
+    }
+
+    /**
+     * Marks a question as answered.
+     *
+     * @param question The question to be marked as answered.
+     * @return The question that was just marked as answered.
+     * @throws ConflictException if question was already marked as answered.
+     */
+    public Question markAsAnswered(Question question) {
+        if (question.isAnswered()) {
+            throw new ConflictException("Question was already marked as answered");
+        }
+        question.setAnswered(true);
+        questionRepository.save(question);
+        return question;
     }
 
     /**
