@@ -7,6 +7,8 @@ import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.demo.repositories.QuestionRepository;
+import nl.tudelft.oopp.demo.services.exceptions.ConflictException;
+import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -85,5 +87,30 @@ public class QuestionBoardService {
         }
         // Find questions belonging to this board
         return questionRepository.getQuestionByQuestionBoard(qb);
+    }
+
+    /**
+     * Set the QuestionBoard's closed attribute to true.
+     *
+     * @param boardId The board id.
+     * @return The updated QuestionBoard
+     * @throws NotFoundException if the board doesn't exist.
+     * @throws ConflictException if the board is already closed.
+     */
+    public QuestionBoard closeBoard(UUID boardId) {
+        QuestionBoard qb = questionBoardRepository.getById(boardId);
+
+        if (qb == null) {
+            throw new NotFoundException("Question board does not exist");
+        }
+
+        if (qb.isClosed()) {
+            throw new ConflictException("This QuestionBoard is already closed");
+        }
+
+        qb.setClosed(true);
+
+        questionBoardRepository.save(qb);
+        return qb;
     }
 }
