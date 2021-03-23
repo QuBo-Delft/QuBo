@@ -1,6 +1,8 @@
 package nl.tudelft.oopp.demo.services;
 
 import java.util.UUID;
+
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionVote;
 import nl.tudelft.oopp.demo.repositories.QuestionRepository;
@@ -46,5 +48,25 @@ public class QuestionVoteService {
         questionVoteRepository.save(vote);
         return vote;
     }
+
+    /**
+     * Get the question vote corresponding to the voteId passed to the method.
+     *
+     * @param voteId The vote ID.
+     * @return The QuestionVote that is associated with the vote ID passed to the method.
+     */
+    public QuestionVote getQuestionVoteById(UUID voteId) {
+        return questionVoteRepository.getQuestionVoteById(voteId);
+    }
+
+    /**
+     * Delete the vote passed to the method from the database.
+     *
+     * @param questionVote The QuestionVote to be deleted.
+     */
+    public void deleteVote(QuestionVote questionVote) {
+        questionVoteRepository.deleteQuestionVoteById(questionVote.getId());
+    }
+
 
 }

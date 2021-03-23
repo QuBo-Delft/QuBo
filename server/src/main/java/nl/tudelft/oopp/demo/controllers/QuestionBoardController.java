@@ -1,6 +1,9 @@
 package nl.tudelft.oopp.demo.controllers;
 
+import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.Set;
@@ -10,6 +13,7 @@ import javax.validation.Valid;
 
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteDetailsDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
@@ -23,6 +27,7 @@ import nl.tudelft.oopp.demo.services.PaceVoteService;
 import nl.tudelft.oopp.demo.services.QuestionBoardService;
 import nl.tudelft.oopp.demo.services.QuestionService;
 
+import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 
 import org.modelmapper.TypeToken;
@@ -104,8 +109,38 @@ public class QuestionBoardController {
     }
 
     /**
+     * PATCH endpoint that closes a QuestionBoard.
+     * Throw 400 upon wrong UUID formatting.
+     * Throw 404 upon requesting non-existent boardid.
+     * Throw 403 if the provided moderator code is incorrect.
+     * Throw 409 if the board is already closed.
+     *
+     * @param boardId       ID property of a board.
+     * @param moderatorCode The moderator code of the board.
+     * @return The details of the closed QuestionBoard.
+     */
+    @RequestMapping(value = "/{boardid}/close", method = PATCH)
+    @ResponseBody
+    public QuestionBoardDetailsDto closeQuestionBoard(
+        @PathVariable("boardid") UUID boardId,
+        @RequestParam("code") UUID moderatorCode) {
+        QuestionBoard qb = service.getBoardById(boardId);
+        if (qb == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        if (!qb.getModeratorCode().equals(moderatorCode)) {
+            throw new ForbiddenException("Invalid moderator code");
+        }
+
+        QuestionBoard closed = this.service.closeBoard(boardId);
+
+        QuestionBoardDetailsDto dto = modelMapper.map(closed, QuestionBoardDetailsDto.class);
+        return dto;
+    }
+
+    /**
      * GET endpoint that provides the client with the QuestionBoard associated with the specified
-     *      moderator code.
+     * moderator code.
      * Throw 400 upon wrong UUID formatting.
      * Throw 404 upon requesting a non-existent moderator code.
      *
@@ -168,7 +203,6 @@ public class QuestionBoardController {
         return dto;
     }
 
-
     /**
      * POST endpoint for registering PaceVotes.
      *
@@ -179,10 +213,41 @@ public class QuestionBoardController {
     @RequestMapping(value = "/{boardid}/pace", method = POST, consumes = "application/json")
     @ResponseBody
     public PaceVoteCreationDto registerPaceVote(
-            @PathVariable("boardid") UUID boardId,
-            @Valid @RequestBody PaceVoteCreationBindingModel paceVoteModel) {
-        PaceVote paceVote = paceVoteService.registerVote(boardId, paceVoteModel);
+        @PathVariable("boardid") UUID boardId,
+        @Valid @RequestBody PaceVoteCreationBindingModel paceVoteModel) {
+        PaceVote paceVote = paceVoteService.registerVote(paceVoteModel, boardId);
         return modelMapper.map(paceVote, PaceVoteCreationDto.class);
     }
+
+    /**
+     * DELETE endpoint for deleting PaceVotes.
+     *
+     * @param boardId    The ID of the Board this request was made in.
+     * @param paceVoteId The ID of the PaceVote that is to be deleted.
+     * @return The dto containing details about the deleted vote.
+     * @throws NotFoundException if PaceVote does not exist in database or
+     *                           PaceVote does not exists in provided questionBoard.
+     */
+    @RequestMapping(value = "/{boardid}/pace/{pacevoteid}", method = DELETE)
+    @ResponseBody
+    public PaceVoteDetailsDto deletePaceVote(
+        @PathVariable("boardid") UUID boardId,
+        @PathVariable("pacevoteid") UUID paceVoteId) {
+        PaceVote vote = paceVoteService.getById(paceVoteId);
+        // Check if PaceVote with this ID exists
+        if (vote == null) {
+            throw new NotFoundException("Pace vote does not exist");
+        }
+        // Check whether provided boardId matches with the ID in the PaceVote
+        UUID paceVoteBoardId = vote.getQuestionBoard().getId();
+        if (!paceVoteBoardId.equals(boardId)) {
+            throw new NotFoundException("Pace vote was not found in requested Question board");
+        }
+        PaceVoteDetailsDto dto = modelMapper.map(vote, PaceVoteDetailsDto.class);
+        // Delete actual vote
+        paceVoteService.deleteVote(vote);
+        return dto;
+    }
+
 }
 
