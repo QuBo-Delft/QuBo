@@ -2,6 +2,7 @@ package nl.tudelft.oopp.demo.communication;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
@@ -260,6 +261,90 @@ public class ServerCommunicationTest {
 
         //Assert
         assertNull(questions);
+    }
+
+    //Tests if addQuestion returns a QuestionCreationDto that corresponds to the text and author the method was
+    //called with.
+    @Test
+    public void testAddQuestionValidRequest() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        String text = "Is the universe infinitely large?";
+        String author = "Insert Name";
+
+        //Act
+        QuestionCreationDto questionCreated = ServerCommunication.addQuestion(quBo.getId(), text, author);
+
+        //Assert
+        QuestionDetailsDto[] questionDetails = ServerCommunication.retrieveQuestions(quBo.getId());
+        assertTrue(questionDetails[0].getId().equals(questionCreated.getId()));
+        assertTrue(questionDetails[0].getAuthorName().equals(author));
+        assertTrue(questionDetails[0].getText().equals(text));
+    }
+
+    //Tests if addQuestion returns null if the board it was going to be added to did not exist.
+    @Test
+    public void testAddQuestionInvalidBoard() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        String text = "Is the universe infinitely large?";
+        String author = "Insert Name";
+
+        //Act
+        QuestionCreationDto questionCreated = ServerCommunication.addQuestion(UUID.randomUUID(), text, author);
+
+        //Assert
+        assertNull(questionCreated);
+    }
+
+    //Tests if addQuestion returns null if the caller attempted to post a question before the start time
+    //of the board.
+    @Test
+    public void testAddQuestionInvalidQuestion() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        Timestamp now = Timestamp.from(Instant.now());
+        now.setTime(now.getTime() + (40 * 60 * 1000));
+        quBoModel.setStartTime(now);
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        String text = "Is the universe infinitely large?";
+        String author = "Insert Name";
+
+        //Act
+        QuestionCreationDto questionCreated = ServerCommunication.addQuestion(quBo.getId(), text, author);
+
+        //Assert
+        assertNull(questionCreated);
+    }
+
+    //Tests if addQuestion returns null when called with null values for question text and author
+    @Test
+    public void testAddQuestionInvalidRequest() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        //Act
+        QuestionCreationDto questionCreated = ServerCommunication.addQuestion(UUID.randomUUID(), null, null);
+
+        //Assert
+        assertNull(questionCreated);
     }
 
     @Test
