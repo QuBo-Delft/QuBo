@@ -12,6 +12,8 @@ import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
+import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -87,19 +89,8 @@ public class QuBoCodesController {
     /**
      * This method takes you back to JoinQuBo after clicking the Back to Homepage button.
      */
-    public void backToHome() throws IOException {
-        Stage primaryStage = new Stage();
-        FXMLLoader loader = new FXMLLoader();
-        URL xmlUrl = getClass().getResource("/JoinQuBo.fxml");
-        loader.setLocation(xmlUrl);
-        Parent root = loader.load();
-
-        //Close current stage
-        Stage stage = (Stage) backToHome.getScene().getWindow();
-        stage.close();
-        //Show new stage
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+    public void backToHome(){
+        SceneLoader.backToHome((Stage) backToHome.getScene().getWindow());
     }
 
 }
