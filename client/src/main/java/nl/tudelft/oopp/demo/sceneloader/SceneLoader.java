@@ -99,7 +99,7 @@ public class SceneLoader {
     /**
      * This method aims to load the JoinQuBo homepage and close the current stage.
      *
-     * @param currentStage	The stage of the scene where the method is called
+     * @param currentStage    The stage of the scene where the method is called
      */
     public static void backToHome(Stage currentStage) {
         currentStage.close();
