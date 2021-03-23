@@ -5,6 +5,7 @@ import nl.tudelft.oopp.demo.dtos.answer.AnswerCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.demo.entities.Answer;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
@@ -12,18 +13,14 @@ import nl.tudelft.oopp.demo.entities.QuestionVote;
 import nl.tudelft.oopp.demo.services.AnswerService;
 import nl.tudelft.oopp.demo.services.QuestionService;
 import nl.tudelft.oopp.demo.services.QuestionVoteService;
-import nl.tudelft.oopp.demo.services.exceptions.ConflictException;
 import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
-
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -182,6 +179,38 @@ public class QuestionController {
         QuestionVoteCreationDto dto = modelMapper.map(vote, QuestionVoteCreationDto.class);
         return dto;
     }
+
+    /**
+     * Delete the QuestionVote with the specified vote ID.
+     *
+     * @param questionId The question ID.
+     * @param voteId     The vote ID.
+     * @return The QuestionVoteDetailsDto based on the deleted QuestionVote.
+     * @throws ResponseStatusException 404 if vote does not exist.
+     * @throws ResponseStatusException 404 if the vote's question ID
+     *                                 doesn't match the provided question ID.
+     */
+    @RequestMapping(value = "/{questionid}/vote/{voteid}", method = DELETE)
+    @ResponseBody
+    public QuestionVoteDetailsDto deleteQuestionVote(
+        @PathVariable("questionid") UUID questionId,
+        @PathVariable("voteid") UUID voteId) {
+        // Verify the request
+        QuestionVote vote = questionVoteService.getQuestionVoteById(voteId);
+        // Check if vote exists
+        if (vote == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find QuestionVote");
+        }
+        // Check if questionId corresponds to this vote's questionId
+        if (!questionId.equals(vote.getQuestion().getId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This Question was not voted on"
+                + " with this QuestionVote");
+        }
+        QuestionVoteDetailsDto dto = modelMapper.map(vote, QuestionVoteDetailsDto.class);
+        questionVoteService.deleteVote(vote);
+        return dto;
+    }
+
 
     /**
      * PATCH endpoint for marking Questions as answered.
