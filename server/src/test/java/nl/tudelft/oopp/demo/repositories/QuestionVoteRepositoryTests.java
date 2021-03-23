@@ -130,4 +130,32 @@ public class QuestionVoteRepositoryTests {
         // Assert
         assertNull(result);
     }
+
+    @Test
+    public void deleteQuestionVoteById_withCorrectId_deletesQuestionVote() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.from(Instant.now()));
+        board.setTitle("Test board");
+        questionBoardRepository.save(board);
+
+        Question question = new Question();
+        question.setAuthorName("Author");
+        question.setText("Test question");
+        question.setSecretCode(UUID.randomUUID());
+        question.setTimestamp(Timestamp.from(Instant.now()));
+        question.setQuestionBoard(board);
+        questionRepository.save(question);
+
+        QuestionVote vote = new QuestionVote();
+        vote.setQuestion(question);
+        questionVoteRepository.save(vote);
+
+        // Act
+        questionVoteRepository.deleteQuestionVoteById(vote.getId());
+
+        // Assert
+        assertNull(questionVoteRepository.getQuestionVoteById(vote.getId()));
+    }
 }
