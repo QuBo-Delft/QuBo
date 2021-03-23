@@ -10,21 +10,27 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.text.Text;
 
 public class StudentViewController {
     @FXML
     private ListView<CustomThing> questionList;
 
+    /**
+     * Code that is run upon loading StudentView.fxml
+     */
     @FXML
     private void initialize() {
         ObservableList<StudentViewController.CustomThing> data = FXCollections.observableArrayList();
         data.addAll(new StudentViewController.CustomThing(2, "What is life?"),
-                new StudentViewController.CustomThing(42,"Trolley problem."));
+                new StudentViewController.CustomThing(42,"Trolley problem." +
+                        "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem." +
+                        "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem." +
+                        "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
 
         questionList.setItems(data);
         questionList.setCellFactory(listView -> new CustomListCell());
@@ -50,7 +56,7 @@ public class StudentViewController {
     }
 
     private class CustomListCell extends ListCell<CustomThing> {
-        private HBox content;
+        private GridPane content;
         private Label upvoteNumber;
         private Text questionContent;
 
@@ -61,16 +67,29 @@ public class StudentViewController {
 
             Button upvoteTriangle = new Button("up");
             VBox upvote = new VBox(upvoteTriangle, upvoteNumber);
+            upvote.setSpacing(5);
             upvote.setAlignment(Pos.CENTER);
 
             MenuButton options = new MenuButton();
             options.getItems().addAll(new MenuItem("Edit"), new MenuItem("Delete"));
 
-            Pane pane = new Pane();
-            HBox.setHgrow(pane, Priority.ALWAYS);
+            double paddingWidth = questionList.getPadding().getLeft() +
+                    questionList.getPadding().getRight();
 
-            content = new HBox(upvote, questionContent, pane, options);
-            content.setSpacing(10);
+            content = new GridPane();
+            ColumnConstraints col2 = new ColumnConstraints();
+            col2.setHgrow(Priority.ALWAYS);
+
+            content.setGridLinesVisible( true );
+            content.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
+                    new ColumnConstraints(50));
+
+            content.addColumn( 0, upvote);
+            content.addColumn( 1, questionContent);
+            content.addColumn( 2, options);
+
+            questionContent.wrappingWidthProperty().bind(questionList.widthProperty().subtract(
+                    paddingWidth + 120));
         }
 
         @Override
