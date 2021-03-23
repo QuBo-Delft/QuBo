@@ -335,6 +335,30 @@ public class ServerCommunication {
     }
 
     /**
+     * Mark the question from the board as answered.
+     *
+     * @param questionId    The ID of the question to be marked as answered.
+     * @param code          The moderator code that associated with the board
+     *                      where the the question is on or the question's secret code.
+     * @return true if and only the question has been marked as answered successfully.
+     */
+    public static boolean markQuestionAsAnswered(UUID questionId, UUID code) {
+        //Set up the variables required by the patch helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "?code=" + code;
+
+        //Send the request to mark the question as answered and retrieve the response
+        HttpResponse<String> response = patch(fullUrl);
+
+        //Check if the request was successful
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        //The question has been marked as answered
+        return true;
+    }
+
+    /**
      * Adds a vote to a question.
      * Communicates with the /api/question/{questionid}/vote server endpoint.
      *
