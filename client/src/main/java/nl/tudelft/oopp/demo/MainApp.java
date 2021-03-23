@@ -9,6 +9,7 @@ import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -110,6 +111,15 @@ public class MainApp {
         for (QuestionDetailsDto question : questionList) {
             System.out.print("    " + gson.toJson(question) + "\n");
         }
+
+        //Add a vote to questionCodes
+        QuestionVoteCreationDto questionVote = ServerCommunication.addQuestionVote(questionId);
+        System.out.println("A vote has been added to the question\n    " + gson.toJson(questionVote));
+
+        //Delete the vote that was just created
+        UUID voteId = questionVote.getId();
+        System.out.println("The vote has been deleted: " + ServerCommunication
+            .deleteQuestionVote(questionId, voteId));
 
         //Delete questionCodes from the question board and print true if the question was deleted successfully
         System.out.println("The question has been deleted: " + ServerCommunication

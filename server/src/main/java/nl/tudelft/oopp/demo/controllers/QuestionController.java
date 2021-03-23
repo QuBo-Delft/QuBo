@@ -19,10 +19,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
-
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +33,7 @@ import javax.validation.Valid;
 
 import java.util.UUID;
 
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 
 /**
  * The Question controller
@@ -101,6 +101,7 @@ public class QuestionController {
         AnswerCreationDto dto = modelMapper.map(answer, AnswerCreationDto.class);
         return dto;
     }
+
 
     /**
      * DELETE endpoint for deleting questions.
@@ -209,6 +210,38 @@ public class QuestionController {
         }
         QuestionVoteDetailsDto dto = modelMapper.map(vote, QuestionVoteDetailsDto.class);
         questionVoteService.deleteVote(vote);
+        return dto;
+    }
+
+
+    /**
+     * PATCH endpoint for marking Questions as answered.
+     *
+     * @param questionId    The ID of the question that is to be marked as answered.
+     * @param moderatorCode The moderator code of the board this question is in.
+     * @return The QuestionDetailsDto after marking the question as answered.
+     * @throws ResponseStatusException 404 if the question was not found in database.
+     * @throws ResponseStatusException 403 if the provided moderatorCode is not authorized
+     *                                 to mark this question as answered.
+     */
+    @RequestMapping(value = "{questionid}/answer", method = PATCH)
+    @ResponseBody
+    public QuestionDetailsDto markQuestionAsAnswered(
+        @PathVariable("questionid") UUID questionId,
+        @RequestParam("code") UUID moderatorCode) {
+        Question question = questionService.getQuestionById(questionId);
+        if (question == null) {
+            // Requested question does not exist
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question does not exist");
+
+        }
+        // Check if the moderatorCode is valid for the question board the question is in
+        if (!moderatorCode.equals(question.getQuestionBoard().getModeratorCode())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided moderatorCode is not valid "
+                + "for this Question");
+        }
+        Question markedQuestion = questionService.markAsAnswered(questionId);
+        QuestionDetailsDto dto = modelMapper.map(markedQuestion, QuestionDetailsDto.class);
         return dto;
     }
 }

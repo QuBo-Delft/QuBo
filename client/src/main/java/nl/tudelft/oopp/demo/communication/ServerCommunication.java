@@ -13,6 +13,8 @@ import nl.tudelft.oopp.demo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -139,7 +141,7 @@ public class ServerCommunication {
         HttpResponse<String> res = post(fullUrl, requestBody, "Content-Type",
                                         "application/json;charset=UTF-8");
 
-        //Check if the request was sent and received properly and return null if this is not the case.
+        //If the request was unsuccessful, return null
         if (res == null || res.statusCode() != 200) {
             return null;
         }
@@ -161,6 +163,7 @@ public class ServerCommunication {
         //Send the http patch request and retrieve the response
         HttpResponse<String> response = patch(fullUrl);
 
+        //If the request was unsuccessful, return false
         if (response == null || response.statusCode() != 200) {
             return false;
         }
@@ -183,7 +186,7 @@ public class ServerCommunication {
                 .uri(URI.create(subUrl + "/api/board/moderator?code=" + moderatorCode)).build();
         HttpResponse<String> response = sendRequest(request);
 
-        //If the code was not a moderator code or the response was null, return null
+        //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
             return null;
         }
@@ -239,6 +242,11 @@ public class ServerCommunication {
             .build();
         HttpResponse<String> response = sendRequest(request);
 
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
         //Convert the response to an array of QuestionDetailsDtos and return this
         QuestionDetailsDto[] questionArray = gson.fromJson(response.body(), QuestionDetailsDto[].class);
 
@@ -267,8 +275,7 @@ public class ServerCommunication {
         HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
             "application/json;charset=UTF-8");
 
-        //Check if the response object is null or if the status code is not equal to 200,
-        //in which case null is returned
+        //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
             return null;
         }
@@ -323,9 +330,64 @@ public class ServerCommunication {
         //Send the request to delete the question from the board and retrieve the response
         HttpResponse<String> response = delete(fullUrl);
 
-        //Check if the question has been deleted properly
-        //Return false if this was not the case
-        if (response.statusCode() != 200) {
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Adds a vote to a question.
+     * Communicates with the /api/question/{questionid}/vote server endpoint.
+     *
+     * @param questionId    The ID of the question to which a vote should be added.
+     * @return Returns a QuestionVoteCreationDto associated with the created question vote.
+     */
+    public static QuestionVoteCreationDto addQuestionVote(UUID questionId) {
+        //Set up the parameters that need to be passed to the post helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "/vote";
+        String requestBody = gson.toJson(questionId);
+
+        //Send the request to add a vote, and retrieve the response
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        //Convert the response to a QuestionVoteCreationDto and return this
+        QuestionVoteCreationDto questionVote = gson.fromJson(response.body(), QuestionVoteCreationDto.class);
+
+        return questionVote;
+    }
+
+    /**
+     * Deletes a question vote from the specified question.
+     * Communicates with the /api/question/{questionid}/vote/{voteid} server endpoint.
+     *
+     * @param questionId    The ID of the question from which a vote should be deleted.
+     * @param voteId        The ID of the vote that should be deleted.
+     * @return Returns true if, and only if, the vote has been deleted successfully.
+     */
+    public static boolean deleteQuestionVote(UUID questionId, UUID voteId) {
+        //Set up the parameter required to call the delete helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "/vote/" + voteId;
+
+        //Send the request to delete the vote, and retrieve the response
+        HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        //Check if the deleted question vote was the right vote
+        QuestionVoteDetailsDto deletedVote = gson.fromJson(response.body(), QuestionVoteDetailsDto.class);
+        if (!deletedVote.getId().equals(voteId)) {
             return false;
         }
 
