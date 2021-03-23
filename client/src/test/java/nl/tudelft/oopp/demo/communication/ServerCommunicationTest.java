@@ -54,7 +54,7 @@ public class ServerCommunicationTest {
     public void testCloseBoardRequestValidRequest() {
         //Arrange
         QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
         quBoModel.setTitle("Test Qubo");
 
         QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
@@ -72,7 +72,7 @@ public class ServerCommunicationTest {
     public void testCloseBoardRequestInvalidCode() {
         //Arrange
         QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
         quBoModel.setTitle("Test Qubo");
 
         QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
@@ -201,7 +201,7 @@ public class ServerCommunicationTest {
     public void testRetrieveQuestionsEmptyArray() {
         //Arrange
         QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
         quBoModel.setTitle("Test Qubo");
 
         QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
@@ -220,7 +220,7 @@ public class ServerCommunicationTest {
     public void testRetrieveQuestionsCorrectArray() {
         //Arrange
         QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
         quBoModel.setTitle("Test Qubo");
 
         QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
@@ -230,9 +230,7 @@ public class ServerCommunicationTest {
                 .addQuestion(quBo.getId(), "Test Question?", "author2");
 
         UUID questionId = question.getId();
-        UUID secretCode = question.getSecretCode();
         UUID question2Id = question2.getId();
-        UUID secretCode2 = question2.getSecretCode();
 
         //Act
         QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
@@ -251,7 +249,7 @@ public class ServerCommunicationTest {
     public void testRetrieveQuestions() {
         //Arrange
         QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
         quBoModel.setTitle("Test Qubo");
 
         QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
@@ -269,7 +267,7 @@ public class ServerCommunicationTest {
     public void testAddQuestionValidRequest() {
         //Arrange
         QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
         quBoModel.setTitle("Test Qubo");
 
         QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
@@ -292,7 +290,7 @@ public class ServerCommunicationTest {
     public void testAddQuestionInvalidBoard() {
         //Arrange
         QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
         quBoModel.setTitle("Test Qubo");
 
         QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
@@ -330,12 +328,12 @@ public class ServerCommunicationTest {
         assertNull(questionCreated);
     }
 
-    //Tests if addQuestion returns null when called with null values for question text and author
+    //Tests if addQuestion returns null when called with null values for question text and author.
     @Test
     public void testAddQuestionInvalidRequest() {
         //Arrange
         QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
         quBoModel.setTitle("Test Qubo");
 
         QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
@@ -345,6 +343,102 @@ public class ServerCommunicationTest {
 
         //Assert
         assertNull(questionCreated);
+    }
+
+    //Tests if editQuestion returns true when called through the moderator code.
+    //Tests if the question text has been changed.
+    @Test
+    public void testEditQuestionValidModRequest() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        QuestionCreationDto question = ServerCommunication
+                .addQuestion(quBo.getId(), "Test Question?", "author");
+
+        //Act
+        boolean wasEdited = ServerCommunication
+                .editQuestion(question.getId(), quBo.getModeratorCode(), "What is life?");
+
+        //Assert
+        QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
+        assertTrue(wasEdited);
+        assertTrue(questions[0].getText().equals("What is life?"));
+    }
+
+    //Tests if editQuestion returns true when called through the question secret code.
+    //Tests if the question text has been changed.
+    @Test
+    public void testEditQuestionValidCodeRequest() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        QuestionCreationDto question = ServerCommunication
+                .addQuestion(quBo.getId(), "Test Question?", "author");
+
+        //Act
+        boolean wasEdited = ServerCommunication
+                .editQuestion(question.getId(), question.getSecretCode(), "What is life?");
+
+        //Assert
+        QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
+        assertTrue(wasEdited);
+        assertTrue(questions[0].getText().equals("What is life?"));
+    }
+
+    //Tests if editQuestion returns false when called through an invalid code.
+    //Tests if the question text has remained the same.
+    @Test
+    public void testEditQuestionInvalidCode() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        QuestionCreationDto question = ServerCommunication
+                .addQuestion(quBo.getId(), "Test Question?", "author");
+
+        //Act
+        boolean wasEdited = ServerCommunication
+                .editQuestion(question.getId(), UUID.randomUUID(), "What is life?");
+
+        //Assert
+        QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
+        assertFalse(wasEdited);
+        assertTrue(questions[0].getText().equals("Test Question?"));
+    }
+
+    //Tests if editQuestion returns false when called through a non-existent question ID.
+    //Tests if the question text has remained the same.
+    @Test
+    public void testEditQuestionInvalidQuestion() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        QuestionCreationDto question = ServerCommunication
+                .addQuestion(quBo.getId(), "Test Question?", "author");
+
+        //Act
+        boolean wasEdited = ServerCommunication
+                .editQuestion(UUID.randomUUID(), quBo.getModeratorCode(), "What is life?");
+
+        //Assert
+        QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
+        assertFalse(wasEdited);
+        assertTrue(questions[0].getText().equals("Test Question?"));
     }
 
     @Test
