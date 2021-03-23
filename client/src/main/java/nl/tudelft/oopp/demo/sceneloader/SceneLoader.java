@@ -4,13 +4,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.controllers.QuBoCodesController;
+import nl.tudelft.oopp.demo.controllers.StudentViewController;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.views.AlertDialog;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.UUID;
 
 public class SceneLoader {
@@ -47,7 +49,7 @@ public class SceneLoader {
             return;
         }
 
-        // Display the scene
+        Stage stage = new Stage();
         stage.setScene(new Scene(root));
         stage.show();
     }
