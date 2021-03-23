@@ -19,8 +19,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,7 +102,6 @@ public class QuestionController {
         return dto;
     }
 
-
     /**
      * DELETE endpoint for deleting questions.
      *
@@ -179,8 +180,9 @@ public class QuestionController {
         QuestionVoteCreationDto dto = modelMapper.map(vote, QuestionVoteCreationDto.class);
         return dto;
     }
+
     /**
-     * Delete the question vote with the specified vote ID.
+     * Delete the QuestionVote with the specified vote ID.
      *
      * @param questionId The question ID.
      * @param voteId     The vote ID.
@@ -209,36 +211,4 @@ public class QuestionController {
         questionVoteService.deleteVote(vote);
         return dto;
     }
-
-    /**
-     * Delete the question vote with the specified vote ID.
-     *
-     * @param questionId The question ID.
-     * @param voteId     The vote ID.
-     * @return The QuestionVoteDetailsDto based on the deleted QuestionVote.
-     * @throws ResponseStatusException 404 if vote does not exist.
-     * @throws ResponseStatusException 404 if the vote's question ID
-     *                                 doesn't match the provided question ID.
-     */
-    @RequestMapping(value = "/{questionid}/vote/{voteid}", method = DELETE)
-    @ResponseBody
-    public QuestionVoteDetailsDto deleteQuestionVote(
-        @PathVariable("questionid") UUID questionId,
-        @PathVariable("voteid") UUID voteId) {
-        // Verify the request
-        QuestionVote vote = questionVoteService.getQuestionVoteById(voteId);
-        // Check if vote exists
-        if (vote == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find QuestionVote");
-        }
-        // Check if questionId corresponds to this vote's questionId
-        if (!questionId.equals(vote.getQuestion().getId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This Question was not voted on"
-                + " with this QuestionVote");
-        }
-        QuestionVoteDetailsDto dto = modelMapper.map(vote, QuestionVoteDetailsDto.class);
-        questionVoteService.deleteVote(vote);
-        return dto;
-    }
-
 }
