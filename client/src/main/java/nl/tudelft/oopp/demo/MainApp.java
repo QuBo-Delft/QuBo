@@ -116,6 +116,11 @@ public class MainApp {
         QuestionVoteCreationDto questionVote = ServerCommunication.addQuestionVote(questionId);
         System.out.println("A vote has been added to the question\n    " + gson.toJson(questionVote));
 
+        //Mark questionTwo as answered
+        UUID questionTwoId = questionTwo.getId();
+        System.out.println("The fact that questionTwo has been marked as answered is "
+                + ServerCommunication.markQuestionAsAnswered(questionTwoId, moderatorCode));
+
         //Delete the vote that was just created
         UUID voteId = questionVote.getId();
         System.out.println("The vote has been deleted: " + ServerCommunication
@@ -127,8 +132,6 @@ public class MainApp {
 
         //Delete questionTwo through the moderator code of the QuestionBoard and print true if the question was
         //deleted successfully
-        UUID questionTwoId = questionTwo.getId();
-
         System.out.println("The question has been deleted: " + ServerCommunication
             .deleteQuestion(questionTwoId, moderatorCode));
 
