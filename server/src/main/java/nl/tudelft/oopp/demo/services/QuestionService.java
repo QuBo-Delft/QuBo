@@ -3,14 +3,18 @@ package nl.tudelft.oopp.demo.services;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
+
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.demo.repositories.QuestionRepository;
+import nl.tudelft.oopp.demo.services.exceptions.ConflictException;
 import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.expression.spel.ast.QualifiedIdentifier;
 import org.springframework.stereotype.Service;
 
 
@@ -84,12 +88,50 @@ public class QuestionService {
     }
 
     /**
+     * Edits the text of a question.
+     *
+     * @param questionId The id of the question to be deleted.
+     * @param model      A model containing the new text of the question.
+     * @return The updated Question.
+     * @throws NotFoundException if the board doesn't exist.
+     */
+    public Question editQuestion(UUID questionId, QuestionEditingBindingModel model) {
+        Question question = questionRepository.getQuestionById(questionId);
+        if (question == null) {
+            throw new NotFoundException("Question does not exist");
+        }
+
+        question.setText(model.getText());
+
+        questionRepository.save(question);
+
+        return question;
+    }
+
+    /**
      * Deletes a question from the database.
      *
      * @param id The id of the question to be deleted.
      */
     public void deleteQuestionById(UUID id) {
         this.questionRepository.deleteQuestionById(id);
+    }
+
+    /**
+     * Marks a question as answered.
+     *
+     * @param questionId The ID of the question to be marked as answered.
+     * @return The question that was just marked as answered.
+     * @throws ConflictException if the question was already marked as answered.
+     */
+    public Question markAsAnswered(UUID questionId) {
+        Question question = questionRepository.getQuestionById(questionId);
+        if (question.isAnswered()) {
+            throw new ConflictException("Question was already marked as answered");
+        }
+        question.setAnswered(true);
+        questionRepository.save(question);
+        return question;
     }
 
     /**

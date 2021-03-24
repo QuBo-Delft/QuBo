@@ -3,11 +3,13 @@ package nl.tudelft.oopp.demo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
-import nl.tudelft.oopp.demo.views.QuoteDisplay;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -85,6 +87,17 @@ public class MainApp {
         System.out.println("Added a question to the Question Board\n    "
             + gson.toJson(questionCodes));
 
+        //Edit the question that was just created through the question secret code, and print true if it was
+        //edited successfully.
+        UUID questionId = questionCodes.getId();
+        UUID secretCode = questionCodes.getSecretCode();
+        System.out.println("The question has been edited: " + ServerCommunication
+            .editQuestion(questionId, secretCode, "What is life?"));
+
+        //Edit the question through the moderator code, and print true if it was edited successfully.
+        System.out.println("The question has been edited through the moderator code: "
+            + ServerCommunication.editQuestion(questionId, moderatorCode, "Is the universe infinitely large?"));
+
         //Add another question
         QuestionCreationDto questionTwo = ServerCommunication
             .addQuestion(boardId, questionText, "author");
@@ -96,21 +109,45 @@ public class MainApp {
 
         System.out.print("The questions in this question board are:\n");
         for (QuestionDetailsDto question : questionList) {
-            System.out.println("    " + gson.toJson(question) + "\n");
+            System.out.print("    " + gson.toJson(question) + "\n");
         }
 
-        //Delete questionCodes from the question board and print true if the question was deleted successfully
-        UUID questionId = questionCodes.getId();
-        UUID secretCode = questionCodes.getSecretCode();
+        //Add a vote to questionCodes
+        QuestionVoteCreationDto questionVote = ServerCommunication.addQuestionVote(questionId);
+        System.out.println("A vote has been added to the question\n    " + gson.toJson(questionVote));
 
+        //Mark questionTwo as answered
+        UUID questionTwoId = questionTwo.getId();
+        System.out.println("The fact that questionTwo has been marked as answered is "
+                + ServerCommunication.markQuestionAsAnswered(questionTwoId, moderatorCode));
+
+        //Delete the vote that was just created
+        UUID voteId = questionVote.getId();
+        System.out.println("The vote has been deleted: " + ServerCommunication
+            .deleteQuestionVote(questionId, voteId));
+
+        //Delete questionCodes from the question board and print true if the question was deleted successfully
         System.out.println("The question has been deleted: " + ServerCommunication
             .deleteQuestion(questionId, secretCode));
 
         //Delete questionTwo through the moderator code of the QuestionBoard and print true if the question was
         //deleted successfully
-        UUID questionTwoId = questionTwo.getId();
-
         System.out.println("The question has been deleted: " + ServerCommunication
             .deleteQuestion(questionTwoId, moderatorCode));
+
+        //Add a pace vote to the question board
+        PaceType paceType = PaceType.JUST_RIGHT;
+        PaceVoteCreationDto paceVote = ServerCommunication.addPaceVote(boardId, paceType);
+        System.out.println("The pace vote has been added\n " + gson.toJson(paceVote));
+
+        //Delete a pace vote from the question board
+        UUID paceVoteId = paceVote.getId();
+        System.out.println("The pace vote has been deleted: " + ServerCommunication
+            .deletePaceVote(boardId, paceVoteId));
+
+        //Close the question board
+        System.out.println("The fact that this question board has been closed is: "
+                + ServerCommunication.closeBoardRequest(boardId, moderatorCode));
+
     }
 }
