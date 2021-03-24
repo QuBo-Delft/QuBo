@@ -32,18 +32,14 @@ public class JoinQuBoController {
      * Method that handles mouse click interaction with the create question board button.
      *
      * @param event the mouse click event
-     * @throws IOException the io exception
      */
     @FXML
-    void createButtonClicked(ActionEvent event) throws IOException {
-        Stage primaryStage = new Stage();
-        FXMLLoader loader = new FXMLLoader();
-        URL xmlUrl = getClass().getResource("/CreateQuBo.fxml");
-        loader.setLocation(xmlUrl);
-        Parent root = loader.load();
+    void createButtonClicked(ActionEvent event) {
+        // Get the stage that is currently displayed on-screen
+        Stage currentStage = (Stage)((Node) event.getSource()).getScene().getWindow();
 
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+        //Load the create question board page
+        SceneLoader.loadCreateQuBo(currentStage);
     }
 
     /**

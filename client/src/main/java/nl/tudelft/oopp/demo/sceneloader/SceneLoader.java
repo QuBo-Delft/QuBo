@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
+import nl.tudelft.oopp.demo.controllers.CreateQuBoController;
 import nl.tudelft.oopp.demo.controllers.QuBoCodesController;
 import nl.tudelft.oopp.demo.controllers.StudentViewController;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
@@ -17,6 +18,41 @@ import java.net.URL;
 import java.util.UUID;
 
 public class SceneLoader {
+
+
+    /**
+     * This method aims to load the page used to create question boards.
+     *
+     * @param currentStage    The current stage that is displayed on-screen.
+     *
+     */
+    public static void loadCreateQuBo(Stage currentStage) {
+        currentStage.close();
+
+        // Create an FXMLLoader of CreateQuBo.fxml
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/CreateQuBo.fxml"));
+
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Get the controller of CreateQuBo
+        CreateQuBoController controller = loader.getController();
+
+        // Check if root is null
+        if (root == null) {
+            AlertDialog.display("", "Unable to display the create question board form");
+            return;
+        }
+
+        // Display the scene
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
 
     /**
      * This method aims to load the page that displays the student code and moderator code.
