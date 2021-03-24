@@ -394,7 +394,7 @@ public class ServerCommunication {
      * @param voteId        The ID of the vote that should be deleted.
      * @return Returns true if, and only if, the vote has been deleted successfully.
      */
-    public static boolean deleteQuestionVote(UUID questionId, UUID voteId) {
+    public static String deleteQuestionVote(UUID questionId, UUID voteId) {
         //Set up the parameter required to call the delete helper method
         String fullUrl = subUrl + "/api/question/" + questionId + "/vote/" + voteId;
 
@@ -403,16 +403,16 @@ public class ServerCommunication {
 
         //If the request was unsuccessful, return false
         if (response == null || response.statusCode() != 200) {
-            return false;
+            return null;
         }
 
         //Check if the deleted question vote was the right vote
         QuestionVoteDetailsDto deletedVote = gson.fromJson(response.body(), QuestionVoteDetailsDto.class);
         if (!deletedVote.getId().equals(voteId)) {
-            return false;
+            return null;
         }
 
-        return true;
+        return response.body();
     }
 
     /**
