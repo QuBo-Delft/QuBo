@@ -1,5 +1,7 @@
 package nl.tudelft.oopp.demo.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.DatePicker;
@@ -44,6 +46,10 @@ public class CreateQuBoController {
     private Button cancelBtn;
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+
+    private static final Gson gson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+            .create();
 
     /**
      * Once the user clicks the "create now" button, this method will be invoked
@@ -130,8 +136,9 @@ public class CreateQuBoController {
         QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel(
             titleStr, startTimeStamp);
 
-        // Send the request and retrieve the QuestionBoardCreationDto
-        QuestionBoardCreationDto questionBoardDto = ServerCommunication.createBoardRequest(board);
+        // Send the request and retrieve the string body of QuestionBoardCreationDto then convert it
+        String resBody = ServerCommunication.createBoardRequest(board);
+        QuestionBoardCreationDto questionBoardDto = gson.fromJson(resBody, QuestionBoardCreationDto.class);
 
         // Alert the user if the creation of the question board has failed
         if (questionBoardDto == null) {
