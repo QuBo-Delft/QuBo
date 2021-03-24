@@ -323,7 +323,7 @@ public class ServerCommunication {
      * @param code          The moderator code associated with the board or the question's secret code.
      * @return Returns true if, and only if, the question was deleted from the board.
      */
-    public static boolean deleteQuestion(UUID questionId, UUID code) {
+    public static String deleteQuestion(UUID questionId, UUID code) {
         //Set up the variables required by the delete helper method
         String fullUrl = subUrl + "/api/question/" + questionId + "?code=" + code;
 
@@ -332,10 +332,10 @@ public class ServerCommunication {
 
         //If the request was unsuccessful, return false
         if (response == null || response.statusCode() != 200) {
-            return false;
+            return null;
         }
 
-        return true;
+        return response.body();
     }
 
     /**
