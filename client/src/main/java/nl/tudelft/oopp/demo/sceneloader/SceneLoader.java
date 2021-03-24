@@ -87,7 +87,7 @@ public class SceneLoader {
     /**
      * This method aims to load the page that displays the student view of a question board.
      *
-     * @param qd    The QuestionBoardCreationDto object that brings data for the
+     * @param qd    The QuestionBoardDetailsDto object that brings data for the
      *              student view of a question board.
      */
     public static void loadStudentView(QuestionBoardDetailsDto qd, Stage currentStage) {
@@ -118,6 +118,13 @@ public class SceneLoader {
         currentStage.setScene(new Scene(root));
     }
 
+    /**
+     * This method loads the moderator view of the question board associated with the QuestionBoardDetailsDto
+     * passed to the method.
+     *
+     * @param quBo  The QuestionBoardDetailsDto object associated with the question board that the moderator
+     *      wants to join.
+     */
     public static void loadModeratorView(QuestionBoardDetailsDto quBo, Stage currentStage) {
         // Create an FXMLLoader of ModeratorView.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/ModeratorView.fxml"));
