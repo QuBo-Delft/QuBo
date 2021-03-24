@@ -129,6 +129,9 @@ public class SceneLoader {
             return;
         }
 
+        // Close the stage that is currently on the screen
+        currentStage.close();
+
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
         stage.show();
