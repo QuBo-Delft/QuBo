@@ -32,7 +32,7 @@ public class MainApp {
         //Display working views
 
         //Display the application homepage
-        //SceneDisplay.main(new String[0]);
+        SceneDisplay.main(new String[0]);
 
         //Create a QuestionBoardCreationBindingModel to create a Question Board
         QuestionBoardCreationBindingModel model = new QuestionBoardCreationBindingModel();
