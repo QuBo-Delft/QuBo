@@ -219,7 +219,7 @@ public class QuestionBoardController {
 
     /**
      * DELETE endpoint for deleting PaceVotes.
-     * Throw 404 upon requesting non-existent paceVote.
+     * Throw 404 upon requesting non-existent pacevote.
      *
      * @param boardId    The ID of the Board this request was made in.
      * @param paceVoteId The ID of the PaceVote that is to be deleted.
@@ -238,7 +238,8 @@ public class QuestionBoardController {
         // Check whether provided boardId matches with the ID in the PaceVote
         UUID paceVoteBoardId = vote.getQuestionBoard().getId();
         if (!paceVoteBoardId.equals(boardId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pace vote was not found in requested Question board");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pace vote was not found in "
+                    + "requested Question board");
         }
         PaceVoteDetailsDto dto = modelMapper.map(vote, PaceVoteDetailsDto.class);
         // Delete actual vote
