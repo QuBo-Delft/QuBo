@@ -266,7 +266,7 @@ public class ServerCommunication {
      * @return Returns a QuestionCreationDto that contains the ID and secret code associated
      *      with the question.
      */
-    public static QuestionCreationDto addQuestion(UUID boardId, String text, String author) {
+    public static String addQuestion(UUID boardId, String text, String author) {
         //Instantiate a QuestionCreationBindingModel
         QuestionCreationBindingModel questionModel = new QuestionCreationBindingModel();
         questionModel.setText(text);
@@ -283,10 +283,7 @@ public class ServerCommunication {
             return null;
         }
 
-        //Convert the JSON response to a QuestionBoardDetailsDto object
-        QuestionCreationDto questionCodes = gson.fromJson(response.body(), QuestionCreationDto.class);
-
-        return questionCodes;
+        return response.body();
     }
 
     /**
