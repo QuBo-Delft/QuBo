@@ -138,9 +138,9 @@ public class ServerCommunication {
      * The method sends a request to the server to create a question board.
      *
      * @param board     The QuestionBoardCreationBindingModel object that contains details of a question board.
-     * @return The http response returned.
+     * @return The response body of type string.
      */
-    public static QuestionBoardCreationDto createBoardRequest(QuestionBoardCreationBindingModel board) {
+    public static String createBoardRequest(QuestionBoardCreationBindingModel board) {
         String fullUrl = subUrl + "api/board";
 
         //Convert the QuestionBoardCreationBindingModel to JSON
@@ -155,7 +155,7 @@ public class ServerCommunication {
             return null;
         }
 
-        return gson.fromJson(res.body(), QuestionBoardCreationDto.class);
+        return res.body();
     }
 
     /**
