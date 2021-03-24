@@ -423,7 +423,7 @@ public class ServerCommunication {
      * @param paceType  The type of pace vote that should be added.
      * @return A PaceVoteCreationDto with the ID of the pace vote.
      */
-    public static PaceVoteCreationDto addPaceVote(UUID boardId, PaceType paceType) {
+    public static String addPaceVote(UUID boardId, PaceType paceType) {
         //Create a PaceVoteCreationBindingModel with the specified pace type
         PaceVoteCreationBindingModel paceModel = new PaceVoteCreationBindingModel();
         paceModel.setPaceType(paceType);
@@ -441,10 +441,7 @@ public class ServerCommunication {
             return null;
         }
 
-        //Convert the response body to a PaceVoteCreationDto and return this
-        PaceVoteCreationDto paceVote = gson.fromJson(response.body(), PaceVoteCreationDto.class);
-
-        return paceVote;
+        return response.body();
     }
 
     /**
@@ -455,7 +452,7 @@ public class ServerCommunication {
      * @param paceVoteId    The ID of the pace vote that should be deleted.
      * @return True if, and only if, the deletion was successful.
      */
-    public static boolean deletePaceVote(UUID boardId, UUID paceVoteId) {
+    public static String deletePaceVote(UUID boardId, UUID paceVoteId) {
         //Set up the URL that will be sent to the delete helper method
         String fullUrl = subUrl + "/api/board/" + boardId + "/pace/" + paceVoteId;
 
@@ -464,16 +461,16 @@ public class ServerCommunication {
 
         //If the request was unsuccessful, return false
         if (response == null || response.statusCode() != 200) {
-            return false;
+            return null;
         }
 
         //Check if the deleted pace vote had the same ID
         PaceVoteDetailsDto deletedVote = gson.fromJson(response.body(), PaceVoteDetailsDto.class);
         if (!deletedVote.getId().equals(paceVoteId)) {
-            return false;
+            return null;
         }
 
-        return true;
+        return response.body();
     }
 
     /**
