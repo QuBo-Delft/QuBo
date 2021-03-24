@@ -1,5 +1,7 @@
 package nl.tudelft.oopp.demo.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +28,10 @@ public class JoinQuBoController {
 
     @FXML // fx:id="errorMessageLabel"
     private Label errorMessageLabel;
+
+    private static final Gson gson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+            .create();
 
     /**
      * Method that handles mouse click interaction with the create question board button.
@@ -64,12 +70,14 @@ public class JoinQuBoController {
             return;
         }
 
-        QuestionBoardDetailsDto questionBoard = ServerCommunication.retrieveBoardDetails(boardCode);
+        String resBody = ServerCommunication.retrieveBoardDetails(boardCode);
 
         // We check whether the question board exists; If not show the error message label.
-        if (questionBoard == null) {
+        if (resBody == null) {
             errorMessageLabel.setVisible(true);
         }
+
+        QuestionBoardDetailsDto questionBoard = gson.fromJson(resBody, QuestionBoardDetailsDto.class);
 
         // Load the student view.
         SceneLoader.loadStudentView(questionBoard);
