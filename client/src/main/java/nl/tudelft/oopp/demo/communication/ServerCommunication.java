@@ -317,8 +317,8 @@ public class ServerCommunication {
      *
      * @param questionId    The ID of the question that should be deleted.
      * @param code          The moderator code associated with the board or the question's secret code.
-     * @return The QuestionDetailsDto associated with the deleted question in JSON String format if, and only if,
-     *          the question was deleted from the board.
+     * @return The QuestionDetailsDto associated with the deleted question in JSON String format if, 
+     *          and only if, the question was deleted from the board.
      */
     public static String deleteQuestion(UUID questionId, UUID code) {
         //Set up the variables required by the delete helper method
