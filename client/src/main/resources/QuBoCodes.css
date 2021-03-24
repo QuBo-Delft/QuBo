@@ -7,7 +7,7 @@
 
     -fx-font-size: 22;
     -fx-font-family: "BahnSchrift";
-    -fx-text-fill: #A23605;
+    -fx-text-fill: #893B18;
     -fx-text-alignment: left;
 }
 
@@ -16,28 +16,28 @@
 
     -fx-font-family: "Bahnschrift";
     -fx-font-size: 15;
-    -fx-text-fill: #6b5e59;
+    -fx-text-fill: #6B5E59;
 }
 
 .copyButton {
-    -fx-background-color: #b9b3a1;
+    -fx-background-color: #B9B3A1;
     -fx-min-width: 130;
 
     -fx-font-weight: bold;
-    -fx-text-fill: #725e54;
+    -fx-text-fill: #725E54;
     -fx-font-size: 16;
 }
 
 .attribute {
     -fx-font-family: "Bahnschrift";
     -fx-font-size: 16;
-    -fx-text-fill: #5c4f4b;
+    -fx-text-fill: #5C4f4B;
 }
 
 .value {
     -fx-font-family: "Bahnschrift";
     -fx-font-size: 15;
-    -fx-text-fill: #6b5e59;
+    -fx-text-fill: #6B5E59;
 }
 
 .line {
@@ -54,5 +54,5 @@
     -fx-font-weight: bold;
     -fx-font-family: "BahnSchrift";
     -fx-font-size: 15;
-    -fx-text-fill: #6b5e59;
+    -fx-text-fill: #6B5E59;
 }
