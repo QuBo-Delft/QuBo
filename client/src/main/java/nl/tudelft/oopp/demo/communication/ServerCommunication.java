@@ -157,7 +157,8 @@ public class ServerCommunication {
      *
      * @param boardId           The board id of a question board to be closed.
      * @param moderatorCode     The moderator code of this question board.
-     * @return The QuestionBoardDetailsDto in JSON String format if, and only if the question board was closed successfully.
+     * @return The QuestionBoardDetailsDto in JSON String format if, and only if the question board was
+     *          closed successfully.
      */
     public static String closeBoardRequest(UUID boardId, UUID moderatorCode) {
         // Construct the full url for closing a question board
@@ -288,7 +289,8 @@ public class ServerCommunication {
      * @param code          The moderator code associated with the question board
      *                      that contains the question or the question secret code.
      * @param text          The new question text.
-     * @return The QuestionDetailsDto associated with the question in JSON String format if, and only if, the request was successful.
+     * @return The QuestionDetailsDto associated with the question in JSON String
+     *          format if, and only if, the request was successful.
      */
     public static String editQuestion(UUID questionId, UUID code, String text) {
         //Set up the parameters required by the put helper method
@@ -315,7 +317,8 @@ public class ServerCommunication {
      *
      * @param questionId    The ID of the question that should be deleted.
      * @param code          The moderator code associated with the board or the question's secret code.
-     * @return The QuestionDetailsDto associated with the deleted question in JSON String format if, and only if, the question was deleted from the board.
+     * @return The QuestionDetailsDto associated with the deleted question in JSON String format if, and only if,
+     *          the question was deleted from the board.
      */
     public static String deleteQuestion(UUID questionId, UUID code) {
         //Set up the variables required by the delete helper method
@@ -338,7 +341,8 @@ public class ServerCommunication {
      * @param questionId    The ID of the question to be marked as answered.
      * @param code          The moderator code that is associated with the board
      *                      the question is part of, or the question's secret code.
-     * @return The QuestionDetailsDto of the answered question in JSON String format if and only if the question has been marked as answered successfully.
+     * @return The QuestionDetailsDto of the answered question in JSON String format
+     *          if and only if the question has been marked as answered successfully.
      */
     public static String markQuestionAsAnswered(UUID questionId, UUID code) {
         //Set up the variables required by the patch helper method
@@ -387,7 +391,8 @@ public class ServerCommunication {
      *
      * @param questionId    The ID of the question from which a vote should be deleted.
      * @param voteId        The ID of the vote that should be deleted.
-     * @return The QuestionVoteDetailsDto associated with the deleted vote in JSON String format if, and only if, the vote has been deleted successfully.
+     * @return The QuestionVoteDetailsDto associated with the deleted vote in JSON String format
+     *          if, and only if, the vote has been deleted successfully.
      */
     public static String deleteQuestionVote(UUID questionId, UUID voteId) {
         //Set up the parameter required to call the delete helper method
@@ -445,7 +450,8 @@ public class ServerCommunication {
      *
      * @param boardId       The question board from which the pace vote should be deleted.
      * @param paceVoteId    The ID of the pace vote that should be deleted.
-     * @return The PaceVoteDetailsDto associated with the deleted pace vote in JSON String format if, and only if, the deletion was successful.
+     * @return The PaceVoteDetailsDto associated with the deleted pace vote in JSON String
+     *          format if, and only if, the deletion was successful.
      */
     public static String deletePaceVote(UUID boardId, UUID paceVoteId) {
         //Set up the URL that will be sent to the delete helper method
