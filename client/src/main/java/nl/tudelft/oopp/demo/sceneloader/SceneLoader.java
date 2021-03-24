@@ -104,13 +104,6 @@ public class SceneLoader {
         StudentViewController controller = loader.getController();
 
         UUID boardId = qd.getId();
-        QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(boardId);
-
-        // Check if the return questions are null
-        if (questions == null) {
-            AlertDialog.display("", "Unable to display the student view");
-            return;
-        }
 
         // TODO: need a method to update data in studentView
 
