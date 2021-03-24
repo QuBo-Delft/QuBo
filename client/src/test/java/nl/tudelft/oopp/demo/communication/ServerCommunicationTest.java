@@ -2,7 +2,6 @@ package nl.tudelft.oopp.demo.communication;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
@@ -366,7 +365,7 @@ public class ServerCommunicationTest {
         //Assert
         QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
         assertTrue(wasEdited);
-        assertTrue(questions[0].getText().equals("What is life?"));
+        assertEquals(questions[0].getText(), "What is life?");
     }
 
     //Tests if editQuestion returns true when called through the question secret code.
@@ -390,7 +389,7 @@ public class ServerCommunicationTest {
         //Assert
         QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
         assertTrue(wasEdited);
-        assertTrue(questions[0].getText().equals("What is life?"));
+        assertEquals(questions[0].getText(), "What is life?");
     }
 
     //Tests if editQuestion returns false when called through an invalid code.
@@ -414,7 +413,7 @@ public class ServerCommunicationTest {
         //Assert
         QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
         assertFalse(wasEdited);
-        assertTrue(questions[0].getText().equals("Test Question?"));
+        assertEquals(questions[0].getText(), "Test Question?");
     }
 
     //Tests if editQuestion returns false when called through a non-existent question ID.
@@ -438,7 +437,7 @@ public class ServerCommunicationTest {
         //Assert
         QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
         assertFalse(wasEdited);
-        assertTrue(questions[0].getText().equals("Test Question?"));
+        assertEquals(questions[0].getText(), "Test Question?");
     }
 
     //Tests if deleteQuestion returns true when called with an existing question and question board.
@@ -462,7 +461,7 @@ public class ServerCommunicationTest {
         //Assert
         QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
         assertTrue(wasDeleted);
-        assertTrue(questions.length == 0);
+        assertEquals(questions.length, 0);
     }
 
     //Tests if deleteQuestion returns false when called with an existing question, but a non-existent question board.
@@ -486,8 +485,8 @@ public class ServerCommunicationTest {
         //Assert
         QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
         assertFalse(wasDeleted);
-        assertTrue(questions.length == 1);
-        assertTrue(questions[0].getId() == question.getId());
+        assertEquals(questions.length, 1);
+        assertEquals(questions[0].getId(), question.getId());
     }
 
     //Tests if deleteQuestion returns false when called with an existing question board, but with a non-existent
@@ -512,8 +511,8 @@ public class ServerCommunicationTest {
         //Assert
         QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
         assertFalse(wasDeleted);
-        assertTrue(questions.length == 1);
-        assertTrue(questions[0].getId() == question.getId());
+        assertEquals(questions.length, 1);
+        assertEquals(questions[0].getId(), question.getId());
     }
 
     @Test
