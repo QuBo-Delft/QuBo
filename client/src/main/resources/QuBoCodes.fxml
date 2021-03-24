@@ -18,12 +18,12 @@
      </columnConstraints>
      <rowConstraints>
          <RowConstraints percentHeight="12.0" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-       <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-       <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-       <RowConstraints minHeight="30.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="15.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
+       <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
+       <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+       <RowConstraints minHeight="20.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
      </rowConstraints>
             <Label id="titleMessage" mouseTransparent="true" prefHeight="44.0" prefWidth="389.0" text="Question Board Created Successfully!" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                 <font>
@@ -35,13 +35,13 @@
                     <Font size="14.0" />
                 </font>
             </Label>
-            <Label fx:id="boardTitle" text="boardTitle" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+            <Label fx:id="boardTitle" styleClass="value" text="boardTitle" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
    <Label styleClass="attribute" text="Start Time:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
       <font>
          <Font size="14.0" />
       </font>
    </Label>
-   <Label fx:id="startTime" text="startTime" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+   <Label fx:id="startTime" styleClass="value" text="startTime" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
       <font>
          <Font size="14.0" />
       </font>

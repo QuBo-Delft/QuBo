@@ -6,6 +6,7 @@
     -fx-font-size: 45;
     -fx-font-family: "BahnSchrift";
     -fx-text-fill: #893B18;
+    -fx-effect: dropshadow(gaussian, #A39E8C , 4,0,0,1);
 }
 
 #join-button {
@@ -13,6 +14,7 @@
     -fx-background-radius: 8;
     -fx-min-height: 40;
     -fx-min-width: 80;
+    -fx-effect: dropshadow(gaussian, #A39E8C , 4,0,0,1);
 
     -fx-font-weight: bold;
     -fx-font-family: "BahnSchrift";
@@ -22,9 +24,10 @@
 
 #create-qb-button {
     -fx-background-color: #EEA24D;
-    -fx-background-radius: 4;
+    -fx-background-radius: 6;
     -fx-min-height: 50;
     -fx-min-width: 130;
+    -fx-effect: dropshadow(gaussian, #A39E8C , 4,0,0,1);
 
     -fx-font-weight: bold;
     -fx-font-family: "BahnSchrift";

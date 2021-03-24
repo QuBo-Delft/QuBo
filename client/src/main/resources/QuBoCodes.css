@@ -15,17 +15,19 @@
     -fx-min-width: 135;
 
     -fx-font-family: "Bahnschrift";
-    -fx-font-size: 15;
+    -fx-font-size: 14;
     -fx-text-fill: #6B5E59;
 }
 
 .copyButton {
     -fx-background-color: #B9B3A1;
-    -fx-min-width: 130;
+    -fx-background-radius: 6;
+    -fx-min-width: 160;
+    -fx-effect: dropshadow(gaussian, #8D8776 , 2,0,0,1);
 
     -fx-font-weight: bold;
     -fx-text-fill: #725E54;
-    -fx-font-size: 16;
+    -fx-font-size: 14;
 }
 
 .attribute {
@@ -36,20 +38,22 @@
 
 .value {
     -fx-font-family: "Bahnschrift";
-    -fx-font-size: 15;
+    -fx-font-size: 14;
     -fx-text-fill: #6B5E59;
 }
 
 .line {
     -fx-min-width: 400;
     -fx-stroke: #A23605;
+    -fx-effect: dropshadow(gaussian, #A39E8C , 4,0,0,1);
 }
 
 #backToHome {
     -fx-background-color: #D8D1C7;
-    -fx-background-radius: 8;
+    -fx-border-radius: 5;
     -fx-min-height: 40;
     -fx-min-width: 80;
+    -fx-effect: dropshadow(gaussian, #8D8776 , 2,0,0,1);
 
     -fx-font-weight: bold;
     -fx-font-family: "BahnSchrift";
