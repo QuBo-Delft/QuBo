@@ -13,6 +13,7 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.views.AlertDialog;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.UUID;
 
 public class SceneLoader {
@@ -87,6 +88,34 @@ public class SceneLoader {
         // Check if root is null
         if (root == null) {
             AlertDialog.display("", "Unable to display the student view");
+            return;
+        }
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
+    /**
+     * This method aims to load the JoinQuBo homepage and close the current stage.
+     *
+     * @param currentStage    The stage of the scene where the method is called
+     */
+    public static void backToHome(Stage currentStage) {
+        currentStage.close();
+
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/JoinQuBo.fxml"));
+
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Check if root is null
+        if (root == null) {
+            AlertDialog.display("", "Unable to display the homepage");
             return;
         }
 
