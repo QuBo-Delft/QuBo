@@ -346,7 +346,7 @@ public class ServerCommunication {
      *                      the question is part of, or the question's secret code.
      * @return True if and only the question has been marked as answered successfully.
      */
-    public static boolean markQuestionAsAnswered(UUID questionId, UUID code) {
+    public static String markQuestionAsAnswered(UUID questionId, UUID code) {
         //Set up the variables required by the patch helper method
         String fullUrl = subUrl + "/api/question/" + questionId + "/answer?code=" + code;
 
@@ -355,11 +355,11 @@ public class ServerCommunication {
 
         //Check if the request was successful
         if (response == null || response.statusCode() != 200) {
-            return false;
+            return null;
         }
 
         //The question has been marked as answered
-        return true;
+        return response.body();
     }
 
     /**
