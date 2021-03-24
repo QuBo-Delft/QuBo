@@ -28,7 +28,7 @@
     <RowConstraints vgrow="SOMETIMES" />
       <RowConstraints vgrow="SOMETIMES" />
   </rowConstraints>
-      <Label alignment="CENTER" text="Title:" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+      <Label alignment="CENTER" text="Title:" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
          <GridPane.margin>
             <Insets right="15.0" />
          </GridPane.margin>
@@ -38,13 +38,12 @@
             <Insets right="15.0" />
          </GridPane.margin>
             </Label>
-            <TextField fx:id="title" accessibleHelp="This field can be used to specify the name of a question board." onKeyReleased="#titleTextHandler" onMouseClicked="#titleTextHandler" prefHeight="27.0" prefWidth="194.0" promptText="Title of question board" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <Button accessibleHelp="This button can be used to immediately create a question board." mnemonicParsing="false" onAction="#createNowBtnClicked" text="Create Now" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <Button accessibleHelp="This button can be used to immediately create a question board." mnemonicParsing="false" onAction="#createNowBtnClicked" text="Create Now" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <font>
                   <Font size="16.0" />
                </font>
             </Button>
-            <Label text="or" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Label text="or" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <font>
                   <Font size="16.0" />
                </font>
@@ -63,6 +62,9 @@
                   <Insets left="10.0" />
                </VBox.margin>
             </Line>
+      <GridPane.margin>
+         <Insets bottom="30.0" />
+      </GridPane.margin>
       </VBox>
       <VBox spacing="1.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                   <DatePicker fx:id="startDate" accessibleHelp="This field can be used to specify a date for the meeting to be scheduled on." accessibleRoleDescription="Date picker" onAction="#dateInputHandler" onKeyReleased="#dateInputHandler" onMouseClicked="#dateInputHandler" promptText="Date">
@@ -108,7 +110,6 @@
                   <Insets top="15.0" />
                </VBox.margin>
             </HBox>
-            <Label fx:id="errorTitle" accessibleHelp="You cannot leave the title field empty, please enter a title." accessibleRoleDescription="Error message" text="Error: The title field is blank" textFill="RED" visible="false" />
             <Label fx:id="errorDateTime" accessibleHelp="Please change the currently set date and time using the date and time pickers. " accessibleRoleDescription="Error message" text="Error: Invalid date, please enter a date and time in the future" textFill="RED" visible="false" wrapText="true">
                <VBox.margin>
                   <Insets />
@@ -118,7 +119,7 @@
             <Insets />
          </GridPane.margin>
       </VBox>
-            <Button accessibleHelp="This button can be clicked to schedule a question board on the specified date and time." mnemonicParsing="false" onAction="#scheduleBtnClicked" text="Schedule&#10;Question Board" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <Button accessibleHelp="This button can be clicked to schedule a question board on the specified date and time." mnemonicParsing="false" onAction="#scheduleBtnClicked" text="Schedule&#10;Question Board" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
                <font>
                   <Font size="16.0" />
                </font>
@@ -131,4 +132,15 @@
             <Insets />
          </GridPane.margin>
       </Button>
+   <VBox spacing="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <TextField fx:id="title" accessibleHelp="This field can be used to specify the name of a question board." onKeyReleased="#titleTextHandler" onMouseClicked="#titleTextHandler" promptText="Title of question board" />
+               <Label fx:id="errorTitle" accessibleHelp="You cannot leave the title field empty, please enter a title." accessibleRoleDescription="Error message" text="Error: The title field is blank" textFill="RED" visible="false">
+            <VBox.margin>
+               <Insets top="5.0" />
+            </VBox.margin>
+         </Label>
+      <GridPane.margin>
+         <Insets />
+      </GridPane.margin>
+   </VBox>
 </GridPane>
