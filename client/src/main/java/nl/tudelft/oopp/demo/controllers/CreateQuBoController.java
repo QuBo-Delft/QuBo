@@ -154,7 +154,7 @@ public class CreateQuBoController {
      * @param startTime     The start time of the question board.
      * @return true if and only the start time is after the current time.
      */
-    private boolean isStartTimeBeforeCurrentTime(Date startTime) {
+    public boolean isStartTimeBeforeCurrentTime(Date startTime) {
         Calendar c1 = Calendar.getInstance();
         Calendar c2 = Calendar.getInstance();
         c1.setTime(startTime);
@@ -168,7 +168,7 @@ public class CreateQuBoController {
      * @param     titleStr the title String to be checked.
      * @return returns true if empty.
      */
-    private boolean titleIsEmpty(String titleStr) {
+    public boolean titleIsEmpty(String titleStr) {
         if (titleStr.isEmpty()) {
             errorTitle.setVisible(true);
             return true;
@@ -181,7 +181,7 @@ public class CreateQuBoController {
      * or when it is clicked. If it is empty it will display the errorTitle label, if it is
      * not empty, but the label was being displayed, it will get hidden again.
      */
-    private void titleTextHandler() {
+    public void titleTextHandler() {
         errorTitle.setVisible(title.getText().isEmpty());
     }
 
