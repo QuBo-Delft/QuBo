@@ -147,7 +147,7 @@ public class CreateQuBoController {
     /**
      * This method aims to check whether the start time is after the current time.
      *
-     * @param startTime The start time of the question board.
+     * @param startTime     The start time of the question board.
      * @return true if and only the start time is after the current time.
      */
     private boolean isStartTimeBeforeCurrentTime(Date startTime) {
@@ -161,7 +161,7 @@ public class CreateQuBoController {
     /**
      * This method checks whether the title TextField is empty and if it is,
      * displays an error accordingly.
-     * @param titleStr the title String to be checked.
+     * @param     titleStr the title String to be checked.
      * @return returns true if empty.
      */
     private boolean titleIsEmpty(String titleStr) {
@@ -177,7 +177,7 @@ public class CreateQuBoController {
      * or when it is clicked. If it is empty it will display the errorTitle label, if it is
      * not empty, but the label was being displayed, it will get hidden again.
      */
-    public void titleTextHandler() {
+    private void titleTextHandler() {
         errorTitle.setVisible(title.getText().isEmpty());
     }
 
@@ -185,7 +185,7 @@ public class CreateQuBoController {
      * This method first checks whether the enter date and time is after the current date and time.
      * It also hides or shows an error Label called errorDateTime accordingly.
      */
-    public void dateInputHandler() {
+    private void dateInputHandler() {
         if (startDate.getValue() == null) {
             errorDateTime.setVisible(true);
         } else {
