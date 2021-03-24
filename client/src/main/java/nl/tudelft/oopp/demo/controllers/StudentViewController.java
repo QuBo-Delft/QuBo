@@ -6,7 +6,11 @@ import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ListCell;
@@ -72,9 +76,9 @@ public class StudentViewController {
         if (sideMenu.isVisible() && polls.isSelected()) {
             sideMenu.getChildren().clear();
             showAnsQuestions();
-        }else if (!sideMenu.isVisible()) {
+        } else if (!sideMenu.isVisible()) {
             showAnsQuestions();
-        }else{
+        } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
         }
@@ -90,9 +94,9 @@ public class StudentViewController {
         if (sideMenu.isVisible() && ansQuestions.isSelected()) {
             sideMenu.getChildren().clear();
             showPolls();
-        }else if (!sideMenu.isVisible()) {
+        } else if (!sideMenu.isVisible()) {
             showPolls();
-        }else{
+        } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
         }
