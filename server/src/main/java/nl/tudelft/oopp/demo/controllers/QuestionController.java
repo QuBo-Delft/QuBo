@@ -69,7 +69,8 @@ public class QuestionController {
 
     /**
      * POST endpoint for answering questions.
-     * Throw 404 if there is no board with the specified moderatorCode or question with the specified question ID.
+     * Throw 404 if there is no board with the specified moderatorCode or question
+     * with the specified question ID.
      * Throw 403 if the board associated with the moderatorCode does not hold the question.
      *
      * @param answerModel   The answer model.
