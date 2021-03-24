@@ -348,7 +348,7 @@ public class ServerCommunication {
      */
     public static boolean markQuestionAsAnswered(UUID questionId, UUID code) {
         //Set up the variables required by the patch helper method
-        String fullUrl = subUrl + "/api/question/" + questionId + "?code=" + code;
+        String fullUrl = subUrl + "/api/question/" + questionId + "/answer?code=" + code;
 
         //Send the request to mark the question as answered and retrieve the response
         HttpResponse<String> response = patch(fullUrl);
