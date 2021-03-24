@@ -3,6 +3,7 @@ package nl.tudelft.oopp.demo.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -71,8 +72,11 @@ public class JoinQuBoController {
             errorMessageLabel.setVisible(true);
         }
 
+        // Get the stage that is currently open
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+
         // Load the student view.
-        SceneLoader.loadStudentView(questionBoard);
+        SceneLoader.loadStudentView(questionBoard, stage);
 
     }
 }

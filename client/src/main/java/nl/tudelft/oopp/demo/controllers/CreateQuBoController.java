@@ -1,10 +1,9 @@
 package nl.tudelft.oopp.demo.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
@@ -15,14 +14,12 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.demo.views.AlertDialog;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.sql.Timestamp;
-import java.util.UUID;
 
 public class CreateQuBoController {
 
@@ -54,7 +51,7 @@ public class CreateQuBoController {
             return;
         }
 
-        sendAndProcessBoardCreationRequest(titleStr, new Date());
+        sendAndProcessBoardCreationRequest(titleStr, new Date(), actionEvent);
 
     }
 
@@ -103,7 +100,7 @@ public class CreateQuBoController {
             return;
         }
 
-        sendAndProcessBoardCreationRequest(titleStr, startTime);
+        sendAndProcessBoardCreationRequest(titleStr, startTime, actionEvent);
 
     }
 
@@ -113,7 +110,7 @@ public class CreateQuBoController {
      * @param titleStr      The title of the question board.
      * @param startTime     The start time of the question board.
      */
-    private void sendAndProcessBoardCreationRequest(String titleStr, Date startTime) {
+    private void sendAndProcessBoardCreationRequest(String titleStr, Date startTime, Event event) {
         Timestamp startTimeStamp = new Timestamp(startTime.getTime());
         QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel(
                 titleStr, startTimeStamp);
@@ -128,8 +125,11 @@ public class CreateQuBoController {
             return;
         }
 
+        // Get the stage that is currently open
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+
         // Load the page that displays student code and moderator code
-        SceneLoader.loadQuestionBoardCodes(questionBoardDto);
+        SceneLoader.loadQuestionBoardCodes(questionBoardDto, stage);
     }
 
     /**

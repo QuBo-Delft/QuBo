@@ -25,7 +25,9 @@ public class SceneLoader {
      *              of QuestionBoardCodes.
      *
      */
-    public static void loadQuestionBoardCodes(QuestionBoardCreationDto qd) {
+    public static void loadQuestionBoardCodes(QuestionBoardCreationDto qd, Stage currentStage) {
+        currentStage.close();
+
         // Create an FXMLLoader of QuBoCodes.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/QuBoCodes.fxml"));
 
@@ -60,7 +62,7 @@ public class SceneLoader {
      * @param qd    The QuestionBoardCreationDto object that brings data for the
      *              student view of a question board.
      */
-    public static void loadStudentView(QuestionBoardDetailsDto qd) {
+    public static void loadStudentView(QuestionBoardDetailsDto qd, Stage currentStage) {
         // Create an FXMLLoader of StudentView.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/StudentView.fxml"));
 
