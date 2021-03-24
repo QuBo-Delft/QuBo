@@ -73,17 +73,17 @@
       </HBox>
    </center>
    <right>
-       <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+       <HBox fx:id="sideScreen" alignment="CENTER" BorderPane.alignment="CENTER">
          <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0">
             <padding>
                <Insets bottom="20.0" left="20.0" top="15.0" />
             </padding>
          </VBox>
           <VBox fx:id="sideBar" prefHeight="358.0" prefWidth="41.0" BorderPane.alignment="CENTER">
-              <ToggleButton fx:id="ansQuestions" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="AnsQ">
+              <ToggleButton fx:id="ansQuestions" onAction="#showHideAnsQuestions" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="AnsQ">
                   <tooltip><Tooltip text="Answered Questions" /></tooltip>
               </ToggleButton>
-             <ToggleButton fx:id="polls" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="Polls" >
+             <ToggleButton fx:id="polls" onAction="#showHidePolls" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="Polls" >
                  <tooltip><Tooltip text="Polls" /></tooltip>
              </ToggleButton>
              <Pane prefHeight="323.0" prefWidth="41.0" VBox.vgrow="ALWAYS" />

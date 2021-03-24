@@ -2,15 +2,11 @@ package nl.tudelft.oopp.demo.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ListCell;
@@ -24,6 +20,8 @@ import javafx.scene.control.Button;
 public class StudentViewController {
     @FXML
     private ListView<Question> questionList;
+    @FXML
+    private HBox sideScreen;
     @FXML
     private VBox sideBar;
     @FXML
@@ -54,10 +52,10 @@ public class StudentViewController {
         questionList.setCellFactory(listView -> new CustomListCell());
 
         //Hide side menu and sidebar
+        sideScreen.managedProperty().bind(sideScreen.visibleProperty());
         sideBar.managedProperty().bind(sideBar.visibleProperty());
         sideMenu.managedProperty().bind(sideMenu.visibleProperty());
-        sideBar.setVisible(false);
-        sideMenu.setVisible(false);
+        sideScreen.setVisible(false);
 
         //Group sidebar buttons to same group so only one can be selected at one time
         ToggleGroup sideBarGroup = new ToggleGroup();
@@ -67,7 +65,43 @@ public class StudentViewController {
     }
 
     public void showHideSideBar() {
-        sideBar.setVisible(!sideBar.isVisible());
+        sideScreen.setVisible(!sideScreen.isVisible());
+    }
+
+    public void showHideAnsQuestions() {
+        if (sideMenu.isVisible() && polls.isSelected()) {
+            sideMenu.getChildren().clear();
+            showAnsQuestions();
+        }else if (!sideMenu.isVisible()) {
+            showAnsQuestions();
+        }else{
+            sideMenu.getChildren().clear();
+            sideMenu.setVisible(false);
+        }
+    }
+
+    public void showAnsQuestions() {
+        Label title = new Label("Answered Questions");
+        sideMenu.setVisible(true);
+        sideMenu.getChildren().add(title);
+    }
+
+    public void showHidePolls() {
+        if (sideMenu.isVisible() && ansQuestions.isSelected()) {
+            sideMenu.getChildren().clear();
+            showPolls();
+        }else if (!sideMenu.isVisible()) {
+            showPolls();
+        }else{
+            sideMenu.getChildren().clear();
+            sideMenu.setVisible(false);
+        }
+    }
+
+    public void showPolls() {
+        Label title = new Label("Polls");
+        sideMenu.setVisible(true);
+        sideMenu.getChildren().add(title);
     }
 
     private static class Question {
