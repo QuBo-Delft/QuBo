@@ -209,10 +209,10 @@ public class ServerCommunication {
      * Communicates with the /api/board/{boardID} server endpoint.
      *
      * @param boardID   The ID of the Question Board whose details should be retrieved.
-     * @return Returns a QuestionBoardDetailsDto containing the details of the Question Board or null
-     *      if this does not exist.
+     * @return a QuestionBoardDetailsDto of type string containing the details of the Question
+     *         Board or null if this does not exist.
      */
-    public static QuestionBoardDetailsDto retrieveBoardDetails(UUID boardID) {
+    public static String retrieveBoardDetails(UUID boardID) {
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
                 .uri(URI.create(subUrl + "api/board/" + boardID)).build();
@@ -231,10 +231,7 @@ public class ServerCommunication {
             return null;
         }
 
-        //Convert the JSON response to a QuestionBoardDetailsDto object
-        QuestionBoardDetailsDto details = gson.fromJson(response.body(), QuestionBoardDetailsDto.class);
-
-        return details;
+        return response.body();
     }
 
     /**
