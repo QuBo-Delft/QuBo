@@ -2,8 +2,11 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -19,16 +22,15 @@
          <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" scaleX="0.6" scaleY="0.6" translateX="1.0">
          </ImageView>
          <ImageView fitHeight="45.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" />
-         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Lecture Title" wrappingWidth="343.21875">
-            <HBox.margin>
-               <Insets left="10.0" />
-            </HBox.margin>
+         <Label maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" text="Lecture Title" wrapText="true" HBox.hgrow="ALWAYS">
             <font>
                <Font size="16.0" />
             </font>
-         </Text>
-         <Pane prefHeight="23.0" prefWidth="166.0" HBox.hgrow="ALWAYS" />
-         <Button alignment="CENTER_RIGHT" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Button" HBox.hgrow="NEVER" />
+         </Label>
+         <Button maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Button" />
+         <Pane maxHeight="40.0" maxWidth="150.0" minHeight="40.0" minWidth="40.0" prefHeight="40.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+         <Button maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Help" />
+         <ToggleButton fx:id="hamburger" onAction="#showHideSideBar" alignment="CENTER_RIGHT" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="sideBar" HBox.hgrow="NEVER" />
       </HBox>
    </top>
    <center>
@@ -71,11 +73,24 @@
       </HBox>
    </center>
    <right>
-      <VBox prefHeight="358.0" prefWidth="41.0" BorderPane.alignment="CENTER">
-         <Button minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="Ans" />
-         <Button minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="Polls" />
-         <Pane prefHeight="323.0" prefWidth="41.0" VBox.vgrow="ALWAYS" />
-         <Button minHeight="39.0" minWidth="40.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="41.0" text="Button" />
-      </VBox>
+       <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0">
+            <padding>
+               <Insets bottom="20.0" left="20.0" top="15.0" />
+            </padding>
+         </VBox>
+          <VBox fx:id="sideBar" prefHeight="358.0" prefWidth="41.0" BorderPane.alignment="CENTER">
+              <ToggleButton fx:id="ansQuestions" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="AnsQ">
+                  <tooltip><Tooltip text="Answered Questions" /></tooltip>
+              </ToggleButton>
+             <ToggleButton fx:id="polls" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="Polls" >
+                 <tooltip><Tooltip text="Polls" /></tooltip>
+             </ToggleButton>
+             <Pane prefHeight="323.0" prefWidth="41.0" VBox.vgrow="ALWAYS" />
+             <Button fx:id="leaveQuBo" minHeight="39.0" minWidth="40.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="41.0" text="Leave" >
+                 <tooltip><Tooltip text="Leave Question Board" /></tooltip>
+             </Button>
+          </VBox>
+       </HBox>
    </right>
 </BorderPane>

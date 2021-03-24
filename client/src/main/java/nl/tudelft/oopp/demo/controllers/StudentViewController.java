@@ -2,6 +2,7 @@ package nl.tudelft.oopp.demo.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -17,16 +18,31 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Button;
 
 public class StudentViewController {
     @FXML
     private ListView<Question> questionList;
+    @FXML
+    private VBox sideBar;
+    @FXML
+    private VBox sideMenu;
+    @FXML
+    private ToggleButton hamburger;
+    @FXML
+    private ToggleButton ansQuestions;
+    @FXML
+    private ToggleButton polls;
+    @FXML
+    private Button leaveQuBo;
 
     /**
      * Code that is run upon loading StudentView.fxml
      */
     @FXML
     private void initialize() {
+        //Get questions
         ObservableList<Question> data = FXCollections.observableArrayList();
         data.addAll(new Question(2, "What is life?"),
                 new Question(42,"Trolley problem."
@@ -36,6 +52,22 @@ public class StudentViewController {
 
         questionList.setItems(data);
         questionList.setCellFactory(listView -> new CustomListCell());
+
+        //Hide side menu and sidebar
+        sideBar.managedProperty().bind(sideBar.visibleProperty());
+        sideMenu.managedProperty().bind(sideMenu.visibleProperty());
+        sideBar.setVisible(false);
+        sideMenu.setVisible(false);
+
+        //Group sidebar buttons to same group so only one can be selected at one time
+        ToggleGroup sideBarGroup = new ToggleGroup();
+        ansQuestions.setToggleGroup(sideBarGroup);
+        polls.setToggleGroup(sideBarGroup);
+
+    }
+
+    public void showHideSideBar() {
+        sideBar.setVisible(!sideBar.isVisible());
     }
 
     private static class Question {
