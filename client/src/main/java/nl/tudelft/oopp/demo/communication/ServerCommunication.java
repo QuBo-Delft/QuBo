@@ -296,7 +296,7 @@ public class ServerCommunication {
      * @param text          The new question text.
      * @return Returns true if, and only if, the request was successful
      */
-    public static boolean editQuestion(UUID questionId, UUID code, String text) {
+    public static String editQuestion(UUID questionId, UUID code, String text) {
         //Set up the parameters required by the put helper method
         String fullUrl = subUrl + "/api/question/" + questionId + "?code=" + code;
 
@@ -309,10 +309,10 @@ public class ServerCommunication {
 
         //If the request was unsuccessful, return false
         if (response == null || response.statusCode() != 200) {
-            return false;
+            return null;
         }
 
-        return true;
+        return response.body();
     }
 
     /**
