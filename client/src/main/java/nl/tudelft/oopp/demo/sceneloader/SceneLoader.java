@@ -27,8 +27,6 @@ public class SceneLoader {
      *
      */
     public static void loadCreateQuBo(Stage currentStage) {
-        currentStage.close();
-
         // Create an FXMLLoader of CreateQuBo.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/CreateQuBo.fxml"));
 
@@ -48,10 +46,8 @@ public class SceneLoader {
             return;
         }
 
-        // Display the scene
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.show();
+        // Display the new scene
+        currentStage.setScene(new Scene(root));
     }
 
     /**
@@ -62,8 +58,6 @@ public class SceneLoader {
      *
      */
     public static void loadQuestionBoardCodes(QuestionBoardCreationDto qd, Stage currentStage) {
-        currentStage.close();
-
         // Create an FXMLLoader of QuBoCodes.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/QuBoCodes.fxml"));
 
@@ -86,10 +80,8 @@ public class SceneLoader {
             return;
         }
 
-        // Display the scene
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.show();
+        // Display the new scene
+        currentStage.setScene(new Scene(root));
     }
 
     /**
@@ -129,12 +121,8 @@ public class SceneLoader {
             return;
         }
 
-        // Close the stage that is currently on the screen
-        currentStage.close();
-
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.show();
+        //Display the new scene
+        currentStage.setScene(new Scene(root));
     }
 
     /**
@@ -143,8 +131,7 @@ public class SceneLoader {
      * @param currentStage    The stage of the scene where the method is called
      */
     public static void backToHome(Stage currentStage) {
-        currentStage.close();
-
+        //Create an FXMLLoader of JoinQuBo.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/JoinQuBo.fxml"));
 
         Parent root = null;
@@ -160,9 +147,7 @@ public class SceneLoader {
             return;
         }
 
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.show();
+        currentStage.setScene(new Scene(root));
     }
 
 }
