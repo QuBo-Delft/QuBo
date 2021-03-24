@@ -186,10 +186,10 @@ public class ServerCommunication {
      * Communicates with the /api/board/moderator?code={moderatorCode} server endpoint.
      *
      * @param moderatorCode     The code belonging to the Question Board whose details should be retrieved.
-     * @return Returns a QuestionBoardDetailsDto containing the details of the Question Board or null
-     *      if this does not exist.
+     * @return a QuestionBoardDetailsDto in Json string containing the details of the Question Board or null
+     *         if this does not exist.
      */
-    public static QuestionBoardDetailsDto retrieveBoardDetailsThroughModCode(UUID moderatorCode) {
+    public static String retrieveBoardDetailsThroughModCode(UUID moderatorCode) {
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
                 .uri(URI.create(subUrl + "/api/board/moderator?code=" + moderatorCode)).build();
@@ -201,7 +201,7 @@ public class ServerCommunication {
         }
 
         //Convert the JSON response to a UUID and return this
-        return gson.fromJson(response.body(), QuestionBoardDetailsDto.class);
+        return response.body();
     }
 
     /**
