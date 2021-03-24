@@ -151,6 +151,8 @@ public class CreateQuBoController {
         QuestionBoardCreationDto questionBoardDto = gson.fromJson(resBody, QuestionBoardCreationDto.class);
 
         // Load the page that displays student code and moderator code
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+
         SceneLoader.loadQuestionBoardCodes(questionBoardDto, stage);
     }
 

@@ -77,6 +77,8 @@ public class JoinQuBoController {
         QuestionBoardDetailsDto questionBoard = gson.fromJson(resBody, QuestionBoardDetailsDto.class);
 
         // Load the student view.
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+
         SceneLoader.loadStudentView(questionBoard, stage);
 
     }
