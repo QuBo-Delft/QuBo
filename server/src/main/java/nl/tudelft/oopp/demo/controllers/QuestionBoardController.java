@@ -221,7 +221,7 @@ public class QuestionBoardController {
      * DELETE endpoint for deleting PaceVotes.
      * Throw 404 upon requesting non-existent pacevote.
      *
-     * @param boardId    The ID of the Board this request was made in.
+     * @param boardId    The ID of the question board this request was made in.
      * @param paceVoteId The ID of the PaceVote that is to be deleted.
      * @return The dto containing details about the deleted vote.
      */
