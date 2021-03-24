@@ -25,7 +25,7 @@ import java.util.Date;
 import java.sql.Timestamp;
 
 /**
- * The controller for CreateQubo.fxml
+ * The controller for CreateQuBo.fxml
  */
 public class CreateQuBoController {
 
@@ -112,10 +112,10 @@ public class CreateQuBoController {
     }
 
     /**
-     * When the user clicks the "cancel" button this method loads the homescreen scene.
+     * When the user clicks the "cancel" button this method loads the home screen scene.
      */
     public void cancelBtnClicked() {
-        //TODO: Use scene builder to load homescreen scene.
+        //TODO: Use scene builder to load home screen scene.
     }
 
     /**
