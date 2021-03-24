@@ -1,0 +1,58 @@
+.root {
+    -fx-background-color: EBE7DB;
+}
+
+#titleMessage {
+    -fx-min-width: 400;
+
+    -fx-font-size: 22;
+    -fx-font-family: "BahnSchrift";
+    -fx-text-fill: #A23605;
+    -fx-text-alignment: left;
+}
+
+.codes {
+    -fx-min-width: 135;
+
+    -fx-font-family: "Bahnschrift";
+    -fx-font-size: 15;
+    -fx-text-fill: #6b5e59;
+}
+
+.copyButton {
+    -fx-background-color: #b9b3a1;
+    -fx-min-width: 130;
+
+    -fx-font-weight: bold;
+    -fx-text-fill: #725e54;
+    -fx-font-size: 16;
+}
+
+.attribute {
+    -fx-font-family: "Bahnschrift";
+    -fx-font-size: 16;
+    -fx-text-fill: #5c4f4b;
+}
+
+.value {
+    -fx-font-family: "Bahnschrift";
+    -fx-font-size: 15;
+    -fx-text-fill: #6b5e59;
+}
+
+.line {
+    -fx-min-width: 400;
+    -fx-stroke: #A23605;
+}
+
+#backToHome {
+    -fx-background-color: #D8D1C7;
+    -fx-background-radius: 8;
+    -fx-min-height: 40;
+    -fx-min-width: 80;
+
+    -fx-font-weight: bold;
+    -fx-font-family: "BahnSchrift";
+    -fx-font-size: 15;
+    -fx-text-fill: #6b5e59;
+}
