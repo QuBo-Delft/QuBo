@@ -1,11 +1,11 @@
 package nl.tudelft.oopp.demo.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -17,11 +17,16 @@ import nl.tudelft.oopp.demo.views.AlertDialog;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.sql.Timestamp;
 
+/**
+ * The controller for CreateQubo.fxml
+ */
 public class CreateQuBoController {
 
     @FXML
@@ -32,44 +37,46 @@ public class CreateQuBoController {
     private Spinner<Integer> hoursSpinner;
     @FXML
     private Spinner<Integer> minutesSpinner;
+    @FXML
+    private Label errorDateTime;
+    @FXML
+    private Label errorTitle;
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
 
     /**
-     * Once the user clicks the "create now" button, this method will be invoked 
-     * to create a question board that opens immediately on the server. 
-     * If the request was unsuccessful, an alert dialog is shown to the user
-     *
-     * @param actionEvent   The click button event.
+     * Once the user clicks the "create now" button, this method will be invoked
+     * to create a question board that opens immediately on the server.
+     * If the request was unsuccessful, an alert dialog is shown to the user.
      */
-    public void createNowBtnClicked(ActionEvent actionEvent) {
+    public void createNowBtnClicked() {
         String titleStr = title.getText();
-        
-        // Check if title is empty
-        if (titleStr.length() == 0) {
-            AlertDialog.display("No Title Input",
-                                "Please enter a meaningful title for the lecture");
-            return;
+
+        // Check if the title is not empty
+        if (!titleIsEmpty(titleStr)) {
+            sendAndProcessBoardCreationRequest(titleStr, new Date());
         }
-
-        sendAndProcessBoardCreationRequest(titleStr, new Date());
-
     }
-
 
     /**
      * Once the user clicks the "schedule" button, this method will be invoked to create
-     * a question board, that opens and closes as scheduled, on the server. 
+     * a question board, that opens and closes as scheduled, on the server.
      * If the request was unsuccessful, an alert dialog is shown to the user.
-     *
-     * @param actionEvent   The click button event.
      */
-    public void scheduleBtnClicked(ActionEvent actionEvent) {
+    public void scheduleBtnClicked() {
         String titleStr = title.getText();
 
         // Check if title is empty
-        if (titleStr.length() == 0) {
-            AlertDialog.display("No Title Input", "Please enter a meaningful title for the lecture");
+        boolean titleEmpty = titleIsEmpty(titleStr);
+
+        // check if date is not null
+        boolean invalidDate = (startDate.getValue() == null);
+        if (invalidDate) {
+            errorDateTime.setVisible(true);
+        }
+
+        // if either the title is empty, or the date is null, stop code execution
+        if (titleEmpty || invalidDate) {
             return;
         }
 
@@ -96,13 +103,19 @@ public class CreateQuBoController {
 
         // Check if the start time is after the current time or is null
         if (startTime == null || !isStartTimeBeforeCurrentTime(startTime)) {
-            AlertDialog.display("Invalid Start Time",
-                    "The start time is before the current time, please try again");
+            errorDateTime.setVisible(true);
             return;
         }
 
         sendAndProcessBoardCreationRequest(titleStr, startTime);
 
+    }
+
+    /**
+     * When the user clicks the "cancel" button this method loads the homescreen scene.
+     */
+    public void cancelBtnClicked() {
+        //TODO: Use scene builder to load homescreen scene.
     }
 
     /**
@@ -114,7 +127,7 @@ public class CreateQuBoController {
     private void sendAndProcessBoardCreationRequest(String titleStr, Date startTime) {
         Timestamp startTimeStamp = new Timestamp(startTime.getTime());
         QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel(
-                titleStr, startTimeStamp);
+            titleStr, startTimeStamp);
 
         // Send the request and retrieve the QuestionBoardCreationDto
         QuestionBoardCreationDto questionBoardDto = ServerCommunication.createBoardRequest(board);
@@ -122,7 +135,7 @@ public class CreateQuBoController {
         // Alert the user if the creation of the question board has failed
         if (questionBoardDto == null) {
             AlertDialog.display("Unsuccessful Request",
-                    "The question board could not be created, please try again");
+                "The question board could not be created, please try again");
             return;
         }
 
@@ -170,7 +183,7 @@ public class CreateQuBoController {
     /**
      * This method aims to check whether the start time is after the current time.
      *
-     * @param startTime     The start time of the question board.
+     * @param startTime The start time of the question board.
      * @return true if and only the start time is after the current time.
      */
     private boolean isStartTimeBeforeCurrentTime(Date startTime) {
@@ -179,6 +192,48 @@ public class CreateQuBoController {
         c1.setTime(startTime);
         c2.setTime(new Date());
         return c1.compareTo(c2) >= 0;
+    }
+
+    /**
+     * This method checks whether the title TextField is empty and if it is,
+     * displays an error accordingly.
+     * @param titleStr the title String to be checked.
+     * @return returns true if empty.
+     */
+    private boolean titleIsEmpty(String titleStr) {
+        if (titleStr.isEmpty()) {
+            errorTitle.setVisible(true);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * This method checks whether the title TextField is empty when it's input is changed
+     * or when it is clicked. If it is empty it will display the errorTitle label, if it is
+     * not empty, but the label was being displayed, it will get hidden again.
+     */
+    public void titleTextHandler() {
+        errorTitle.setVisible(title.getText().isEmpty());
+    }
+
+    /**
+     * This method first checks whether the enter date and time is after the current date and time.
+     * It also hides or shows an error Label called errorDateTime accordingly.
+     */
+    public void dateInputHandler() {
+        if (startDate.getValue() == null) {
+            errorDateTime.setVisible(true);
+        } else {
+            // Create a new variable with the current date and time
+            LocalDateTime today = LocalDateTime.now();
+            // Retrieve the entered date
+            LocalDate inputDay = startDate.getValue();
+            // Add the hour and time value from the Spinners to the entered date
+            LocalDateTime inputTime = inputDay.atTime(hoursSpinner.getValue(), minutesSpinner.getValue());
+            // Compare both dates
+            errorDateTime.setVisible(!inputTime.isAfter(today));
+        }
     }
 
 }
