@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
+import nl.tudelft.oopp.demo.controllers.CreateQuBoController;
 import nl.tudelft.oopp.demo.controllers.QuBoCodesController;
 import nl.tudelft.oopp.demo.controllers.StudentViewController;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
@@ -13,10 +14,40 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.views.AlertDialog;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.UUID;
 
 public class SceneLoader {
+
+
+    /**
+     * This method aims to load the page used to create question boards.
+     *
+     * @param currentStage    The current stage that is displayed on-screen.
+     *
+     */
+    public static void loadCreateQuBo(Stage currentStage) {
+        // Create an FXMLLoader of CreateQuBo.fxml
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/CreateQuBo.fxml"));
+
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Get the controller of CreateQuBo
+        CreateQuBoController controller = loader.getController();
+
+        // Check if root is null
+        if (root == null) {
+            AlertDialog.display("", "Unable to display the create question board form");
+            return;
+        }
+
+        // Display the new scene
+        currentStage.setScene(new Scene(root));
+    }
 
     /**
      * This method aims to load the page that displays the student code and moderator code.
@@ -25,9 +56,9 @@ public class SceneLoader {
      *              of QuestionBoardCodes.
      *
      */
-    public static void loadQuestionBoardCodes(QuestionBoardCreationDto qd) {
+    public static void loadQuestionBoardCodes(QuestionBoardCreationDto qd, Stage currentStage) {
         // Create an FXMLLoader of QuBoCodes.fxml
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/QuBoCodes.fxml"));
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/QuBoCodes.fxml"));
 
         Parent root = null;
         try {
@@ -48,10 +79,8 @@ public class SceneLoader {
             return;
         }
 
-        // Display the scene
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.show();
+        // Display the new scene
+        currentStage.setScene(new Scene(root));
     }
 
     /**
@@ -60,9 +89,9 @@ public class SceneLoader {
      * @param qd    The QuestionBoardCreationDto object that brings data for the
      *              student view of a question board.
      */
-    public static void loadStudentView(QuestionBoardDetailsDto qd) {
+    public static void loadStudentView(QuestionBoardDetailsDto qd, Stage currentStage) {
         // Create an FXMLLoader of StudentView.fxml
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/StudentView.fxml"));
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/StudentView.fxml"));
 
         Parent root = null;
         try {
@@ -84,9 +113,8 @@ public class SceneLoader {
             return;
         }
 
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.show();
+        //Display the new scene
+        currentStage.setScene(new Scene(root));
     }
 
     /**
@@ -95,9 +123,8 @@ public class SceneLoader {
      * @param currentStage    The stage of the scene where the method is called
      */
     public static void backToHome(Stage currentStage) {
-        currentStage.close();
-
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/JoinQuBo.fxml"));
+        //Create an FXMLLoader of JoinQuBo.fxml
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/JoinQuBo.fxml"));
 
         Parent root = null;
         try {
@@ -112,9 +139,7 @@ public class SceneLoader {
             return;
         }
 
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.show();
+        currentStage.setScene(new Scene(root));
     }
 
 }

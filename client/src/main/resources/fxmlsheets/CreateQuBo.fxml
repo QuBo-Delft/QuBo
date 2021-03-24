@@ -1,55 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Line?>
-<?import javafx.scene.text.Font?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<GridPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.demo.controllers.CreateQuBoController">
+<GridPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.demo.controllers.CreateQuBoController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" />
-    <ColumnConstraints hgrow="SOMETIMES" />
+    <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
+    <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
       <ColumnConstraints hgrow="SOMETIMES" />
+      <ColumnConstraints />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints prefHeight="80.0" vgrow="SOMETIMES" />
     <RowConstraints vgrow="SOMETIMES" />
       <RowConstraints vgrow="SOMETIMES" />
     <RowConstraints vgrow="SOMETIMES" />
       <RowConstraints vgrow="SOMETIMES" />
   </rowConstraints>
-      <Label alignment="CENTER" text="Title:" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+      <Label alignment="CENTER" styleClass="attribute" text="Title:" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
          <GridPane.margin>
             <Insets right="15.0" />
          </GridPane.margin>
       </Label>
-            <Label text="Schedule:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
+            <Label styleClass="attribute" text="Schedule:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
          <GridPane.margin>
             <Insets right="15.0" />
          </GridPane.margin>
             </Label>
-            <Button accessibleHelp="This button can be used to immediately create a question board." mnemonicParsing="false" onAction="#createNowBtnClicked" text="Create Now" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <Button accessibleHelp="This button can be used to immediately create a question board." mnemonicParsing="false" onAction="#createNowBtnClicked" styleClass="createQuBo" text="Create Now" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <font>
                   <Font size="16.0" />
                </font>
             </Button>
-            <Label text="or" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Label id="or" text="or" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <font>
                   <Font size="16.0" />
                </font>
+      <GridPane.margin>
+         <Insets />
+      </GridPane.margin>
             </Label>
       <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2">
-                  <Label mouseTransparent="true" text="Create Question Board">
+                  <Label id="titleMessage" mouseTransparent="true" text="Create Question Board">
                      <font>
                         <Font size="21.0" />
                      </font>
@@ -57,11 +53,6 @@
                   <Insets bottom="5.0" left="30.0" right="15.0" top="15.0" />
                </VBox.margin>
                   </Label>
-            <Line endX="100.0" startX="-300.0" strokeWidth="2.0">
-               <VBox.margin>
-                  <Insets left="10.0" />
-               </VBox.margin>
-            </Line>
       <GridPane.margin>
          <Insets bottom="30.0" />
       </GridPane.margin>
@@ -79,7 +70,7 @@
                                     <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="0" max="23" min="0" />
                                  </valueFactory>
                               </Spinner>
-                              <Label alignment="TOP_LEFT" text="Hours" textFill="#9e9e9e">
+                              <Label alignment="TOP_LEFT" styleClass="value" text="Hours" textFill="#9e9e9e">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -96,7 +87,7 @@
                                     <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="0" max="59" min="0" />
                                  </valueFactory>
                               </Spinner>
-                              <Label alignment="TOP_LEFT" text="Minutes" textFill="#9e9e9e">
+                              <Label alignment="TOP_LEFT" styleClass="value" text="Minutes" textFill="#9e9e9e">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -110,7 +101,7 @@
                   <Insets top="15.0" />
                </VBox.margin>
             </HBox>
-            <Label fx:id="errorDateTime" accessibleHelp="Please change the currently set date and time using the date and time pickers. " accessibleRoleDescription="Error message" text="Error: Invalid date, please enter a date and time in the future" textFill="RED" visible="false" wrapText="true">
+            <Label fx:id="errorDateTime" accessibleHelp="Please change the currently set date and time using the date and time pickers. " accessibleRoleDescription="Error message" styleClass="errorMessageLabel" text="Error: Invalid date, please enter a date and time in the future" textFill="RED" visible="false" wrapText="true">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
@@ -119,7 +110,7 @@
             <Insets />
          </GridPane.margin>
       </VBox>
-            <Button accessibleHelp="This button can be clicked to schedule a question board on the specified date and time." mnemonicParsing="false" onAction="#scheduleBtnClicked" text="Schedule&#10;Question Board" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
+            <Button accessibleHelp="This button can be clicked to schedule a question board on the specified date and time." mnemonicParsing="false" onAction="#scheduleBtnClicked" styleClass="createQuBo" text="Schedule&#10;Question Board" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
                <font>
                   <Font size="16.0" />
                </font>
@@ -127,14 +118,14 @@
             <Insets />
          </GridPane.margin>
             </Button>
-      <Button fx:id="cancelBtn" accessibleHelp="This button can be used to return to the homescreen of the application." alignment="CENTER" mnemonicParsing="false" onAction="#cancelBtnClicked" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+      <Button id="cancelButton" fx:id="cancelBtn" accessibleHelp="This button can be used to return to the homescreen of the application." alignment="CENTER" mnemonicParsing="false" onAction="#cancelBtnClicked" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets />
          </GridPane.margin>
       </Button>
-   <VBox spacing="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+    <VBox spacing="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                   <TextField fx:id="title" accessibleHelp="This field can be used to specify the name of a question board." onKeyReleased="#titleTextHandler" onMouseClicked="#titleTextHandler" promptText="Title of question board" />
-               <Label fx:id="errorTitle" accessibleHelp="You cannot leave the title field empty, please enter a title." accessibleRoleDescription="Error message" text="Error: The title field is blank" textFill="RED" visible="false">
+               <Label fx:id="errorTitle" accessibleHelp="You cannot leave the title field empty, please enter a title." accessibleRoleDescription="Error message" styleClass="errorMessageLabel" text="Error: The title field is blank" textFill="RED" visible="false">
             <VBox.margin>
                <Insets top="5.0" />
             </VBox.margin>
@@ -143,4 +134,12 @@
          <Insets />
       </GridPane.margin>
    </VBox>
+    <Line endX="400.0" startX="-100.0" styleClass="line" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.valignment="BASELINE">
+        <GridPane.margin>
+            <Insets left="15.0" top="60.0" />
+        </GridPane.margin>
+    </Line>
+    <stylesheets>
+        <URL value="@../css/CreateQuBo.css" />
+    </stylesheets>
 </GridPane>

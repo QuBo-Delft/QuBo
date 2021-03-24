@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -37,18 +38,14 @@ public class JoinQuBoController {
      * Method that handles mouse click interaction with the create question board button.
      *
      * @param event the mouse click event
-     * @throws IOException the io exception
      */
     @FXML
-    void createButtonClicked(ActionEvent event) throws IOException {
-        Stage primaryStage = new Stage();
-        FXMLLoader loader = new FXMLLoader();
-        URL xmlUrl = getClass().getResource("/CreateQuBo.fxml");
-        loader.setLocation(xmlUrl);
-        Parent root = loader.load();
+    void createButtonClicked(ActionEvent event) {
+        // Get the stage that is currently displayed on-screen
+        Stage currentStage = (Stage)((Node) event.getSource()).getScene().getWindow();
 
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+        //Load the create question board page
+        SceneLoader.loadCreateQuBo(currentStage);
     }
 
     /**
@@ -80,7 +77,9 @@ public class JoinQuBoController {
         QuestionBoardDetailsDto questionBoard = gson.fromJson(resBody, QuestionBoardDetailsDto.class);
 
         // Load the student view.
-        SceneLoader.loadStudentView(questionBoard);
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+
+        SceneLoader.loadStudentView(questionBoard, stage);
 
     }
 }
