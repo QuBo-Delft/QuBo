@@ -369,7 +369,7 @@ public class ServerCommunication {
      * @param questionId    The ID of the question to which a vote should be added.
      * @return Returns a QuestionVoteCreationDto associated with the created question vote.
      */
-    public static QuestionVoteCreationDto addQuestionVote(UUID questionId) {
+    public static String addQuestionVote(UUID questionId) {
         //Set up the parameters that need to be passed to the post helper method
         String fullUrl = subUrl + "/api/question/" + questionId + "/vote";
         String requestBody = gson.toJson(questionId);
@@ -383,10 +383,7 @@ public class ServerCommunication {
             return null;
         }
 
-        //Convert the response to a QuestionVoteCreationDto and return this
-        QuestionVoteCreationDto questionVote = gson.fromJson(response.body(), QuestionVoteCreationDto.class);
-
-        return questionVote;
+        return response.body();
     }
 
     /**
