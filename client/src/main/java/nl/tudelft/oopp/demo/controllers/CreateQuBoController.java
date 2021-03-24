@@ -189,7 +189,7 @@ public class CreateQuBoController {
      * This method first checks whether the enter date and time is after the current date and time.
      * It also hides or shows an error Label called errorDateTime accordingly.
      */
-    private void dateInputHandler() {
+    public void dateInputHandler() {
         if (startDate.getValue() == null) {
             errorDateTime.setVisible(true);
         } else {
