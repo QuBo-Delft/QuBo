@@ -2,12 +2,19 @@ package nl.tudelft.oopp.demo.communication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteDetailsDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
+import nl.tudelft.oopp.demo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -81,6 +88,44 @@ public class ServerCommunication {
     }
 
     /**
+     * Retrieves an HTTP response from the server by sending an HTTP patch request.
+     *
+     * @param fullUrl   The URL corresponding to the server endpoint.
+     * @return The http response.
+     */
+    private static HttpResponse<String> patch(String fullUrl) {
+        //Set up the request Object
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(fullUrl))
+                .method("PATCH", HttpRequest.BodyPublishers.ofString("{}"))
+                .header("Content-Type", "application/json")
+                .build();
+
+        //Send the request, and return the http response
+        return  sendRequest(request);
+    }
+
+    /**
+     * Retrieves an HTTP response from the server by sending an HTTP put request.
+     *
+     * @param fullUrl       The URL corresponding to the server endpoint.
+     * @param requestBody   The body of the request. This should contain the information that should be sent to
+     *      the server.
+     * @return The HTTP response returned.
+     */
+    private static HttpResponse<String> put(String fullUrl, String requestBody) {
+        //Set up the request Object
+        HttpRequest request = HttpRequest.newBuilder()
+            .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+            .uri(URI.create(fullUrl))
+            .headers("Content-Type", "application/json;charset=UTF-8")
+            .build();
+
+        //Send the request, and retrieve and return the response from the server
+        return sendRequest(request);
+    }
+
+    /**
      * The method sends a request to the server to create a question board.
      *
      * @param board     The QuestionBoardCreationBindingModel object that contains details of a question board.
@@ -96,12 +141,34 @@ public class ServerCommunication {
         HttpResponse<String> res = post(fullUrl, requestBody, "Content-Type",
                                         "application/json;charset=UTF-8");
 
-        //Check if the request was sent and received properly and return null if this is not the case.
+        //If the request was unsuccessful, return null
         if (res == null || res.statusCode() != 200) {
             return null;
         }
 
         return gson.fromJson(res.body(), QuestionBoardCreationDto.class);
+    }
+
+    /**
+     * This method aims to close a question board corresponding to a specific boardId and moderatorCode.
+     *
+     * @param boardId           The board id of a question board to be closed.
+     * @param moderatorCode     The moderator code of this question board.
+     * @return true if and only if the question board was closed successfully.
+     */
+    public static boolean closeBoardRequest(UUID boardId, UUID moderatorCode) {
+        // Construct the full url for closing a question board
+        String fullUrl = subUrl + "api/board/" + boardId + "/close?code=" + moderatorCode;
+
+        //Send the http patch request and retrieve the response
+        HttpResponse<String> response = patch(fullUrl);
+
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -119,7 +186,7 @@ public class ServerCommunication {
                 .uri(URI.create(subUrl + "/api/board/moderator?code=" + moderatorCode)).build();
         HttpResponse<String> response = sendRequest(request);
 
-        //If the code was not a moderator code or the response was null, return null
+        //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
             return null;
         }
@@ -175,6 +242,11 @@ public class ServerCommunication {
             .build();
         HttpResponse<String> response = sendRequest(request);
 
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
         //Convert the response to an array of QuestionDetailsDtos and return this
         QuestionDetailsDto[] questionArray = gson.fromJson(response.body(), QuestionDetailsDto[].class);
 
@@ -203,8 +275,7 @@ public class ServerCommunication {
         HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
             "application/json;charset=UTF-8");
 
-        //Check if the response object is null or if the status code is not equal to 200,
-        //in which case null is returned
+        //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
             return null;
         }
@@ -213,6 +284,35 @@ public class ServerCommunication {
         QuestionCreationDto questionCodes = gson.fromJson(response.body(), QuestionCreationDto.class);
 
         return questionCodes;
+    }
+
+    /**
+     * Edits the text of a question
+     * Communicates with the /api/question/{questionid}?code={code} server endpoint.
+     *
+     * @param questionId    The ID of the question whose text should be modified.
+     * @param code          The moderator code associated with the question board that contains the question or
+     *      the question secret code.
+     * @param text          The new question text.
+     * @return Returns true if, and only if, the request was successful
+     */
+    public static boolean editQuestion(UUID questionId, UUID code, String text) {
+        //Set up the parameters required by the put helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "?code=" + code;
+
+        QuestionEditingBindingModel editedQuestion = new QuestionEditingBindingModel();
+        editedQuestion.setText(text);
+        String requestBody = gson.toJson(editedQuestion);
+
+        //Send the put request to edit the question and retrieve the response
+        HttpResponse<String> response = put(fullUrl, requestBody);
+
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -230,9 +330,149 @@ public class ServerCommunication {
         //Send the request to delete the question from the board and retrieve the response
         HttpResponse<String> response = delete(fullUrl);
 
-        //Check if the question has been deleted properly
-        //Return false if this was not the case
-        if (response.statusCode() != 200) {
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Mark the question from the board as answered.
+     *
+     * @param questionId    The ID of the question to be marked as answered.
+     * @param code          The moderator code that is associated with the board
+     *                      the question is part of, or the question's secret code.
+     * @return True if and only the question has been marked as answered successfully.
+     */
+    public static boolean markQuestionAsAnswered(UUID questionId, UUID code) {
+        //Set up the variables required by the patch helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "/answer?code=" + code;
+
+        //Send the request to mark the question as answered and retrieve the response
+        HttpResponse<String> response = patch(fullUrl);
+
+        //Check if the request was successful
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        //The question has been marked as answered
+        return true;
+    }
+
+    /**
+     * Adds a vote to a question.
+     * Communicates with the /api/question/{questionid}/vote server endpoint.
+     *
+     * @param questionId    The ID of the question to which a vote should be added.
+     * @return Returns a QuestionVoteCreationDto associated with the created question vote.
+     */
+    public static QuestionVoteCreationDto addQuestionVote(UUID questionId) {
+        //Set up the parameters that need to be passed to the post helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "/vote";
+        String requestBody = gson.toJson(questionId);
+
+        //Send the request to add a vote, and retrieve the response
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        //Convert the response to a QuestionVoteCreationDto and return this
+        QuestionVoteCreationDto questionVote = gson.fromJson(response.body(), QuestionVoteCreationDto.class);
+
+        return questionVote;
+    }
+
+    /**
+     * Deletes a question vote from the specified question.
+     * Communicates with the /api/question/{questionid}/vote/{voteid} server endpoint.
+     *
+     * @param questionId    The ID of the question from which a vote should be deleted.
+     * @param voteId        The ID of the vote that should be deleted.
+     * @return Returns true if, and only if, the vote has been deleted successfully.
+     */
+    public static boolean deleteQuestionVote(UUID questionId, UUID voteId) {
+        //Set up the parameter required to call the delete helper method
+        String fullUrl = subUrl + "/api/question/" + questionId + "/vote/" + voteId;
+
+        //Send the request to delete the vote, and retrieve the response
+        HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        //Check if the deleted question vote was the right vote
+        QuestionVoteDetailsDto deletedVote = gson.fromJson(response.body(), QuestionVoteDetailsDto.class);
+        if (!deletedVote.getId().equals(voteId)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Adds a pace vote to the question board.
+     * Communicated with the /api/board/{boardid}/pace server endpoint.
+     *
+     * @param boardId   The ID of the question board to which a pace vote should be added.
+     * @param paceType  The type of pace vote that should be added.
+     * @return A PaceVoteCreationDto with the ID of the pace vote.
+     */
+    public static PaceVoteCreationDto addPaceVote(UUID boardId, PaceType paceType) {
+        //Create a PaceVoteCreationBindingModel with the specified pace type
+        PaceVoteCreationBindingModel paceModel = new PaceVoteCreationBindingModel();
+        paceModel.setPaceType(paceType);
+
+        //Set up the variables needed to call the post method
+        String requestBody = gson.toJson(paceModel);
+        String fullUrl = subUrl + "/api/board/" + boardId + "/pace";
+
+        //Request the pace vote creation, and retrieve the response
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        //Convert the response body to a PaceVoteCreationDto and return this
+        PaceVoteCreationDto paceVote = gson.fromJson(response.body(), PaceVoteCreationDto.class);
+
+        return paceVote;
+    }
+
+    /**
+     * Deletes a pace vote with specified ID from the question board.
+     * Communicated with the /api/board/{boardid}/pace/{pacevoteid} server endpoint.
+     *
+     * @param boardId       The question board from which the pace vote should be deleted.
+     * @param paceVoteId    The ID of the pace vote that should be deleted.
+     * @return True if, and only if, the deletion was successful.
+     */
+    public static boolean deletePaceVote(UUID boardId, UUID paceVoteId) {
+        //Set up the URL that will be sent to the delete helper method
+        String fullUrl = subUrl + "/api/board/" + boardId + "/pace/" + paceVoteId;
+
+        //Send the request to the server and receive the response
+        HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return false
+        if (response == null || response.statusCode() != 200) {
+            return false;
+        }
+
+        //Check if the deleted pace vote had the same ID
+        PaceVoteDetailsDto deletedVote = gson.fromJson(response.body(), PaceVoteDetailsDto.class);
+        if (!deletedVote.getId().equals(paceVoteId)) {
             return false;
         }
 

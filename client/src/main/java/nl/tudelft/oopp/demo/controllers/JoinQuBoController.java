@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
 
 import java.io.IOException;
 import java.net.URL;
@@ -69,6 +70,9 @@ public class JoinQuBoController {
         if (questionBoard == null) {
             errorMessageLabel.setVisible(true);
         }
-        // TODO: joinQuestionBoard method
+
+        // Load the student view.
+        SceneLoader.loadStudentView(questionBoard);
+
     }
 }
