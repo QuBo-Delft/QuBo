@@ -6,7 +6,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
-
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
@@ -39,6 +40,8 @@ public class CreateQuBoController {
     private Label errorDateTime;
     @FXML
     private Label errorTitle;
+    @FXML
+    private Button cancelBtn;
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
 
@@ -113,7 +116,7 @@ public class CreateQuBoController {
      * When the user clicks the "cancel" button this method loads the home screen scene.
      */
     public void cancelBtnClicked() {
-        //TODO: Use scene builder to load home screen scene.
+        SceneLoader.backToHome((Stage) cancelBtn.getScene().getWindow());
     }
 
     /**
