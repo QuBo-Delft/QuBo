@@ -4,16 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
-import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteDetailsDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
-import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
-import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
-import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
-import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
-import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 
 import java.net.URI;
@@ -138,7 +132,7 @@ public class ServerCommunication {
      * The method sends a request to the server to create a question board.
      *
      * @param board     The QuestionBoardCreationBindingModel object that contains details of a question board.
-     * @return The response body of type string.
+     * @return The response body in Json string format.
      */
     public static String createBoardRequest(QuestionBoardCreationBindingModel board) {
         String fullUrl = subUrl + "api/board";
@@ -163,7 +157,7 @@ public class ServerCommunication {
      *
      * @param boardId           The board id of a question board to be closed.
      * @param moderatorCode     The moderator code of this question board.
-     * @return non-null if and only if the question board was closed successfully.
+     * @return Non-null if and only if the question board was closed successfully.
      */
     public static String closeBoardRequest(UUID boardId, UUID moderatorCode) {
         // Construct the full url for closing a question board
@@ -186,8 +180,8 @@ public class ServerCommunication {
      * Communicates with the /api/board/moderator?code={moderatorCode} server endpoint.
      *
      * @param moderatorCode     The code belonging to the Question Board whose details should be retrieved.
-     * @return a QuestionBoardDetailsDto in Json string containing the details of the Question Board or null
-     *         if this does not exist.
+     * @return A QuestionBoardDetailsDto in Json string format containing the details of the Question Board
+     *         or null if this does not exist.
      */
     public static String retrieveBoardDetailsThroughModCode(UUID moderatorCode) {
         //Create a request and response object, send the request, and retrieve the response
@@ -209,7 +203,7 @@ public class ServerCommunication {
      * Communicates with the /api/board/{boardID} server endpoint.
      *
      * @param boardID   The ID of the Question Board whose details should be retrieved.
-     * @return a QuestionBoardDetailsDto of type string containing the details of the Question
+     * @return A QuestionBoardDetailsDto in Json string format containing the details of the Question
      *         Board or null if this does not exist.
      */
     public static String retrieveBoardDetails(UUID boardID) {
@@ -239,7 +233,7 @@ public class ServerCommunication {
      * Communicates with the /api/board/{boardid}/questions server endpoint.
      *
      * @param boardId   The ID of the Question Board whose question list should be retrieved.
-     * @return Returns an array of QuestionDetailsDtos.
+     * @return An array of QuestionDetailsDtos in Json string format.
      */
     public static String retrieveQuestions(UUID boardId) {
         //Send the request to retrieve the questions of the question board, and retrieve the response
@@ -263,8 +257,8 @@ public class ServerCommunication {
      * @param boardId   The ID of the Question Board whose details should be retrieved.
      * @param text      The content of the question.
      * @param author    The name of the author of the question.
-     * @return Returns a QuestionCreationDto that contains the ID and secret code associated
-     *      with the question.
+     * @return A QuestionCreationDto in Json string format that contains the ID and
+     *         secret code associated with the question.
      */
     public static String addQuestion(UUID boardId, String text, String author) {
         //Instantiate a QuestionCreationBindingModel
@@ -291,10 +285,10 @@ public class ServerCommunication {
      * Communicates with the /api/question/{questionid}?code={code} server endpoint.
      *
      * @param questionId    The ID of the question whose text should be modified.
-     * @param code          The moderator code associated with the question board that contains the question or
-     *      the question secret code.
+     * @param code          The moderator code associated with the question board
+     *                      that contains the question or the question secret code.
      * @param text          The new question text.
-     * @return Returns true if, and only if, the request was successful
+     * @return Non-null if, and only if, the request was successful.
      */
     public static String editQuestion(UUID questionId, UUID code, String text) {
         //Set up the parameters required by the put helper method
@@ -307,7 +301,7 @@ public class ServerCommunication {
         //Send the put request to edit the question and retrieve the response
         HttpResponse<String> response = put(fullUrl, requestBody);
 
-        //If the request was unsuccessful, return false
+        //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
             return null;
         }
@@ -321,7 +315,7 @@ public class ServerCommunication {
      *
      * @param questionId    The ID of the question that should be deleted.
      * @param code          The moderator code associated with the board or the question's secret code.
-     * @return Returns true if, and only if, the question was deleted from the board.
+     * @return Non-null if, and only if, the question was deleted from the board.
      */
     public static String deleteQuestion(UUID questionId, UUID code) {
         //Set up the variables required by the delete helper method
@@ -330,7 +324,7 @@ public class ServerCommunication {
         //Send the request to delete the question from the board and retrieve the response
         HttpResponse<String> response = delete(fullUrl);
 
-        //If the request was unsuccessful, return false
+        //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
             return null;
         }
@@ -344,7 +338,7 @@ public class ServerCommunication {
      * @param questionId    The ID of the question to be marked as answered.
      * @param code          The moderator code that is associated with the board
      *                      the question is part of, or the question's secret code.
-     * @return True if and only the question has been marked as answered successfully.
+     * @return Non-null if and only the question has been marked as answered successfully.
      */
     public static String markQuestionAsAnswered(UUID questionId, UUID code) {
         //Set up the variables required by the patch helper method
@@ -367,7 +361,8 @@ public class ServerCommunication {
      * Communicates with the /api/question/{questionid}/vote server endpoint.
      *
      * @param questionId    The ID of the question to which a vote should be added.
-     * @return Returns a QuestionVoteCreationDto associated with the created question vote.
+     * @return A QuestionVoteCreationDto associated with the created question vote
+     *         in Json string format.
      */
     public static String addQuestionVote(UUID questionId) {
         //Set up the parameters that need to be passed to the post helper method
@@ -392,7 +387,7 @@ public class ServerCommunication {
      *
      * @param questionId    The ID of the question from which a vote should be deleted.
      * @param voteId        The ID of the vote that should be deleted.
-     * @return Returns true if, and only if, the vote has been deleted successfully.
+     * @return Non-null if, and only if, the vote has been deleted successfully.
      */
     public static String deleteQuestionVote(UUID questionId, UUID voteId) {
         //Set up the parameter required to call the delete helper method
@@ -401,7 +396,7 @@ public class ServerCommunication {
         //Send the request to delete the vote, and retrieve the response
         HttpResponse<String> response = delete(fullUrl);
 
-        //If the request was unsuccessful, return false
+        //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
             return null;
         }
@@ -421,7 +416,7 @@ public class ServerCommunication {
      *
      * @param boardId   The ID of the question board to which a pace vote should be added.
      * @param paceType  The type of pace vote that should be added.
-     * @return A PaceVoteCreationDto with the ID of the pace vote.
+     * @return A PaceVoteCreationDto in Json string format with the ID of the pace vote.
      */
     public static String addPaceVote(UUID boardId, PaceType paceType) {
         //Create a PaceVoteCreationBindingModel with the specified pace type
@@ -450,7 +445,7 @@ public class ServerCommunication {
      *
      * @param boardId       The question board from which the pace vote should be deleted.
      * @param paceVoteId    The ID of the pace vote that should be deleted.
-     * @return True if, and only if, the deletion was successful.
+     * @return Non-null if, and only if, the deletion was successful.
      */
     public static String deletePaceVote(UUID boardId, UUID paceVoteId) {
         //Set up the URL that will be sent to the delete helper method
@@ -459,7 +454,7 @@ public class ServerCommunication {
         //Send the request to the server and receive the response
         HttpResponse<String> response = delete(fullUrl);
 
-        //If the request was unsuccessful, return false
+        //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
             return null;
         }

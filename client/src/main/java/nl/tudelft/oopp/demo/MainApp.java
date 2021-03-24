@@ -82,9 +82,11 @@ public class MainApp {
         //Print the JSON representation of the dto returned by the addQuestion method called using the
         //ID of the questionBoard.
         String questionText = "Has this question been added successfully?";
+
         //QuestionCreationDto questionCodes = ServerCommunication.addQuestion(boardId, questionText, "author");
         QuestionCreationDto questionCodes = gson.fromJson(ServerCommunication.addQuestion(boardId,
                 questionText, "author"), QuestionCreationDto.class);
+
         System.out.println("Added a question to the Question Board\n    "
             + gson.toJson(questionCodes));
 
@@ -97,7 +99,8 @@ public class MainApp {
 
         //Edit the question through the moderator code, and print true if it was edited successfully.
         System.out.println("The question has been edited through the moderator code: "
-            + (((ServerCommunication.editQuestion(questionId, moderatorCode, "Is the universe infinitely large?"))) != null));
+            + (((ServerCommunication
+                .editQuestion(questionId, moderatorCode, "Is the universe infinitely large?"))) != null));
 
         //Add another question
         QuestionCreationDto questionTwo = gson.fromJson(ServerCommunication
@@ -107,7 +110,8 @@ public class MainApp {
             + gson.toJson(questionTwo));
 
         //Retrieve the questions associated with the question board and log them to the console
-        QuestionDetailsDto[] questionList = gson.fromJson(ServerCommunication.retrieveQuestions(boardId), QuestionDetailsDto[].class);
+        QuestionDetailsDto[] questionList = gson.fromJson(ServerCommunication
+                .retrieveQuestions(boardId), QuestionDetailsDto[].class);
 
 
         //QuestionDetailsDto[] questionArray = gson.fromJson(response.body(), QuestionDetailsDto[].class);
@@ -118,7 +122,9 @@ public class MainApp {
         }
 
         //Add a vote to questionCodes
-        QuestionVoteCreationDto questionVote = gson.fromJson(ServerCommunication.addQuestionVote(questionId), QuestionVoteCreationDto.class);
+        QuestionVoteCreationDto questionVote = gson.fromJson(ServerCommunication
+                .addQuestionVote(questionId), QuestionVoteCreationDto.class);
+
         System.out.println("A vote has been added to the question\n    " + gson.toJson(questionVote));
 
         //Mark questionTwo as answered
@@ -143,7 +149,9 @@ public class MainApp {
         //Add a pace vote to the question board
         PaceType paceType = PaceType.JUST_RIGHT;
         //PaceVoteCreationDto paceVote = ServerCommunication.addPaceVote(boardId, paceType);
-        PaceVoteCreationDto paceVote = gson.fromJson(ServerCommunication.addPaceVote(boardId, paceType), PaceVoteCreationDto.class);
+        PaceVoteCreationDto paceVote = gson.fromJson(ServerCommunication
+                .addPaceVote(boardId, paceType), PaceVoteCreationDto.class);
+
         System.out.println("The pace vote has been added\n " + gson.toJson(paceVote));
 
         //Delete a pace vote from the question board
