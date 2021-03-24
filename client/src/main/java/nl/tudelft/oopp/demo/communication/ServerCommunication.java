@@ -24,11 +24,20 @@ import java.util.UUID;
 
 public class ServerCommunication {
 
-    private static final HttpClient client = HttpClient.newBuilder().build();
+    private static HttpClient client = HttpClient.newBuilder().build();
     private static final String subUrl = "http://localhost:8080/";
     private static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         .create();
+
+    /**
+     * Set the value of the client of ServerCommunication.
+     *
+     * @param client    The HttpClient object to set.
+     */
+    public static void setClient(HttpClient client) {
+        ServerCommunication.client = client;
+    }
 
     /**
      * Retrieves an http response from the server by sending an http request.
