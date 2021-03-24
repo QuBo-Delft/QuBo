@@ -60,12 +60,7 @@ public class StudentViewController {
         sideBar.managedProperty().bind(sideBar.visibleProperty());
         sideMenu.managedProperty().bind(sideMenu.visibleProperty());
         sideScreen.setVisible(false);
-
-        //Group sidebar buttons to same group so only one can be selected at one time
-        ToggleGroup sideBarGroup = new ToggleGroup();
-        ansQuestions.setToggleGroup(sideBarGroup);
-        polls.setToggleGroup(sideBarGroup);
-
+        sideMenu.setVisible(false);
     }
 
     public void showHideSideBar() {
@@ -74,6 +69,7 @@ public class StudentViewController {
 
     public void showHideAnsQuestions() {
         if (sideMenu.isVisible() && polls.isSelected()) {
+            polls.setSelected(false);
             sideMenu.getChildren().clear();
             showAnsQuestions();
         } else if (!sideMenu.isVisible()) {
@@ -92,6 +88,7 @@ public class StudentViewController {
 
     public void showHidePolls() {
         if (sideMenu.isVisible() && ansQuestions.isSelected()) {
+            ansQuestions.setSelected(false);
             sideMenu.getChildren().clear();
             showPolls();
         } else if (!sideMenu.isVisible()) {
