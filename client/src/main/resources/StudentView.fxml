@@ -30,7 +30,7 @@
          <Button maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Button" />
          <Pane maxHeight="40.0" maxWidth="150.0" minHeight="40.0" minWidth="40.0" prefHeight="40.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
          <Button maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Help" />
-         <ToggleButton fx:id="hamburger" onAction="#showHideSideBar" alignment="CENTER_RIGHT" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="sideBar" HBox.hgrow="NEVER" />
+         <ToggleButton fx:id="hamburger" onAction="#showHideSideScreen" alignment="CENTER_RIGHT" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="sideBar" HBox.hgrow="NEVER" />
       </HBox>
    </top>
    <center>
@@ -41,7 +41,7 @@
                      <Insets left="30.0" right="60.0" top="20.0" />
                   </padding>
                </ListView>
-               <Pane maxHeight="160.0" maxWidth="140.0" prefHeight="4.0" prefWidth="57.0" StackPane.alignment="BOTTOM_RIGHT">
+               <Pane fx:id="paceVotePane" maxHeight="160.0" maxWidth="140.0" prefHeight="4.0" prefWidth="57.0" StackPane.alignment="BOTTOM_RIGHT">
                      <VBox minHeight="160.0" minWidth="140.0">
                                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How is the current lecture pacing?" wrappingWidth="118.5263671875">
                               <VBox.margin>

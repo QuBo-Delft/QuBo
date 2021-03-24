@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
@@ -18,7 +19,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Button;
 
 public class StudentViewController {
@@ -30,6 +30,8 @@ public class StudentViewController {
     private VBox sideBar;
     @FXML
     private VBox sideMenu;
+    @FXML
+    private Pane paceVotePane;
     @FXML
     private ToggleButton hamburger;
     @FXML
@@ -53,7 +55,7 @@ public class StudentViewController {
                         + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
 
         questionList.setItems(data);
-        questionList.setCellFactory(listView -> new CustomListCell());
+        questionList.setCellFactory(listView -> new QuestionListCell());
 
         //Hide side menu and sidebar
         sideScreen.managedProperty().bind(sideScreen.visibleProperty());
@@ -63,46 +65,75 @@ public class StudentViewController {
         sideMenu.setVisible(false);
     }
 
-    public void showHideSideBar() {
-        sideScreen.setVisible(!sideScreen.isVisible());
+    /**
+     * Toggles the visibility of the sideScreen.
+     */
+    public void showHideSideScreen() {
+        if (sideScreen.isVisible() && sideMenu.isVisible()) {
+            sideScreen.setVisible(false);
+            paceVotePane.setVisible(true);
+        } else {
+            sideScreen.setVisible(!sideScreen.isVisible());
+        }
     }
 
+    /**
+     * Toggles the visibility of the answered questions menu.
+     */
     public void showHideAnsQuestions() {
         if (sideMenu.isVisible() && polls.isSelected()) {
             polls.setSelected(false);
             sideMenu.getChildren().clear();
             showAnsQuestions();
         } else if (!sideMenu.isVisible()) {
+            paceVotePane.setVisible(false);
             showAnsQuestions();
         } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
+            paceVotePane.setVisible(true);
         }
     }
 
+    /**
+     * Shows the content of the answered questions menu.
+     */
     public void showAnsQuestions() {
         Label title = new Label("Answered Questions");
         sideMenu.setVisible(true);
         sideMenu.getChildren().add(title);
+
+        //TODO: Fetch questions and display in a ListView
     }
 
+    /**
+     * Toggles the visibility of the poll menu.
+     */
     public void showHidePolls() {
         if (sideMenu.isVisible() && ansQuestions.isSelected()) {
             ansQuestions.setSelected(false);
             sideMenu.getChildren().clear();
             showPolls();
         } else if (!sideMenu.isVisible()) {
+            paceVotePane.setVisible(false);
             showPolls();
         } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
+            paceVotePane.setVisible(true);
+
         }
     }
 
+    /**
+     * Shows the content of the poll menu.
+     */
     public void showPolls() {
         Label title = new Label("Polls");
         sideMenu.setVisible(true);
         sideMenu.getChildren().add(title);
+
+        //TODO: Fetch polls and display in a ListView
     }
 
     private static class Question {
@@ -123,12 +154,12 @@ public class StudentViewController {
         }
     }
 
-    private class CustomListCell extends ListCell<Question> {
+    private class QuestionListCell extends ListCell<Question> {
         private GridPane content;
         private Label upvoteNumber;
         private Text questionContent;
 
-        public CustomListCell() {
+        public QuestionListCell() {
             super();
             upvoteNumber = new Label();
             questionContent = new Text();
