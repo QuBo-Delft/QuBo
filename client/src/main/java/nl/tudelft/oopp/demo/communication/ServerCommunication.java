@@ -241,7 +241,7 @@ public class ServerCommunication {
      * @param boardId   The ID of the Question Board whose question list should be retrieved.
      * @return Returns an array of QuestionDetailsDtos.
      */
-    public static QuestionDetailsDto[] retrieveQuestions(UUID boardId) {
+    public static String retrieveQuestions(UUID boardId) {
         //Send the request to retrieve the questions of the question board, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
             .uri(URI.create(subUrl + "api/board/" + boardId + "/questions"))
@@ -253,10 +253,7 @@ public class ServerCommunication {
             return null;
         }
 
-        //Convert the response to an array of QuestionDetailsDtos and return this
-        QuestionDetailsDto[] questionArray = gson.fromJson(response.body(), QuestionDetailsDto[].class);
-
-        return questionArray;
+        return response.body();
     }
 
     /**
