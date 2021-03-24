@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.controllers.CreateQuBoController;
+import nl.tudelft.oopp.demo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.demo.controllers.QuBoCodesController;
 import nl.tudelft.oopp.demo.controllers.StudentViewController;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
@@ -110,6 +111,34 @@ public class SceneLoader {
         // Check if root is null
         if (root == null) {
             AlertDialog.display("", "Unable to display the student view");
+            return;
+        }
+
+        //Display the new scene
+        currentStage.setScene(new Scene(root));
+    }
+
+    public static void loadModeratorView(QuestionBoardDetailsDto quBo, Stage currentStage) {
+        // Create an FXMLLoader of ModeratorView.fxml
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/ModeratorView.fxml"));
+
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //Get the controller of ModeratorView
+        ModeratorViewController controller = loader.getController();
+
+        UUID boardId = quBo.getId();
+
+        // TODO: need a method to update data in moderatorView
+
+        //Check if the root is null
+        if (root == null) {
+            AlertDialog.display("", "Unable to display the moderator view");
             return;
         }
 
