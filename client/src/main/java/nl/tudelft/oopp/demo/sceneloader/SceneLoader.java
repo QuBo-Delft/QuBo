@@ -14,7 +14,6 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.views.AlertDialog;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.UUID;
 
 public class SceneLoader {
@@ -28,7 +27,7 @@ public class SceneLoader {
      */
     public static void loadCreateQuBo(Stage currentStage) {
         // Create an FXMLLoader of CreateQuBo.fxml
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/CreateQuBo.fxml"));
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/CreateQuBo.fxml"));
 
         Parent root = null;
         try {
@@ -59,7 +58,7 @@ public class SceneLoader {
      */
     public static void loadQuestionBoardCodes(QuestionBoardCreationDto qd, Stage currentStage) {
         // Create an FXMLLoader of QuBoCodes.fxml
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/QuBoCodes.fxml"));
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/QuBoCodes.fxml"));
 
         Parent root = null;
         try {
@@ -92,7 +91,7 @@ public class SceneLoader {
      */
     public static void loadStudentView(QuestionBoardDetailsDto qd, Stage currentStage) {
         // Create an FXMLLoader of StudentView.fxml
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/StudentView.fxml"));
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/StudentView.fxml"));
 
         Parent root = null;
         try {
@@ -132,7 +131,7 @@ public class SceneLoader {
      */
     public static void backToHome(Stage currentStage) {
         //Create an FXMLLoader of JoinQuBo.fxml
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/JoinQuBo.fxml"));
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/JoinQuBo.fxml"));
 
         Parent root = null;
         try {

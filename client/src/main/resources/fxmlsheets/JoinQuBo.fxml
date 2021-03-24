@@ -44,6 +44,6 @@
         </font>
     </Label>
     <stylesheets>
-        <URL value="@JoinQuBo.css"/>
+        <URL value="@../css/JoinQuBo.css"/>
     </stylesheets>
 </GridPane>

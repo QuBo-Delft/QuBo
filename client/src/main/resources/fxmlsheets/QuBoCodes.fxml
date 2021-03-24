@@ -69,6 +69,6 @@
       </GridPane.margin>
    </Line>
    <stylesheets>
-        <URL value="@QuBoCodes.css" />
+        <URL value="@../css/QuBoCodes.css" />
    </stylesheets>
 </GridPane>
