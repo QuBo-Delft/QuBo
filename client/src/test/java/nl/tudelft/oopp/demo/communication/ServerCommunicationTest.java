@@ -211,7 +211,7 @@ public class ServerCommunicationTest {
 
         //Assert
         assertNotNull(questions);
-        assertTrue(questions.length == 0);
+        assertEquals(questions.length, 0);
     }
 
     //Tests if retrieveQuestions returns an array with all added questions when called through a valid board ID
@@ -237,8 +237,8 @@ public class ServerCommunicationTest {
 
         //Assert
         assertNotNull(questions);
-        assertTrue(questions.length == 2);
-        assertTrue(questions[0] != questions[1]);
+        assertEquals(questions.length, 2);
+        assertNotEquals(questions[0], questions[1]);
         assertTrue(questions[0].getId() == questionId ^ questions[0].getId() == question2Id);
         assertTrue(questions[1].getId() == questionId ^ questions[1].getId() == question2Id);
         assertTrue(Arrays.asList(questions).contains(question2));
@@ -280,9 +280,9 @@ public class ServerCommunicationTest {
 
         //Assert
         QuestionDetailsDto[] questionDetails = ServerCommunication.retrieveQuestions(quBo.getId());
-        assertTrue(questionDetails[0].getId().equals(questionCreated.getId()));
-        assertTrue(questionDetails[0].getAuthorName().equals(author));
-        assertTrue(questionDetails[0].getText().equals(text));
+        assertEquals(questionDetails[0].getId(), questionCreated.getId());
+        assertEquals(questionDetails[0].getAuthorName(), author);
+        assertEquals(questionDetails[0].getText(), text);
     }
 
     //Tests if addQuestion returns null if the board it was going to be added to did not exist.
@@ -439,6 +439,81 @@ public class ServerCommunicationTest {
         QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
         assertFalse(wasEdited);
         assertTrue(questions[0].getText().equals("Test Question?"));
+    }
+
+    //Tests if deleteQuestion returns true when called with an existing question and question board.
+    //Tests if the question has been deleted from the list of questions.
+    @Test
+    public void testDeleteQuestionValidRequest() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        QuestionCreationDto question = ServerCommunication
+                .addQuestion(quBo.getId(), "Test Question?", "author");
+
+        //Act
+        boolean wasDeleted = ServerCommunication
+                .deleteQuestion(quBo.getId(), question.getId());
+
+        //Assert
+        QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
+        assertTrue(wasDeleted);
+        assertTrue(questions.length == 0);
+    }
+
+    //Tests if deleteQuestion returns false when called with an existing question, but a non-existent question board.
+    //Tests if the question has not been deleted from the list of questions.
+    @Test
+    public void testDeleteQuestionInvalidQuBo() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        QuestionCreationDto question = ServerCommunication
+                .addQuestion(quBo.getId(), "Test Question?", "author");
+
+        //Act
+        boolean wasDeleted = ServerCommunication
+                .deleteQuestion(UUID.randomUUID(), question.getId());
+
+        //Assert
+        QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
+        assertFalse(wasDeleted);
+        assertTrue(questions.length == 1);
+        assertTrue(questions[0].getId() == question.getId());
+    }
+
+    //Tests if deleteQuestion returns false when called with an existing question board, but with a non-existent
+    //question.
+    //Tests if the question has not been deleted from the list of questions.
+    @Test
+    public void testDeleteQuestionInvalidQuestion() {
+        //Arrange
+        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
+        quBoModel.setStartTime(Timestamp.from(Instant.now()));
+        quBoModel.setTitle("Test Qubo");
+
+        QuestionBoardCreationDto quBo = ServerCommunication.createBoardRequest(quBoModel);
+
+        QuestionCreationDto question = ServerCommunication
+                .addQuestion(quBo.getId(), "Test Question?", "author");
+
+        //Act
+        boolean wasDeleted = ServerCommunication
+                .deleteQuestion(quBo.getId(), UUID.randomUUID());
+
+        //Assert
+        QuestionDetailsDto[] questions = ServerCommunication.retrieveQuestions(quBo.getId());
+        assertFalse(wasDeleted);
+        assertTrue(questions.length == 1);
+        assertTrue(questions[0].getId() == question.getId());
     }
 
     @Test
