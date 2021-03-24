@@ -129,7 +129,7 @@ public class QuestionBoardController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }
         if (!qb.getModeratorCode().equals(moderatorCode)) {
-            throw new ForbiddenException("Invalid moderator code");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid moderator code");
         }
 
         QuestionBoard closed = this.service.closeBoard(boardId);
@@ -221,12 +221,11 @@ public class QuestionBoardController {
 
     /**
      * DELETE endpoint for deleting PaceVotes.
+     * Throw 404 upon requesting non-existent paceVote.
      *
      * @param boardId    The ID of the Board this request was made in.
      * @param paceVoteId The ID of the PaceVote that is to be deleted.
      * @return The dto containing details about the deleted vote.
-     * @throws NotFoundException if PaceVote does not exist in database or
-     *                           PaceVote does not exists in provided questionBoard.
      */
     @RequestMapping(value = "/{boardid}/pace/{pacevoteid}", method = DELETE)
     @ResponseBody
@@ -236,12 +235,12 @@ public class QuestionBoardController {
         PaceVote vote = paceVoteService.getById(paceVoteId);
         // Check if PaceVote with this ID exists
         if (vote == null) {
-            throw new NotFoundException("Pace vote does not exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pace vote does not exist");
         }
         // Check whether provided boardId matches with the ID in the PaceVote
         UUID paceVoteBoardId = vote.getQuestionBoard().getId();
         if (!paceVoteBoardId.equals(boardId)) {
-            throw new NotFoundException("Pace vote was not found in requested Question board");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pace vote was not found in requested Question board");
         }
         PaceVoteDetailsDto dto = modelMapper.map(vote, PaceVoteDetailsDto.class);
         // Delete actual vote
