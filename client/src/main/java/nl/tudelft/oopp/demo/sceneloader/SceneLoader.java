@@ -104,7 +104,8 @@ public class SceneLoader {
         // Get the controller of StudentView
         StudentViewController controller = loader.getController();
 
-        UUID boardId = qd.getId();
+        // Set the question board of the student view to qd.
+        controller.setQuBo(qd);
 
         // TODO: need a method to update data in studentView
 
