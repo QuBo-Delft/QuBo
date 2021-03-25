@@ -10,7 +10,7 @@ import java.util.List;
 public class Sorting {
 
     /**
-     * This inner class contains the method that sets the sorting order used in sortOnTimeAnswered
+     * This inner class contains the method that sets the sorting order used in sortOnTimeAnswered.
      */
     public static class QuestionTimeAnsweredComparator implements Comparator<QuestionDetailsDto> {
 
@@ -21,12 +21,12 @@ public class Sorting {
          * @param o2    A QuestionDetailsDto that is to be compared with o1.
          *
          * @return 0 if they were answered at the same time, 1 if o1 was answered before o2,
-         * and -1 if o1 was answered after o2. This ensures that the list of questions starts with
-         * the question that was answered last.
+         *      and -1 if o1 was answered after o2. This ensures that the list of questions starts with
+         *      the question that was answered last.
          */
         @Override
         public int compare(QuestionDetailsDto o1, QuestionDetailsDto o2) {
-            if (o1.getAnswered().equals(o2.getAnswered())){
+            if (o1.getAnswered().equals(o2.getAnswered())) {
                 return 0;
             } else if (o1.getAnswered().before(o2.getAnswered())) {
                 return 1;
@@ -37,7 +37,7 @@ public class Sorting {
     }
 
     /**
-     * This inner class contains the method that sets the sorting order used in sortOnUpvotes
+     * This inner class contains the method that sets the sorting order used in sortOnUpvotes.
      */
     public static class QuestionVotesComparator implements Comparator<QuestionDetailsDto> {
 
@@ -48,8 +48,8 @@ public class Sorting {
          * @param o2    The QuestionDetailsDto that is to be compared with o1.
          *
          * @return 0 if the number of votes are equal, 1 if the number of votes of o1 is smaller than that
-         * of o2, and -1 if the number of votes of o1 is greater than that of o2. This ensures that the list
-         * of questions starts with the question with the greatest number of upvotes.
+         *      of o2, and -1 if the number of votes of o1 is greater than that of o2. This ensures that the
+         *      list of questions starts with the question with the greatest number of upvotes.
          */
         @Override
         public int compare(QuestionDetailsDto o1, QuestionDetailsDto o2) {
@@ -69,7 +69,7 @@ public class Sorting {
      *
      * @param questions The array of questions that should be sorted.
      */
-    public static void sortOnTimeAnswered (QuestionDetailsDto[] questions) {
+    public static void sortOnTimeAnswered(QuestionDetailsDto[] questions) {
         //Convert the array to a list
         List<QuestionDetailsDto> sortList = Arrays.asList(questions);
 
@@ -84,7 +84,7 @@ public class Sorting {
      *
      * @param questions The array of questions that should be sorted.
      */
-    public static void sortOnUpvotes (QuestionDetailsDto[] questions) {
+    public static void sortOnUpvotes(QuestionDetailsDto[] questions) {
         //Convert the array to a list
         List<QuestionDetailsDto> sortList = Arrays.asList(questions);
 
