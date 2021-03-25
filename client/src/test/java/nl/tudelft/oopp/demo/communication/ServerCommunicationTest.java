@@ -105,21 +105,65 @@ public class ServerCommunicationTest {
         httpClientMock.verify().post(subUrl + "api/board").called();
     }
 
+    // Test if the closeBoardRequest method returns a non-null response body after being
+    // called with valid board Id (boardId) and moderator code (modCode) then receiving
+    // statusCode 200.
+    @Test
+    public void testCloseBoardRequest() {
+        // Arrange
+        HttpClientMock httpClientMock = new HttpClientMock();
+        // Act
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPatch(subUrl + "api/board/" + uuid1 + "/close?code=" + uuid3)
+                .doReturnStatus(200);
+
+        String responseBody = ServerCommunication.closeBoardRequest(uuid1, uuid3);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .patch(subUrl + "api/board/" + uuid1 + "/close?code=" + uuid3).called();
     }
 
-    //Test if the closeBoardRequest method returns false if it is called with the ID of an existing
-    //question board, but with an invalid code.
+    // Test if the closeBoardRequest method returns null after being called with invalid boardId and
+    // modCode, and receiving statusCode 400 and failureToken as response body.
     @Test
     public void testCloseBoardRequestInvalidCode() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+        // Arrange
+        HttpClientMock httpClientMock = new HttpClientMock();
+        // Act
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPatch(subUrl + "api/board/" + uuid1 + "/close?code=" + uuid3)
+                .doReturnStatus(400).doReturn(failureToken);
 
+        String responseBody = ServerCommunication.closeBoardRequest(uuid1, uuid3);
 
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .patch(subUrl + "api/board/" + uuid1 + "/close?code=" + uuid3).called();
+    }
 
-        //Act
+    // Test if the closeBoardRequest method returns the successToken after being called with
+    // valid boardId and modCode, then receiving statusCode 200 and the successToken as response body.
+    @Test
+    public void testCloseBoardRequestGivingCorrectResponseBody() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPatch(subUrl + "api/board/" + uuid1 + "/close?code=" + uuid3)
+                .doReturn(successToken);
 
+        String responseBody = ServerCommunication.closeBoardRequest(uuid1, uuid3);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .patch(subUrl + "api/board/" + uuid1 + "/close?code=" + uuid3).called();
+    }
 
         //Assert
 
