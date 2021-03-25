@@ -2,24 +2,17 @@ package nl.tudelft.oopp.demo.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.Control;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ListCell;
@@ -30,8 +23,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
+import nl.tudelft.oopp.demo.views.ConfirmationDialog;
 
-import java.awt.event.MouseEvent;
 
 public class StudentViewController {
     @FXML
@@ -159,53 +152,15 @@ public class StudentViewController {
         //TODO: Fetch polls and display in a ListView
     }
 
-    public void leaveQuBo(ActionEvent actionEvent) {
-        sideBar.setDisable(true);
-        topBar.setDisable(true);
-        displayLeavePopup();
-    }
-
-    public void displayLeavePopup() {
-        Pane layer = new Pane();
-        layer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5)");
-
-        Label title = new Label("Leave Question Board?");
-        title.setStyle("-fx-font-size: 18");
-        Label description = new Label("You will have to use your code to join again.");
-
-        Button yes = new Button("Yes");
-        Button no = new Button("No");
-
-        HBox hbox = new HBox(yes, no);
-        hbox.setAlignment(Pos.CENTER);
-        hbox.setSpacing(20);
-        hbox.setPadding(new Insets(10,0,0,0));
-
-        VBox vbox = new VBox(title, description, hbox);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setSpacing(15);
-
-        BorderPane dialogue = new BorderPane(vbox);
-        int fixedHeight = 170;
-        int fixedWidth = 340;
-        dialogue.setMaxHeight(fixedHeight);
-        dialogue.setMaxWidth(fixedWidth);
-        dialogue.setPrefHeight(fixedHeight);
-        dialogue.setPrefWidth(fixedWidth);
-        dialogue.setStyle("-fx-background-color: rgb(255, 255, 255)");
-
-        StackPane leaveDialogue = new StackPane(layer, dialogue);
-        leaveDialogue.setAlignment(Pos.CENTER);
-        content.getChildren().add(leaveDialogue);
-    }
-
-    public void returnToQuBo() {
-        sideBar.setDisable(false);
-        topBar.setDisable(false);
-    }
-
-    public void returnToHome() {
-        SceneLoader.backToHome((Stage) leaveQuBo.getScene().getWindow());
+    /**
+     * Method that runs when the Leave button is clicked.
+     */
+    public void leaveQuBo() {
+        boolean backHome = ConfirmationDialog.display("Leave Question Board?",
+            "You will have to use your code to join again.");
+        if (backHome) {
+            SceneLoader.backToHome((Stage) leaveQuBo.getScene().getWindow());
+        }
     }
 
     private static class Question {
