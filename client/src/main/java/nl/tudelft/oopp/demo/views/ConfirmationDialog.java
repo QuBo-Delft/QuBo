@@ -18,7 +18,7 @@ public class ConfirmationDialog {
     private static boolean answer;
 
     /**
-     * This method creates a dialog window with a question and brief description.
+     * This method creates a dialog window with a question and a brief description.
      * Users can click on the "Yes" and "No" buttons in this dialog window to answer said question.
      *
      * @param titleParam     The title of this dialog.
