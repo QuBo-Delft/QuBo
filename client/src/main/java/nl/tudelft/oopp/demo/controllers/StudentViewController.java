@@ -119,6 +119,8 @@ public class StudentViewController {
         List<QuestionDetailsDto> unanswered = new ArrayList<>();
 
         if (questions == null || questions.length == 0) {
+            answeredQuestions = new QuestionDetailsDto[0];
+            unansweredQuestions = new QuestionDetailsDto[0];
             return;
         }
 
