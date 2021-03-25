@@ -267,14 +267,25 @@ public class ServerCommunicationTest {
         httpClientMock.verify().get(subUrl + "/api/board/moderator?code=" + uuid1).called();
     }
 
+    // Test if the retrieveBoardDetails method returns a non-null response body after being called
+    // with invalid boardId and valid ModCode, and receiving statusCode 404.
     @Test
-    public void testRetrieveBoardDetailsThroughModCodeValidRequest() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-        quBoModel.setTitle("Test Qubo");
+    public void testRetrieveBoardDetailsThroughInvalidBoardIdAndValidModCode() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
 
+        httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1)
+                .doReturnStatus(200);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1).doReturnStatus(404);
 
+        String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the requests were truly made
+        httpClientMock.verify().get(subUrl + "/api/board/moderator?code=" + uuid1).called();
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1).called();
     }
 
     //Test if the retrieveBoardDetailsThroughModCode method returns null when called with a code that does not
