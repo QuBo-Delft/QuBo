@@ -75,11 +75,14 @@ public class JoinQuBoController {
         }
 
         QuestionBoardDetailsDto questionBoard = gson.fromJson(resBody, QuestionBoardDetailsDto.class);
-
-        // Load the student view.
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
 
-        SceneLoader.loadStudentView(questionBoard, stage);
-
+        //Load the student view if the code entered by the user was the board ID of the question board.
+        //Load the moderator view if this is not the case.
+        if (boardCode.equals(questionBoard.getId())) {
+            SceneLoader.loadStudentView(questionBoard, stage);
+        } else {
+            SceneLoader.loadModeratorView(questionBoard, stage);
+        }
     }
 }
