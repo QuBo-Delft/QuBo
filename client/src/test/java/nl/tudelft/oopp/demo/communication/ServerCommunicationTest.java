@@ -214,19 +214,59 @@ public class ServerCommunicationTest {
         httpClientMock.verify().get(subUrl + "api/board/" + uuid1).called();
     }
 
-    //Test if the closeBoardRequest method returns false if it is called with UUIDs that do not
-    //correspond to those of an existing question board nor its moderator code.
+    // Test if the retrieveBoardDetailsThroughModCode method returns a non-null response body
+    // after being called with a valid ModCode and receiving statusCode 200.
     @Test
-    public void testCloseBoardRequestInvalidRequest() {
-        //Act
-//        boolean isClosed = ServerCommunication.closeBoardRequest(UUID.randomUUID(), UUID.randomUUID());
+    public void testRetrieveBoardDetailsThroughModCode() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1)
+                .doReturnStatus(200);
 
-        //Assert
+        String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
 
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .get(subUrl + "/api/board/moderator?code=" + uuid1).called();
     }
 
-    //Test if the retrieveBoardDetailsThroughModCode method returns a QuestionBoardDetailsDto
-    //that corresponds to that of the created board.
+    // Test if the retrieveBoardDetailsThroughModCode method returns null after being called with an invalid
+    // ModCode, and receiving statusCode 404 and failureToken as the response body.
+    @Test
+    public void testRetrieveBoardDetailsThroughInValidModCode() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1)
+                .doReturnStatus(404).doReturn(failureToken);
+
+        String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "/api/board/moderator?code=" + uuid1).called();
+    }
+
+    // Test if the retrieveBoardDetailsThroughModCode method returns the successToken after being called
+    // with a valid ModCode, and receiving statusCode 200 and the successToken as the response body.
+    @Test
+    public void testRetrieveBoardDetailsThroughModCodeGivingCorrectResponseBody() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1).doReturn(successToken);
+        String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "/api/board/moderator?code=" + uuid1).called();
+    }
+
     @Test
     public void testRetrieveBoardDetailsThroughModCodeValidRequest() {
         //Arrange
