@@ -690,7 +690,6 @@ public class ServerCommunicationTest {
         HttpClientMock httpClientMock = new HttpClientMock();
         QuestionVoteDetailsDto qd = new QuestionVoteDetailsDto();
         qd.setId(uuid2);
-        String qdStr = gson.toJson(qd);
         qd.setId(uuid3);
         String qdStrReturned = gson.toJson(qd);
         // Act
@@ -832,6 +831,4 @@ public class ServerCommunicationTest {
         httpClientMock.verify()
                 .delete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2).called();
     }
-
-
 }

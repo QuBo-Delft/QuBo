@@ -1,9 +1,10 @@
 package nl.tudelft.oopp.demo.controllers;
 
+import javafx.event.ActionEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.fxml.FXML;
-
+import javafx.scene.Node;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
@@ -56,12 +57,12 @@ public class CreateQuBoController {
      * to create a question board that opens immediately on the server.
      * If the request was unsuccessful, an alert dialog is shown to the user.
      */
-    public void createNowBtnClicked() {
+    public void createNowBtnClicked(ActionEvent actionEvent) {
         String titleStr = title.getText();
 
         // Check if the title is not empty
         if (!titleIsEmpty(titleStr)) {
-            sendAndProcessBoardCreationRequest(titleStr, new Date());
+            sendAndProcessBoardCreationRequest(titleStr, new Date(), actionEvent);
         }
     }
 
@@ -70,7 +71,7 @@ public class CreateQuBoController {
      * a question board, that opens and closes as scheduled, on the server.
      * If the request was unsuccessful, an alert dialog is shown to the user.
      */
-    public void scheduleBtnClicked() {
+    public void scheduleBtnClicked(ActionEvent actionEvent) {
         String titleStr = title.getText();
 
         // Check if title is empty
@@ -114,7 +115,7 @@ public class CreateQuBoController {
             return;
         }
 
-        sendAndProcessBoardCreationRequest(titleStr, startTime);
+        sendAndProcessBoardCreationRequest(titleStr, startTime, actionEvent);
 
     }
 
@@ -131,7 +132,7 @@ public class CreateQuBoController {
      * @param titleStr      The title of the question board.
      * @param startTime     The start time of the question board.
      */
-    private void sendAndProcessBoardCreationRequest(String titleStr, Date startTime) {
+    private void sendAndProcessBoardCreationRequest(String titleStr, Date startTime, ActionEvent event) {
         Timestamp startTimeStamp = new Timestamp(startTime.getTime());
         QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel(
             titleStr, startTimeStamp);
@@ -150,7 +151,9 @@ public class CreateQuBoController {
         QuestionBoardCreationDto questionBoardDto = gson.fromJson(resBody, QuestionBoardCreationDto.class);
 
         // Load the page that displays student code and moderator code
-        SceneLoader.loadQuestionBoardCodes(questionBoardDto);
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+
+        SceneLoader.loadQuestionBoardCodes(questionBoardDto, stage);
     }
 
     /**

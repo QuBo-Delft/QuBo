@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -24,23 +25,25 @@
                text="Error: Could not find the requested question board!&#10;Please check if you inserted the code correctly!"
                textAlignment="CENTER" textFill="RED" visible="false" VBox.vgrow="ALWAYS"/>
         <TextField fx:id="questionBoardCode" alignment="CENTER" promptText="Enter code here..."/>
-        <Button mnemonicParsing="false" onAction="#joinButtonClicked" text="Join" textAlignment="CENTER"/>
+        <Button id="join-button" mnemonicParsing="false" onAction="#joinButtonClicked" text="Join" textAlignment="CENTER"/>
         <opaqueInsets>
             <Insets/>
         </opaqueInsets>
     </VBox>
-    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2"
-          GridPane.rowIndex="2">
-        <Label text="Or"/>
-        <Button mnemonicParsing="false" onAction="#createButtonClicked" text="Create&#10;Question Board"
-                textAlignment="CENTER"/>
+    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+        <Label id="or" text="or" />
+        <Button id="create-qb-button" mnemonicParsing="false" onAction="#createButtonClicked"
+                text="Create&#10;Question Board" textAlignment="CENTER" />
         <opaqueInsets>
             <Insets/>
         </opaqueInsets>
     </HBox>
-    <Label text="QuBo" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+    <Label id="QuBo" text="QuBo" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
         <font>
             <Font name="System Bold" size="24.0"/>
         </font>
     </Label>
+    <stylesheets>
+        <URL value="@../css/JoinQuBo.css"/>
+    </stylesheets>
 </GridPane>

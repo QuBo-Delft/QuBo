@@ -31,7 +31,7 @@ public class SceneDisplay extends Application {
         FXMLLoader loader = new FXMLLoader();
 
         // By giving the resource path, it is able to display an specific fxml file
-        URL xmlUrl = getClass().getResource("/JoinQuBo.fxml");
+        URL xmlUrl = getClass().getResource("/fxmlsheets/JoinQuBo.fxml");
         loader.setLocation(xmlUrl);
         Parent root = loader.load();
 
