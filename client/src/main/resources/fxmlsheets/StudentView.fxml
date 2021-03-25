@@ -18,7 +18,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.demo.controllers.StudentViewController">
    <top>
-      <HBox alignment="CENTER" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="TOP_LEFT">
+      <HBox fx:id="topBar" alignment="CENTER" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="TOP_LEFT">
          <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" scaleX="0.6" scaleY="0.6" translateX="1.0">
          </ImageView>
          <ImageView fitHeight="45.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" />
@@ -34,8 +34,7 @@
       </HBox>
    </top>
    <center>
-       <StackPane>
-      <StackPane>
+      <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
                  <ListView fx:id="questionList" prefHeight="360.0" prefWidth="902.0">
                  <padding>
@@ -77,7 +76,6 @@
                </StackPane.margin>
             </Button>
       </StackPane>
-       </StackPane>
    </center>
    <right>
           <VBox fx:id="sideBar" prefHeight="358.0" prefWidth="41.0" BorderPane.alignment="CENTER">
