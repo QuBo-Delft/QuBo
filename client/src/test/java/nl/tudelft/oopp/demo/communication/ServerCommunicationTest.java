@@ -165,8 +165,53 @@ public class ServerCommunicationTest {
                 .patch(subUrl + "api/board/" + uuid1 + "/close?code=" + uuid3).called();
     }
 
-        //Assert
+    // Test if the retrieveBoardDetails method returns a non-null response body
+    // after being called with a valid boardId and receiving statusCode 200.
+    @Test
+    public void testRetrieveBoardDetails() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1).doReturnStatus(200);
+        String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
+        
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1).called();
+    }
 
+    // Test if the retrieveBoardDetails method returns null after being called with an invalid boardId,
+    // and receiving statusCode 404 and failureToken as the response body.
+    @Test
+    public void testRetrieveBoardDetailsThroughInvalidBoardId() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1)
+                .doReturnStatus(400);
+        String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1).called();
+    }
+
+    // Test if the retrieveBoardDetails method returns the successToken after being called
+    // with a valid BoardId, and receiving statusCode 200 and the successToken as the response body.
+    @Test
+    public void testRetrieveBoardDetailsGivingCorrectResponseBody() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1).doReturn(successToken);
+        String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1).called();
     }
 
     //Test if the closeBoardRequest method returns false if it is called with UUIDs that do not
