@@ -767,9 +767,71 @@ public class ServerCommunicationTest {
         httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/pace").called();
     }
 
+    // Test if the deletePaceVote method returns a non-null response body after being called
+    // with valid boardId and paceVoteId, and receiving statusCode 200.
     @Test
-    public void testRandomQuote() {
+    public void testDeletePaceVoteThroughValidRequest() {
+        // Arrange and Act
+        PaceVoteDetailsDto pd = new PaceVoteDetailsDto();
+        pd.setId(uuid2);
+        String pdStringReturned = gson.toJson(pd);
+        HttpClientMock httpClientMock = new HttpClientMock();
 
-        assertNotNull(ServerCommunication.getQuote());
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onDelete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2)
+                .doReturn(pdStringReturned).doReturnStatus(200);
+
+        String responseBody = ServerCommunication.deletePaceVote(uuid1, uuid2);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .delete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2).called();
     }
+
+    // Test if the deletePaceVote method returns null after being called with invalid boardId and
+    // paceVoteId and receiving statusCode 404 and failureToken as the response body.
+    @Test
+    public void testDeletePaceVoteThroughInvalidRequest() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onDelete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2)
+                .doReturnStatus(404);
+
+        String responseBody = ServerCommunication.deletePaceVote(uuid1, uuid2);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .delete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2).called();
+    }
+
+    // Test if the deletePaceVote method returns null after being called with valid boardId
+    // and paceVoteId and receiving statusCode 200 and a response body with the wrong deletedVote.
+    @Test
+    public void testDeletePaceVoteGivingIncorrectResponseBody() {
+        // Arrange and Act
+        PaceVoteDetailsDto pd = new PaceVoteDetailsDto();
+        pd.setId(uuid3);
+        String pdStringReturned = gson.toJson(pd);
+        HttpClientMock httpClientMock = new HttpClientMock();
+
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onDelete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2)
+                .doReturn(pdStringReturned).doReturnStatus(200);
+
+        String responseBody = ServerCommunication.deletePaceVote(uuid1, uuid2);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .delete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2).called();
+    }
+
+
 }
