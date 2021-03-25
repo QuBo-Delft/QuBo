@@ -707,41 +707,64 @@ public class ServerCommunicationTest {
                 .delete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2).called();
     }
 
-    //Tests if deleteQuestion returns true when called with an existing question and question board.
-    //Tests if the question has been deleted from the list of questions.
+    // Test if the addPaceVote method returns a non-null response body after being called
+    // with a valid boardId and receiving statusCode 200.
     @Test
-    public void testDeleteQuestionValidRequest() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testAddPaceVoteThroughValidRequest() {
+        // Arrange and Act
+        PaceType pt = PaceType.TOO_FAST;
+        HttpClientMock httpClientMock = new HttpClientMock();
 
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/pace")
+                .doReturnStatus(200);
 
+        String responseBody = ServerCommunication.addPaceVote(uuid1, pt);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/pace").called();
     }
 
-    //Tests if deleteQuestion returns false when called with an existing question, but a non-existent question board.
-    //Tests if the question has not been deleted from the list of questions.
+    // Test if the addPaceVote method returns null after being called with an invalid
+    // boardId and receiving statusCode 404 and failureToken as the response body.
     @Test
-    public void testDeleteQuestionInvalidQuBo() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testAddPaceVoteThroughInvalidRequest() {
+        // Arrange and Act
+        PaceType pt = PaceType.TOO_FAST;
+        HttpClientMock httpClientMock = new HttpClientMock();
 
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/pace")
+                .doReturnStatus(404).doReturn(failureToken);
 
+        String responseBody = ServerCommunication.addPaceVote(uuid1, pt);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/pace").called();
     }
 
-    //Tests if deleteQuestion returns false when called with an existing question board, but with a non-existent
-    //question.
-    //Tests if the question has not been deleted from the list of questions.
+    // Test if the addQuestionVote method returns the successToken after being called with a valid boardId
+    // and receiving statusCode 200 and the successToken as the response body.
     @Test
-    public void testDeleteQuestionInvalidQuestion() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testAddPaceVoteGivingCorrectResponseBody() {
+        // Arrange and Act
+        PaceType pt = PaceType.TOO_FAST;
+        HttpClientMock httpClientMock = new HttpClientMock();
 
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/pace")
+                .doReturn(successToken);
 
+        String responseBody = ServerCommunication.addPaceVote(uuid1, pt);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/pace").called();
     }
 
     @Test
