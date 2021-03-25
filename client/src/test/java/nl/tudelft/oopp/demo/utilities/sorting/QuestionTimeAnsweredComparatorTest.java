@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QuestionTimeAnsweredComparatorTest {
 
-    private final QuestionTimeAnsweredComparator comparator = new QuestionTimeAnsweredComparator();
+    private final Sorting.QuestionTimeAnsweredComparator comparator = new Sorting.QuestionTimeAnsweredComparator();
     private QuestionDetailsDto question1;
 
     //Set up the question1 object used in each test before each test is executed.

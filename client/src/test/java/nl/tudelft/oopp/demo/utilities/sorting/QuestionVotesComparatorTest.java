@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QuestionVotesComparatorTest {
 
-    private final QuestionVotesComparator comparator = new QuestionVotesComparator();
+    private final Sorting.QuestionVotesComparator comparator = new Sorting.QuestionVotesComparator();
     private QuestionDetailsDto question1;
 
     //Set up the question1 object used in each test before each test is executed.
