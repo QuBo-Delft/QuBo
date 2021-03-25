@@ -1,6 +1,5 @@
 package nl.tudelft.oopp.demo.communication;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,6 +14,10 @@ import org.junit.jupiter.api.Test;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ServerCommunicationTest {
     
@@ -331,8 +334,9 @@ public class ServerCommunicationTest {
     @Test
     public void testRetrieveQuestionsGivingCorrectResponseBody() {
         // Arrange
-        QuestionDetailsDto[] questions =
-                {new QuestionDetailsDto(), new QuestionDetailsDto()};
+        QuestionDetailsDto[] questions = new QuestionDetailsDto[2];
+        questions[0] = new QuestionDetailsDto();
+        questions[1] = new QuestionDetailsDto();
         String questionsStr = gson.toJson(questions);
         HttpClientMock httpClientMock = new HttpClientMock();
 
@@ -358,8 +362,8 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/question")
                 .doReturnStatus(200);
 
-        String responseBody = ServerCommunication.
-                addQuestion(uuid1, "Why is CO so confusing?", "Koen");
+        String responseBody = ServerCommunication
+                .addQuestion(uuid1, "Why is CO so confusing?", "Koen");
 
         // Assert
         assertNotNull(responseBody);
