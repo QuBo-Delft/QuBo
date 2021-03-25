@@ -2,6 +2,7 @@ package nl.tudelft.oopp.demo.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -25,8 +26,6 @@ public class StudentViewController {
     @FXML
     private ListView<Question> questionList;
     @FXML
-    private HBox sideScreen;
-    @FXML
     private VBox sideBar;
     @FXML
     private VBox sideMenu;
@@ -40,6 +39,8 @@ public class StudentViewController {
     private ToggleButton polls;
     @FXML
     private Button leaveQuBo;
+
+    private boolean sideMenuOpen;
 
     /**
      * Code that is run upon loading StudentView.fxml
@@ -58,22 +59,26 @@ public class StudentViewController {
         questionList.setCellFactory(listView -> new QuestionListCell());
 
         //Hide side menu and sidebar
-        sideScreen.managedProperty().bind(sideScreen.visibleProperty());
         sideBar.managedProperty().bind(sideBar.visibleProperty());
         sideMenu.managedProperty().bind(sideMenu.visibleProperty());
-        sideScreen.setVisible(false);
+        sideBar.setVisible(false);
         sideMenu.setVisible(false);
     }
 
     /**
-     * Toggles the visibility of the sideScreen.
+     * Toggles the visibility of the sideBar.
      */
-    public void showHideSideScreen() {
-        if (sideScreen.isVisible() && sideMenu.isVisible()) {
-            sideScreen.setVisible(false);
-            paceVotePane.setVisible(true);
+    public void showHideSideBar() {
+        if (hamburger.isSelected()) {
+            if (sideMenuOpen) {
+                paceVotePane.setVisible(false);
+            }
+            sideMenu.setVisible(sideMenuOpen);
+            sideBar.setVisible(true);
         } else {
-            sideScreen.setVisible(!sideScreen.isVisible());
+            paceVotePane.setVisible(true);
+            sideMenu.setVisible(false);
+            sideBar.setVisible(false);
         }
     }
 
@@ -87,10 +92,12 @@ public class StudentViewController {
             showAnsQuestions();
         } else if (!sideMenu.isVisible()) {
             paceVotePane.setVisible(false);
+            sideMenuOpen = true;
             showAnsQuestions();
         } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
+            sideMenuOpen = false;
             paceVotePane.setVisible(true);
         }
     }
@@ -116,10 +123,12 @@ public class StudentViewController {
             showPolls();
         } else if (!sideMenu.isVisible()) {
             paceVotePane.setVisible(false);
+            sideMenuOpen = true;
             showPolls();
         } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
+            sideMenuOpen = false;
             paceVotePane.setVisible(true);
 
         }
@@ -134,6 +143,9 @@ public class StudentViewController {
         sideMenu.getChildren().add(title);
 
         //TODO: Fetch polls and display in a ListView
+    }
+
+    public void leaveQuBo(ActionEvent actionEvent) {
     }
 
     private static class Question {
