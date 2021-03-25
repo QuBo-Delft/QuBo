@@ -1,5 +1,7 @@
 package nl.tudelft.oopp.demo.mappings.question;
 
+import nl.tudelft.oopp.demo.config.custommappings.QuestionToQuestionDetailsDtoConverter;
+import nl.tudelft.oopp.demo.entities.QuestionVote;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Timestamp;
@@ -15,9 +17,15 @@ import org.modelmapper.ModelMapper;
 public class QuestionDetailsDtoTests {
     private ModelMapper mapper;
 
+    /**
+     * Initialise mapper and add custom mapping configuration.
+     */
     @BeforeEach
     public void setUp() {
         mapper = new ModelMapper();
+
+        var questionToQuestionDetailsDtoConverter = new QuestionToQuestionDetailsDtoConverter(mapper);
+        questionToQuestionDetailsDtoConverter.init();
     }
 
     @Test
@@ -36,6 +44,13 @@ public class QuestionDetailsDtoTests {
 
         q.setAnswers(answerSet);
 
+        HashSet<QuestionVote> voteSet = new HashSet<>();
+        voteSet.add(new QuestionVote());
+        voteSet.add(new QuestionVote());
+        voteSet.add(new QuestionVote());
+
+        q.setVotes(voteSet);
+
         // Act
         QuestionDetailsDto dto = mapper.map(q, QuestionDetailsDto.class);
 
@@ -46,5 +61,6 @@ public class QuestionDetailsDtoTests {
         assertEquals(q.getTimestamp(), dto.getTimestamp());
         assertEquals(q.getAnswered(), dto.getAnswered());
         assertEquals(q.getAnswers().size(), dto.getAnswers().size());
+        assertEquals(q.getVotes().size(), dto.getUpvotes());
     }
 }
