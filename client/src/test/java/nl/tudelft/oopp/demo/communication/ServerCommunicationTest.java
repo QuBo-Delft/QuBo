@@ -16,23 +16,25 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
-//To run these tests, one must first run DemoApplication.java in the server folder as these tests require
-//a connection to the server.
 public class ServerCommunicationTest {
+    
+    private final String successToken = "{token: success}";
+    private final String failureToken = "{token: failure}";
 
-    //Tests if the createBoardRequest method returns a QuestionBoardCreationDto with the same
-    //attribute values as the QuestionBoardCreationBindingModel used to call the method with.
+    private final UUID uuid1 = UUID.randomUUID();
+    private final UUID uuid2 = UUID.randomUUID();
+    private final UUID uuid3 = UUID.randomUUID();
+
+    private static final Gson gson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+            .create();
+
+    private static final String subUrl = "http://localhost:8080/";
+
+    // Test if the sendRequest method catches the exception caused by not setting up a response.
     @Test
-    public void testCreateBoardRequestValidRequest() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-        quBoModel.setTitle("Test Qubo");
-
-        //Act
-
-        //Assert
-
+    public void testSendRequest() {
+        assertNull(ServerCommunication.retrieveBoardDetails(uuid1));
     }
 
     //Tests if the createBoardRequest method returns null when called without a correct
