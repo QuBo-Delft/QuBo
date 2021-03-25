@@ -639,38 +639,72 @@ public class ServerCommunicationTest {
         httpClientMock.verify().post(subUrl + "/api/question/" + uuid3 + "/vote").called();
     }
 
-    //Tests if editQuestion returns true when called through the question secret code.
-    //Tests if the question text has been changed.
+    // Test if the deleteQuestionVote method returns a non-null response body after being called
+    // with valid questionId and voteId and receiving statusCode 200.
     @Test
-    public void testEditQuestionValidCodeRequest() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testDeleteQuestionVoteThroughValidRequest() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        QuestionVoteDetailsDto qd = new QuestionVoteDetailsDto();
+        qd.setId(uuid2);
+        String qdStr = gson.toJson(qd);
 
+        // Act
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2)
+                .doReturn(qdStr).doReturnStatus(200);
+
+        String responseBody = ServerCommunication.deleteQuestionVote(uuid1, uuid2);
+
+        // Assert
+        assertEquals(qdStr, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .delete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2).called();
     }
 
-    //Tests if editQuestion returns false when called through an invalid code.
-    //Tests if the question text has remained the same.
+    // Test if the deleteQuestionVote method returns null after being called with invalid
+    // questionId and voteId and receiving statusCode 404 and failureToken as the response body.
     @Test
-    public void testEditQuestionInvalidCode() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testDeleteQuestionVoteThroughInvalidRequest() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2)
+                .doReturnStatus(404).doReturn(failureToken);
 
+        String responseBody = ServerCommunication.deleteQuestionVote(uuid1, uuid2);
 
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .delete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2).called();
     }
 
-    //Tests if editQuestion returns false when called through a non-existent question ID.
-    //Tests if the question text has remained the same.
+    // Test if the addQuestionVote method returns null after being called with valid questionId and
+    // voteId, and receiving statusCode 200 and a response body with a wrong deletedVote.
     @Test
-    public void testEditQuestionInvalidQuestion() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testDeleteQuestionVoteGivingIncorrectResponseBody() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        QuestionVoteDetailsDto qd = new QuestionVoteDetailsDto();
+        qd.setId(uuid2);
+        String qdStr = gson.toJson(qd);
+        qd.setId(uuid3);
+        String qdStrReturned = gson.toJson(qd);
+        // Act
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2)
+                .doReturn(qdStrReturned);
 
+        String responseBody = ServerCommunication.deleteQuestionVote(uuid1, uuid2);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .delete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2).called();
     }
 
     //Tests if deleteQuestion returns true when called with an existing question and question board.
