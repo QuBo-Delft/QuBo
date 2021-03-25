@@ -154,6 +154,9 @@ public class StudentViewController {
 
     /**
      * Method that runs when the Leave button is clicked.
+     * Pops up a confirmation dialogue.
+     * If user clicks yes -> Question board closes and user returns to the JoinQuBo page
+     * If user clicks no -> Confirmation dialogue closes and user returns to the question board
      */
     public void leaveQuBo() {
         boolean backHome = ConfirmationDialog.display("Leave Question Board?",
