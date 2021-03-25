@@ -16,6 +16,8 @@ public class QuestionDetailsDto {
 
     private boolean answered;
 
+    private int upvotes;
+
     private Set<AnswerDetailsDto> answers;
 
     public QuestionDetailsDto() {
@@ -67,5 +69,13 @@ public class QuestionDetailsDto {
 
     public void setAnswered(boolean answered) {
         this.answered = answered;
+    }
+
+    public int getUpvotes() {
+        return upvotes;
+    }
+
+    public void setUpvotes(int upvotes) {
+        this.upvotes = upvotes;
     }
 }
