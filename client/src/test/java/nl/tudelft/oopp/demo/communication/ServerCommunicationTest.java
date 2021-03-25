@@ -403,25 +403,73 @@ public class ServerCommunicationTest {
                 .addQuestion(uuid1, "Why is CO so confusing?", "Koen");
 
         //Assert
-
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .post(subUrl + "api/board/" + uuid1 + "/question").called();
     }
 
-    //Tests if retrieveQuestions returns an array with all added questions when called through a valid board ID
-    //with questions added.
+    // Test if the editQuestion method returns a non-null response body after being called
+    // with valid questionId and modCode and receiving statusCode 200.
     @Test
-    public void testRetrieveQuestionsCorrectArray() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testEditQuestionWithValidCode() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPut(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
+                .doReturnStatus(200);
 
+        String responseBody = ServerCommunication
+                .editQuestion(uuid1, uuid2, "Why is CO taught so clear");
 
-        UUID questionId = question.getId();
-        UUID question2Id = question2.getId();
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .put(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
+    }
 
-        //Act
+    // Test if the editQuestion method returns null after being called with invalid
+    // questionId and modCode and receiving statusCode 404 and failureToken as the response body.
+    @Test
+    public void testEditQuestionWithInvalidCode() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPut(subUrl + "/api/question/" + uuid1 + "?code=" + uuid3)
+                .doReturnStatus(404).doReturn(failureToken);
 
-        //Assert
+        String responseBody = ServerCommunication
+                .editQuestion(uuid1, uuid3, "Why is CO so clear");
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .put(subUrl + "/api/question/" + uuid1 + "?code=" + uuid3).called();
+    }
+
+    // Test if the editQuestion method returns the successToken after being called
+    // with valid questionId and modCode and receiving statusCode 200 and
+    // successToken as the response body.
+    @Test
+    public void testEditQuestionGivingCorrectResponseBody() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPut(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
+                .doReturn(successToken);
+
+        String responseBody = ServerCommunication
+                .editQuestion(uuid1, uuid2, "Why is CO so clear");
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .put(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
+    }
+
 
     }
 
