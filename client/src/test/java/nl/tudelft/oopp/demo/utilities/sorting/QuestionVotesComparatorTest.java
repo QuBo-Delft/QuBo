@@ -16,9 +16,11 @@ public class QuestionVotesComparatorTest {
     private final Sorting.QuestionVotesComparator comparator = new Sorting.QuestionVotesComparator();
     private QuestionDetailsDto question1;
 
-    //Set up the question1 object used in each test before each test is executed.
+    /**
+     * Sets up the QuestionDetailsDto used in all tests.
+     */
     @BeforeEach
-    public void setUp () {
+    public void setUp() {
         question1 = new QuestionDetailsDto();
         question1.setText("Is the universe infinitely large?");
         question1.setAuthorName("Smart Hamster");
@@ -30,7 +32,7 @@ public class QuestionVotesComparatorTest {
 
     //Test if the comparison of a question with itself will return 0.
     @Test
-    public void testSameQuestions () {
+    public void testSameQuestions() {
         //Act
         int compare = comparator.compare(question1, question1);
 
@@ -40,7 +42,7 @@ public class QuestionVotesComparatorTest {
 
     //Test if the comparison of two equal questions will return 0.
     @Test
-    public void testEqualQuestions () {
+    public void testEqualQuestions() {
         //Arrange
         QuestionDetailsDto question2 = new QuestionDetailsDto();
         question2.setText("Why did the chicken cross the road?");
@@ -60,7 +62,7 @@ public class QuestionVotesComparatorTest {
     //Test if the comparison of a question with a question that has a higher number of votes
     //will return 1.
     @Test
-    public void testCompareQuestionWithDifferentQuestionWithMoreVotes () {
+    public void testCompareQuestionWithDifferentQuestionWithMoreVotes() {
         //Arrange
         QuestionDetailsDto question2 = new QuestionDetailsDto();
         question2.setText("Why did the chicken cross the road?");
@@ -80,7 +82,7 @@ public class QuestionVotesComparatorTest {
     //Test if the comparison of a question with a question that has a higher number of votes
     //will return -1.
     @Test
-    public void testCompareQuestionWithDifferentQuestionWithLessVotes () {
+    public void testCompareQuestionWithDifferentQuestionWithLessVotes() {
         //Arrange
         QuestionDetailsDto question2 = new QuestionDetailsDto();
         question2.setText("Why did the chicken cross the road?");

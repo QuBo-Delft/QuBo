@@ -14,12 +14,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QuestionTimeAnsweredComparatorTest {
 
-    private final Sorting.QuestionTimeAnsweredComparator comparator = new Sorting.QuestionTimeAnsweredComparator();
+    private final Sorting.QuestionTimeAnsweredComparator comparator = new Sorting
+            .QuestionTimeAnsweredComparator();
     private QuestionDetailsDto question1;
 
-    //Set up the question1 object used in each test before each test is executed.
+    /**
+     * Sets up the QuestionDetailsDto used in all tests.
+     */
     @BeforeEach
-    public void setUp () {
+    public void setUp() {
         question1 = new QuestionDetailsDto();
         question1.setText("Is the universe infinitely large?");
         question1.setAuthorName("Smart Hamster");
@@ -31,7 +34,7 @@ public class QuestionTimeAnsweredComparatorTest {
 
     //Test if the comparison of a question with itself will return 0.
     @Test
-    public void testSameQuestions () {
+    public void testSameQuestions() {
         //Act
         int compare = comparator.compare(question1, question1);
 
@@ -41,7 +44,7 @@ public class QuestionTimeAnsweredComparatorTest {
 
     //Test if the comparison of two equal questions will return 0.
     @Test
-    public void testEqualQuestions () {
+    public void testEqualQuestions() {
         //Arrange
         QuestionDetailsDto question2 = new QuestionDetailsDto();
         question2.setText("Why did the chicken cross the road?");
@@ -60,7 +63,7 @@ public class QuestionTimeAnsweredComparatorTest {
 
     //Test if the comparison of a question with a question that was answered later returns 1.
     @Test
-    public void testCompareQuestionWithDifferentQuestionAnsweredLater () {
+    public void testCompareQuestionWithDifferentQuestionAnsweredLater() {
         //Arrange
         QuestionDetailsDto question2 = new QuestionDetailsDto();
         question2.setText("Why did the chicken cross the road?");
@@ -79,7 +82,7 @@ public class QuestionTimeAnsweredComparatorTest {
 
     //Test if the comparison of a question with a question that was answered earlier returns -1.
     @Test
-    public void testCompareQuestionWithDifferentQuestionAnsweredEarlier () {
+    public void testCompareQuestionWithDifferentQuestionAnsweredEarlier() {
         //Arrange
         QuestionDetailsDto question2 = new QuestionDetailsDto();
         question2.setText("Why did the chicken cross the road?");

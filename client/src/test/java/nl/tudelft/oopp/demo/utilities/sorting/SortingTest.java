@@ -13,18 +13,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SortingTest {
 
     private final Sorting.QuestionVotesComparator comparatorVotes = new Sorting.QuestionVotesComparator();
-    private final Sorting.QuestionTimeAnsweredComparator comparatorAnswered = new Sorting.QuestionTimeAnsweredComparator();
+    private final Sorting.QuestionTimeAnsweredComparator comparatorAnswered = new Sorting
+            .QuestionTimeAnsweredComparator();
     private QuestionDetailsDto[] questions;
     private Timestamp now;
 
+    /**
+     * Set the Timestamp used in test methods to the time at which the test execution starts.
+     */
     @BeforeEach
-    public void setUp () {
+    public void setUp() {
         now = Timestamp.from(Instant.now());
     }
 
     //Tests if a long mixed array will be sorted correctly by sortOnTimeAnswered.
     @Test
-    public void testSortOnTimeAnsweredMixed () {
+    public void testSortOnTimeAnsweredMixed() {
         //Arrange
         questions = new QuestionDetailsDto[10];
         questions[0] = new QuestionDetailsDto();
@@ -38,16 +42,16 @@ public class SortingTest {
         questions[8] = new QuestionDetailsDto();
         questions[9] = new QuestionDetailsDto();
 
-        questions[0].setAnswered(new Timestamp(now.getTime() + 8*1000));
+        questions[0].setAnswered(new Timestamp(now.getTime() + 8 * 1000));
         questions[1].setAnswered(new Timestamp(now.getTime() + 1000));
-        questions[2].setAnswered(new Timestamp(now.getTime() + 2*1000));
+        questions[2].setAnswered(new Timestamp(now.getTime() + 2 * 1000));
         questions[3].setAnswered(now);
-        questions[4].setAnswered(new Timestamp(now.getTime() + 4*1000));
-        questions[5].setAnswered(new Timestamp(now.getTime() + 7*1000));
-        questions[6].setAnswered(new Timestamp(now.getTime() + 3*1000));
-        questions[7].setAnswered(new Timestamp(now.getTime() + 6*1000));
-        questions[8].setAnswered(new Timestamp(now.getTime() + 4*1000));
-        questions[9].setAnswered(new Timestamp(now.getTime() + 5*1000));
+        questions[4].setAnswered(new Timestamp(now.getTime() + 4 * 1000));
+        questions[5].setAnswered(new Timestamp(now.getTime() + 7 * 1000));
+        questions[6].setAnswered(new Timestamp(now.getTime() + 3 * 1000));
+        questions[7].setAnswered(new Timestamp(now.getTime() + 6 * 1000));
+        questions[8].setAnswered(new Timestamp(now.getTime() + 4 * 1000));
+        questions[9].setAnswered(new Timestamp(now.getTime() + 5 * 1000));
 
         //Act
         Sorting.sortOnTimeAnswered(questions);
@@ -66,14 +70,14 @@ public class SortingTest {
 
     //Tests if a sorted array will stay sorted by sortOnTimeAnswered.
     @Test
-    public void testSortOnTimeAnsweredSorted () {
+    public void testSortOnTimeAnsweredSorted() {
         //Arrange
         questions = new QuestionDetailsDto[3];
         questions[0] = new QuestionDetailsDto();
         questions[1] = new QuestionDetailsDto();
         questions[2] = new QuestionDetailsDto();
 
-        questions[0].setAnswered(new Timestamp(now.getTime() + 2*1000));
+        questions[0].setAnswered(new Timestamp(now.getTime() + 2 * 1000));
         questions[1].setAnswered(new Timestamp(now.getTime() + 1000));
         questions[2].setAnswered(now);
 
@@ -87,7 +91,7 @@ public class SortingTest {
 
     //Tests if an array sorted in reverse order will be sorted correctly by sortOnTimeAnswered.
     @Test
-    public void testSortOnTimeAnsweredReversed () {
+    public void testSortOnTimeAnsweredReversed() {
         //Arrange
         questions = new QuestionDetailsDto[3];
         questions[0] = new QuestionDetailsDto();
@@ -96,7 +100,7 @@ public class SortingTest {
 
         questions[0].setAnswered(now);
         questions[1].setAnswered(new Timestamp(now.getTime() + 1000));
-        questions[2].setAnswered(new Timestamp(now.getTime() + 2*1000));
+        questions[2].setAnswered(new Timestamp(now.getTime() + 2 * 1000));
 
         //Act
         Sorting.sortOnTimeAnswered(questions);
@@ -108,7 +112,7 @@ public class SortingTest {
 
     //Tests if a medium-sized mixed array is sorted correctly by sortOnTimeAnswered.
     @Test
-    public void testSortOnUpvotesMixed () {
+    public void testSortOnUpvotesMixed() {
         //Arrange
         questions = new QuestionDetailsDto[6];
         questions[0] = new QuestionDetailsDto();
@@ -138,7 +142,7 @@ public class SortingTest {
 
     //Tests if a sorted array is sorted correctly by sortOnTimeAnswered.
     @Test
-    public void testSortOnUpvotesSorted () {
+    public void testSortOnUpvotesSorted() {
         //Arrange
         questions = new QuestionDetailsDto[3];
         questions[0] = new QuestionDetailsDto();
@@ -159,7 +163,7 @@ public class SortingTest {
 
     //Tests if an array that was sorted in reversed order is sorted correctly by sortOnTimeAnswered.
     @Test
-    public void testSortOnUpvotesReversed () {
+    public void testSortOnUpvotesReversed() {
         //Arrange
         questions = new QuestionDetailsDto[3];
         questions[0] = new QuestionDetailsDto();
