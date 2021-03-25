@@ -585,40 +585,58 @@ public class ServerCommunicationTest {
                 .patch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2).called();
     }
 
-    //Tests if addQuestion returns null if the caller attempted to post a question before the start time
-    //of the board.
+    // Test if the addQuestionVote method returns a non-null response body after being called
+    // with a valid questionId and receiving statusCode 200.
     @Test
-    public void testAddQuestionInvalidQuestion() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        Timestamp now = Timestamp.from(Instant.now());
-        now.setTime(now.getTime() + (40 * 60 * 1000));
-        quBoModel.setStartTime(now);
-        quBoModel.setTitle("Test Qubo");
+    public void testAddQuestionVoteThroughValidRequest() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(subUrl + "/api/question/" + uuid1 + "/vote")
+                .doReturnStatus(200);
 
+        String responseBody = ServerCommunication.addQuestionVote(uuid1);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(subUrl + "/api/question/" + uuid1 + "/vote").called();
     }
 
-    //Tests if addQuestion returns null when called with null values for question text and author.
+    // Test if the addQuestionVote method returns null after being called with an invalid
+    // questionId and receiving statusCode 404 and failureToken as the response body.
     @Test
-    public void testAddQuestionInvalidRequest() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testAddQuestionVoteThroughInvalidRequest() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(subUrl + "/api/question/" + uuid3 + "/vote")
+                .doReturnStatus(404).doReturn(failureToken);
 
+        String responseBody = ServerCommunication.addQuestionVote(uuid3);
 
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(subUrl + "/api/question/" + uuid3 + "/vote").called();
     }
 
-    //Tests if editQuestion returns true when called through the moderator code.
-    //Tests if the question text has been changed.
+    // Test if the addQuestionVote method returns the successToken after being called
+    // with a valid questionId and receiving statusCode 200 and the successToken as the response body.
     @Test
-    public void testEditQuestionValidModRequest() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testAddQuestionVoteGivingCorrectResponseBody() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(subUrl + "/api/question/" + uuid3 + "/vote")
+                .doReturn(successToken);
 
+        String responseBody = ServerCommunication.addQuestionVote(uuid3);
 
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(subUrl + "/api/question/" + uuid3 + "/vote").called();
     }
 
     //Tests if editQuestion returns true when called through the question secret code.
