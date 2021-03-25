@@ -114,15 +114,16 @@ public class StudentViewController {
      * @param questions The question array that needs to be divided.
      */
     private void divideQuestions(QuestionDetailsDto[] questions) {
-        //Initialise two lists to contain the answered and unanswered questions.
-        List<QuestionDetailsDto> answered = new ArrayList<>();
-        List<QuestionDetailsDto> unanswered = new ArrayList<>();
-
+        //If there are no questions, initialise the questions lists with empty arrays and return.
         if (questions == null || questions.length == 0) {
             answeredQuestions = new QuestionDetailsDto[0];
             unansweredQuestions = new QuestionDetailsDto[0];
             return;
         }
+
+        //Initialise two lists to contain the answered and unanswered questions.
+        List<QuestionDetailsDto> answered = new ArrayList<>();
+        List<QuestionDetailsDto> unanswered = new ArrayList<>();
 
         //Divide the questions over the two lists.
         for (QuestionDetailsDto question : questions) {
