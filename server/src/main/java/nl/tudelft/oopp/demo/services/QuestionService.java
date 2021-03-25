@@ -3,7 +3,6 @@ package nl.tudelft.oopp.demo.services;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
-
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.demo.entities.Question;
@@ -14,7 +13,6 @@ import nl.tudelft.oopp.demo.services.exceptions.ConflictException;
 import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
-import org.springframework.expression.spel.ast.QualifiedIdentifier;
 import org.springframework.stereotype.Service;
 
 
@@ -126,10 +124,10 @@ public class QuestionService {
      */
     public Question markAsAnswered(UUID questionId) {
         Question question = questionRepository.getQuestionById(questionId);
-        if (question.isAnswered()) {
+        if (question.getAnswered() != null) {
             throw new ConflictException("Question was already marked as answered");
         }
-        question.setAnswered(true);
+        question.setAnswered(Timestamp.from(Instant.now()));
         questionRepository.save(question);
         return question;
     }

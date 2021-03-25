@@ -14,7 +14,9 @@ public class QuestionDetailsDto {
 
     private Timestamp timestamp;
 
-    private boolean answered;
+    private Timestamp answered;
+
+    private int upvotes;
 
     private Set<AnswerDetailsDto> answers;
 
@@ -61,11 +63,19 @@ public class QuestionDetailsDto {
         this.authorName = authorName;
     }
 
-    public boolean isAnswered() {
+    public Timestamp getAnswered() {
         return answered;
     }
 
-    public void setAnswered(boolean answered) {
+    public void setAnswered(Timestamp answered) {
         this.answered = answered;
+    }
+
+    public int getUpvotes() {
+        return upvotes;
+    }
+
+    public void setUpvotes(int upvotes) {
+        this.upvotes = upvotes;
     }
 }

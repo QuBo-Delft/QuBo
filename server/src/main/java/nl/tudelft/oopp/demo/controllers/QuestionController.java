@@ -13,8 +13,6 @@ import nl.tudelft.oopp.demo.entities.QuestionVote;
 import nl.tudelft.oopp.demo.services.AnswerService;
 import nl.tudelft.oopp.demo.services.QuestionService;
 import nl.tudelft.oopp.demo.services.QuestionVoteService;
-import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
-import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -71,13 +69,14 @@ public class QuestionController {
 
     /**
      * POST endpoint for answering questions.
+     * Throw 404 if there is no board with the specified moderatorCode or question
+     * with the specified question ID.
+     * Throw 403 if the board associated with the moderatorCode does not hold the question.
      *
      * @param answerModel   The answer model.
      * @param questionId    The question id.
      * @param moderatorCode The moderator code.
      * @return The answer details dto.
-     * @throws NotFoundException  if there is no board with moderatorCode or question with questionId.
-     * @throws ForbiddenException if the board associated with the moderatorCode does not hold the question.
      */
     @RequestMapping(value = "{questionid}/answer", method = POST, consumes = "application/json")
     @ResponseBody
@@ -89,12 +88,12 @@ public class QuestionController {
         Question question = questionService.getQuestionById(questionId);
         if (question == null) {
             // Requested question does not exist
-            throw new NotFoundException("Question does not exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question does not exist");
         }
         QuestionBoard board = question.getQuestionBoard();
         // Check whether moderator code is correct for the board the question was asked in
         if (!board.getModeratorCode().equals(moderatorCode)) {
-            throw new ForbiddenException("Incorrect moderatorCode for Question");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Incorrect moderatorCode for Question");
         }
         // Answer the question
         Answer answer = answerService.addAnswerToQuestion(answerModel, question);
@@ -105,13 +104,13 @@ public class QuestionController {
 
     /**
      * DELETE endpoint for deleting questions.
+     * Throw 404 if there is no question with this questionId.
+     * Throw 403 if the provided code is neither the secret code of the given
+     * question nor the moderator code of its board.
      *
      * @param questionId The question id.
      * @param code       The secret code of the question or the moderator code of its board.
      * @return The details of the deleted question.
-     * @throws NotFoundException  if there is no question with this questionId.
-     * @throws ForbiddenException if the provided code is neither the secret code of the given
-     *                            question nor the moderator code of its board.
      */
     @RequestMapping(value = "{questionid}", method = DELETE)
     @ResponseBody
@@ -121,11 +120,11 @@ public class QuestionController {
         Question question = questionService.getQuestionById(questionId);
         if (question == null) {
             // Requested question does not exist
-            throw new NotFoundException("Question does not exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question does not exist");
         }
         if (!questionService.canModifyQuestion(question, code)) {
-            throw new ForbiddenException("The provided code is neither the secret code of this "
-                + "question nor the moderator code of its board.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided code is neither the "
+                    + "secret code of this question nor the moderator code of its board.");
         }
 
         QuestionDetailsDto dto = modelMapper.map(question, QuestionDetailsDto.class);
@@ -136,14 +135,14 @@ public class QuestionController {
 
     /**
      * PUT endpoint for editing questions.
+     * Throw 404 if there is no question with this questionId.
+     * Throw 403 if the provided code is neither the secret code of the given
+     * question nor the moderator code of its board.
      *
      * @param model      The question editing model.
      * @param questionId The question id.
      * @param code       The secret code of the question or the moderator code of its board.
      * @return The details of the edited question.
-     * @throws NotFoundException  if there is no question with this questionId.
-     * @throws ForbiddenException if the provided code is neither the secret code of the given
-     *                            question nor the moderator code of its board.
      */
     @RequestMapping(value = "{questionid}", method = PUT)
     @ResponseBody
@@ -154,11 +153,11 @@ public class QuestionController {
         Question question = questionService.getQuestionById(questionId);
         if (question == null) {
             // Requested question does not exist
-            throw new NotFoundException("Question does not exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question does not exist");
         }
         if (!questionService.canModifyQuestion(question, code)) {
-            throw new ForbiddenException("The provided code is neither the secret code of this "
-                + "question nor the moderator code of its board.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided code is neither the "
+                    + "secret code of this question nor the moderator code of its board.");
         }
 
         Question edited = questionService.editQuestion(questionId, model);

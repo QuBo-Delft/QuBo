@@ -44,8 +44,8 @@ public class Question {
     @Column(name = "timestamp")
     private Timestamp timestamp;
 
-    @Column(name = "answered", nullable = false)
-    private boolean answered;
+    @Column(name = "answered")
+    private Timestamp answered;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Answer> answers;
@@ -148,11 +148,11 @@ public class Question {
         this.answers = answers;
     }
 
-    public boolean isAnswered() {
+    public Timestamp getAnswered() {
         return answered;
     }
 
-    public void setAnswered(boolean answered) {
+    public void setAnswered(Timestamp answered) {
         this.answered = answered;
     }
 }
