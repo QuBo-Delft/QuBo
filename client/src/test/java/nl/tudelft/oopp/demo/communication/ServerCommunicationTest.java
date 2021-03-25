@@ -1,6 +1,5 @@
 package nl.tudelft.oopp.demo.communication;
 
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pgssoft.httpclient.HttpClientMock;
@@ -11,17 +10,12 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel
 import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.net.ConnectException;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ServerCommunicationTest {
     
@@ -40,18 +34,18 @@ public class ServerCommunicationTest {
 
     private HttpClientMock httpClientMock;
 
-    // Test if the sendRequest method catches the exception caused by not setting up a response.
-    @Test
-    public void testSendRequest() {
-        assertNull(ServerCommunication.retrieveBoardDetails(uuid1));
-    }
-
     /**
      * Initialise the httpClientMock object for each test case.
      */
     @BeforeEach
     public void setUp() {
         httpClientMock = new HttpClientMock();
+    }
+
+    // Test if the sendRequest method catches the exception caused by a refused connection.
+    @Test
+    public void testSendRequest() {
+        assertNull(ServerCommunication.retrieveBoardDetails(uuid1));
     }
 
     // Tests if the createBoardRequest method returns a non-null response body after receiving
