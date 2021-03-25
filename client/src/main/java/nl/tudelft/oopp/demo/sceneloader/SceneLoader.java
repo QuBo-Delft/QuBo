@@ -90,9 +90,14 @@ public class SceneLoader {
      * @param qd    The QuestionBoardDetailsDto object that brings data for the
      *              student view of a question board.
      */
-    public static void loadStudentView(QuestionBoardDetailsDto qd, Stage currentStage) {
+    public void loadStudentView(QuestionBoardDetailsDto qd, Stage currentStage) {
         // Create an FXMLLoader of StudentView.fxml
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/StudentView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlsheets/StudentView.fxml"));
+
+        //Set the controller of the student view.
+        StudentViewController controller = new StudentViewController();
+        controller.setQuBo(qd);
+        loader.setController(controller);
 
         Parent root = null;
         try {
@@ -100,12 +105,6 @@ public class SceneLoader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // Get the controller of StudentView
-        StudentViewController controller = loader.getController();
-
-        // Set the question board of the student view to qd.
-        controller.setQuBo(qd);
 
         // TODO: need a method to update data in studentView
 

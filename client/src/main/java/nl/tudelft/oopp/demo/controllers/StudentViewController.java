@@ -82,15 +82,19 @@ public class StudentViewController {
      * the number of upvotes they have received.
      */
     private void displayQuestions() {
-        //Retrieve the questions and conver them to an array of QuestionDetailsDtos.
+        //Retrieve the questions and convert them to an array of QuestionDetailsDtos.
         String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
-                .create();
-        QuestionDetailsDto[] questions = gson.fromJson(jsonQuestions, QuestionDetailsDto[].class);
+        if (jsonQuestions == null) {
+            divideQuestions(null);
+        } else {
+            Gson gson = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+                    .create();
+            QuestionDetailsDto[] questions = gson.fromJson(jsonQuestions, QuestionDetailsDto[].class);
 
-        //Divide the questions over two lists and sort them.
-        divideQuestions(questions);
+            //Divide the questions over two lists and sort them.
+            divideQuestions(questions);
+        }
 
         //TODO: Display the questions in the list view by accessing class attributes.
     }
@@ -105,6 +109,10 @@ public class StudentViewController {
         //Initialise two lists to contain the answered and unanswered questions.
         List<QuestionDetailsDto> answered = new ArrayList<>();
         List<QuestionDetailsDto> unanswered = new ArrayList<>();
+
+        if(questions == null || questions.length == 0) {
+            return;
+        }
 
         //Divide the questions over the two lists.
         for (QuestionDetailsDto question : questions) {
