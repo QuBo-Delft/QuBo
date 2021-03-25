@@ -17,11 +17,13 @@ import org.modelmapper.ModelMapper;
 public class QuestionDetailsDtoTests {
     private ModelMapper mapper;
 
+    /**
+     * Initialise mapper and add custom mapping configuration.
+     */
     @BeforeEach
     public void setUp() {
         mapper = new ModelMapper();
 
-        // Initialise custom mapping
         var questionToQuestionDetailsDtoConverter = new QuestionToQuestionDetailsDtoConverter(mapper);
         questionToQuestionDetailsDtoConverter.init();
     }
