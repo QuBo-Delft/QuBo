@@ -12,14 +12,15 @@ public class QuestionVotesComparator implements Comparator<QuestionDetailsDto> {
      * @param o1    The QuestionDetailsDto that is to be compared with o2.
      * @param o2    The QuestionDetailsDto that is to be compared with o1.
      *
-     * @return 0 if the number of votes are equal, -1 if the number of votes of o1 is smaller than that
-     * of o2, and 1 if the number of votes of o1 is greater than that of o2.
+     * @return 0 if the number of votes are equal, 1 if the number of votes of o1 is smaller than that
+     * of o2, and -1 if the number of votes of o1 is greater than that of o2. This ensures that the list
+     * of questions starts with the question with the greatest number of upvotes.
      */
     @Override
     public int compare(QuestionDetailsDto o1, QuestionDetailsDto o2) {
-        if (o1.getNumberOfVotes() == o2.getNumberOfVotes()) {
+        if (o1.getUpvotes() == o2.getUpvotes()) {
             return 0;
-        } else if (o1.getNumberOfVotes() > o2.getNumberOfVotes()) {
+        } else if (o1.getUpvotes() < o2.getUpvotes()) {
             return 1;
         } else {
             return -1;
