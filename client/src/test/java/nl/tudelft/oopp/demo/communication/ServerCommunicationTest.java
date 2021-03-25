@@ -528,33 +528,61 @@ public class ServerCommunicationTest {
                 .delete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
     }
 
-    //Tests if addQuestion returns a QuestionCreationDto that corresponds to the text and author the method was
-    //called with.
+    // Test if the markQuestionAsAnswered method returns a non-null response body after being called
+    // with valid questionId and modCode and receiving statusCode 200.
     @Test
-    public void testAddQuestionValidRequest() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testMarkQuestionAsAnsweredThroughValidRequest() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPatch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2)
+                .doReturnStatus(200);
 
-        String text = "Is the universe infinitely large?";
-        String author = "Insert Name";
+        String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
 
-        //Act
-
-        //Assert
-
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .patch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2).called();
     }
 
-    //Tests if addQuestion returns null if the board it was going to be added to did not exist.
+    // Test if the markQuestionAsAnswered method returns null after being called with invalid
+    // questionId and modCode and receiving statusCode 404 and failureToken as the response body.
     @Test
-    public void testAddQuestionInvalidBoard() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testMarkQuestionAsAnsweredThroughInvalidRequest() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPatch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2)
+                .doReturnStatus(404).doReturn(failureToken);
 
+        String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
 
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .patch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2).called();
+    }
+
+    // Test if the markQuestionAsAnswered method returns the successToken after being called
+    // with valid questionId and modCode and receiving statusCode 200 and the successToken as the response body.
+    @Test
+    public void testMarkQuestionAsAnsweredGivingCorrectResponseBody() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPatch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2)
+                .doReturn(successToken).doReturnStatus(200);
+
+        String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .patch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2).called();
     }
 
     //Tests if addQuestion returns null if the caller attempted to post a question before the start time
