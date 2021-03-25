@@ -288,28 +288,64 @@ public class ServerCommunicationTest {
         httpClientMock.verify().get(subUrl + "api/board/" + uuid1).called();
     }
 
-    //Test if the retrieveBoardDetailsThroughModCode method returns null when called with a code that does not
-    //correspond to a moderator code of a question board.
+    // Test if the retrieveQuestions method returns null after being called with an invalid
+    // boardId, and receiving statusCode 400 and failureToken as the response body.
     @Test
-    public void testRetrieveBoardDetailsThroughModCodeInvalidCode() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-        quBoModel.setTitle("Test Qubo");
+    public void testRetrieveQuestionsWithInvalidBoardId() {
+        // Arrange
+        HttpClientMock httpClientMock = new HttpClientMock();
+        // Act
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/questions")
+                .doReturnStatus(400).doReturn(failureToken);
 
+        String responseBody = ServerCommunication.retrieveQuestions(uuid1);
 
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1 + "/questions").called();
     }
 
-    //Test if the retrieveBoardDetails method returns a QuestionBoardDetailsDto that corresponds to that of the
-    //created board.
+    // Test if the retrieveQuestions method returns null after being called with an invalid
+    // boardId, and receiving statusCode 404 and failureToken as the response body.
     @Test
-    public void testRetrieveBoardDetailsValidRequest() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-        quBoModel.setTitle("Test Qubo");
+    public void testRetrieveQuestionsNotFound() {
+        // Arrange
+        HttpClientMock httpClientMock = new HttpClientMock();
+        // Act
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/questions")
+                .doReturnStatus(404).doReturn(failureToken);
+        String responseBody = ServerCommunication.retrieveQuestions(uuid1);
 
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1 + "/questions").called();
+    }
 
+    // Test if the retrieveQuestions method returns a non-null response body after being
+    // called with a valid boardId, and receiving statusCode 200 and questionsStr as the
+    // response body.
+    @Test
+    public void testRetrieveQuestionsGivingCorrectResponseBody() {
+        // Arrange
+        QuestionDetailsDto[] questions =
+                {new QuestionDetailsDto(), new QuestionDetailsDto()};
+        String questionsStr = gson.toJson(questions);
+        HttpClientMock httpClientMock = new HttpClientMock();
+
+        // Act
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/questions")
+                .doReturn(questionsStr);
+        String responseBody = ServerCommunication.retrieveQuestions(uuid1);
+
+        // Assert
+        assertEquals(questionsStr, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1 + "/questions").called();
     }
 
     //Test if the retrieveBoardDetails method returns a QuestionBoardDetailsDto that corresponds to that of the
