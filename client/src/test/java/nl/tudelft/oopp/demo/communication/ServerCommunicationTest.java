@@ -471,22 +471,61 @@ public class ServerCommunicationTest {
     }
 
 
+    // Test if the deleteQuestion method returns a non-null response body after being called
+    // with valid questionId and modCode and receiving statusCode 200.
+    @Test
+    public void testDeleteQuestionValidRequest() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
+                .doReturnStatus(200);
+
+        String responseBody = ServerCommunication.deleteQuestion(uuid1, uuid2);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .delete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
     }
 
-    //Tests if retrieveQuestions returns null when called through an invalid board ID.
+    // Test if the deleteQuestion method returns null after being called with invalid
+    // questionId and modCode and receiving statusCode 404 and failureToken as the response body.
     @Test
-    public void testRetrieveQuestions() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testDeleteQuestionInvalidQuBo() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
+                .doReturnStatus(404).doReturn(failureToken);
 
+        String responseBody = ServerCommunication.deleteQuestion(uuid1, uuid2);
 
-        //Act
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .delete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
+    }
 
+    // Test if the deleteQuestion method returns the successToken after being called
+    // with valid questionId and modCode and receiving statusCode 200 and the successToken as the response body.
+    @Test
+    public void testDeleteQuestionGivingCorrectResponseBody() {
+        // Arrange and Act
+        HttpClientMock httpClientMock = new HttpClientMock();
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
+                .doReturn(successToken);
 
-        //Assert
+        String responseBody = ServerCommunication.deleteQuestion(uuid1, uuid2);
 
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+                .delete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
     }
 
     //Tests if addQuestion returns a QuestionCreationDto that corresponds to the text and author the method was
