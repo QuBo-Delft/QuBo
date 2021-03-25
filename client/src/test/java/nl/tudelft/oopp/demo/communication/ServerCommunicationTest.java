@@ -37,29 +37,73 @@ public class ServerCommunicationTest {
         assertNull(ServerCommunication.retrieveBoardDetails(uuid1));
     }
 
-    //Tests if the createBoardRequest method returns null when called without a correct
-    //QuestionBoardCreationBindingModel.
+    // Tests if the createBoardRequest method returns a non-null response body after receiving
+    // statusCode 200.
     @Test
-    public void testCreateBoardRequestInvalidRequest() {
-        //Act
+    public void testCreateBoardRequest() {
+        // Arrange
+        Timestamp startTimeStamp = new Timestamp(new Date().getTime());
+        QuestionBoardCreationBindingModel board =
+                new QuestionBoardCreationBindingModel("Title", startTimeStamp);
+        HttpClientMock httpClientMock = new HttpClientMock();
 
-        //Assert
+        // Act
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(subUrl + "api/board")
+                .doReturnStatus(200);
 
+        String responseBody = ServerCommunication.createBoardRequest(board);
+        
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(subUrl + "api/board").called();
     }
 
-    //Test if the closeBoardRequest method returns true if it is called with the ID and moderator
-    //code of an existing question board.
+    // Test if the createBoardRequest method returns null after receiving statusCode 400
+    // and failureToken as the response body.
     @Test
-    public void testCloseBoardRequestValidRequest() {
-        //Arrange
-        QuestionBoardCreationBindingModel quBoModel = new QuestionBoardCreationBindingModel();
-        quBoModel.setStartTime(Timestamp.from(Instant.now()));
-        quBoModel.setTitle("Test Qubo");
+    public void testCreateBoardRequestInValidRequest() {
+        // Arrange
+        Timestamp startTimeStamp = new Timestamp(new Date().getTime());
+        QuestionBoardCreationBindingModel board =
+                new QuestionBoardCreationBindingModel("Title", startTimeStamp);
+        HttpClientMock httpClientMock = new HttpClientMock();
 
+        // Act
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(subUrl + "api/board")
+                .doReturnStatus(400).doReturn(failureToken);
 
-        //Act
+        String responseBody = ServerCommunication.createBoardRequest(board);
 
-        //Assert
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(subUrl + "api/board").called();
+    }
+
+    // Test if the createBoardRequest method returns the successToken after receiving
+    // statusCode 200 and the successToken as the response body.
+    @Test
+    public void testCreateBoardRequestGivingCorrectResponseBody() {
+        // Arrange
+        Timestamp startTimeStamp = new Timestamp(new Date().getTime());
+        QuestionBoardCreationBindingModel board =
+                new QuestionBoardCreationBindingModel("Title", startTimeStamp);
+        HttpClientMock httpClientMock = new HttpClientMock();
+
+        // Act
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(subUrl + "api/board").doReturn(successToken);
+
+        String responseBody = ServerCommunication.createBoardRequest(board);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(subUrl + "api/board").called();
+    }
 
     }
 
