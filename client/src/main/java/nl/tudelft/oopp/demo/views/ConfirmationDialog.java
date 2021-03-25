@@ -18,7 +18,7 @@ public class ConfirmationDialog {
     private static boolean answer;
 
     /**
-     * This method creates a dialog window with a question as the message of the window. 
+     * This method creates a dialog window with a question and brief description.
      * Users can click on the "Yes" and "No" buttons in this dialog window to answer said question.
      *
      * @param titleParam     The title of this dialog.
@@ -34,22 +34,6 @@ public class ConfirmationDialog {
         Label title = new Label(titleParam);
         title.setStyle("-fx-font-size: 18");
         Label message = new Label(messageParam);
-
-        // Create the buttons
-        Button yesButton = new Button("Yes");
-        Button noButton = new Button("No");
-
-        // Create HBox to arrange the buttons
-        HBox hbox = new HBox(yesButton, noButton);
-        hbox.setAlignment(Pos.CENTER);
-        hbox.setSpacing(40);
-        hbox.setPadding(new Insets(10,0,0,0));
-
-        // Create VBox to arrange title, message and hbox with buttons
-        VBox vbox = new VBox(title, message, hbox);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setSpacing(15);
-
         // Wrap Text if too long
         int maxWidth = 340;
         title.setWrapText(true);
@@ -62,10 +46,11 @@ public class ConfirmationDialog {
         message.setAlignment(Pos.CENTER);
         message.setTextAlignment(TextAlignment.CENTER);
 
-        // Create BorderPane to put vbox
-        BorderPane dialogue = new BorderPane(vbox);
-        dialogue.setPadding(new Insets(30,40,30,40));
-
+        // Create the buttons
+        Button yesButton = new Button("Yes");
+        Button noButton = new Button("No");
+        yesButton.setStyle("-fx-font-size: 15");
+        noButton.setStyle("-fx-font-size: 15");
         // Set button click action
         yesButton.setOnAction(e -> {
             answer = true;
@@ -75,6 +60,21 @@ public class ConfirmationDialog {
             answer = false;
             window.close();
         });
+
+        // Create HBox to arrange the buttons
+        HBox hbox = new HBox(yesButton, noButton);
+        hbox.setAlignment(Pos.CENTER);
+        hbox.setSpacing(40);
+        hbox.setPadding(new Insets(10,0,0,0));
+
+        // Create VBox to arrange title, message and hbox with buttons
+        VBox vbox = new VBox(title, message, hbox);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(15);
+
+        // Create BorderPane to put vbox
+        BorderPane dialogue = new BorderPane(vbox);
+        dialogue.setPadding(new Insets(30,40,30,40));
 
         // Set the scene to dialogue
         Scene scene = new Scene(dialogue);
