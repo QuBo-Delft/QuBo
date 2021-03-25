@@ -2,17 +2,18 @@ package nl.tudelft.oopp.demo.communication;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.pgssoft.httpclient.HttpClientMock;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
+import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteDetailsDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
-import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
-import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.UUID;
 
 //To run these tests, one must first run DemoApplication.java in the server folder as these tests require
