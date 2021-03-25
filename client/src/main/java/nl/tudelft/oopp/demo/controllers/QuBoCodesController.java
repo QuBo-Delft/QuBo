@@ -2,9 +2,6 @@ package nl.tudelft.oopp.demo.controllers;
 
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.Clipboard;
@@ -14,8 +11,6 @@ import javafx.util.Duration;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
 
-import java.io.IOException;
-import java.net.URL;
 
 public class QuBoCodesController {
 
