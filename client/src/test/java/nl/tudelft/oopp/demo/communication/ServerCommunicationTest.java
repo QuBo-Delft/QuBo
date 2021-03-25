@@ -109,7 +109,7 @@ public class ServerCommunicationTest {
     }
 
     // Test if the closeBoardRequest method returns a non-null response body after being
-    // called with valid board Id (boardId) and moderator code (modCode) then receiving
+    // called with a valid board ID and moderator code then receiving
     // statusCode 200.
     @Test
     public void testCloseBoardRequest() {
@@ -129,8 +129,8 @@ public class ServerCommunicationTest {
                 .patch(subUrl + "api/board/" + uuid1 + "/close?code=" + uuid3).called();
     }
 
-    // Test if the closeBoardRequest method returns null after being called with invalid boardId and
-    // modCode, and receiving statusCode 400 and failureToken as response body.
+    // Test if the closeBoardRequest method returns null after being called with an invalid board ID and
+    // moderator code, and receiving statusCode 400 and failureToken as response body.
     @Test
     public void testCloseBoardRequestInvalidCode() {
         // Arrange
@@ -150,7 +150,8 @@ public class ServerCommunicationTest {
     }
 
     // Test if the closeBoardRequest method returns the successToken after being called with
-    // valid boardId and modCode, then receiving statusCode 200 and the successToken as response body.
+    // a valid board ID and moderator code, and then receiving statusCode 200 and the successToken
+    // as response body.
     @Test
     public void testCloseBoardRequestGivingCorrectResponseBody() {
         // Arrange and Act
@@ -169,13 +170,14 @@ public class ServerCommunicationTest {
     }
 
     // Test if the retrieveBoardDetails method returns a non-null response body
-    // after being called with a valid boardId and receiving statusCode 200.
+    // after being called with a valid board ID and receiving statusCode 200.
     @Test
     public void testRetrieveBoardDetails() {
         // Arrange and Act
         HttpClientMock httpClientMock = new HttpClientMock();
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1).doReturnStatus(200);
+
         String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
         
         // Assert
@@ -184,7 +186,7 @@ public class ServerCommunicationTest {
         httpClientMock.verify().get(subUrl + "api/board/" + uuid1).called();
     }
 
-    // Test if the retrieveBoardDetails method returns null after being called with an invalid boardId,
+    // Test if the retrieveBoardDetails method returns null after being called with an invalid board ID,
     // and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testRetrieveBoardDetailsThroughInvalidBoardId() {
@@ -193,6 +195,7 @@ public class ServerCommunicationTest {
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1)
                 .doReturnStatus(400);
+
         String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
 
         // Assert
@@ -202,12 +205,13 @@ public class ServerCommunicationTest {
     }
 
     // Test if the retrieveBoardDetails method returns the successToken after being called
-    // with a valid BoardId, and receiving statusCode 200 and the successToken as the response body.
+    // with a valid board ID, and receiving statusCode 200 and the successToken as the response body.
     @Test
     public void testRetrieveBoardDetailsGivingCorrectResponseBody() {
         // Arrange and Act
         HttpClientMock httpClientMock = new HttpClientMock();
         ServerCommunication.setClient(httpClientMock);
+
         httpClientMock.onGet(subUrl + "api/board/" + uuid1).doReturn(successToken);
         String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
 
@@ -218,7 +222,7 @@ public class ServerCommunicationTest {
     }
 
     // Test if the retrieveBoardDetailsThroughModCode method returns a non-null response body
-    // after being called with a valid ModCode and receiving statusCode 200.
+    // after being called with a valid moderator code and receiving statusCode 200.
     @Test
     public void testRetrieveBoardDetailsThroughModCode() {
         // Arrange and Act
@@ -236,8 +240,8 @@ public class ServerCommunicationTest {
                 .get(subUrl + "/api/board/moderator?code=" + uuid1).called();
     }
 
-    // Test if the retrieveBoardDetailsThroughModCode method returns null after being called with an invalid
-    // ModCode, and receiving statusCode 404 and failureToken as the response body.
+    // Test if the retrieveBoardDetailsThroughModCode method returns null after being called with an
+    // invalid moderator code, and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testRetrieveBoardDetailsThroughInValidModCode() {
         // Arrange and Act
@@ -255,13 +259,14 @@ public class ServerCommunicationTest {
     }
 
     // Test if the retrieveBoardDetailsThroughModCode method returns the successToken after being called
-    // with a valid ModCode, and receiving statusCode 200 and the successToken as the response body.
+    // with a valid moderator code, and receiving statusCode 200 and the successToken as the response body.
     @Test
     public void testRetrieveBoardDetailsThroughModCodeGivingCorrectResponseBody() {
         // Arrange and Act
         HttpClientMock httpClientMock = new HttpClientMock();
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1).doReturn(successToken);
+
         String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
 
         // Assert
@@ -271,7 +276,11 @@ public class ServerCommunicationTest {
     }
 
     // Test if the retrieveBoardDetails method returns a non-null response body after being called
-    // with invalid boardId and valid ModCode, and receiving statusCode 404.
+    // with an invalid board ID and a valid moderator code, and receiving statusCode 404. The invalid
+    // board ID will cause a 404 statusCode to be returned in the response, then the retrieveBoardDetails
+    // method will call the testRetrieveBoardDetailsThroughModCode method using the same UUID to see if it
+    // a valid moderator code. In this case, since it is a valid moderator code, a non-null response body
+    // will be returned.
     @Test
     public void testRetrieveBoardDetailsThroughInvalidBoardIdAndValidModCode() {
         // Arrange and Act
@@ -292,7 +301,7 @@ public class ServerCommunicationTest {
     }
 
     // Test if the retrieveQuestions method returns null after being called with an invalid
-    // boardId, and receiving statusCode 400 and failureToken as the response body.
+    // board ID, and receiving statusCode 400 and failureToken as the response body.
     @Test
     public void testRetrieveQuestionsWithInvalidBoardId() {
         // Arrange
@@ -311,7 +320,7 @@ public class ServerCommunicationTest {
     }
 
     // Test if the retrieveQuestions method returns null after being called with an invalid
-    // boardId, and receiving statusCode 404 and failureToken as the response body.
+    // board ID, and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testRetrieveQuestionsNotFound() {
         // Arrange
@@ -320,6 +329,7 @@ public class ServerCommunicationTest {
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/questions")
                 .doReturnStatus(404).doReturn(failureToken);
+
         String responseBody = ServerCommunication.retrieveQuestions(uuid1);
 
         // Assert
@@ -329,7 +339,7 @@ public class ServerCommunicationTest {
     }
 
     // Test if the retrieveQuestions method returns a non-null response body after being
-    // called with a valid boardId, and receiving statusCode 200 and questionsStr as the
+    // called with a valid board ID, and receiving statusCode 200 and questionsStr as the
     // response body.
     @Test
     public void testRetrieveQuestionsGivingCorrectResponseBody() {
@@ -353,7 +363,7 @@ public class ServerCommunicationTest {
     }
 
     // Test if the addQuestion method returns a non-null response body after being called
-    // with a valid boardId, and receiving statusCode 200.
+    // with a valid board ID, and receiving statusCode 200.
     @Test
     public void testAddQuestionValidBoard() {
         // Arrange and Act
@@ -372,8 +382,9 @@ public class ServerCommunicationTest {
                 .post(subUrl + "api/board/" + uuid1 + "/question").called();
     }
 
-    // Test if the addQuestion method returns null after being called with invalid
-    // questionId and modCode, and receiving statusCode 404 and failureToken as the response body.
+    // Test if the addQuestion method returns null after being called with an invalid
+    // questionId and moderator code, and receiving statusCode 404 and failureToken as
+    // the response body.
     @Test
     public void testAddQuestionInvalidBoard() {
         // Arrange and Act
@@ -393,7 +404,7 @@ public class ServerCommunicationTest {
     }
 
     // Test if the addQuestion method returns the successToken after being called
-    // with valid questionId and modCode, and receiving statusCode 200 and the successToken
+    // with a valid questionId and moderator code, and receiving statusCode 200 and the successToken
     // as the response body.
     @Test
     public void testAddQuestionGivingCorrectResponseBody() {
@@ -414,7 +425,7 @@ public class ServerCommunicationTest {
     }
 
     // Test if the editQuestion method returns a non-null response body after being called
-    // with valid questionId and modCode and receiving statusCode 200.
+    // with a valid questionId and moderator code and receiving statusCode 200.
     @Test
     public void testEditQuestionWithValidCode() {
         // Arrange and Act
@@ -433,8 +444,9 @@ public class ServerCommunicationTest {
                 .put(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
     }
 
-    // Test if the editQuestion method returns null after being called with invalid
-    // questionId and modCode and receiving statusCode 404 and failureToken as the response body.
+    // Test if the editQuestion method returns null after being called with an invalid
+    // questionId and moderator code and receiving statusCode 404 and failureToken as the
+    // response body.
     @Test
     public void testEditQuestionWithInvalidCode() {
         // Arrange and Act
@@ -454,7 +466,7 @@ public class ServerCommunicationTest {
     }
 
     // Test if the editQuestion method returns the successToken after being called
-    // with valid questionId and modCode and receiving statusCode 200 and
+    // with a valid questionId and moderator code and receiving statusCode 200 and
     // successToken as the response body.
     @Test
     public void testEditQuestionGivingCorrectResponseBody() {
@@ -476,7 +488,7 @@ public class ServerCommunicationTest {
 
 
     // Test if the deleteQuestion method returns a non-null response body after being called
-    // with valid questionId and modCode and receiving statusCode 200.
+    // with a valid questionId and moderator code and receiving statusCode 200.
     @Test
     public void testDeleteQuestionValidRequest() {
         // Arrange and Act
@@ -494,8 +506,8 @@ public class ServerCommunicationTest {
                 .delete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
     }
 
-    // Test if the deleteQuestion method returns null after being called with invalid
-    // questionId and modCode and receiving statusCode 404 and failureToken as the response body.
+    // Test if the deleteQuestion method returns null after being called with an invalid
+    // questionId and moderator code and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testDeleteQuestionInvalidQuBo() {
         // Arrange and Act
@@ -514,7 +526,8 @@ public class ServerCommunicationTest {
     }
 
     // Test if the deleteQuestion method returns the successToken after being called
-    // with valid questionId and modCode and receiving statusCode 200 and the successToken as the response body.
+    // with a valid questionId and moderator code and receiving statusCode 200 and the successToken
+    // as the response body.
     @Test
     public void testDeleteQuestionGivingCorrectResponseBody() {
         // Arrange and Act
@@ -533,7 +546,7 @@ public class ServerCommunicationTest {
     }
 
     // Test if the markQuestionAsAnswered method returns a non-null response body after being called
-    // with valid questionId and modCode and receiving statusCode 200.
+    // with a valid questionId and moderator code and receiving statusCode 200.
     @Test
     public void testMarkQuestionAsAnsweredThroughValidRequest() {
         // Arrange and Act
@@ -551,8 +564,8 @@ public class ServerCommunicationTest {
                 .patch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2).called();
     }
 
-    // Test if the markQuestionAsAnswered method returns null after being called with invalid
-    // questionId and modCode and receiving statusCode 404 and failureToken as the response body.
+    // Test if the markQuestionAsAnswered method returns null after being called with an invalid
+    // questionId and moderator code and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testMarkQuestionAsAnsweredThroughInvalidRequest() {
         // Arrange and Act
@@ -571,14 +584,15 @@ public class ServerCommunicationTest {
     }
 
     // Test if the markQuestionAsAnswered method returns the successToken after being called
-    // with valid questionId and modCode and receiving statusCode 200 and the successToken as the response body.
+    // with a valid questionId and moderator code and receiving statusCode 200 and the successToken
+    // as the response body.
     @Test
     public void testMarkQuestionAsAnsweredGivingCorrectResponseBody() {
         // Arrange and Act
         HttpClientMock httpClientMock = new HttpClientMock();
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPatch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2)
-                .doReturn(successToken).doReturnStatus(200);
+                .doReturn(successToken);
 
         String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
 
@@ -644,7 +658,7 @@ public class ServerCommunicationTest {
     }
 
     // Test if the deleteQuestionVote method returns a non-null response body after being called
-    // with valid questionId and voteId and receiving statusCode 200.
+    // with a valid questionId and voteId and receiving statusCode 200.
     @Test
     public void testDeleteQuestionVoteThroughValidRequest() {
         // Arrange and Act
@@ -667,7 +681,7 @@ public class ServerCommunicationTest {
                 .delete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2).called();
     }
 
-    // Test if the deleteQuestionVote method returns null after being called with invalid
+    // Test if the deleteQuestionVote method returns null after being called with an invalid
     // questionId and voteId and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testDeleteQuestionVoteThroughInvalidRequest() {
@@ -686,14 +700,13 @@ public class ServerCommunicationTest {
                 .delete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2).called();
     }
 
-    // Test if the addQuestionVote method returns null after being called with valid questionId and
+    // Test if the addQuestionVote method returns null after being called with a valid questionId and
     // voteId, and receiving statusCode 200 and a response body with a wrong deletedVote.
     @Test
     public void testDeleteQuestionVoteGivingIncorrectResponseBody() {
         // Arrange and Act
         HttpClientMock httpClientMock = new HttpClientMock();
         QuestionVoteDetailsDto qd = new QuestionVoteDetailsDto();
-        qd.setId(uuid2);
         qd.setId(uuid3);
         String qdStrReturned = gson.toJson(qd);
         // Act
@@ -750,8 +763,8 @@ public class ServerCommunicationTest {
         httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/pace").called();
     }
 
-    // Test if the addQuestionVote method returns the successToken after being called with a valid boardId
-    // and receiving statusCode 200 and the successToken as the response body.
+    // Test if the addPaceVote method returns the successToken after being called with a
+    // valid boardId and receiving statusCode 200 and the successToken as the response body.
     @Test
     public void testAddPaceVoteGivingCorrectResponseBody() {
         // Arrange and Act
@@ -771,7 +784,7 @@ public class ServerCommunicationTest {
     }
 
     // Test if the deletePaceVote method returns a non-null response body after being called
-    // with valid boardId and paceVoteId, and receiving statusCode 200.
+    // with a valid boardId and paceVoteId, and receiving statusCode 200.
     @Test
     public void testDeletePaceVoteThroughValidRequest() {
         // Arrange and Act
@@ -793,7 +806,7 @@ public class ServerCommunicationTest {
                 .delete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2).called();
     }
 
-    // Test if the deletePaceVote method returns null after being called with invalid boardId and
+    // Test if the deletePaceVote method returns null after being called with an invalid boardId and
     // paceVoteId and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testDeletePaceVoteThroughInvalidRequest() {
@@ -813,7 +826,7 @@ public class ServerCommunicationTest {
                 .delete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2).called();
     }
 
-    // Test if the deletePaceVote method returns null after being called with valid boardId
+    // Test if the deletePaceVote method returns null after being called with a valid boardId
     // and paceVoteId and receiving statusCode 200 and a response body with the wrong deletedVote.
     @Test
     public void testDeletePaceVoteGivingIncorrectResponseBody() {
