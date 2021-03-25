@@ -80,6 +80,7 @@ public class SceneLoader {
 
         // Display the new scene
         currentStage.setScene(new Scene(root));
+        currentStage.setTitle("Created Question Board");
     }
 
     /**
@@ -174,6 +175,7 @@ public class SceneLoader {
         }
 
         currentStage.setScene(new Scene(root));
+        currentStage.setTitle("Join Question Board");
     }
 
 }

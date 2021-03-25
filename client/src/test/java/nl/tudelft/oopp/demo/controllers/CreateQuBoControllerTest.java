@@ -1,36 +1,199 @@
 package nl.tudelft.oopp.demo.controllers;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Spinner;
+import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
+import org.testfx.api.FxAssert;
+import org.testfx.api.FxRobot;
+import org.testfx.framework.junit5.Start;
+import org.testfx.matcher.base.NodeMatchers;
+import org.testfx.matcher.base.WindowMatchers;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.IOException;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-class CreateQuBoControllerTest {
+class CreateQuBoControllerTest extends TestFxBase {
 
-    @Test
-    void createNowBtnClicked() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    LocalDate yesterday = LocalDate.now().minusDays(1);
+    LocalDate today = LocalDate.now();
+    LocalDate tomorrow = LocalDate.now().plusDays(1);
+
+    String yesterdayStr = yesterday.format(formatter);
+    String todayStr = today.format(formatter);
+    String tomorrowStr = tomorrow.format(formatter);
+
+    Scene scene;
+    Spinner hourSpinner;
+    Spinner minSpinner;
+
+    @Start
+    void start(Stage stage) throws IOException {
+        String fxmlSheet = "CreateQuBo";
+        Scene scene = start(stage, fxmlSheet);
+
+        hourSpinner = (Spinner) scene.lookup("#hoursSpinner");
+        minSpinner = (Spinner) scene.lookup("#minutesSpinner");
     }
 
+    /*
+        These tests make sure the Create QuBo (now) button is working as intended.
+     */
+    // Click create now button while null title
     @Test
-    void scheduleBtnClicked() {
+    void createNowBtnClickedNullTitle(FxRobot robot) {
+        robot.clickOn("#createBtn");
+        FxAssert.verifyThat("#errorTitle", Node::isVisible);
+        FxAssert.verifyThat("#errorDateTime", NodeMatchers.isInvisible());
     }
 
+    // Click create now button while empty title
     @Test
-    void cancelBtnClicked() {
+    void createNowBtnClickedEmptyTitle(FxRobot robot) {
+        robot.clickOn("#title");
+        robot.write("");
+        robot.clickOn("#createBtn");
+        FxAssert.verifyThat("#errorTitle", Node::isVisible);
+        FxAssert.verifyThat("#errorDateTime", NodeMatchers.isInvisible());
     }
 
+    // Click create now button while title has literal value null
     @Test
-    void isStartTimeBeforeCurrentTime() {
+    void createNowBtnClickedTitleLiteralNull(FxRobot robot) {
+        robot.clickOn("#title");
+        robot.write("null");
+        robot.clickOn("#createBtn");
+        FxAssert.verifyThat(robot.window("(Created Question Board)"), WindowMatchers.isShowing());
     }
 
+    // Click create now button while title has proper name
     @Test
-    void titleIsEmpty() {
+    void createNowBtnClickedTitleInserted(FxRobot robot) {
+        robot.clickOn("#title");
+        robot.write("QuBo");
+        robot.clickOn("#createBtn");
+        FxAssert.verifyThat(robot.window("(Created Question Board)"), WindowMatchers.isShowing());
     }
 
+    /*
+        These tests make sure the Schedule QuBo button is working as intended.
+     */
+    // Click schedule button while null title and no date and time set
     @Test
-    void titleTextHandler() {
+    void scheduleBtnClickedNullTitle(FxRobot robot) {
+        robot.clickOn("#scheduleBtn");
+        FxAssert.verifyThat("#errorTitle", Node::isVisible);
+        FxAssert.verifyThat("#errorDateTime", Node::isVisible);
     }
 
+    // Click schedule button while empty title and no date and time set
     @Test
-    void dateInputHandler() {
+    void scheduleBtnClickedEmptyTitle(FxRobot robot) {
+        robot.clickOn("#title");
+        robot.write("");
+        robot.clickOn("#scheduleBtn");
+        FxAssert.verifyThat("#errorTitle", Node::isVisible);
+        FxAssert.verifyThat("#errorDateTime", Node::isVisible);
+    }
+
+    // Click schedule button while title has literal value null and no date and time set
+    @Test
+    void scheduleBtnClickedTitleLiteralNull(FxRobot robot) {
+        robot.clickOn("#title");
+        robot.write("null");
+        robot.clickOn("#scheduleBtn");
+        FxAssert.verifyThat("#errorDateTime", Node::isVisible);
+        FxAssert.verifyThat("#errorTitle", NodeMatchers.isInvisible());
+    }
+
+    // Click the schedule button while title has proper value and no date and time set
+    @Test
+    void scheduleBtnClickedOnlyTitleInserted(FxRobot robot) {
+        robot.clickOn("#title");
+        robot.write("QuBo");
+        robot.clickOn("#scheduleBtn");
+        FxAssert.verifyThat("#errorDateTime", Node::isVisible);
+        FxAssert.verifyThat("#errorTitle", NodeMatchers.isInvisible());
+    }
+
+    /*
+        The tests regarding clicking the schedule a QuBo button below will have titles
+        properly inserted, as the title input functionality is tested above and on no failing tests above
+        can be deemed as correct and working.
+     */
+    // Click the schedule button with proper title but date before today
+    @Test
+    void scheduleBtnClickedDateBeforeToday(FxRobot robot) {
+        robot.clickOn("#title");
+        robot.write("QuBo");
+        robot.clickOn("#startDate");
+        robot.write(yesterdayStr);
+        robot.clickOn("#scheduleBtn");
+        FxAssert.verifyThat("#errorDateTime", Node::isVisible);
+        FxAssert.verifyThat("#errorTitle", NodeMatchers.isInvisible());
+    }
+
+    // Click the schedule button with proper title, date and min, but incorrect hour
+    @Test
+    void scheduleBtnClickedDateTodayTimeHourBefore(FxRobot robot) {
+        int hourBefore = LocalDateTime.now().minusHours(1).getHour();
+        robot.clickOn("#title");
+        robot.write("QuBo");
+        robot.clickOn("#startDate");
+        robot.write(todayStr);
+        hourSpinner.getValueFactory().setValue(hourBefore);
+        robot.clickOn("#scheduleBtn");
+        FxAssert.verifyThat("#errorDateTime", Node::isVisible);
+        FxAssert.verifyThat("#errorTitle", NodeMatchers.isInvisible());
+    }
+
+    // Click the schedule button with proper title, date and hour, but incorrect minute
+    @Test
+    void scheduleBtnClickedDateTodayTimeMinBefore(FxRobot robot) {
+        int hourCurrent = LocalDateTime.now().getHour();
+        int minBefore = LocalDateTime.now().minusMinutes(5).getMinute();
+        robot.clickOn("#title");
+        robot.write("QuBo");
+        robot.clickOn("#startDate");
+        robot.write(todayStr);
+        hourSpinner.getValueFactory().setValue(hourCurrent);
+        minSpinner.getValueFactory().setValue(minBefore);
+        robot.clickOn("#scheduleBtn");
+        FxAssert.verifyThat("#errorDateTime", Node::isVisible);
+        FxAssert.verifyThat("#errorTitle", NodeMatchers.isInvisible());
+    }
+
+    // Click the schedule button with proper title, date set to tomorrow
+    @Test
+    void scheduleBtnClickedDateTomorrowTimeDefault(FxRobot robot) {
+        robot.clickOn("#title");
+        robot.write("QuBo");
+        robot.clickOn("#startDate");
+        robot.write(tomorrowStr);
+        robot.clickOn("#scheduleBtn");
+        FxAssert.verifyThat(robot.window("(Created Question Board)"), WindowMatchers.isShowing());
+    }
+
+    // Click the schedule button with proper title, date, hour and minute set to current
+    @Test
+    void scheduleBtnClickedDateTodayTimeCurrent(FxRobot robot) {
+        int hourCurrent = LocalDateTime.now().getHour();
+        int minCurrent = LocalDateTime.now().getMinute();
+        robot.clickOn("#title");
+        robot.write("QuBo");
+        robot.clickOn("#startDate");
+        robot.write(todayStr);
+        hourSpinner.getValueFactory().setValue(hourCurrent);
+        minSpinner.getValueFactory().setValue(minCurrent);
+        robot.clickOn("#scheduleBtn");
+        FxAssert.verifyThat(robot.window("(Created Question Board)"), WindowMatchers.isShowing());
     }
 }
