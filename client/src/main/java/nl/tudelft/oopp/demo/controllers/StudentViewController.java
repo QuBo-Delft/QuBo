@@ -20,6 +20,10 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentViewController {
     @FXML
@@ -40,6 +44,9 @@ public class StudentViewController {
     private ToggleButton polls;
     @FXML
     private Button leaveQuBo;
+
+    private QuestionDetailsDto[] answeredQuestions;
+    private QuestionDetailsDto[] unansweredQuestions;
 
     /**
      * Code that is run upon loading StudentView.fxml
@@ -63,6 +70,31 @@ public class StudentViewController {
         sideMenu.managedProperty().bind(sideMenu.visibleProperty());
         sideScreen.setVisible(false);
         sideMenu.setVisible(false);
+    }
+
+    /**
+     * This method will be used to divide the question list into a list of answered questions,
+     * and a list of unanswered questions.
+     *
+     * @param questions The question array that needs to be divided.
+     */
+    private void divideQuestions(QuestionDetailsDto[] questions) {
+        //Initialise two lists to contain the answered and unanswered questions
+        List<QuestionDetailsDto> answered = new ArrayList<>();
+        List<QuestionDetailsDto> unanswered = new ArrayList<>();
+
+        for (QuestionDetailsDto question : questions) {
+            if (question.getAnswered() != null) {
+                answered.add(question);
+            } else {
+                unanswered.add(question);
+            }
+        }
+
+        //Convert the list of answered and unanswered questions to arrays and store them in their
+        //respective class attributes.
+        answeredQuestions = answered.toArray(new QuestionDetailsDto[0]);
+        unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
     }
 
     /**
