@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -21,9 +22,13 @@ public class JoinQuBoController {
 
     @FXML // fx:id="questionBoardCode"
     private TextField questionBoardCode;
-
     @FXML // fx:id="errorMessageLabel"
     private Label errorMessageLabel;
+    @FXML // fx:id="createBtn"
+    private Button createBtn;
+    @FXML // fx:id="joinBtn"
+    private Button joinBtn;
+
 
     private static final Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")

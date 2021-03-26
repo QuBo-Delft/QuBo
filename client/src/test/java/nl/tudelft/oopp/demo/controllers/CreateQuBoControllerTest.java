@@ -1,8 +1,6 @@
 package nl.tudelft.oopp.demo.controllers;
 
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Spinner;
 import javafx.stage.Stage;
@@ -14,13 +12,15 @@ import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.matcher.base.WindowMatchers;
 
 import java.io.IOException;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 class CreateQuBoControllerTest extends TestFxBase {
 
+    /*
+        These dates and formatted dates are used in various tests regarding scheduling a question board
+     */
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     LocalDate yesterday = LocalDate.now().minusDays(1);
@@ -31,10 +31,10 @@ class CreateQuBoControllerTest extends TestFxBase {
     String todayStr = today.format(formatter);
     String tomorrowStr = tomorrow.format(formatter);
 
-    Scene scene;
     Spinner hourSpinner;
     Spinner minSpinner;
 
+    //Initiate testing done through the TestFX library
     @Start
     void start(Stage stage) throws IOException {
         String fxmlSheet = "CreateQuBo";
