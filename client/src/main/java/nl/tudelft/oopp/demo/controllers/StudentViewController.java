@@ -9,6 +9,8 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -245,18 +247,19 @@ public class StudentViewController {
                     new ColumnConstraints(50));
 
             content.addColumn(0, upvote);
-            content.addColumn(1, new VBox(questionContent));
+            VBox questionVbox = new VBox(questionContent);
+            content.addColumn(1, questionVbox);
             content.addColumn(2, options);
-
-            //Add action listeners to options menu
-            edit.setOnAction(event -> editQuestion(questionContent));
-            delete.setOnAction(event -> deleteQuestionOption(content, options, questionId, code));
 
             //Make questionContent resize with width of cell
             double paddingWidth = questionList.getPadding().getLeft()
-                    +  questionList.getPadding().getRight();
+                    +  questionList.getPadding().getRight() + 120;
             questionContent.wrappingWidthProperty().bind(questionList.widthProperty()
-                    .subtract(paddingWidth + 120));
+                    .subtract(paddingWidth));
+
+            //Add action listeners to options menu
+            edit.setOnAction(event -> editQuestion(questionContent, questionVbox, options));
+            delete.setOnAction(event -> deleteQuestionOption(content, options, questionId, code));
 
             //Set alignment of children in the GridPane
             upvote.setAlignment(Pos.TOP_CENTER);
@@ -278,9 +281,21 @@ public class StudentViewController {
         }
     }
 
-    public void editQuestion(Text questionContent) {
-        questionContent.setVisible(false);
+    public void editQuestion(Text questionContent, VBox questionVbox, MenuButton options) {
+        options.setDisable(true);
+        TextArea input = new TextArea();
+        input.setWrapText(true);
+        input.prefWidthProperty().bind(questionContent.wrappingWidthProperty());
 
+        Button cancel = new Button("Cancel");
+        Button update = new Button("Update");
+        HBox buttons = new HBox(cancel, update);
+        buttons.setAlignment(Pos.CENTER_RIGHT);
+
+        questionContent.setVisible(false);
+        questionVbox.getChildren().add(input);
+        questionVbox.getChildren().add(buttons);
+        input.setText(questionContent.getText());
     }
 
     public void deleteQuestionOption(GridPane gridpane, MenuButton options, UUID questionId, UUID code) {
