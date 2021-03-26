@@ -288,6 +288,34 @@ public class StudentViewController {
         }
     }
 
+    /**
+     *  Add the user inputted question to the question board, add the returned question ID
+     *  to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
+     */
+    public void addQuestion() {
+        // Display a dialog that extract the user's question text,
+        // ensure it is at least 8 characters long
+        String questionText = GetTextDialog.display("Write your question here...",
+                "Ask", "Cancel", true);
+        String author = authorName == null ? "" : authorName;
+        String responseBody = ServerCommunication.addQuestion(quBo.getId(), questionText, author);
+        if (responseBody == null) {
+            AlertDialog.display("Unsuccessful Request",
+                    "The request to ask a question has failed, please try again.");
+            return;
+        }
+        QuestionCreationDto qd = gson.fromJson(responseBody, QuestionCreationDto.class);
+        UUID questionId = qd.getId();
+        UUID secretCode = qd.getSecretCode();
+
+        // Add the returned question ID to the askedQuestionList
+        askedQuestionList.add(questionId);
+        // Map the secretCode as the value to the question ID as the key
+        secretCodeMapQuestionId.put(questionId, secretCode);
+
+        // TODO: Update the view of questions
+    }
+
     public void editQuestion() {
 
     }
