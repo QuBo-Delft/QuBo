@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.Pane;
@@ -20,6 +21,9 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
+import nl.tudelft.oopp.demo.views.ConfirmationDialog;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
@@ -30,9 +34,11 @@ import java.util.List;
 
 public class StudentViewController {
     @FXML
-    private ListView<Question> questionList;
+    private HBox topBar;
     @FXML
-    private HBox sideScreen;
+    private StackPane content;
+    @FXML
+    private ListView<Question> questionList;
     @FXML
     private VBox sideBar;
     @FXML
@@ -47,6 +53,8 @@ public class StudentViewController {
     private ToggleButton polls;
     @FXML
     private Button leaveQuBo;
+
+    private boolean sideMenuOpen;
 
     private QuestionBoardDetailsDto quBo;
     private QuestionDetailsDto[] answeredQuestions;
@@ -70,10 +78,9 @@ public class StudentViewController {
         displayQuestions();
 
         //Hide side menu and sidebar
-        sideScreen.managedProperty().bind(sideScreen.visibleProperty());
         sideBar.managedProperty().bind(sideBar.visibleProperty());
         sideMenu.managedProperty().bind(sideMenu.visibleProperty());
-        sideScreen.setVisible(false);
+        sideBar.setVisible(false);
         sideMenu.setVisible(false);
     }
 
@@ -91,8 +98,8 @@ public class StudentViewController {
             divideQuestions(null);
         } else {
             Gson gson = new GsonBuilder()
-                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
-                    .create();
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+                .create();
             QuestionDetailsDto[] questions = gson.fromJson(jsonQuestions, QuestionDetailsDto[].class);
 
             //Divide the questions over two lists and sort them.
@@ -141,14 +148,19 @@ public class StudentViewController {
     }
 
     /**
-     * Toggles the visibility of the sideScreen.
+     * Toggles the visibility of the sideBar.
      */
-    public void showHideSideScreen() {
-        if (sideScreen.isVisible() && sideMenu.isVisible()) {
-            sideScreen.setVisible(false);
-            paceVotePane.setVisible(true);
+    public void showHideSideBar() {
+        if (hamburger.isSelected()) {
+            if (sideMenuOpen) {
+                paceVotePane.setVisible(false);
+            }
+            sideMenu.setVisible(sideMenuOpen);
+            sideBar.setVisible(true);
         } else {
-            sideScreen.setVisible(!sideScreen.isVisible());
+            paceVotePane.setVisible(true);
+            sideMenu.setVisible(false);
+            sideBar.setVisible(false);
         }
     }
 
@@ -162,10 +174,12 @@ public class StudentViewController {
             showAnsQuestions();
         } else if (!sideMenu.isVisible()) {
             paceVotePane.setVisible(false);
+            sideMenuOpen = true;
             showAnsQuestions();
         } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
+            sideMenuOpen = false;
             paceVotePane.setVisible(true);
         }
     }
@@ -191,12 +205,13 @@ public class StudentViewController {
             showPolls();
         } else if (!sideMenu.isVisible()) {
             paceVotePane.setVisible(false);
+            sideMenuOpen = true;
             showPolls();
         } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
+            sideMenuOpen = false;
             paceVotePane.setVisible(true);
-
         }
     }
 
@@ -209,6 +224,20 @@ public class StudentViewController {
         sideMenu.getChildren().add(title);
 
         //TODO: Fetch polls and display in a ListView
+    }
+
+    /**
+     * Method that runs when the Leave button is clicked.
+     * Pops up a confirmation dialogue.
+     * If the user clicks yes -> Question board closes and user returns to the JoinQuBo page
+     * If the user clicks no -> Confirmation dialogue closes and user returns to the question board
+     */
+    public void leaveQuBo() {
+        boolean backHome = ConfirmationDialog.display("Leave Question Board?",
+            "You will have to use your code to join again.");
+        if (backHome) {
+            SceneLoader.backToHome((Stage) leaveQuBo.getScene().getWindow());
+        }
     }
 
     private static class Question {

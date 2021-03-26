@@ -30,8 +30,8 @@ public class SceneDisplay extends Application {
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader();
 
-        // By giving the resource path, it is able to display an specific fxml file
-        URL xmlUrl = getClass().getResource("/javafx/QuBoCodes.fxml");
+        // By giving the resource path, it is able to display a specific fxml file
+        URL xmlUrl = getClass().getResource("/fxmlsheets/StudentView.fxml");
         loader.setLocation(xmlUrl);
         Parent root = loader.load();
 
