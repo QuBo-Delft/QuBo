@@ -1,7 +1,7 @@
 package nl.tudelft.oopp.demo.controllers;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -24,7 +24,13 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.demo.views.ConfirmationDialog;
+import nl.tudelft.oopp.demo.communication.ServerCommunication;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.demo.utilities.sorting.Sorting;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentViewController {
     @FXML
@@ -50,27 +56,158 @@ public class StudentViewController {
 
     private boolean sideMenuOpen;
 
+    private QuestionBoardDetailsDto quBo;
+    private QuestionDetailsDto[] answeredQuestions;
+    private QuestionDetailsDto[] unansweredQuestions;
+
+    /**
+     * Method that sets the QuestionBoardDetailsDto of the student view.
+     *
+     * @param quBo  The QuestionBoardDetailsDto of the question board that the student joined.
+     */
+    public void setQuBo(QuestionBoardDetailsDto quBo) {
+        this.quBo = quBo;
+    }
+
     /**
      * Code that is run upon loading StudentView.fxml
      */
     @FXML
     private void initialize() {
-        //Get questions
-        ObservableList<Question> data = FXCollections.observableArrayList();
-        data.addAll(new Question(2, "What is life?"),
-                new Question(42,"Trolley problem."
-                        + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                        + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                        + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
-
-        questionList.setItems(data);
-        questionList.setCellFactory(listView -> new QuestionListCell());
+        //Display the questions
+        displayQuestions();
 
         //Hide side menu and sidebar
         sideBar.managedProperty().bind(sideBar.visibleProperty());
         sideMenu.managedProperty().bind(sideMenu.visibleProperty());
         sideBar.setVisible(false);
         sideMenu.setVisible(false);
+    }
+
+    /**
+     * Method that displays the questions that are in the question board on the screen. Answered questions
+     * will be sorted by the time at which they were answered, and unanswered questions will be sorted by
+     * the number of upvotes they have received.
+     */
+    private void displayQuestions() {
+        //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
+        //not null.
+        String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
+
+        if (jsonQuestions == null) {
+            divideQuestions(null);
+        } else {
+            Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+                .create();
+            QuestionDetailsDto[] questions = gson.fromJson(jsonQuestions, QuestionDetailsDto[].class);
+
+            //Divide the questions over two lists and sort them.
+            divideQuestions(questions);
+            if (unansweredQuestions != null) {
+                Sorting.sortOnUpvotes(unansweredQuestions);
+            }
+            if (answeredQuestions != null) {
+                Sorting.sortOnTimeAnswered(answeredQuestions);
+            }
+        }
+        //TODO: Display the questions in the list view by accessing class attributes.
+    }
+
+    /**
+     * This method will be used to divide the question list into a list of answered questions,
+     * and a list of unanswered questions.
+     *
+     * @param questions The question array that needs to be divided.
+     */
+    private void divideQuestions(QuestionDetailsDto[] questions) {
+        //If there are no questions, initialise the questions lists with empty arrays and return.
+        if (questions == null || questions.length == 0) {
+            answeredQuestions = new QuestionDetailsDto[0];
+            unansweredQuestions = new QuestionDetailsDto[0];
+            return;
+        }
+
+        //Initialise two lists to contain the answered and unanswered questions.
+        List<QuestionDetailsDto> answered = new ArrayList<>();
+        List<QuestionDetailsDto> unanswered = new ArrayList<>();
+
+        //Divide the questions over the two lists.
+        for (QuestionDetailsDto question : questions) {
+            if (question.getAnswered() != null) {
+                answered.add(question);
+            } else {
+                unanswered.add(question);
+            }
+        }
+
+        //Convert the list of answered and unanswered questions to arrays and store them in their
+        //respective class attributes.
+        answeredQuestions = answered.toArray(new QuestionDetailsDto[0]);
+        unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
+    }
+
+    /**
+     * Method that displays the questions that are in the question board on the screen. Answered questions
+     * will be sorted by the time at which they were answered, and unanswered questions will be sorted by
+     * the number of upvotes they have received.
+     */
+    private void displayQuestions() {
+        //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
+        //not null.
+        String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
+
+        if (jsonQuestions == null) {
+            divideQuestions(null);
+        } else {
+            Gson gson = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+                    .create();
+            QuestionDetailsDto[] questions = gson.fromJson(jsonQuestions, QuestionDetailsDto[].class);
+
+            //Divide the questions over two lists and sort them.
+            divideQuestions(questions);
+            if (unansweredQuestions != null) {
+                Sorting.sortOnUpvotes(unansweredQuestions);
+            }
+            if (answeredQuestions != null) {
+                Sorting.sortOnTimeAnswered(answeredQuestions);
+            }
+        }
+        //TODO: Display the questions in the list view by accessing class attributes.
+    }
+
+    /**
+     * This method will be used to divide the question list into a list of answered questions,
+     * and a list of unanswered questions.
+     *
+     * @param questions The question array that needs to be divided.
+     */
+    private void divideQuestions(QuestionDetailsDto[] questions) {
+        //If there are no questions, initialise the questions lists with empty arrays and return.
+        if (questions == null || questions.length == 0) {
+            answeredQuestions = new QuestionDetailsDto[0];
+            unansweredQuestions = new QuestionDetailsDto[0];
+            return;
+        }
+
+        //Initialise two lists to contain the answered and unanswered questions.
+        List<QuestionDetailsDto> answered = new ArrayList<>();
+        List<QuestionDetailsDto> unanswered = new ArrayList<>();
+
+        //Divide the questions over the two lists.
+        for (QuestionDetailsDto question : questions) {
+            if (question.getAnswered() != null) {
+                answered.add(question);
+            } else {
+                unanswered.add(question);
+            }
+        }
+
+        //Convert the list of answered and unanswered questions to arrays and store them in their
+        //respective class attributes.
+        answeredQuestions = answered.toArray(new QuestionDetailsDto[0]);
+        unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
     }
 
     /**
