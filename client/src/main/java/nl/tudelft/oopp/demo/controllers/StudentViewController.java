@@ -148,69 +148,6 @@ public class StudentViewController {
     }
 
     /**
-     * Method that displays the questions that are in the question board on the screen. Answered questions
-     * will be sorted by the time at which they were answered, and unanswered questions will be sorted by
-     * the number of upvotes they have received.
-     */
-    private void displayQuestions() {
-        //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
-        //not null.
-        String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
-
-        if (jsonQuestions == null) {
-            divideQuestions(null);
-        } else {
-            Gson gson = new GsonBuilder()
-                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
-                    .create();
-            QuestionDetailsDto[] questions = gson.fromJson(jsonQuestions, QuestionDetailsDto[].class);
-
-            //Divide the questions over two lists and sort them.
-            divideQuestions(questions);
-            if (unansweredQuestions != null) {
-                Sorting.sortOnUpvotes(unansweredQuestions);
-            }
-            if (answeredQuestions != null) {
-                Sorting.sortOnTimeAnswered(answeredQuestions);
-            }
-        }
-        //TODO: Display the questions in the list view by accessing class attributes.
-    }
-
-    /**
-     * This method will be used to divide the question list into a list of answered questions,
-     * and a list of unanswered questions.
-     *
-     * @param questions The question array that needs to be divided.
-     */
-    private void divideQuestions(QuestionDetailsDto[] questions) {
-        //If there are no questions, initialise the questions lists with empty arrays and return.
-        if (questions == null || questions.length == 0) {
-            answeredQuestions = new QuestionDetailsDto[0];
-            unansweredQuestions = new QuestionDetailsDto[0];
-            return;
-        }
-
-        //Initialise two lists to contain the answered and unanswered questions.
-        List<QuestionDetailsDto> answered = new ArrayList<>();
-        List<QuestionDetailsDto> unanswered = new ArrayList<>();
-
-        //Divide the questions over the two lists.
-        for (QuestionDetailsDto question : questions) {
-            if (question.getAnswered() != null) {
-                answered.add(question);
-            } else {
-                unanswered.add(question);
-            }
-        }
-
-        //Convert the list of answered and unanswered questions to arrays and store them in their
-        //respective class attributes.
-        answeredQuestions = answered.toArray(new QuestionDetailsDto[0]);
-        unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
-    }
-
-    /**
      * Toggles the visibility of the sideBar.
      */
     public void showHideSideBar() {
