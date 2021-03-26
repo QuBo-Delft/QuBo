@@ -114,4 +114,19 @@ public class GetTextDialog {
         // Return user's text input
         return userInput;
     }
+
+    /**
+     * This method checks if the user input is at least 8 characters long.
+     *
+     * @param messageLabel  The message label that displays a message.
+     * @return True if and only if the user input is at least 8 characters long.
+     */
+    private static boolean isAtLeastEightChars(Label messageLabel) {
+        if (userInput == null || userInput.length() < 8) {
+            // The user input is not at least 8 characters long, display an error massage
+            messageLabel.setText("Error: the text has to be at least 8 characters long");
+            return false;
+        }
+        return true;
+    }
 }
