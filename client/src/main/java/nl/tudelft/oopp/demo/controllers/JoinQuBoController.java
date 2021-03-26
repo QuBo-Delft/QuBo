@@ -20,13 +20,13 @@ import java.util.UUID;
  */
 public class JoinQuBoController {
 
-    @FXML // fx:id="questionBoardCode"
+    @FXML
     private TextField questionBoardCode;
-    @FXML // fx:id="errorMessageLabel"
+    @FXML
     private Label errorMessageLabel;
-    @FXML // fx:id="createBtn"
+    @FXML
     private Button createBtn;
-    @FXML // fx:id="joinBtn"
+    @FXML
     private Button joinBtn;
 
 

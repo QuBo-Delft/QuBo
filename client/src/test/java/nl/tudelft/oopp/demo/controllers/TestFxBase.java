@@ -34,7 +34,6 @@ public abstract class TestFxBase {
 
         stage.setScene(new Scene(root));
         stage.show();
-        stage.toFront();
 
         return stage.getScene();
     }
