@@ -57,10 +57,11 @@ public class ServerCommunicationTest {
         QuestionBoardCreationBindingModel board =
                 new QuestionBoardCreationBindingModel("Title", startTimeStamp);
 
-        // Act
         httpClientMock.onPost(subUrl + "api/board")
                 .doReturnStatus(200);
         ServerCommunication.setClient(httpClientMock);
+
+        // Act
         String responseBody = ServerCommunication.createBoardRequest(board);
         
         // Assert
@@ -78,11 +79,11 @@ public class ServerCommunicationTest {
         QuestionBoardCreationBindingModel board =
                 new QuestionBoardCreationBindingModel("Title", startTimeStamp);
 
-        // Act
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "api/board")
                 .doReturnStatus(400).doReturn(failureToken);
 
+        // Act
         String responseBody = ServerCommunication.createBoardRequest(board);
 
         // Assert
@@ -100,10 +101,10 @@ public class ServerCommunicationTest {
         QuestionBoardCreationBindingModel board =
                 new QuestionBoardCreationBindingModel("Title", startTimeStamp);
 
-        // Act
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "api/board").doReturn(successToken);
 
+        // Act
         String responseBody = ServerCommunication.createBoardRequest(board);
 
         // Assert
@@ -117,11 +118,12 @@ public class ServerCommunicationTest {
     // statusCode 200.
     @Test
     public void testCloseBoardRequest() {
-        // Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPatch(subUrl + "api/board/" + uuid1 + "/close?code=" + uuid3)
                 .doReturnStatus(200);
 
+        // Act
         String responseBody = ServerCommunication.closeBoardRequest(uuid1, uuid3);
 
         // Assert
@@ -135,11 +137,12 @@ public class ServerCommunicationTest {
     // moderator code, and receiving statusCode 400 and failureToken as response body.
     @Test
     public void testCloseBoardRequestInvalidCode() {
-        // Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPatch(subUrl + "api/board/" + uuid1 + "/close?code=" + uuid3)
                 .doReturnStatus(400).doReturn(failureToken);
 
+        // Act
         String responseBody = ServerCommunication.closeBoardRequest(uuid1, uuid3);
 
         // Assert
@@ -154,11 +157,12 @@ public class ServerCommunicationTest {
     // as response body.
     @Test
     public void testCloseBoardRequestGivingCorrectResponseBody() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPatch(subUrl + "api/board/" + uuid1 + "/close?code=" + uuid3)
                 .doReturn(successToken);
 
+        // Act
         String responseBody = ServerCommunication.closeBoardRequest(uuid1, uuid3);
 
         // Assert
@@ -172,10 +176,10 @@ public class ServerCommunicationTest {
     // after being called with a valid board ID and receiving statusCode 200.
     @Test
     public void testRetrieveBoardDetails() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1).doReturnStatus(200);
-
+        // Act
         String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
         
         // Assert
@@ -188,11 +192,11 @@ public class ServerCommunicationTest {
     // and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testRetrieveBoardDetailsThroughInvalidBoardId() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1)
                 .doReturnStatus(400);
-
+        // Act
         String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
 
         // Assert
@@ -205,12 +209,11 @@ public class ServerCommunicationTest {
     // with a valid board ID, and receiving statusCode 200 and the successToken as the response body.
     @Test
     public void testRetrieveBoardDetailsGivingCorrectResponseBody() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
-
         httpClientMock.onGet(subUrl + "api/board/" + uuid1).doReturn(successToken);
+        // Act
         String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
-
         // Assert
         assertEquals(successToken, responseBody);
         // Verify if the request was truly made
@@ -221,13 +224,12 @@ public class ServerCommunicationTest {
     // after being called with a valid moderator code and receiving statusCode 200.
     @Test
     public void testRetrieveBoardDetailsThroughModCode() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1)
                 .doReturnStatus(200);
-
+        // Act
         String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
-
         // Assert
         assertNotNull(responseBody);
         // Verify if the request was truly made
@@ -239,13 +241,12 @@ public class ServerCommunicationTest {
     // invalid moderator code, and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testRetrieveBoardDetailsThroughInValidModCode() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1)
                 .doReturnStatus(404).doReturn(failureToken);
-
+        // Act
         String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
-
         // Assert
         assertNull(responseBody);
         // Verify if the request was truly made
@@ -256,12 +257,11 @@ public class ServerCommunicationTest {
     // with a valid moderator code, and receiving statusCode 200 and the successToken as the response body.
     @Test
     public void testRetrieveBoardDetailsThroughModCodeGivingCorrectResponseBody() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1).doReturn(successToken);
-
+        // Act
         String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
-
         // Assert
         assertEquals(successToken, responseBody);
         // Verify if the request was truly made
@@ -276,13 +276,12 @@ public class ServerCommunicationTest {
     // will be returned.
     @Test
     public void testRetrieveBoardDetailsThroughInvalidBoardIdAndValidModCode() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
-
         httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1)
                 .doReturnStatus(200);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1).doReturnStatus(404);
-
+        // Act
         String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
 
         // Assert
@@ -297,11 +296,10 @@ public class ServerCommunicationTest {
     @Test
     public void testRetrieveQuestionsWithInvalidBoardId() {
         // Arrange
-        // Act
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/questions")
                 .doReturnStatus(400).doReturn(failureToken);
-
+        // Act
         String responseBody = ServerCommunication.retrieveQuestions(uuid1);
 
         // Assert
@@ -314,12 +312,11 @@ public class ServerCommunicationTest {
     // board ID, and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testRetrieveQuestionsNotFound() {
-        // Arrange
         // Act
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/questions")
                 .doReturnStatus(404).doReturn(failureToken);
-
+        // Act
         String responseBody = ServerCommunication.retrieveQuestions(uuid1);
 
         // Assert
@@ -338,11 +335,10 @@ public class ServerCommunicationTest {
         questions[0] = new QuestionDetailsDto();
         questions[1] = new QuestionDetailsDto();
         String questionsStr = gson.toJson(questions);
-
-        // Act
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/questions")
                 .doReturn(questionsStr);
+        // Act
         String responseBody = ServerCommunication.retrieveQuestions(uuid1);
 
         // Assert
@@ -355,11 +351,11 @@ public class ServerCommunicationTest {
     // with a valid board ID, and receiving statusCode 200.
     @Test
     public void testAddQuestionValidBoard() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/question")
                 .doReturnStatus(200);
-
+        // Act
         String responseBody = ServerCommunication
                 .addQuestion(uuid1, "Why is CO so confusing?", "Koen");
 
@@ -375,11 +371,11 @@ public class ServerCommunicationTest {
     // the response body.
     @Test
     public void testAddQuestionInvalidBoard() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/question")
                 .doReturnStatus(404).doReturn(failureToken);
-
+        // Act
         String responseBody = ServerCommunication
                 .addQuestion(uuid1, "Why is CO so confusing?", "Koen");
 
@@ -395,11 +391,11 @@ public class ServerCommunicationTest {
     // as the response body.
     @Test
     public void testAddQuestionGivingCorrectResponseBody() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/question")
                 .doReturn(successToken);
-
+        // Act
         String responseBody = ServerCommunication
                 .addQuestion(uuid1, "Why is CO so confusing?", "Koen");
 
@@ -414,11 +410,11 @@ public class ServerCommunicationTest {
     // with a valid questionId and moderator code and receiving statusCode 200.
     @Test
     public void testEditQuestionWithValidCode() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPut(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturnStatus(200);
-
+        // Act
         String responseBody = ServerCommunication
                 .editQuestion(uuid1, uuid2, "Why is CO taught so clear");
 
@@ -434,11 +430,11 @@ public class ServerCommunicationTest {
     // response body.
     @Test
     public void testEditQuestionWithInvalidCode() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPut(subUrl + "/api/question/" + uuid1 + "?code=" + uuid3)
                 .doReturnStatus(404).doReturn(failureToken);
-
+        // Act
         String responseBody = ServerCommunication
                 .editQuestion(uuid1, uuid3, "Why is CO so clear");
 
@@ -454,11 +450,11 @@ public class ServerCommunicationTest {
     // successToken as the response body.
     @Test
     public void testEditQuestionGivingCorrectResponseBody() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPut(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturn(successToken);
-
+        // Act
         String responseBody = ServerCommunication
                 .editQuestion(uuid1, uuid2, "Why is CO so clear");
 
@@ -474,11 +470,11 @@ public class ServerCommunicationTest {
     // with a valid questionId and moderator code and receiving statusCode 200.
     @Test
     public void testDeleteQuestionValidRequest() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturnStatus(200);
-
+        // Act
         String responseBody = ServerCommunication.deleteQuestion(uuid1, uuid2);
 
         // Assert
@@ -492,11 +488,11 @@ public class ServerCommunicationTest {
     // questionId and moderator code and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testDeleteQuestionInvalidQuBo() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturnStatus(404).doReturn(failureToken);
-
+        // Act
         String responseBody = ServerCommunication.deleteQuestion(uuid1, uuid2);
 
         // Assert
@@ -511,11 +507,11 @@ public class ServerCommunicationTest {
     // as the response body.
     @Test
     public void testDeleteQuestionGivingCorrectResponseBody() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturn(successToken);
-
+        // Act
         String responseBody = ServerCommunication.deleteQuestion(uuid1, uuid2);
 
         // Assert
@@ -529,11 +525,11 @@ public class ServerCommunicationTest {
     // with a valid questionId and moderator code and receiving statusCode 200.
     @Test
     public void testMarkQuestionAsAnsweredThroughValidRequest() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPatch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2)
                 .doReturnStatus(200);
-
+        // Act
         String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
 
         // Assert
@@ -547,11 +543,11 @@ public class ServerCommunicationTest {
     // questionId and moderator code and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testMarkQuestionAsAnsweredThroughInvalidRequest() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPatch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2)
                 .doReturnStatus(404).doReturn(failureToken);
-
+        // Act
         String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
 
         // Assert
@@ -566,11 +562,11 @@ public class ServerCommunicationTest {
     // as the response body.
     @Test
     public void testMarkQuestionAsAnsweredGivingCorrectResponseBody() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPatch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2)
                 .doReturn(successToken);
-
+        // Act
         String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
 
         // Assert
@@ -584,11 +580,11 @@ public class ServerCommunicationTest {
     // with a valid questionId and receiving statusCode 200.
     @Test
     public void testAddQuestionVoteThroughValidRequest() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "/api/question/" + uuid1 + "/vote")
                 .doReturnStatus(200);
-
+        // Act
         String responseBody = ServerCommunication.addQuestionVote(uuid1);
 
         // Assert
@@ -601,11 +597,11 @@ public class ServerCommunicationTest {
     // questionId and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testAddQuestionVoteThroughInvalidRequest() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "/api/question/" + uuid3 + "/vote")
                 .doReturnStatus(404).doReturn(failureToken);
-
+        // Act
         String responseBody = ServerCommunication.addQuestionVote(uuid3);
 
         // Assert
@@ -618,11 +614,11 @@ public class ServerCommunicationTest {
     // with a valid questionId and receiving statusCode 200 and the successToken as the response body.
     @Test
     public void testAddQuestionVoteGivingCorrectResponseBody() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "/api/question/" + uuid3 + "/vote")
                 .doReturn(successToken);
-
+        // Act
         String responseBody = ServerCommunication.addQuestionVote(uuid3);
 
         // Assert
@@ -640,11 +636,10 @@ public class ServerCommunicationTest {
         qd.setId(uuid2);
         String qdStr = gson.toJson(qd);
 
-        // Act
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2)
                 .doReturn(qdStr).doReturnStatus(200);
-
+        // Act
         String responseBody = ServerCommunication.deleteQuestionVote(uuid1, uuid2);
 
         // Assert
@@ -658,11 +653,11 @@ public class ServerCommunicationTest {
     // questionId and voteId and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testDeleteQuestionVoteThroughInvalidRequest() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2)
                 .doReturnStatus(404).doReturn(failureToken);
-
+        // Act
         String responseBody = ServerCommunication.deleteQuestionVote(uuid1, uuid2);
 
         // Assert
@@ -680,11 +675,11 @@ public class ServerCommunicationTest {
         QuestionVoteDetailsDto qd = new QuestionVoteDetailsDto();
         qd.setId(uuid3);
         String qdStrReturned = gson.toJson(qd);
-        // Act
+
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2)
                 .doReturn(qdStrReturned);
-
+        // Act
         String responseBody = ServerCommunication.deleteQuestionVote(uuid1, uuid2);
 
         // Assert
@@ -698,13 +693,13 @@ public class ServerCommunicationTest {
     // with a valid boardId and receiving statusCode 200.
     @Test
     public void testAddPaceVoteThroughValidRequest() {
-        // Arrange and Act
+        // Arrange
         PaceType pt = PaceType.TOO_FAST;
 
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/pace")
                 .doReturnStatus(200);
-
+        // Act
         String responseBody = ServerCommunication.addPaceVote(uuid1, pt);
 
         // Assert
@@ -717,13 +712,13 @@ public class ServerCommunicationTest {
     // boardId and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testAddPaceVoteThroughInvalidRequest() {
-        // Arrange and Act
+        // Arrange
         PaceType pt = PaceType.TOO_FAST;
 
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/pace")
                 .doReturnStatus(404).doReturn(failureToken);
-
+        // Act
         String responseBody = ServerCommunication.addPaceVote(uuid1, pt);
 
         // Assert
@@ -736,13 +731,13 @@ public class ServerCommunicationTest {
     // valid boardId and receiving statusCode 200 and the successToken as the response body.
     @Test
     public void testAddPaceVoteGivingCorrectResponseBody() {
-        // Arrange and Act
+        // Arrange
         PaceType pt = PaceType.TOO_FAST;
 
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/pace")
                 .doReturn(successToken);
-
+        // Act
         String responseBody = ServerCommunication.addPaceVote(uuid1, pt);
 
         // Assert
@@ -755,7 +750,7 @@ public class ServerCommunicationTest {
     // with a valid boardId and paceVoteId, and receiving statusCode 200.
     @Test
     public void testDeletePaceVoteThroughValidRequest() {
-        // Arrange and Act
+        // Arrange
         PaceVoteDetailsDto pd = new PaceVoteDetailsDto();
         pd.setId(uuid2);
         String pdStringReturned = gson.toJson(pd);
@@ -763,7 +758,7 @@ public class ServerCommunicationTest {
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onDelete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2)
                 .doReturn(pdStringReturned).doReturnStatus(200);
-
+        // Act
         String responseBody = ServerCommunication.deletePaceVote(uuid1, uuid2);
 
         // Assert
@@ -777,11 +772,11 @@ public class ServerCommunicationTest {
     // paceVoteId and receiving statusCode 404 and failureToken as the response body.
     @Test
     public void testDeletePaceVoteThroughInvalidRequest() {
-        // Arrange and Act
+        // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onDelete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2)
                 .doReturnStatus(404);
-
+        // Act
         String responseBody = ServerCommunication.deletePaceVote(uuid1, uuid2);
 
         // Assert
@@ -795,7 +790,7 @@ public class ServerCommunicationTest {
     // and paceVoteId and receiving statusCode 200 and a response body with the wrong deletedVote.
     @Test
     public void testDeletePaceVoteGivingIncorrectResponseBody() {
-        // Arrange and Act
+        // Arrange
         PaceVoteDetailsDto pd = new PaceVoteDetailsDto();
         pd.setId(uuid3);
         String pdStringReturned = gson.toJson(pd);
@@ -803,7 +798,7 @@ public class ServerCommunicationTest {
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onDelete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2)
                 .doReturn(pdStringReturned).doReturnStatus(200);
-
+        // Act
         String responseBody = ServerCommunication.deletePaceVote(uuid1, uuid2);
 
         // Assert
