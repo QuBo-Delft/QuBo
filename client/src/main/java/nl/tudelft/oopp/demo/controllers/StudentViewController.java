@@ -28,6 +28,8 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.demo.views.AlertDialog;
 import nl.tudelft.oopp.demo.views.ConfirmationDialog;
@@ -37,6 +39,7 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.utilities.sorting.Sorting;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -68,15 +71,18 @@ public class StudentViewController {
     private ToggleButton polls;
     @FXML
     private Button leaveQuBo;
+    private boolean sideMenuOpen = false;
 
-    private boolean sideMenuOpen;
-
-    private HashSet<UUID> upvoteList = new HashSet<>();
-    private HashSet<UUID> askedQuestionList = new HashSet<>();
+    private HashMap<UUID, UUID> questionMapUpvote = new HashMap<>();
+    private HashMap<UUID, UUID> askedQuestionList = new HashMap<>();
 
     private QuestionBoardDetailsDto quBo;
     private QuestionDetailsDto[] answeredQuestions;
     private QuestionDetailsDto[] unansweredQuestions;
+
+    private static final Gson gson = new GsonBuilder()
+        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+        .create();
 
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
@@ -264,6 +270,7 @@ public class StudentViewController {
                     .subtract(paddingWidth));
 
             //Add action listeners to options menu
+            upvoteTriangle.setOnAction(event -> upvoteQuestion(questionId, upvoteTriangle));
             edit.setOnAction(event -> editQuestion(questionContent, questionVbox, options, questionId, code));
             delete.setOnAction(event -> deleteQuestionOption(content, options, questionId, code));
 
@@ -283,6 +290,28 @@ public class StudentViewController {
                 setGraphic(content);
             } else {
                 setGraphic(null);
+            }
+        }
+    }
+
+    public void upvoteQuestion(UUID questionId, ToggleButton upvoteTriangle) {
+        if (upvoteTriangle.isSelected()) {
+            String response = ServerCommunication.addQuestionVote(questionId);
+
+            if (response == null) {
+                AlertDialog.display("", "Upvote failed.");
+                upvoteTriangle.setSelected(false);
+            } else {
+                QuestionVoteDetailsDto dto = gson.fromJson(response, QuestionVoteDetailsDto.class);
+                questionMapUpvote.put(questionId, dto.getId());
+            }
+        } else {
+            String response = ServerCommunication.deleteQuestionVote(questionId,
+                questionMapUpvote.get(questionId));
+
+            if (response == null) {
+                AlertDialog.display("", "Un-upvoting failed.");
+                upvoteTriangle.setSelected(true);
             }
         }
     }
