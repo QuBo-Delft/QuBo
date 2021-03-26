@@ -294,23 +294,40 @@ public class StudentViewController {
         }
     }
 
+    /**
+     * This method is run when the upvote button is clicked.
+     * When the ToggleButton is activated: Sends a request to the server to add a vote.
+     * When the ToggleButton is deactivated: Sends a request to the server to remove the vote.
+     *
+     * @param questionId        UUID of the question that the user decides to upvote.
+     * @param upvoteTriangle    The ToggleButton which the user clicks to add a vote.
+     */
     public void upvoteQuestion(UUID questionId, ToggleButton upvoteTriangle) {
         if (upvoteTriangle.isSelected()) {
+            //Code that runs when the button is activated
+            //Send a request to the server and store the response
             String response = ServerCommunication.addQuestionVote(questionId);
 
+            //Check if the response is null
+            //If the response is not null store the question UUID with the vote UUID in the HashMap
             if (response == null) {
                 AlertDialog.display("", "Upvote failed.");
+                //Unselect the button as the upvote action failed
                 upvoteTriangle.setSelected(false);
             } else {
                 QuestionVoteDetailsDto dto = gson.fromJson(response, QuestionVoteDetailsDto.class);
                 questionMapUpvote.put(questionId, dto.getId());
             }
         } else {
+            //Code that runs when the button is deactivated
+            //Send a request to the server and store the response
             String response = ServerCommunication.deleteQuestionVote(questionId,
                 questionMapUpvote.get(questionId));
 
+            //Check if the response is null
             if (response == null) {
                 AlertDialog.display("", "Un-upvoting failed.");
+                //Reselect the button as the un-upvote action failed
                 upvoteTriangle.setSelected(true);
             }
         }
