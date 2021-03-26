@@ -94,28 +94,33 @@ public class SceneLoader {
         // Create an FXMLLoader of StudentView.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlsheets/StudentView.fxml"));
 
-        //Set the controller of the student view.
-        StudentViewController controller = new StudentViewController();
-        controller.setQuBo(qd);
-        loader.setController(controller);
-
-        Parent root = null;
+        // Create a new stage to load the student view
+        Stage newStage = new Stage();
+        Scene newScene = null;
+        // Check if file can be loaded
         try {
-            root = loader.load();
+            newScene = new Scene(loader.load());
+            newStage.setScene(newScene);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // TODO: need a method to update data in studentView
-
-        // Check if root is null
-        if (root == null) {
+        // Check if newScene is null
+        if (newScene == null) {
             AlertDialog.display("", "Unable to display the student view");
             return;
         }
 
-        //Display the new scene
-        currentStage.setScene(new Scene(root));
+        // Get controller and initialize qb
+        StudentViewController controller = loader.getController();
+        loader.setController(controller);
+        controller.setQuBo(qd);
+
+        // TODO: need a method to update data in studentView
+
+        // Close current stage and show new stage
+        currentStage.close();
+        newStage.show();
     }
 
     /**

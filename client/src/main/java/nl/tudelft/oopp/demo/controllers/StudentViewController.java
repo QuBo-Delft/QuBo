@@ -2,6 +2,10 @@ package nl.tudelft.oopp.demo.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -35,6 +39,10 @@ import java.util.List;
 public class StudentViewController {
     @FXML
     private HBox topBar;
+    @FXML
+    public Button boardInfo;
+    @FXML
+    public Button helpDoc;
     @FXML
     private StackPane content;
     @FXML
@@ -74,6 +82,7 @@ public class StudentViewController {
      */
     @FXML
     private void initialize() {
+        testQuestions();
         //Display the questions
         displayQuestions();
 
@@ -84,6 +93,18 @@ public class StudentViewController {
         sideMenu.setVisible(false);
     }
 
+    private void testQuestions() {
+        ObservableList<Question> data = FXCollections.observableArrayList();
+        data.addAll(new Question(2, "What is life?"),
+            new Question(42,"Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
+
+        questionList.setItems(data);
+        questionList.setCellFactory(listView -> new QuestionListCell());
+    }
+
     /**
      * Method that displays the questions that are in the question board on the screen. Answered questions
      * will be sorted by the time at which they were answered, and unanswered questions will be sorted by
@@ -92,6 +113,10 @@ public class StudentViewController {
     private void displayQuestions() {
         //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
         //not null.
+        if (quBo == null) {
+            divideQuestions(null);
+            return;
+        }
         String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
 
         if (jsonQuestions == null) {
@@ -240,6 +265,12 @@ public class StudentViewController {
         }
     }
 
+    public void displayBoardInfo() {
+    }
+
+    public void displayHelpDoc() {
+    }
+
     private static class Question {
         private int upvoteNumber;
         private String questionContent;
@@ -276,7 +307,9 @@ public class StudentViewController {
 
             //Create options menu with edit and delete options
             MenuButton options = new MenuButton();
-            options.getItems().addAll(new MenuItem("Edit"), new MenuItem("Delete"));
+            MenuItem edit = new MenuItem("Edit");
+            MenuItem delete = new MenuItem("Delete");
+            options.getItems().addAll(edit, delete);
 
             //Create GridPane and add nodes to it
             content = new GridPane();
