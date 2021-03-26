@@ -27,6 +27,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
+import nl.tudelft.oopp.demo.views.AlertDialog;
 import nl.tudelft.oopp.demo.views.ConfirmationDialog;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
@@ -189,6 +190,7 @@ public class StudentViewController {
 
     private static class Question {
         private UUID questionId;
+        private UUID code;
         private int upvoteNumber;
         private String questionContent;
 
@@ -209,6 +211,7 @@ public class StudentViewController {
     private class QuestionListCell extends ListCell<Question> {
         private GridPane content;
         private UUID questionId;
+        private UUID code;
         private Label upvoteNumber;
         private Text questionContent;
 
@@ -223,14 +226,12 @@ public class StudentViewController {
             upvote.setSpacing(5);
             upvote.setAlignment(Pos.CENTER);
 
-            //Create options menu with edit and delete options
-            MenuButton options = new MenuButton();
+            //Create the edit and delete menu items
             MenuItem edit = new MenuItem("Edit");
             MenuItem delete = new MenuItem("Delete");
+            //Create options menu and add the edit and delete menu items
+            MenuButton options = new MenuButton();
             options.getItems().addAll(edit, delete);
-            //Add action listeners to options
-            edit.setOnAction(event -> System.out.println("Option 3 selected"));
-            edit.setOnAction(event -> System.out.println("Option 3 selected"));
 
             //Create GridPane and add nodes to it
             content = new GridPane();
@@ -242,8 +243,13 @@ public class StudentViewController {
                     new ColumnConstraints(50));
 
             content.addColumn(0, upvote);
-            content.addColumn(1, questionContent);
+            content.addColumn(1, new VBox(questionContent));
             content.addColumn(2, options);
+
+
+            //Add action listeners to options menu
+            edit.setOnAction(event -> editQuestion(questionContent));
+            delete.setOnAction(event -> deleteQuestionOption(content, options, questionId, code));
 
             //Make questionContent resize with width of cell
             double paddingWidth = questionList.getPadding().getLeft()
@@ -271,8 +277,37 @@ public class StudentViewController {
         }
     }
 
-    public void editQuestion() {
+    public void editQuestion(Text questionContent) {
 
+    }
+
+    public void deleteQuestionOption(GridPane gridpane, MenuButton options, UUID questionId, UUID code) {
+        options.setDisable(true);
+
+        Label confirmation = new Label("Are you sure you want to delete this question?");
+        Button yes = new Button("Yes");
+        Button cancel = new Button("Cancel");
+        yes.setOnAction(event -> deleteQuestion(questionId, code));
+
+        HBox dialogue = new HBox(confirmation, yes, cancel);
+
+        gridpane.addRow(1, dialogue);
+        gridpane.setRowSpan(dialogue, GridPane.REMAINING);
+    }
+
+    /**.
+     *
+     * @param questionId
+     * @param code
+     */
+    public void deleteQuestion(UUID questionId, UUID code) {
+        System.out.println("Deletion successful");
+//        String response = ServerCommunication.deleteQuestion(questionId, code);
+//        if (response == null) {
+//            AlertDialog.display("", "Question deletion unsuccessful.");
+//        } else {
+//            AlertDialog.display("", "Question deletion successful.");
+//        }
     }
 
     /**
