@@ -26,14 +26,18 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
+import nl.tudelft.oopp.demo.views.AlertDialog;
 import nl.tudelft.oopp.demo.views.ConfirmationDialog;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.utilities.sorting.Sorting;
+import nl.tudelft.oopp.demo.views.GetTextDialog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -68,8 +72,16 @@ public class StudentViewController {
 
     private boolean sideMenuOpen;
 
+    private String authorName;
+
+    private static final Gson gson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+            .create();
+
     private HashSet<UUID> upvoteList = new HashSet<>();
     private HashSet<UUID> askedQuestionList = new HashSet<>();
+
+    private HashMap<UUID, UUID> secretCodeMapQuestionId = new HashMap<>();
 
     private QuestionBoardDetailsDto quBo;
     private QuestionDetailsDto[] answeredQuestions;
@@ -121,14 +133,13 @@ public class StudentViewController {
         //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
         //not null.
 
-        /* Uncomment this part when you need to test the student view individually
-         * To be deleted in final version
+        // Uncomment this part when you need to test the student view individually
+        // To be deleted in final version
 
         if (quBo == null) {
             divideQuestions(null);
             return;
         }
-        */
 
         String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
 
