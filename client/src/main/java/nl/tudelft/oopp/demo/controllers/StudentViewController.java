@@ -56,6 +56,8 @@ public class StudentViewController {
     @FXML
     private Pane paceVotePane;
     @FXML
+    public Button askQuestion;
+    @FXML
     private ToggleButton hamburger;
     @FXML
     private ToggleButton ansQuestions;
