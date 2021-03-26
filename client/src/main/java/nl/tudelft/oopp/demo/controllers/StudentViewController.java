@@ -2,6 +2,10 @@ package nl.tudelft.oopp.demo.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -30,11 +34,17 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.utilities.sorting.Sorting;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 public class StudentViewController {
     @FXML
     private HBox topBar;
+    @FXML
+    public Button boardInfo;
+    @FXML
+    public Button helpDoc;
     @FXML
     private StackPane content;
     @FXML
@@ -46,6 +56,8 @@ public class StudentViewController {
     @FXML
     private Pane paceVotePane;
     @FXML
+    public Button askQuestion;
+    @FXML
     private ToggleButton hamburger;
     @FXML
     private ToggleButton ansQuestions;
@@ -55,6 +67,9 @@ public class StudentViewController {
     private Button leaveQuBo;
 
     private boolean sideMenuOpen;
+
+    private HashSet<UUID> upvoteList = new HashSet<>();
+    private HashSet<UUID> askedQuestionList = new HashSet<>();
 
     private QuestionBoardDetailsDto quBo;
     private QuestionDetailsDto[] answeredQuestions;
@@ -74,6 +89,7 @@ public class StudentViewController {
      */
     @FXML
     private void initialize() {
+        testQuestions();
         //Display the questions
         displayQuestions();
 
@@ -84,6 +100,18 @@ public class StudentViewController {
         sideMenu.setVisible(false);
     }
 
+    private void testQuestions() {
+        ObservableList<Question> data = FXCollections.observableArrayList();
+        data.addAll(new Question(2, "What is life?"),
+            new Question(42,"Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
+
+        questionList.setItems(data);
+        questionList.setCellFactory(listView -> new QuestionListCell());
+    }
+
     /**
      * Method that displays the questions that are in the question board on the screen. Answered questions
      * will be sorted by the time at which they were answered, and unanswered questions will be sorted by
@@ -92,6 +120,16 @@ public class StudentViewController {
     private void displayQuestions() {
         //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
         //not null.
+
+        /* Uncomment this part when you need to test the student view individually
+         * To be deleted in final version
+
+        if (quBo == null) {
+            divideQuestions(null);
+            return;
+        }
+        */
+
         String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
 
         if (jsonQuestions == null) {
@@ -111,6 +149,8 @@ public class StudentViewController {
                 Sorting.sortOnTimeAnswered(answeredQuestions);
             }
         }
+
+
         //TODO: Display the questions in the list view by accessing class attributes.
     }
 
@@ -145,6 +185,100 @@ public class StudentViewController {
         //respective class attributes.
         answeredQuestions = answered.toArray(new QuestionDetailsDto[0]);
         unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
+    }
+
+    public void displayBoardInfo() {
+    }
+
+    public void displayHelpDoc() {
+    }
+
+    private static class Question {
+        private UUID questionId;
+        private int upvoteNumber;
+        private String questionContent;
+
+        public int getUpvoteNumber() {
+            return upvoteNumber;
+        }
+
+        public String getQuestionContent() {
+            return questionContent;
+        }
+
+        public Question(int upvoteNumber, String questionContent) {
+            this.upvoteNumber = upvoteNumber;
+            this.questionContent = questionContent;
+        }
+    }
+
+    private class QuestionListCell extends ListCell<Question> {
+        private GridPane content;
+        private UUID questionId;
+        private Label upvoteNumber;
+        private Text questionContent;
+
+        public QuestionListCell() {
+            super();
+            upvoteNumber = new Label();
+            questionContent = new Text();
+
+            //Create the Vbox for placing the upvote button and upvote number
+            ToggleButton upvoteTriangle = new ToggleButton("up");
+            VBox upvote = new VBox(upvoteTriangle, upvoteNumber);
+            upvote.setSpacing(5);
+            upvote.setAlignment(Pos.CENTER);
+
+            //Create options menu with edit and delete options
+            MenuButton options = new MenuButton();
+            MenuItem edit = new MenuItem("Edit");
+            MenuItem delete = new MenuItem("Delete");
+            options.getItems().addAll(edit, delete);
+            //Add action listeners to options
+            edit.setOnAction(event -> System.out.println("Option 3 selected"));
+            edit.setOnAction(event -> System.out.println("Option 3 selected"));
+
+            //Create GridPane and add nodes to it
+            content = new GridPane();
+            ColumnConstraints col2 = new ColumnConstraints();
+            col2.setHgrow(Priority.ALWAYS);
+
+            content.setGridLinesVisible(true);
+            content.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
+                    new ColumnConstraints(50));
+
+            content.addColumn(0, upvote);
+            content.addColumn(1, questionContent);
+            content.addColumn(2, options);
+
+            //Make questionContent resize with width of cell
+            double paddingWidth = questionList.getPadding().getLeft()
+                    +  questionList.getPadding().getRight();
+            questionContent.wrappingWidthProperty().bind(questionList.widthProperty()
+                    .subtract(paddingWidth + 120));
+
+            //Set alignment of children in the GridPane
+            upvote.setAlignment(Pos.TOP_CENTER);
+            GridPane.setValignment(options, VPos.TOP);
+            GridPane.setHalignment(options, HPos.RIGHT);
+        }
+
+        @Override
+        protected void updateItem(Question item, boolean empty) {
+            super.updateItem(item, empty);
+            //If the item was not null and empty was false, add content to the graphic
+            if (item != null && !empty) {
+                upvoteNumber.setText(Integer.toString(item.getUpvoteNumber()));
+                questionContent.setText(item.getQuestionContent());
+                setGraphic(content);
+            } else {
+                setGraphic(null);
+            }
+        }
+    }
+
+    public void editQuestion() {
+
     }
 
     /**
@@ -239,82 +373,4 @@ public class StudentViewController {
             SceneLoader.backToHome((Stage) leaveQuBo.getScene().getWindow());
         }
     }
-
-    private static class Question {
-        private int upvoteNumber;
-        private String questionContent;
-
-        public int getUpvoteNumber() {
-            return upvoteNumber;
-        }
-
-        public String getQuestionContent() {
-            return questionContent;
-        }
-
-        public Question(int upvoteNumber, String questionContent) {
-            this.upvoteNumber = upvoteNumber;
-            this.questionContent = questionContent;
-        }
-    }
-
-    private class QuestionListCell extends ListCell<Question> {
-        private GridPane content;
-        private Label upvoteNumber;
-        private Text questionContent;
-
-        public QuestionListCell() {
-            super();
-            upvoteNumber = new Label();
-            questionContent = new Text();
-
-            //Create the Vbox for placing the upvote button and upvote number
-            ToggleButton upvoteTriangle = new ToggleButton("up");
-            VBox upvote = new VBox(upvoteTriangle, upvoteNumber);
-            upvote.setSpacing(5);
-            upvote.setAlignment(Pos.CENTER);
-
-            //Create options menu with edit and delete options
-            MenuButton options = new MenuButton();
-            options.getItems().addAll(new MenuItem("Edit"), new MenuItem("Delete"));
-
-            //Create GridPane and add nodes to it
-            content = new GridPane();
-            ColumnConstraints col2 = new ColumnConstraints();
-            col2.setHgrow(Priority.ALWAYS);
-
-            content.setGridLinesVisible(true);
-            content.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
-                    new ColumnConstraints(50));
-
-            content.addColumn(0, upvote);
-            content.addColumn(1, questionContent);
-            content.addColumn(2, options);
-
-            //Make questionContent resize with width of cell
-            double paddingWidth = questionList.getPadding().getLeft()
-                    +  questionList.getPadding().getRight();
-            questionContent.wrappingWidthProperty().bind(questionList.widthProperty()
-                    .subtract(paddingWidth + 120));
-
-            //Set alignment of children in the GridPane
-            upvote.setAlignment(Pos.TOP_CENTER);
-            GridPane.setValignment(options, VPos.TOP);
-            GridPane.setHalignment(options, HPos.RIGHT);
-        }
-
-        @Override
-        protected void updateItem(Question item, boolean empty) {
-            super.updateItem(item, empty);
-            //If the item was not null and empty was false, add content to the graphic
-            if (item != null && !empty) {
-                upvoteNumber.setText(Integer.toString(item.getUpvoteNumber()));
-                questionContent.setText(item.getQuestionContent());
-                setGraphic(content);
-            } else {
-                setGraphic(null);
-            }
-        }
-    }
-
 }
