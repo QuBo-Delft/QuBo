@@ -9,6 +9,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.control.Menu;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -122,10 +123,15 @@ public class StudentViewController {
     private void displayQuestions() {
         //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
         //not null.
+
+        //Uncomment this part when you need to test the student view individually
+        //To be deleted in final version
+
         if (quBo == null) {
             divideQuestions(null);
             return;
         }
+
         String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
 
         if (jsonQuestions == null) {
@@ -258,7 +264,7 @@ public class StudentViewController {
                     .subtract(paddingWidth));
 
             //Add action listeners to options menu
-            edit.setOnAction(event -> editQuestion(questionContent, questionVbox, options));
+            edit.setOnAction(event -> editQuestion(questionContent, questionVbox, options, questionId, code));
             delete.setOnAction(event -> deleteQuestionOption(content, options, questionId, code));
 
             //Set alignment of children in the GridPane
@@ -281,8 +287,10 @@ public class StudentViewController {
         }
     }
 
-    public void editQuestion(Text questionContent, VBox questionVbox, MenuButton options) {
+    public void editQuestion(Text questionContent, VBox questionVbox, MenuButton options,
+                             UUID questionId, UUID code) {
         options.setDisable(true);
+
         TextArea input = new TextArea();
         input.setWrapText(true);
         input.prefWidthProperty().bind(questionContent.wrappingWidthProperty());
@@ -292,10 +300,32 @@ public class StudentViewController {
         HBox buttons = new HBox(cancel, update);
         buttons.setAlignment(Pos.CENTER_RIGHT);
 
+        update.setOnAction(event -> updateQuestionContent(options, questionId, code, input.getText()));
+        cancel.setOnAction(event -> cancelEdit(options, questionVbox, input, buttons, questionContent));
+
         questionContent.setVisible(false);
         questionVbox.getChildren().add(input);
         questionVbox.getChildren().add(buttons);
         input.setText(questionContent.getText());
+    }
+
+    public void updateQuestionContent(MenuButton options, UUID questionId, UUID code, String text) {
+        options.setDisable(false);
+        String response = ServerCommunication.editQuestion(questionId, code, text);
+
+        if (response == null) {
+            AlertDialog.display("", "Question update failed.");
+        } else {
+            AlertDialog.display("", "Question update successful.");
+        }
+    }
+
+    public void cancelEdit(MenuButton options, VBox questionVbox, TextArea input,
+                            HBox buttons, Text questionContent) {
+        options.setDisable(false);
+        questionVbox.getChildren().remove(input);
+        questionVbox.getChildren().remove(buttons);
+        questionContent.setVisible(true);
     }
 
     public void deleteQuestionOption(GridPane gridpane, MenuButton options, UUID questionId, UUID code) {
@@ -314,7 +344,7 @@ public class StudentViewController {
         GridPane.setColumnSpan(dialogue, GridPane.REMAINING);
 
         //Set action listeners
-        yes.setOnAction(event -> deleteQuestion(questionId, code));
+        yes.setOnAction(event -> deleteQuestion(options, questionId, code));
         cancel.setOnAction(event -> cancelDeletion(options, gridpane, dialogue));
     }
 
@@ -323,7 +353,7 @@ public class StudentViewController {
      * @param questionId
      * @param code
      */
-    public void deleteQuestion(UUID questionId, UUID code) {
+    public void deleteQuestion(MenuButton options, UUID questionId, UUID code) {
         String response = ServerCommunication.deleteQuestion(questionId, code);
 
         if (response == null) {
