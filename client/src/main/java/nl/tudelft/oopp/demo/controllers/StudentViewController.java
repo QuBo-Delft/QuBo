@@ -120,10 +120,16 @@ public class StudentViewController {
     private void displayQuestions() {
         //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
         //not null.
+
+        /* Uncomment this part when you need to test the student view individually
+         * To be deleted in final version
+
         if (quBo == null) {
             divideQuestions(null);
             return;
         }
+        */
+
         String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
 
         if (jsonQuestions == null) {
