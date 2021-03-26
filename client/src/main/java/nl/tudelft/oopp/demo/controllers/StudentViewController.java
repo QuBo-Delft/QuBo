@@ -4,10 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.layout.StackPane;
@@ -219,6 +218,9 @@ public class StudentViewController {
             super();
             upvoteNumber = new Label();
             questionContent = new Text();
+            //Bind the managed property to the visible property so that when the node is
+            //not visible, it will also not be accounted for in the layout
+            questionContent.managedProperty().bind(questionContent.visibleProperty());
 
             //Create the Vbox for placing the upvote button and upvote number
             ToggleButton upvoteTriangle = new ToggleButton("up");
@@ -245,7 +247,6 @@ public class StudentViewController {
             content.addColumn(0, upvote);
             content.addColumn(1, new VBox(questionContent));
             content.addColumn(2, options);
-
 
             //Add action listeners to options menu
             edit.setOnAction(event -> editQuestion(questionContent));
@@ -278,6 +279,7 @@ public class StudentViewController {
     }
 
     public void editQuestion(Text questionContent) {
+        questionContent.setVisible(false);
 
     }
 
@@ -285,14 +287,20 @@ public class StudentViewController {
         options.setDisable(true);
 
         Label confirmation = new Label("Are you sure you want to delete this question?");
+        confirmation.setWrapText(true);
         Button yes = new Button("Yes");
         Button cancel = new Button("Cancel");
-        yes.setOnAction(event -> deleteQuestion(questionId, code));
 
         HBox dialogue = new HBox(confirmation, yes, cancel);
+        dialogue.setPadding(new Insets(5,10,5,10));
+        dialogue.setAlignment(Pos.CENTER);
 
         gridpane.addRow(1, dialogue);
-        gridpane.setRowSpan(dialogue, GridPane.REMAINING);
+        GridPane.setColumnSpan(dialogue, GridPane.REMAINING);
+
+        //Set action listeners
+        yes.setOnAction(event -> deleteQuestion(questionId, code));
+        cancel.setOnAction(event -> cancelDeletion(options, gridpane, dialogue));
     }
 
     /**.
@@ -301,13 +309,18 @@ public class StudentViewController {
      * @param code
      */
     public void deleteQuestion(UUID questionId, UUID code) {
-        System.out.println("Deletion successful");
-//        String response = ServerCommunication.deleteQuestion(questionId, code);
-//        if (response == null) {
-//            AlertDialog.display("", "Question deletion unsuccessful.");
-//        } else {
-//            AlertDialog.display("", "Question deletion successful.");
-//        }
+        String response = ServerCommunication.deleteQuestion(questionId, code);
+
+        if (response == null) {
+            AlertDialog.display("", "Question deletion failed.");
+        } else {
+            AlertDialog.display("", "Question deletion successful.");
+        }
+    }
+
+    public void cancelDeletion(MenuButton options, GridPane gridPane, HBox dialogue) {
+        gridPane.getChildren().remove(dialogue);
+        options.setDisable(false);
     }
 
     /**
