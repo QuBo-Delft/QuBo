@@ -537,7 +537,7 @@ public class StudentViewController {
         String response = ServerCommunication.deleteQuestion(questionId, code);
 
         if (response == null) {
-            //If response failed
+            //If the request failed
             AlertDialog.display("Unsuccessful Request", "Failed to delete your question, please try again.");
         } else {
             //If response successful
