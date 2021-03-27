@@ -449,7 +449,7 @@ public class StudentViewController {
 
         if (response == null) {
             //If request failed
-            AlertDialog.display("", "Question update failed.");
+            AlertDialog.display("Unsuccessful Request", "Failed to update your question, please try again.");
         } else {
             //If request successful
             AlertDialog.display("", "Question update successful.");
