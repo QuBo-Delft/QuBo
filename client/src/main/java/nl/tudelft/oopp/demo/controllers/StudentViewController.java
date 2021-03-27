@@ -131,7 +131,6 @@ public class StudentViewController {
         questionList.setStyle("-fx-background-insets: 0 ;");
 
         questionList.setEditable(true);
-
     }
 
     /**
