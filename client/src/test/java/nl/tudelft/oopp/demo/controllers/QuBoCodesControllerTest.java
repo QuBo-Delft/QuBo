@@ -143,12 +143,14 @@ class QuBoCodesControllerTest extends TestFxBase {
      * Either of these exceptions will make the test calling this method fail automatically.
      */
     private void clipboardTest() {
-        try {
-            clipboard = (String) Toolkit.getDefaultToolkit().getSystemClipboard()
-                .getData(DataFlavor.stringFlavor);
-            clipboardUuid = UUID.fromString(clipboard);
-        } catch (IOException | UnsupportedFlavorException e) {
-            e.printStackTrace();
+        if (!Boolean.getBoolean("headless")) {
+            try {
+                clipboard = (String) Toolkit.getDefaultToolkit().getSystemClipboard()
+                    .getData(DataFlavor.stringFlavor);
+                clipboardUuid = UUID.fromString(clipboard);
+            } catch (IOException | UnsupportedFlavorException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
