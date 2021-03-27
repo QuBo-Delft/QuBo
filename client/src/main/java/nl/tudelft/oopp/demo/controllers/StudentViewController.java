@@ -487,7 +487,7 @@ public class StudentViewController {
      * Displays a confirmation dialogue and two buttons ("Yes" and "Cancel").
      * /
      * Yes -> Sends a request to the server to delete the question.
-     * Cancel -> Cancels the action
+     * Cancel -> Cancels the action.
      *
      * @param gridpane      GridPane of the cell (Needed to add a row for the confirmation dialogue)
      * @param options       The options menu node (Needs to be disabled when confirmation dialogue shows up)
