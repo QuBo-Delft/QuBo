@@ -317,8 +317,8 @@ public class StudentViewController {
             //Set pane to fixed height
             int spaceHeight = 20;
             space.setPrefHeight(spaceHeight);
-            space.setPrefHeight(spaceHeight);
-            space.setPrefHeight(spaceHeight);
+            space.setMinHeight(spaceHeight);
+            space.setMaxHeight(spaceHeight);
 
             //Bind properties for easier management
             space.managedProperty().bind(space.visibleProperty());
