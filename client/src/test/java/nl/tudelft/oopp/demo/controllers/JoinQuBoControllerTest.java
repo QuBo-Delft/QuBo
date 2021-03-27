@@ -11,24 +11,34 @@ import org.testfx.matcher.base.WindowMatchers;
 
 import java.io.IOException;
 
+/**
+ * This class tests the JoinQuBoController which controls the JoinQuBo.fxml.
+ */
 class JoinQuBoControllerTest extends TestFxBase {
 
     /*
-        These Strings allow store the UUIDs to string from the @BeforeAll
+        These Strings allow store the UUIDs to string from the @BeforeAll.
      */
     static String openBoard;
     static String openBoardModerator;
     static String closedBoard;
     static String closedBoardModerator;
 
-    //Initiate testing done through the TestFX library
+    /**
+     * Initiate testing done through the TestFX library
+     *
+     * @param stage Test stage created by the TestFX library
+     * @throws IOException IOException thrown by incorrect load in start method
+     */
     @Start
     void start(Stage stage) throws IOException {
         String fxmlSheet = "JoinQuBo";
-        preStart(stage, fxmlSheet);
+        start(stage, fxmlSheet);
     }
 
-    // Creates a closed and open QuBo for testing purposes
+    /**
+     * Creates a closed and open QuBo for testing purposes.
+     */
     @BeforeAll
     static void setQuBos() {
         openBoard = createOpenQuBo().getId().toString();
@@ -37,21 +47,33 @@ class JoinQuBoControllerTest extends TestFxBase {
         closedBoardModerator = createClosedQuBo().getModeratorCode().toString();
     }
 
-    // Click on the create QuBo button and ensure the create scene is displayed
+    /**
+     * Click on the create QuBo button and ensure the create scene is displayed.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void createButtonClickedTest(FxRobot robot) {
         robot.clickOn("#createBtn");
         FxAssert.verifyThat(robot.window("(Create Question Board)"), WindowMatchers.isShowing());
     }
 
-    // Click on the join button with no QuBo code entered
+    /**
+     * Click on the join button with no QuBo code entered.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void joinButtonClickedNoCode(FxRobot robot) {
         robot.clickOn("#joinBtn");
         FxAssert.verifyThat("#errorMessageLabel", Node::isVisible);
     }
 
-    // Click on the join button with null entered
+    /**
+     * Click on the join button with null entered.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void joinButtonClickedNullCode(FxRobot robot) {
         robot.clickOn("#questionBoardCode");
@@ -60,7 +82,11 @@ class JoinQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat("#errorMessageLabel", Node::isVisible);
     }
 
-    // Click on the join button with empty entered
+    /**
+     * Click on the join button with empty entered.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void joinButtonClickedEmptyCode(FxRobot robot) {
         robot.clickOn("#questionBoardCode");
@@ -69,7 +95,11 @@ class JoinQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat("#errorMessageLabel", Node::isVisible);
     }
 
-    // Click on the join button with an incorrect UUID entered
+    /**
+     * Click on the join button with an incorrect UUID entered.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void joinButtonClickedIncorrectUuid(FxRobot robot) {
         robot.clickOn("#questionBoardCode");
@@ -78,7 +108,11 @@ class JoinQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat("#errorMessageLabel", Node::isVisible);
     }
 
-    // Click on the join button with a correct UUID entered for an open meeting - student
+    /**
+     * Click on the join button with a correct UUID entered for an open meeting - student.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void joinButtonClickedCorrectUuidOpenStu(FxRobot robot) {
         robot.clickOn("#questionBoardCode");
@@ -87,7 +121,11 @@ class JoinQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat(robot.window("(QuBo)"), WindowMatchers.isShowing());
     }
 
-    // Click on the join button with a correct UUID entered for a closed meeting - student
+    /**
+     * Click on the join button with a correct UUID entered for a closed meeting - student.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void joinButtonClickedCorrectUuidClosedStu(FxRobot robot) {
         robot.clickOn("#questionBoardCode");
@@ -96,7 +134,11 @@ class JoinQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat(robot.window("(QuBo)"), WindowMatchers.isShowing());
     }
 
-    // Click on the join button with a correct UUID entered for a open meeting - moderator
+    /**
+     * Click on the join button with a correct UUID entered for a open meeting - moderator.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void joinButtonClickedCorrectUuidOpenMod(FxRobot robot) {
         robot.clickOn("#questionBoardCode");
@@ -105,7 +147,11 @@ class JoinQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat(robot.window("(QuBo - Moderator)"), WindowMatchers.isShowing());
     }
 
-    // Click on the join button with a correct UUID entered for a closed meeting - moderator
+    /**
+     * Click on the join button with a correct UUID entered for a closed meeting - moderator.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void joinButtonClickedCorrectUuidClosedMod(FxRobot robot) {
         robot.clickOn("#questionBoardCode");

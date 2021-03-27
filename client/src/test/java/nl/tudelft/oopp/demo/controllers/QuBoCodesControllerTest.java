@@ -10,60 +10,78 @@ import org.testfx.framework.junit5.Start;
 import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.matcher.base.WindowMatchers;
 import org.testfx.matcher.control.LabeledMatchers;
-import org.testfx.matcher.control.TextMatchers;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.UUID;
-import java.util.regex.Matcher;
 
+/**
+ * This class tests the QuBoCodesController which controls the QuBoCodes.fxml.
+ */
 class QuBoCodesControllerTest extends TestFxBase{
 
     /*
-        These elements are used for the clipBoardTest method
+        These elements are used for the clipBoardTest method.
      */
     String clipboard;
     UUID clipboardUuid;
 
     QuestionBoardCreationDto qc = createOpenQuBo();
 
-    //Initiate testing done through the TestFX library
+    /**
+     * Initiate testing done through the TestFX library.
+     *
+     * @param stage Test stage created by the TestFX library.
+     * @throws IOException IOException thrown by incorrect load in start method.
+     */
     @Start
     void start(Stage stage) throws IOException {
         String fxmlSheet = "QuBoCodes";
         startCreation(stage, fxmlSheet, qc);
     }
 
-    // Verify title is correct
+    /**
+     * Verify title is correct.
+     */
     @Test
     void verifyTitle() {
         FxAssert.verifyThat("#boardTitle", LabeledMatchers.hasText("QuBo"));
     }
 
-    // Verify startTime is correct
+    /**
+     * Verify startTime is correct.
+     */
     @Test
     void verifyStartTime() {
         String startTimeStr = qc.getStartTime().toString();
         FxAssert.verifyThat("#startTime", LabeledMatchers.hasText(startTimeStr));
     }
 
-    // Verify admin code is correct
+    /**
+     * Verify admin code is correct.
+     */
     @Test
     void verifyAdmin() {
         String adminCodeStr = qc.getModeratorCode().toString();
         FxAssert.verifyThat("#adminCode", LabeledMatchers.hasText(adminCodeStr));
     }
 
-    // Verify student code is correct
+    /**
+     * Verify student code is correct.
+     */
     @Test
     void verifyStudent() {
         String studentCodeStr = qc.getId().toString();
         FxAssert.verifyThat("#studentCode", LabeledMatchers.hasText(studentCodeStr));
     }
 
-    // Test whether only the student success label shows when only the student code is copied
+    /**
+     * Test whether only the student success label shows when only the student code is copied.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void copyOnlyStudentCode(FxRobot robot) {
         robot.clickOn("#copyStudentBtn");
@@ -72,7 +90,11 @@ class QuBoCodesControllerTest extends TestFxBase{
         clipboardTest();
     }
 
-    // Test whether only the admin success label shows when only the admin code is copied
+    /**
+     * Test whether only the admin success label shows when only the admin code is copied.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void copyOnlyAdminCode(FxRobot robot) {
         robot.clickOn("#copyAdminBtn");
@@ -81,7 +103,11 @@ class QuBoCodesControllerTest extends TestFxBase{
         clipboardTest();
     }
 
-    // Test whether both labels show when both codes are successfully copied
+    /**
+     * Test whether both labels show when both codes are successfully copied.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void copyBothCodes(FxRobot robot) {
         robot.clickOn("#copyAdminBtn");
@@ -92,21 +118,31 @@ class QuBoCodesControllerTest extends TestFxBase{
         clipboardTest();
     }
 
-    // Test whether the labels are hidden on default
+    /**
+     * Test whether the labels are hidden on default.
+     */
     @Test
     void copyNoCodes() {
         FxAssert.verifyThat("#studentCopySuccessful", NodeMatchers.isInvisible());
         FxAssert.verifyThat("#adminCopySuccessful", NodeMatchers.isInvisible());
     }
 
-    // Test whether the the back to home button works and directs to the correct scene
+    /**
+     * Test whether the the back to home button works and directs to the correct scene.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void backToHome(FxRobot robot) {
         robot.clickOn("#backToHome");
         FxAssert.verifyThat(robot.window("(Join Question Board)"), WindowMatchers.isShowing());
     }
 
-    // When an exception is thrown, the test calling this method automatically fails
+    /**
+     * This method checks whether the clipboard actually contains the correct code copied.
+     * When this method fails, an IOException or UnsupportedFlavorException shall be thrown.
+     * Either of these exceptions will make the test calling this method fail automatically.
+     */
     private void clipboardTest() {
         try {
             clipboard = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);

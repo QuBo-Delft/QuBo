@@ -17,11 +17,14 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * This class tests the CreateQuBoController which controls the CreateQuBo.fxml.
+ */
 @SuppressWarnings("ALL")
 class CreateQuBoControllerTest extends TestFxBase {
 
     /*
-        These dates and and objects are used for various tests. The objects are instantiated in @Start
+        These dates and and objects are used for various tests. The objects are instantiated in @Start.
      */
     LocalDate yesterday = LocalDate.now().minusDays(1);
     LocalDate today = LocalDate.now();
@@ -31,21 +34,27 @@ class CreateQuBoControllerTest extends TestFxBase {
     Spinner minSpinner;
     DatePicker picker;
 
-    //Initiate testing done through the TestFX library
+    /**
+     * Initiate testing done through the TestFX library.
+     *
+     * @param stage Test stage created by the TestFX library.
+     * @throws IOException IOException thrown by incorrect load in start method.
+     */
     @Start
     void start(Stage stage) throws IOException {
         String fxmlSheet = "CreateQuBo";
-        Scene scene = preStart(stage, fxmlSheet);
+        Scene scene = start(stage, fxmlSheet);
 
         hourSpinner = (Spinner) scene.lookup("#hoursSpinner");
         minSpinner = (Spinner) scene.lookup("#minutesSpinner");
         picker = (DatePicker) scene.lookup("#startDate");
     }
 
-    /*
-        These tests make sure the Create QuBo (now) button is working as intended.
+    /**
+     * Click create now button while null title.
+     *
+     * @param robot TestFX robot.
      */
-    // Click create now button while null title
     @Test
     void createNowBtnClickedNullTitle(FxRobot robot) {
         robot.clickOn("#createBtn");
@@ -53,7 +62,11 @@ class CreateQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat("#errorDateTime", NodeMatchers.isInvisible());
     }
 
-    // Click create now button while empty title
+    /**
+     * Click create now button while empty title.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void createNowBtnClickedEmptyTitle(FxRobot robot) {
         robot.clickOn("#title");
@@ -63,7 +76,11 @@ class CreateQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat("#errorDateTime", NodeMatchers.isInvisible());
     }
 
-    // Click create now button while title has literal value null
+    /**
+     * Click create now button while title has literal value null.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void createNowBtnClickedTitleLiteralNull(FxRobot robot) {
         robot.clickOn("#title");
@@ -72,14 +89,22 @@ class CreateQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat(robot.window("(Created Question Board)"), WindowMatchers.isShowing());
     }
 
-    // Click cancel button and check whether home screen is shown
+    /**
+     * Click cancel button and check whether home screen is shown
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void cancelBtnClick(FxRobot robot) {
         robot.clickOn("#cancelBtn");
         FxAssert.verifyThat(robot.window("(Join Question Board)"), WindowMatchers.isShowing());
     }
 
-    // Click create now button while title has proper name
+    /**
+     * Click create now button while title has proper name.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void createNowBtnClickedTitleInserted(FxRobot robot) {
         robot.clickOn("#title");
@@ -88,10 +113,11 @@ class CreateQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat(robot.window("(Created Question Board)"), WindowMatchers.isShowing());
     }
 
-    /*
-        These tests make sure the Schedule QuBo button is working as intended.
+    /**
+     * Click schedule button while null title and no date and time set.
+     *
+     * @param robot TestFX robot.
      */
-    // Click schedule button while null title and no date and time set
     @Test
     void scheduleBtnClickedNullTitle(FxRobot robot) {
         robot.clickOn("#scheduleBtn");
@@ -99,7 +125,11 @@ class CreateQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat("#errorDateTime", Node::isVisible);
     }
 
-    // Click schedule button while empty title and no date and time set
+    /**
+     * Click schedule button while empty title and no date and time set.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void scheduleBtnClickedEmptyTitle(FxRobot robot) {
         robot.clickOn("#title");
@@ -109,7 +139,11 @@ class CreateQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat("#errorDateTime", Node::isVisible);
     }
 
-    // Click schedule button while title has literal value null and no date and time set
+    /**
+     * Click schedule button while title has literal value null and no date and time set.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void scheduleBtnClickedTitleLiteralNull(FxRobot robot) {
         robot.clickOn("#title");
@@ -119,7 +153,11 @@ class CreateQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat("#errorTitle", NodeMatchers.isInvisible());
     }
 
-    // Click the schedule button while title has proper value and no date and time set
+    /**
+     * Click the schedule button while title has proper value and no date and time set.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void scheduleBtnClickedOnlyTitleInserted(FxRobot robot) {
         robot.clickOn("#title");
@@ -134,7 +172,12 @@ class CreateQuBoControllerTest extends TestFxBase {
         properly inserted, as the title input functionality is tested above and on no failing tests above
         can be deemed as correct and working.
      */
-    // Click the schedule button with proper title but date before today
+
+    /**
+     * Click the schedule button with proper title but date before today.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void scheduleBtnClickedDateBeforeToday(FxRobot robot) {
         robot.clickOn("#title");
@@ -146,7 +189,11 @@ class CreateQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat("#errorTitle", NodeMatchers.isInvisible());
     }
 
-    // Click the schedule button with proper title, date and min, but incorrect hour
+    /**
+     * Click the schedule button with proper title, date and min, but incorrect hour.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void scheduleBtnClickedDateTodayTimeHourBefore(FxRobot robot) {
         int hourBefore = LocalDateTime.now().minusHours(1).getHour();
@@ -160,7 +207,11 @@ class CreateQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat("#errorTitle", NodeMatchers.isInvisible());
     }
 
-    // Click the schedule button with proper title, date and hour, but incorrect minute
+    /**
+     * Click the schedule button with proper title, date and hour, but incorrect minute.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void scheduleBtnClickedDateTodayTimeMinBefore(FxRobot robot) {
         int hourCurrent = LocalDateTime.now().getHour();
@@ -176,7 +227,11 @@ class CreateQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat("#errorTitle", NodeMatchers.isInvisible());
     }
 
-    // Click the schedule button with proper title, date set to tomorrow
+    /**
+     * Click the schedule button with proper title, date set to tomorrow.
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void scheduleBtnClickedDateTomorrowTimeDefault(FxRobot robot) {
         robot.clickOn("#title");
@@ -188,7 +243,11 @@ class CreateQuBoControllerTest extends TestFxBase {
         FxAssert.verifyThat(robot.window("(Created Question Board)"), WindowMatchers.isShowing());
     }
 
-    // Click the schedule button with proper title, date, hour and minute set to current
+    /**
+     * Click the schedule button with proper title, date, hour and minute set to current
+     *
+     * @param robot TestFX robot.
+     */
     @Test
     void scheduleBtnClickedDateTodayTimeCurrent(FxRobot robot) {
         int hourCurrent = LocalDateTime.now().getHour();
