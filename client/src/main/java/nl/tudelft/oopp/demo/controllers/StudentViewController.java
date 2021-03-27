@@ -429,7 +429,7 @@ public class StudentViewController {
      * This method runs when the Update button (created in editQuestion) is clicked.
      * Sends an editQuestion request to the server.
      * /
-     * If request successful -> Displays alert and removes text area and buttons, updates question
+     * If the request is successful -> Displays alert, removes the text area and buttons, and updates
      * content locally as well
      * If request failed -> Displays alert and doesn't change anything, prevents user losing edited question
      *
