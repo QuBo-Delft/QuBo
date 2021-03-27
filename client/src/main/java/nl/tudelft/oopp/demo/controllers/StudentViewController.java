@@ -459,7 +459,7 @@ public class StudentViewController {
             //Set edited text to question content area and show
             questionContent.setText(text);
             questionContent.setVisible(true);
-            //Enable options menu as editing action has been completed successfully
+            //Enable options menu as editing has been completed successfully
             options.setDisable(false);
         }
     }
