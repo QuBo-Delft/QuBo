@@ -18,7 +18,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.demo.controllers.StudentViewController">
    <top>
-      <HBox alignment="CENTER" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="TOP_LEFT">
+      <HBox fx:id="topBar" alignment="CENTER" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="TOP_LEFT">
          <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" scaleX="0.6" scaleY="0.6" translateX="1.0">
          </ImageView>
          <ImageView fitHeight="45.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" />
@@ -27,70 +27,74 @@
                <Font size="16.0" />
             </font>
          </Label>
-         <Button maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Button" />
+         <Button fx:id="boardInfo" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="40.0" prefWidth="40.0" text="Button" />
          <Pane maxHeight="40.0" maxWidth="150.0" minHeight="40.0" minWidth="40.0" prefHeight="40.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-         <Button maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Help" />
-         <ToggleButton fx:id="hamburger" onAction="#showHideSideScreen" alignment="CENTER_RIGHT" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="sideBar" HBox.hgrow="NEVER" />
+         <Button fx:id="helpDoc" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#displayHelpDoc" prefHeight="40.0" prefWidth="40.0" text="Help" />
+         <ToggleButton fx:id="hamburger" alignment="CENTER_RIGHT" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#showHideSideBar" prefHeight="40.0" prefWidth="40.0" text="sideBar" HBox.hgrow="NEVER" />
       </HBox>
    </top>
    <center>
-      <HBox prefHeight="411.0" prefWidth="580.0" BorderPane.alignment="CENTER">
-         <StackPane>
-                  <ListView fx:id="questionList" prefHeight="360.0" prefWidth="902.0">
-                  <padding>
-                     <Insets left="30.0" right="60.0" top="20.0" />
-                  </padding>
-               </ListView>
-               <Pane fx:id="paceVotePane" maxHeight="160.0" maxWidth="140.0" prefHeight="4.0" prefWidth="57.0" StackPane.alignment="BOTTOM_RIGHT">
-                     <VBox minHeight="160.0" minWidth="140.0">
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How is the current lecture pacing?" wrappingWidth="118.5263671875">
-                              <VBox.margin>
-                                 <Insets bottom="10.0" />
-                              </VBox.margin>
-                           </Text>
-                                    <RadioButton mnemonicParsing="false" text="Too fast">
-                              <VBox.margin>
-                                 <Insets bottom="10.0" />
-                              </VBox.margin>
-                           </RadioButton>
-                                    <RadioButton mnemonicParsing="false" text="All right">
-                              <VBox.margin>
-                                 <Insets bottom="10.0" />
-                              </VBox.margin>
-                           </RadioButton>
-                                    <RadioButton mnemonicParsing="false" text="Too slow" />
-                        <padding>
-                           <Insets left="10.0" top="10.0" />
-                        </padding>
-                     </VBox>
-               </Pane>
-               <Button mnemonicParsing="false" text="Button" StackPane.alignment="BOTTOM_LEFT">
-                  <StackPane.margin>
-                     <Insets bottom="20.0" left="20.0" />
-                  </StackPane.margin>
-               </Button>
-         </StackPane>
-      </HBox>
+      <StackPane fx:id="content">
+            <HBox prefHeight="100.0" prefWidth="200.0">
+                 <ListView fx:id="questionList" prefHeight="360.0" prefWidth="902.0">
+                 <padding>
+                    <Insets left="30.0" right="60.0" top="20.0" />
+                 </padding>
+              </ListView>
+              <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0">
+                 <padding>
+                    <Insets bottom="20.0" left="20.0" top="15.0" />
+                 </padding>
+              </VBox>
+            </HBox>
+            <Pane fx:id="paceVotePane" maxHeight="160.0" maxWidth="140.0" prefHeight="4.0" prefWidth="57.0" StackPane.alignment="BOTTOM_RIGHT">
+                  <VBox minHeight="160.0" minWidth="140.0">
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How is the current lecture pacing?" wrappingWidth="118.5263671875">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </Text>
+                                 <RadioButton mnemonicParsing="false" text="Too fast">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                                 <RadioButton mnemonicParsing="false" text="All right">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                                 <RadioButton mnemonicParsing="false" text="Too slow" />
+                     <padding>
+                        <Insets left="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+            </Pane>
+          <Button fx:id="askQuestion" maxHeight="45.0" maxWidth="45.0" minHeight="45.0" minWidth="45.0" mnemonicParsing="false" onAction="#addQuestion" prefHeight="45.0" prefWidth="45.0" text="ASK" StackPane.alignment="BOTTOM_LEFT">
+               <StackPane.margin>
+                  <Insets bottom="20.0" left="20.0" />
+               </StackPane.margin>
+            </Button>
+      </StackPane>
    </center>
    <right>
-       <HBox fx:id="sideScreen" alignment="CENTER" BorderPane.alignment="CENTER">
-         <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0">
-            <padding>
-               <Insets bottom="20.0" left="20.0" top="15.0" />
-            </padding>
-         </VBox>
           <VBox fx:id="sideBar" prefHeight="358.0" prefWidth="41.0" BorderPane.alignment="CENTER">
-              <ToggleButton fx:id="ansQuestions" onAction="#showHideAnsQuestions" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="AnsQ">
-                  <tooltip><Tooltip text="Answered Questions" /></tooltip>
+              <ToggleButton fx:id="ansQuestions" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#showHideAnsQuestions" text="AnsQ">
+                  <tooltip>
+                  <Tooltip text="Answered Questions" />
+               </tooltip>
               </ToggleButton>
-             <ToggleButton fx:id="polls" onAction="#showHidePolls" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="Polls" >
-                 <tooltip><Tooltip text="Polls" /></tooltip>
+             <ToggleButton fx:id="polls" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#showHidePolls" text="Polls">
+                 <tooltip>
+                  <Tooltip text="Polls" />
+               </tooltip>
              </ToggleButton>
              <Pane prefHeight="323.0" prefWidth="41.0" VBox.vgrow="ALWAYS" />
-             <Button fx:id="leaveQuBo" minHeight="39.0" minWidth="40.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="41.0" text="Leave" >
-                 <tooltip><Tooltip text="Leave Question Board" /></tooltip>
+             <Button fx:id="leaveQuBo" minHeight="39.0" minWidth="40.0" mnemonicParsing="false" onAction="#leaveQuBo" prefHeight="39.0" prefWidth="41.0" text="Leave">
+                 <tooltip>
+                  <Tooltip text="Leave Question Board" />
+               </tooltip>
              </Button>
           </VBox>
-       </HBox>
    </right>
 </BorderPane>

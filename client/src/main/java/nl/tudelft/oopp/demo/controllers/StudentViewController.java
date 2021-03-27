@@ -1,11 +1,16 @@
 package nl.tudelft.oopp.demo.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.Pane;
@@ -20,18 +25,42 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
+import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
+import nl.tudelft.oopp.demo.views.AlertDialog;
+import nl.tudelft.oopp.demo.views.ConfirmationDialog;
+import nl.tudelft.oopp.demo.communication.ServerCommunication;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
+import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.demo.utilities.sorting.Sorting;
+import nl.tudelft.oopp.demo.views.GetTextDialog;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
 
 public class StudentViewController {
     @FXML
-    private ListView<Question> questionList;
+    private HBox topBar;
     @FXML
-    private HBox sideScreen;
+    public Button boardInfo;
+    @FXML
+    public Button helpDoc;
+    @FXML
+    private StackPane content;
+    @FXML
+    private ListView<Question> questionList;
     @FXML
     private VBox sideBar;
     @FXML
     private VBox sideMenu;
     @FXML
     private Pane paceVotePane;
+    @FXML
+    public Button askQuestion;
     @FXML
     private ToggleButton hamburger;
     @FXML
@@ -41,102 +70,141 @@ public class StudentViewController {
     @FXML
     private Button leaveQuBo;
 
+    private boolean sideMenuOpen;
+
+    private String authorName;
+
+    private static final Gson gson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+            .create();
+
+    private HashSet<UUID> upvoteList = new HashSet<>();
+    private HashSet<UUID> askedQuestionList = new HashSet<>();
+
+    private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
+
+    private QuestionBoardDetailsDto quBo;
+    private QuestionDetailsDto[] answeredQuestions;
+    private QuestionDetailsDto[] unansweredQuestions;
+
+    /**
+     * Method that sets the QuestionBoardDetailsDto of the student view.
+     *
+     * @param quBo  The QuestionBoardDetailsDto of the question board that the student joined.
+     */
+    public void setQuBo(QuestionBoardDetailsDto quBo) {
+        this.quBo = quBo;
+    }
+
     /**
      * Code that is run upon loading StudentView.fxml
      */
     @FXML
     private void initialize() {
-        //Get questions
-        ObservableList<Question> data = FXCollections.observableArrayList();
-        data.addAll(new Question(2, "What is life?"),
-                new Question(42,"Trolley problem."
-                        + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                        + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                        + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
-
-        questionList.setItems(data);
-        questionList.setCellFactory(listView -> new QuestionListCell());
+        testQuestions();
+        //Display the questions
+        displayQuestions();
 
         //Hide side menu and sidebar
-        sideScreen.managedProperty().bind(sideScreen.visibleProperty());
         sideBar.managedProperty().bind(sideBar.visibleProperty());
         sideMenu.managedProperty().bind(sideMenu.visibleProperty());
-        sideScreen.setVisible(false);
+        sideBar.setVisible(false);
         sideMenu.setVisible(false);
     }
 
+    private void testQuestions() {
+        ObservableList<Question> data = FXCollections.observableArrayList();
+        data.addAll(new Question(2, "What is life?"),
+            new Question(42,"Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
+
+        questionList.setItems(data);
+        questionList.setCellFactory(listView -> new QuestionListCell());
+    }
+
     /**
-     * Toggles the visibility of the sideScreen.
+     * Method that displays the questions that are in the question board on the screen. Answered questions
+     * will be sorted by the time at which they were answered, and unanswered questions will be sorted by
+     * the number of upvotes they have received.
      */
-    public void showHideSideScreen() {
-        if (sideScreen.isVisible() && sideMenu.isVisible()) {
-            sideScreen.setVisible(false);
-            paceVotePane.setVisible(true);
-        } else {
-            sideScreen.setVisible(!sideScreen.isVisible());
+    private void displayQuestions() {
+        //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
+        //not null.
+
+        // To be deleted in final version
+
+        if (quBo == null) {
+            divideQuestions(null);
+            return;
         }
-    }
 
-    /**
-     * Toggles the visibility of the answered questions menu.
-     */
-    public void showHideAnsQuestions() {
-        if (sideMenu.isVisible() && polls.isSelected()) {
-            polls.setSelected(false);
-            sideMenu.getChildren().clear();
-            showAnsQuestions();
-        } else if (!sideMenu.isVisible()) {
-            paceVotePane.setVisible(false);
-            showAnsQuestions();
+        String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
+
+        if (jsonQuestions == null) {
+            divideQuestions(null);
         } else {
-            sideMenu.getChildren().clear();
-            sideMenu.setVisible(false);
-            paceVotePane.setVisible(true);
+            Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+                .create();
+            QuestionDetailsDto[] questions = gson.fromJson(jsonQuestions, QuestionDetailsDto[].class);
+
+            //Divide the questions over two lists and sort them.
+            divideQuestions(questions);
+            if (unansweredQuestions != null) {
+                Sorting.sortOnUpvotes(unansweredQuestions);
+            }
+            if (answeredQuestions != null) {
+                Sorting.sortOnTimeAnswered(answeredQuestions);
+            }
         }
+
+
+        //TODO: Display the questions in the list view by accessing class attributes.
     }
 
     /**
-     * Shows the content of the answered questions menu.
+     * This method will be used to divide the question list into a list of answered questions,
+     * and a list of unanswered questions.
+     *
+     * @param questions The question array that needs to be divided.
      */
-    public void showAnsQuestions() {
-        Label title = new Label("Answered Questions");
-        sideMenu.setVisible(true);
-        sideMenu.getChildren().add(title);
-
-        //TODO: Fetch questions and display in a ListView
-    }
-
-    /**
-     * Toggles the visibility of the poll menu.
-     */
-    public void showHidePolls() {
-        if (sideMenu.isVisible() && ansQuestions.isSelected()) {
-            ansQuestions.setSelected(false);
-            sideMenu.getChildren().clear();
-            showPolls();
-        } else if (!sideMenu.isVisible()) {
-            paceVotePane.setVisible(false);
-            showPolls();
-        } else {
-            sideMenu.getChildren().clear();
-            sideMenu.setVisible(false);
-            paceVotePane.setVisible(true);
-
+    private void divideQuestions(QuestionDetailsDto[] questions) {
+        //If there are no questions, initialise the questions lists with empty arrays and return.
+        if (questions == null || questions.length == 0) {
+            answeredQuestions = new QuestionDetailsDto[0];
+            unansweredQuestions = new QuestionDetailsDto[0];
+            return;
         }
+
+        //Initialise two lists to contain the answered and unanswered questions.
+        List<QuestionDetailsDto> answered = new ArrayList<>();
+        List<QuestionDetailsDto> unanswered = new ArrayList<>();
+
+        //Divide the questions over the two lists.
+        for (QuestionDetailsDto question : questions) {
+            if (question.getAnswered() != null) {
+                answered.add(question);
+            } else {
+                unanswered.add(question);
+            }
+        }
+
+        //Convert the list of answered and unanswered questions to arrays and store them in their
+        //respective class attributes.
+        answeredQuestions = answered.toArray(new QuestionDetailsDto[0]);
+        unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
     }
 
-    /**
-     * Shows the content of the poll menu.
-     */
-    public void showPolls() {
-        Label title = new Label("Polls");
-        sideMenu.setVisible(true);
-        sideMenu.getChildren().add(title);
+    public void displayBoardInfo() {
+    }
 
-        //TODO: Fetch polls and display in a ListView
+    public void displayHelpDoc() {
     }
 
     private static class Question {
+        private UUID questionId;
         private int upvoteNumber;
         private String questionContent;
 
@@ -156,6 +224,7 @@ public class StudentViewController {
 
     private class QuestionListCell extends ListCell<Question> {
         private GridPane content;
+        private UUID questionId;
         private Label upvoteNumber;
         private Text questionContent;
 
@@ -172,7 +241,12 @@ public class StudentViewController {
 
             //Create options menu with edit and delete options
             MenuButton options = new MenuButton();
-            options.getItems().addAll(new MenuItem("Edit"), new MenuItem("Delete"));
+            MenuItem edit = new MenuItem("Edit");
+            MenuItem delete = new MenuItem("Delete");
+            options.getItems().addAll(edit, delete);
+            //Add action listeners to options
+            edit.setOnAction(event -> System.out.println("Option 3 selected"));
+            edit.setOnAction(event -> System.out.println("Option 3 selected"));
 
             //Create GridPane and add nodes to it
             content = new GridPane();
@@ -213,4 +287,133 @@ public class StudentViewController {
         }
     }
 
+    /**
+     *  Add the questions that the user entered to the question board, add the returned question ID
+     *  to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
+     */
+    public void addQuestion() {
+        // Display a dialog to extract the user's question text,
+        // and ensure it is at least 8 characters long
+        String questionText = GetTextDialog.display("Write your question here...",
+                "Ask", "Cancel", true);
+        // The returned questionText will be null if the user decides to not ask
+        if (questionText == null) {
+            return;
+        }
+
+        String author = authorName == null ? "" : authorName;
+        String responseBody = ServerCommunication.addQuestion(quBo.getId(), questionText, author);
+        if (responseBody == null) {
+            AlertDialog.display("Unsuccessful Request",
+                    "Failed to post your question, please try again.");
+            return;
+        }
+        QuestionCreationDto qd = gson.fromJson(responseBody, QuestionCreationDto.class);
+        UUID questionId = qd.getId();
+        UUID secretCode = qd.getSecretCode();
+
+        // Add the returned question ID to the askedQuestionList
+        askedQuestionList.add(questionId);
+        // Map the secretCode as the value to the question ID as the key
+        secretCodeMap.put(questionId, secretCode);
+
+        // TODO: Update the view of questions
+    }
+
+    public void editQuestion() {
+
+    }
+
+    /**
+     * Toggles the visibility of the sideBar.
+     */
+    public void showHideSideBar() {
+        if (hamburger.isSelected()) {
+            if (sideMenuOpen) {
+                paceVotePane.setVisible(false);
+            }
+            sideMenu.setVisible(sideMenuOpen);
+            sideBar.setVisible(true);
+        } else {
+            paceVotePane.setVisible(true);
+            sideMenu.setVisible(false);
+            sideBar.setVisible(false);
+        }
+    }
+
+    /**
+     * Toggles the visibility of the answered questions menu.
+     */
+    public void showHideAnsQuestions() {
+        if (sideMenu.isVisible() && polls.isSelected()) {
+            polls.setSelected(false);
+            sideMenu.getChildren().clear();
+            showAnsQuestions();
+        } else if (!sideMenu.isVisible()) {
+            paceVotePane.setVisible(false);
+            sideMenuOpen = true;
+            showAnsQuestions();
+        } else {
+            sideMenu.getChildren().clear();
+            sideMenu.setVisible(false);
+            sideMenuOpen = false;
+            paceVotePane.setVisible(true);
+        }
+    }
+
+    /**
+     * Shows the content of the answered questions menu.
+     */
+    public void showAnsQuestions() {
+        Label title = new Label("Answered Questions");
+        sideMenu.setVisible(true);
+        sideMenu.getChildren().add(title);
+
+        //TODO: Fetch questions and display in a ListView
+    }
+
+    /**
+     * Toggles the visibility of the poll menu.
+     */
+    public void showHidePolls() {
+        if (sideMenu.isVisible() && ansQuestions.isSelected()) {
+            ansQuestions.setSelected(false);
+            sideMenu.getChildren().clear();
+            showPolls();
+        } else if (!sideMenu.isVisible()) {
+            paceVotePane.setVisible(false);
+            sideMenuOpen = true;
+            showPolls();
+        } else {
+            sideMenu.getChildren().clear();
+            sideMenu.setVisible(false);
+            sideMenuOpen = false;
+            paceVotePane.setVisible(true);
+        }
+    }
+
+    /**
+     * Shows the content of the poll menu.
+     */
+    public void showPolls() {
+        Label title = new Label("Polls");
+        sideMenu.setVisible(true);
+        sideMenu.getChildren().add(title);
+
+        //TODO: Fetch polls and display in a ListView
+    }
+
+    /**
+     * Method that runs when the Leave button is clicked.
+     * Pops up a confirmation dialogue.
+     * If the user clicks yes -> Question board closes and user returns to the JoinQuBo page
+     * If the user clicks no -> Confirmation dialogue closes and user returns to the question board
+     */
+    public void leaveQuBo() {
+        boolean backHome = ConfirmationDialog.display("Leave Question Board?",
+            "You will have to use your code to join again.");
+        if (backHome) {
+            SceneLoader.backToHome((Stage) leaveQuBo.getScene().getWindow());
+        }
+    }
 }

@@ -4,10 +4,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.controllers.CreateQuBoController;
 import nl.tudelft.oopp.demo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.demo.controllers.QuBoCodesController;
 import nl.tudelft.oopp.demo.controllers.StudentViewController;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.views.AlertDialog;
@@ -90,33 +92,38 @@ public class SceneLoader {
      * @param qd    The QuestionBoardDetailsDto object that brings data for the
      *              student view of a question board.
      */
-    public static void loadStudentView(QuestionBoardDetailsDto qd, Stage currentStage) {
+    public void loadStudentView(QuestionBoardDetailsDto qd, Stage currentStage) {
         // Create an FXMLLoader of StudentView.fxml
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/StudentView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlsheets/StudentView.fxml"));
 
-        Parent root = null;
+        // Create a new stage to load the student view
+        Stage newStage = new Stage();
+        Scene newScene = null;
+        // Check if file can be loaded
         try {
-            root = loader.load();
+            newScene = new Scene(loader.load());
+            newStage.setScene(newScene);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Get the controller of StudentView
-        StudentViewController controller = loader.getController();
-
-        UUID boardId = qd.getId();
-
-        // TODO: need a method to update data in studentView
-
-        // Check if root is null
-        if (root == null) {
+        // Check if newScene is null
+        if (newScene == null) {
             AlertDialog.display("", "Unable to display the student view");
             return;
         }
 
-        //Display the new scene
-        currentStage.setScene(new Scene(root));
-        currentStage.setTitle(qd.getTitle());
+        // Get controller and initialize qb
+        StudentViewController controller = loader.getController();
+        loader.setController(controller);
+        controller.setQuBo(qd);
+
+        // TODO: need a method to update data in studentView
+
+        // Close current stage and show new stage
+        currentStage.close();
+        newStage.show();
+        newStage.setTitle(qd.getTitle());
     }
 
     /**
