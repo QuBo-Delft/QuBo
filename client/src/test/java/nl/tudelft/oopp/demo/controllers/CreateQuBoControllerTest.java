@@ -16,7 +16,6 @@ import org.testfx.matcher.base.WindowMatchers;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @SuppressWarnings("ALL")
 class CreateQuBoControllerTest extends TestFxBase {

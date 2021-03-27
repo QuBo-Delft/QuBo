@@ -25,11 +25,11 @@ public abstract class TestFxBase {
 
     public Scene preStart(Stage stage, String fxmlSheet) throws IOException {
         FXMLLoader loadedFxml = loader(fxmlSheet);
-        return start(stage, loadedFxml);
+        Parent root = loadedFxml.load();
+        return start(stage, root);
     }
 
-    public Scene start(Stage stage, FXMLLoader loadedFxml) throws IOException {
-        Parent root = loadedFxml.load();
+    public Scene start(Stage stage, Parent root) {
         stage.setScene(new Scene(root));
         stage.show();
 
@@ -38,6 +38,7 @@ public abstract class TestFxBase {
 
     public Scene startCreation(Stage stage, String fxmlSheet, QuestionBoardCreationDto qc) throws IOException {
         FXMLLoader loadedFxml = loader(fxmlSheet);
+        Parent root = loadedFxml.load();
 
         // Get the controller of QuBoCodes
         QuBoCodesController controller = loadedFxml.getController();
@@ -45,11 +46,12 @@ public abstract class TestFxBase {
         // Transfer the data for QuBoCodes
         controller.displayCodes(qc);
 
-        return start(stage, loadedFxml);
+        return start(stage, root);
     }
 
     public Scene startDetails(Stage stage, String fxmlSheet, UUID boardIdT) throws IOException {
         FXMLLoader loadedFxml = loader(fxmlSheet);
+        Parent root = loadedFxml.load();
 
         String resBody = ServerCommunication.retrieveBoardDetails(boardIdT);
 
@@ -65,7 +67,7 @@ public abstract class TestFxBase {
 
         UUID boardId = qd.getId();
         //TODO:currentStage.setTitle(qd.getTitle());
-        return start(stage, loadedFxml);
+        return start(stage, root);
     }
 
     public FXMLLoader loader(String fxmlSheet) {

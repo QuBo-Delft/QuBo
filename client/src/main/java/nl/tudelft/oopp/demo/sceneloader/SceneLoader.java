@@ -52,11 +52,11 @@ public class SceneLoader {
     /**
      * This method aims to load the page that displays the student code and moderator code.
      *
-     * @param qd    The QuestionBoardCreationDto object to be transferred to the controller
+     * @param qc    The QuestionBoardCreationDto object to be transferred to the controller
      *              of QuestionBoardCodes.
      *
      */
-    public static void loadQuestionBoardCodes(QuestionBoardCreationDto qd, Stage currentStage) {
+    public static void loadQuestionBoardCodes(QuestionBoardCreationDto qc, Stage currentStage) {
         // Create an FXMLLoader of QuBoCodes.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/QuBoCodes.fxml"));
 
@@ -71,7 +71,7 @@ public class SceneLoader {
         QuBoCodesController controller = loader.getController();
 
         // Transfer the data for QuBoCodes
-        controller.displayCodes(qd);
+        controller.displayCodes(qc);
 
         // Check if root is null
         if (root == null) {
