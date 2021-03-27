@@ -244,7 +244,7 @@ public class StudentViewController {
             content = new GridPane();
             upvoteNumber = new Label();
             questionContent = new Text();
-            //Bind the managed property to the visible property so that when the node is
+            //Bind the managed property to the visible property so that the node is not accounted for
             //in the layout when it is not visible.
             questionContent.managedProperty().bind(questionContent.visibleProperty());
 
