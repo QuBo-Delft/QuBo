@@ -245,7 +245,7 @@ public class StudentViewController {
             upvoteNumber = new Label();
             questionContent = new Text();
             //Bind the managed property to the visible property so that when the node is
-            //not visible, it will also not be accounted for in the layout
+            //in the layout when it is not visible.
             questionContent.managedProperty().bind(questionContent.visibleProperty());
 
             //TODO:Search if questionId exists in upvoteMap and set editable
