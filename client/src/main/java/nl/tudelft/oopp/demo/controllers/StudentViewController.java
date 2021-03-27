@@ -302,6 +302,8 @@ public class StudentViewController {
             MenuButton options = new MenuButton();
             options.getItems().addAll(edit, delete);
 
+            options.visibleProperty().bind(options.disableProperty().not());
+
             //Add action listeners to options menu
             edit.setOnAction(event -> editQuestionOption(questionContent, questionVbox, options,
                 questionId, secretCodeMap.get(questionId)));
