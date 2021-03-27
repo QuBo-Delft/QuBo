@@ -430,7 +430,7 @@ public class StudentViewController {
      * Sends an editQuestion request to the server.
      * /
      * If the request is successful -> Displays alert, removes the text area and buttons, and updates
-     * content locally as well
+     * the question content locally as well.
      * If request failed -> Displays alert and doesn't change anything, prevents user losing edited question
      *
      * @param options           The options menu node (Needs to be disabled when editing)
