@@ -19,7 +19,7 @@ public class GetTextDialog {
     private static String userInput;
 
     /**
-     * This method creates a dialog window which allows users to enter text
+     * This method creates a dialog window which allows users to enter text,
      * and send the user input to the method caller.
      *
      * @param message               The message to be displayed as a prompt
@@ -69,7 +69,7 @@ public class GetTextDialog {
                     window.close();
                 }
             } else if (userInput == null || userInput.length() == 0) {
-                messageLabel.setText("Error: please enter a text");
+                messageLabel.setText("Error: Please enter text");
             } else {
                 // The user input is valid
                 window.close();
