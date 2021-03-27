@@ -11,7 +11,7 @@ import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.matcher.base.WindowMatchers;
 import org.testfx.matcher.control.LabeledMatchers;
 
-import java.awt.*;
+import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
@@ -20,8 +20,7 @@ import java.util.UUID;
 /**
  * This class tests the QuBoCodesController which controls the QuBoCodes.fxml.
  */
-class QuBoCodesControllerTest extends TestFxBase{
-
+class QuBoCodesControllerTest extends TestFxBase {
     /*
         These elements are used for the clipBoardTest method.
      */
@@ -145,7 +144,8 @@ class QuBoCodesControllerTest extends TestFxBase{
      */
     private void clipboardTest() {
         try {
-            clipboard = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+            clipboard = (String) Toolkit.getDefaultToolkit().getSystemClipboard()
+                .getData(DataFlavor.stringFlavor);
             clipboardUuid = UUID.fromString(clipboard);
         } catch (IOException | UnsupportedFlavorException e) {
             e.printStackTrace();

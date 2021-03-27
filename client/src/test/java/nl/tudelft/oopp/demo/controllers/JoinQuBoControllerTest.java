@@ -25,10 +25,10 @@ class JoinQuBoControllerTest extends TestFxBase {
     static String closedBoardModerator;
 
     /**
-     * Initiate testing done through the TestFX library
+     * Initiate testing done through the TestFX library.
      *
-     * @param stage Test stage created by the TestFX library
-     * @throws IOException IOException thrown by incorrect load in start method
+     * @param stage Test stage created by the TestFX library.
+     * @throws IOException IOException thrown by incorrect load in start method.
      */
     @Start
     void start(Stage stage) throws IOException {

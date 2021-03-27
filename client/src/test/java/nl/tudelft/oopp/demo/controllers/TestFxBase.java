@@ -124,7 +124,7 @@ public abstract class TestFxBase {
      * @param startTime time for which to schedule the question board.
      * @return          question board creation details.
      */
-    private static QuestionBoardCreationDto QuBoBuilder(Timestamp startTime) {
+    private static QuestionBoardCreationDto quBoBuilder(Timestamp startTime) {
         QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel("QuBo", startTime);
 
         // Send the request and retrieve the string body of QuestionBoardCreationDto
@@ -142,7 +142,7 @@ public abstract class TestFxBase {
      */
     public static QuestionBoardCreationDto createOpenQuBo() {
         Timestamp startTimeNow = Timestamp.valueOf(LocalDateTime.now());
-        return QuBoBuilder(startTimeNow);
+        return quBoBuilder(startTimeNow);
     }
 
     /**
@@ -153,6 +153,6 @@ public abstract class TestFxBase {
      */
     public static QuestionBoardCreationDto createClosedQuBo() {
         Timestamp startTimeTomorrow = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
-        return QuBoBuilder(startTimeTomorrow);
+        return quBoBuilder(startTimeTomorrow);
     }
 }

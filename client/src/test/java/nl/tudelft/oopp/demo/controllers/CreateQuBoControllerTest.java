@@ -90,7 +90,7 @@ class CreateQuBoControllerTest extends TestFxBase {
     }
 
     /**
-     * Click cancel button and check whether home screen is shown
+     * Click cancel button and check whether home screen is shown.
      *
      * @param robot TestFX robot.
      */
@@ -196,11 +196,11 @@ class CreateQuBoControllerTest extends TestFxBase {
      */
     @Test
     void scheduleBtnClickedDateTodayTimeHourBefore(FxRobot robot) {
-        int hourBefore = LocalDateTime.now().minusHours(1).getHour();
         robot.clickOn("#title");
         robot.write("QuBo");
         robot.clickOn("#startDate");
         picker.setValue(today);
+        int hourBefore = LocalDateTime.now().minusHours(1).getHour();
         hourSpinner.getValueFactory().setValue(hourBefore);
         robot.clickOn("#scheduleBtn");
         FxAssert.verifyThat("#errorDateTime", Node::isVisible);
@@ -214,12 +214,12 @@ class CreateQuBoControllerTest extends TestFxBase {
      */
     @Test
     void scheduleBtnClickedDateTodayTimeMinBefore(FxRobot robot) {
-        int hourCurrent = LocalDateTime.now().getHour();
-        int minBefore = LocalDateTime.now().minusMinutes(5).getMinute();
         robot.clickOn("#title");
         robot.write("QuBo");
         robot.clickOn("#startDate");
         picker.setValue(today);
+        int hourCurrent = LocalDateTime.now().getHour();
+        int minBefore = LocalDateTime.now().minusMinutes(5).getMinute();
         hourSpinner.getValueFactory().setValue(hourCurrent);
         minSpinner.getValueFactory().setValue(minBefore);
         robot.clickOn("#scheduleBtn");
@@ -244,18 +244,18 @@ class CreateQuBoControllerTest extends TestFxBase {
     }
 
     /**
-     * Click the schedule button with proper title, date, hour and minute set to current
+     * Click the schedule button with proper title, date, hour and minute set to current.
      *
      * @param robot TestFX robot.
      */
     @Test
     void scheduleBtnClickedDateTodayTimeCurrent(FxRobot robot) {
-        int hourCurrent = LocalDateTime.now().getHour();
-        int minCurrent = LocalDateTime.now().plusMinutes(1).getMinute();
         robot.clickOn("#title");
         robot.write("QuBo");
         robot.clickOn("#startDate");
         picker.setValue(today);
+        int hourCurrent = LocalDateTime.now().getHour();
+        int minCurrent = LocalDateTime.now().plusMinutes(1).getMinute();
         hourSpinner.getValueFactory().setValue(hourCurrent);
         minSpinner.getValueFactory().setValue(minCurrent);
         robot.clickOn("#scheduleBtn");
