@@ -45,8 +45,6 @@
 - As a TA I want to join question boards using the lecture codes after the lectures so that I can see all questions and written answers, if any.
 - As a TA I want to ban specific IP addresses so that they are not able to influence the state of the question board and do not distract others.
 ---
-- As an admin I want to be able to see events with information on who caused the event (names and IP addresses) so that I can take action if a specific user is not behaving appropriately.
----
 ### Could have
 ---
 - As a lecturer I want to schedule question boards to open and close as specified so that I don't need to manually do that.
@@ -68,6 +66,8 @@
 ---
 - As a TA I want to rephrase certain questions so that the questions are clear to the lecturer.
 - As a TA I want to change the colours of the interface so that the application will be more appealing to use.
+---
+- As an admin I want to be able to see events with information on who caused the event (names and IP addresses) so that I can take action if a specific user is not behaving appropriately.
 ---
 ### Won't have
 ---
