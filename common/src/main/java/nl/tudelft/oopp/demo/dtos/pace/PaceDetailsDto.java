@@ -10,6 +10,19 @@ public class PaceDetailsDto {
     public PaceDetailsDto() {
     }
 
+    /**
+     * Instantiates a new PaceDetailsDto.
+     *
+     * @param justRightVotes The JUST_RIGHT votes.
+     * @param tooFastVotes   The TOO_FAST votes.
+     * @param tooSlowVotes   The TOO_SLOW votes.
+     */
+    public PaceDetailsDto(int justRightVotes, int tooFastVotes, int tooSlowVotes) {
+        this.justRightVotes = justRightVotes;
+        this.tooFastVotes = tooFastVotes;
+        this.tooSlowVotes = tooSlowVotes;
+    }
+
     public int getJustRightVotes() {
         return justRightVotes;
     }
