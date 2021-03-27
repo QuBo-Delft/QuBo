@@ -452,7 +452,6 @@ public class StudentViewController {
             AlertDialog.display("Unsuccessful Request", "Failed to update your question, please try again.");
         } else {
             //If request successful
-            AlertDialog.display("", "Question update successful.");
             //Remove text area and buttons
             questionVbox.getChildren().remove(input);
             questionVbox.getChildren().remove(buttons);
