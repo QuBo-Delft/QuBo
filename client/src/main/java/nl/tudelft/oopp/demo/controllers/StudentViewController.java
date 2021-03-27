@@ -431,7 +431,7 @@ public class StudentViewController {
      * /
      * If the request is successful -> Displays alert, removes the text area and buttons, and updates
      * the question content locally as well.
-     * If request failed -> Displays alert and doesn't change anything, prevents user losing edited question
+     * If the request fails -> Displays an alert and prevents the user from losing the edited question.
      *
      * @param options           The options menu node (Needs to be disabled when editing)
      * @param questionId        The UUID of the question that is being edited
