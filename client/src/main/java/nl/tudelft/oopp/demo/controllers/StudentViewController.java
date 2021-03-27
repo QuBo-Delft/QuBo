@@ -526,7 +526,7 @@ public class StudentViewController {
      * Sends a deleteQuestion request to the server.
      * /
      * If the request is successful -> Displays an alert.
-     * If failed -> Displays successful removal label and icon
+     * If the request fails -> Displays successful removal label and icon.
      *
      * @param gridPane      GridPane of the cell (Needed to add a row for the confirmation dialogue)
      * @param questionId    The UUID of the question that is being edited
