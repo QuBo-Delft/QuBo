@@ -81,7 +81,7 @@ public class StudentViewController {
     private HashSet<UUID> upvoteList = new HashSet<>();
     private HashSet<UUID> askedQuestionList = new HashSet<>();
 
-    private HashMap<UUID, UUID> secretCodeMapQuestionId = new HashMap<>();
+    private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
 
     private QuestionBoardDetailsDto quBo;
     private QuestionDetailsDto[] answeredQuestions;
@@ -133,7 +133,6 @@ public class StudentViewController {
         //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
         //not null.
 
-        // Uncomment this part when you need to test the student view individually
         // To be deleted in final version
 
         if (quBo == null) {
@@ -289,19 +288,24 @@ public class StudentViewController {
     }
 
     /**
-     *  Add the user inputted question to the question board, add the returned question ID
+     *  Add the questions that the user entered to the question board, add the returned question ID
      *  to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
      */
     public void addQuestion() {
-        // Display a dialog that extract the user's question text,
-        // ensure it is at least 8 characters long
+        // Display a dialog to extract the user's question text,
+        // and ensure it is at least 8 characters long
         String questionText = GetTextDialog.display("Write your question here...",
                 "Ask", "Cancel", true);
+        // The returned questionText will be null if the user decides to not ask
+        if (questionText == null) {
+            return;
+        }
+
         String author = authorName == null ? "" : authorName;
         String responseBody = ServerCommunication.addQuestion(quBo.getId(), questionText, author);
         if (responseBody == null) {
             AlertDialog.display("Unsuccessful Request",
-                    "The request to ask a question has failed, please try again.");
+                    "Failed to post your question, please try again.");
             return;
         }
         QuestionCreationDto qd = gson.fromJson(responseBody, QuestionCreationDto.class);
@@ -311,7 +315,7 @@ public class StudentViewController {
         // Add the returned question ID to the askedQuestionList
         askedQuestionList.add(questionId);
         // Map the secretCode as the value to the question ID as the key
-        secretCodeMapQuestionId.put(questionId, secretCode);
+        secretCodeMap.put(questionId, secretCode);
 
         // TODO: Update the view of questions
     }
