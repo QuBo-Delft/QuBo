@@ -29,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.demo.controllers.helpers.NoFocusModel;
 import nl.tudelft.oopp.demo.controllers.helpers.NoSelectionModel;
+import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.demo.views.AlertDialog;
 import nl.tudelft.oopp.demo.views.ConfirmationDialog;
@@ -36,9 +37,11 @@ import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.utilities.sorting.Sorting;
+import nl.tudelft.oopp.demo.views.GetTextDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,12 +74,16 @@ public class StudentViewController {
     private Button leaveQuBo;
     private boolean sideMenuOpen;
 
-    private final Gson gson = new GsonBuilder()
-        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
-        .create();
+    private String authorName;
 
+    private static final Gson gson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+            .create();
+
+    //HashMap of questionId:upvoteId, needed when deleting vote
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
-    private HashMap<UUID, UUID> askedQuestionsMap = new HashMap<>();
+    //HashMap of questionId:secretCode
+    private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
 
     private QuestionBoardDetailsDto quBo;
     private QuestionDetailsDto[] answeredQuestions;
@@ -144,8 +151,7 @@ public class StudentViewController {
         //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
         //not null.
 
-        //Uncomment this part when you need to test the student view individually
-        //To be deleted in final version
+        // To be deleted in final version
         if (quBo == null) {
             divideQuestions(null);
             return;
@@ -307,9 +313,9 @@ public class StudentViewController {
 
             //Add action listeners to options menu
             edit.setOnAction(event -> editQuestion(questionContent, questionVbox, options,
-                questionId, askedQuestionsMap.get(questionId), space));
+                questionId, secretCodeMap.get(questionId), space));
             delete.setOnAction(event -> deleteQuestionOption(content, options, questionId,
-                askedQuestionsMap.get(questionId), space));
+                secretCodeMap.get(questionId), space));
 
             return options;
         }
@@ -340,6 +346,37 @@ public class StudentViewController {
                 setGraphic(null);
             }
         }
+    }
+
+    /**
+     *  Add the questions that the user entered to the question board, add the returned question ID
+     *  to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
+     */
+    public void addQuestion() {
+        // Display a dialog to extract the user's question text,
+        // and ensure it is at least 8 characters long
+        String questionText = GetTextDialog.display("Write your question here...",
+            "Ask", "Cancel", true);
+        // The returned questionText will be null if the user decides to not ask
+        if (questionText == null) {
+            return;
+        }
+
+        String author = authorName == null ? "" : authorName;
+        String responseBody = ServerCommunication.addQuestion(quBo.getId(), questionText, author);
+        if (responseBody == null) {
+            AlertDialog.display("Unsuccessful Request",
+                "Failed to post your question, please try again.");
+            return;
+        }
+        QuestionCreationDto qd = gson.fromJson(responseBody, QuestionCreationDto.class);
+        UUID questionId = qd.getId();
+        UUID secretCode = qd.getSecretCode();
+
+        // Map the secretCode as the value to the question ID as the key
+        secretCodeMap.put(questionId, secretCode);
+
+        // TODO: Update the view of questions
     }
 
     public void editQuestion(Text questionContent, VBox questionVbox, MenuButton options,
