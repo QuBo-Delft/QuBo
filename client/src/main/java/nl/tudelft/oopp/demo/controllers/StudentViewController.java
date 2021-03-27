@@ -9,7 +9,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -41,7 +40,6 @@ import nl.tudelft.oopp.demo.views.GetTextDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -82,7 +80,7 @@ public class StudentViewController {
 
     //HashMap of questionId:upvoteId, needed when deleting vote
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
-    //HashMap of questionId:secretCode
+    //HashMap of questionId:secretCode, needed when editing and deleting questions
     private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
 
     private QuestionBoardDetailsDto quBo;
@@ -121,25 +119,19 @@ public class StudentViewController {
             new Question(UUID.randomUUID(), 42,"Trolley problem."
                 + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
                 + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."),
-            new Question(UUID.randomUUID(), 42,"Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."),
-            new Question(UUID.randomUUID(), 42,"Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
                 + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
 
         questionList.setItems(data);
         questionList.setCellFactory(listView -> new QuestionListCell());
 
+        //Make ListCells unable to be selected individually (remove blue highlighting)
         questionList.setSelectionModel(new NoSelectionModel<>());
         questionList.setFocusModel(new NoFocusModel<>());
-
-        questionList.setEditable(true);
         //Remove border of focus
         questionList.setStyle("-fx-background-insets: 0 ;");
+
+        questionList.setEditable(true);
+
     }
 
     /**
@@ -250,6 +242,7 @@ public class StudentViewController {
 
         public QuestionListCell() {
             super();
+            content = new GridPane();
             upvoteNumber = new Label();
             questionContent = new Text();
             //Bind the managed property to the visible property so that when the node is
@@ -261,33 +254,32 @@ public class StudentViewController {
 
             this.setPadding(new Insets(0,10,20,0));
 
-            Pane space = new Pane();
-            VBox questionVbox = newQuestionVbox(space);
-            MenuButton options = newOptionsMenu(questionVbox, space);
+            VBox questionVbox = newQuestionVbox();
+            MenuButton options = newOptionsMenu(questionVbox);
 
-            //Create new GridPane and add nodes to it
-            content = new GridPane();
+            //Add nodes to gridpane
             content.addColumn(0, newUpvoteVbox(upvoteNumber));
             content.addColumn(1, questionVbox);
             content.addColumn(2, options);
 
-            content.setPadding(new Insets(6,3,8,3));
-            GridPane.setMargin(content, new Insets(0,10,0,0));
-
+            //Set column constraints
             ColumnConstraints col2 = new ColumnConstraints();
             col2.setMaxWidth(GridPane.USE_PREF_SIZE);
             col2.setHgrow(Priority.ALWAYS);
-            content.setGridLinesVisible(true);
             content.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
                 new ColumnConstraints(50));
 
             //Make questionContent resize with width of cell
             double paddingWidth = questionList.getPadding().getLeft()
                     +  questionList.getPadding().getRight() + content.getPadding().getLeft()
-                    + content.getPadding().getRight() + 130;
+                    + content.getPadding().getRight() + 140;
             questionContent.wrappingWidthProperty().bind(questionList.widthProperty()
                     .subtract(paddingWidth));
 
+            //Make gridlines visible for clarity during development
+            content.setGridLinesVisible(true);
+            //Set paddings
+            content.setPadding(new Insets(6,3,8,3));
             //Set alignment of children in the GridPane
             GridPane.setValignment(options, VPos.TOP);
             GridPane.setHalignment(options, HPos.RIGHT);
@@ -303,7 +295,7 @@ public class StudentViewController {
             return upvote;
         }
 
-        public MenuButton newOptionsMenu(VBox questionVbox, Pane space) {
+        public MenuButton newOptionsMenu(VBox questionVbox) {
             //Create the edit and delete menu items
             MenuItem edit = new MenuItem("Edit");
             MenuItem delete = new MenuItem("Delete");
@@ -312,22 +304,28 @@ public class StudentViewController {
             options.getItems().addAll(edit, delete);
 
             //Add action listeners to options menu
-            edit.setOnAction(event -> editQuestion(questionContent, questionVbox, options,
-                questionId, secretCodeMap.get(questionId), space));
+            edit.setOnAction(event -> editQuestionOption(questionContent, questionVbox, options,
+                questionId, secretCodeMap.get(questionId)));
             delete.setOnAction(event -> deleteQuestionOption(content, options, questionId,
-                secretCodeMap.get(questionId), space));
+                secretCodeMap.get(questionId)));
 
             return options;
         }
 
-        public VBox newQuestionVbox(Pane space) {
+        public VBox newQuestionVbox() {
+            //Create a pane for spacing purposes
+            Pane space = new Pane();
+            //Set pane to fixed height
             int spaceHeight = 20;
             space.setPrefHeight(spaceHeight);
             space.setPrefHeight(spaceHeight);
             space.setPrefHeight(spaceHeight);
+
+            //Bind properties for easier management
             space.managedProperty().bind(space.visibleProperty());
             space.visibleProperty().bind(this.questionContent.visibleProperty());
             VBox questionVbox = new VBox(this.questionContent, space);
+
             questionVbox.setSpacing(10);
 
             return questionVbox;
@@ -379,10 +377,27 @@ public class StudentViewController {
         // TODO: Update the view of questions
     }
 
-    public void editQuestion(Text questionContent, VBox questionVbox, MenuButton options,
-                             UUID questionId, UUID code, Pane space) {
+    /**
+     * This method runs when the user selects Edit from the options Menu.
+     * Hides the original Text node and displays a Text Area node with the content of the
+     * original question set in the Text Area for easier editing.
+     * /
+     * Displays two buttons ("Cancel" and "Update").
+     * Update -> Sends a request to the server to update question content
+     * Cancel -> Cancels the action
+     *
+     * @param questionContent   Text node of the question content (Needs to be hidden when editing)
+     * @param questionVbox      VBox containing question content (Needed to display the text area in it)
+     * @param options           The options menu node (Needs to be disabled when editing)
+     * @param questionId        The UUID of the question that is being edited
+     * @param code              Secret code of the question
+     */
+    public void editQuestionOption(Text questionContent, VBox questionVbox, MenuButton options,
+                                   UUID questionId, UUID code) {
+        //Disable options menu
         options.setDisable(true);
 
+        //Create a new TextArea and bind its size
         TextArea input = new TextArea();
         input.setWrapText(true);
         input.prefWidthProperty().bind(questionContent.wrappingWidthProperty());
@@ -390,39 +405,75 @@ public class StudentViewController {
         input.maxWidthProperty().bind(questionContent.wrappingWidthProperty());
         input.setPrefRowCount(5);
 
+        //Create the buttons and set their alignments
         Button cancel = new Button("Cancel");
         Button update = new Button("Update");
         HBox buttons = new HBox(cancel, update);
         buttons.setAlignment(Pos.CENTER_RIGHT);
         buttons.setSpacing(15);
 
-        update.setOnAction(event -> updateQuestionContent(options, questionId, code, input.getText(),
+        //Set action listeners for the buttons
+        update.setOnAction(event -> updateQuestion(options, questionId, code, input.getText(),
             questionContent, questionVbox, input, buttons));
         cancel.setOnAction(event -> cancelEdit(options, questionVbox, input, buttons, questionContent));
 
+        //Hide question text and display text area
         questionContent.setVisible(false);
         questionVbox.getChildren().add(input);
         questionVbox.getChildren().add(buttons);
         input.setText(questionContent.getText());
     }
 
-    public void updateQuestionContent(MenuButton options, UUID questionId, UUID code, String text,
-                                      Text questionContent, VBox questionVbox, TextArea input,
-                                      HBox buttons) {
+    /**
+     * This method runs when the Update button (created in editQuestion) is clicked.
+     * Sends an editQuestion request to the server.
+     * /
+     * If request successful -> Displays alert and removes text area and buttons, updates question
+     * content locally as well
+     * If request failed -> Displays alert and doesn't change anything, prevents user losing edited question
+     *
+     * @param options           The options menu node (Needs to be disabled when editing)
+     * @param questionId        The UUID of the question that is being edited
+     * @param code              Secret code of the question
+     * @param text              Content of the text area (Edited question)
+     * @param questionContent   Text node of the question content (Needs to be shown after successful edit)
+     * @param questionVbox      VBox containing question content (Needed to remove the text area in it)
+     * @param input             The Text Area node (Needs to be removed after a successful edit)
+     * @param buttons           The HBox containing the buttons (Needs to be removed after a successful edit)
+     */
+    public void updateQuestion(MenuButton options, UUID questionId, UUID code, String text,
+                               Text questionContent, VBox questionVbox, TextArea input,
+                               HBox buttons) {
+        //Send a request to the server
         String response = ServerCommunication.editQuestion(questionId, code, text);
 
         if (response == null) {
+            //If request failed
             AlertDialog.display("", "Question update failed.");
         } else {
+            //If request successful
             AlertDialog.display("", "Question update successful.");
+            //Remove text area and buttons
             questionVbox.getChildren().remove(input);
             questionVbox.getChildren().remove(buttons);
+            //Set edited text to question content area and show
             questionContent.setText(text);
             questionContent.setVisible(true);
+            //Enable options menu as editing action has been completed successfully
             options.setDisable(false);
         }
     }
 
+    /**
+     * This method runs when the Cancel button (created in editQuestion) is clicked.
+     * Removes all the nodes that were added when editing the question and displays original question.
+     *
+     * @param options           The options menu node (Needs to be disabled when editing)
+     * @param questionVbox      VBox containing question content (Needed to remove the text area in it)
+     * @param input             The Text Area node (Needs to be removed after a successful edit)
+     * @param buttons           The HBox containing the buttons (Needs to be removed after a successful edit)
+     * @param questionContent   Text node of the question content (Needs to be shown after successful edit)
+     */
     public void cancelEdit(MenuButton options, VBox questionVbox, TextArea input,
                             HBox buttons, Text questionContent) {
         options.setDisable(false);
@@ -431,44 +482,80 @@ public class StudentViewController {
         questionContent.setVisible(true);
     }
 
-    public void deleteQuestionOption(GridPane gridpane, MenuButton options, UUID questionId, UUID code,
-                                     Pane space) {
+    /**
+     * This method runs when the user selects Delete from the options Menu.
+     * Displays a confirmation dialogue and two buttons ("Yes" and "Cancel").
+     * /
+     * Yes -> Sends a request to the server to delete question
+     * Cancel -> Cancels the action
+     *
+     * @param gridpane      GridPane of the cell (Needed to add a row for the confirmation dialogue)
+     * @param options       The options menu node (Needs to be disabled when confirmation dialogue shows up)
+     * @param questionId    The UUID of the question that is being deleted
+     * @param code          Secret code of the question
+     */
+    public void deleteQuestionOption(GridPane gridpane, MenuButton options, UUID questionId, UUID code) {
+        //Disable options menu
         options.setDisable(true);
 
+        //Create new label
         Label confirmation = new Label("Are you sure you want to delete this question?");
         confirmation.setPadding(new Insets(0,5,0,0));
         confirmation.setWrapText(true);
+        //Create buttons
         Button yes = new Button("Yes");
         Button cancel = new Button("Cancel");
-
         HBox dialogue = new HBox(confirmation, yes, cancel);
+
+        //Set layouts
         dialogue.setPadding(new Insets(5,10,5,10));
         dialogue.setSpacing(15);
         dialogue.setAlignment(Pos.CENTER);
 
+        //Show confirmation dialogue
         gridpane.addRow(1, dialogue);
         GridPane.setColumnSpan(dialogue, GridPane.REMAINING);
 
         //Set action listeners
-        yes.setOnAction(event -> deleteQuestion(options, questionId, code));
+        yes.setOnAction(event -> deleteQuestion(gridpane, questionId, code));
         cancel.setOnAction(event -> cancelDeletion(options, gridpane, dialogue));
     }
 
-    /**.
+    /**
+     * This method runs when the Delete button (created in deleteQuestion) is clicked.
+     * Sends a deleteQuestion request to the server.
+     * /
+     * If successful -> Displays alert
+     * If failed -> Displays successful removal label and icon
      *
-     * @param questionId
-     * @param code
+     * @param gridPane      GridPane of the cell (Needed to add a row for the confirmation dialogue)
+     * @param questionId    The UUID of the question that is being edited
+     * @param code          Secret code of the question
      */
-    public void deleteQuestion(MenuButton options, UUID questionId, UUID code) {
+    public void deleteQuestion(GridPane gridPane, UUID questionId, UUID code) {
+        //Send a request to the server
         String response = ServerCommunication.deleteQuestion(questionId, code);
 
         if (response == null) {
+            //If response failed
             AlertDialog.display("", "Question deletion failed.");
         } else {
+            //If response successful
             AlertDialog.display("", "Question deletion successful.");
+            //TODO: Display successful removal label and icon
+            //gridPane.setVisible(false);
+            //gridPane.setManaged(false);
         }
     }
 
+    /**
+     * This method runs when the Cancel button (created in deleteQuestion) is clicked.
+     * Removes the confirmation dialogue and enables the options menu.
+     *
+     * @param options   The options menu node (Needs to be enabled)
+     * @param gridPane  GridPane of the cell (Needed to remove row of confirmation dialogue)
+     * @param dialogue  The confirmation dialogue (Needs to be removed)
+     */
     public void cancelDeletion(MenuButton options, GridPane gridPane, HBox dialogue) {
         gridPane.getChildren().remove(dialogue);
         options.setDisable(false);
