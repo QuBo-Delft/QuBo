@@ -16,6 +16,15 @@ import java.io.IOException;
  */
 class JoinQuBoControllerTest extends TestFxBase {
 
+    static {
+        if (Boolean.getBoolean("headless")) {
+            System.setProperty("testfx.robot", "glass");
+            System.setProperty("testfx.headless", "true");
+            System.setProperty("prism.order", "sw");
+            System.setProperty("prism.text", "t2k");
+        }
+    }
+
     /*
         These Strings allow store the UUIDs to string from the @BeforeAll.
      */

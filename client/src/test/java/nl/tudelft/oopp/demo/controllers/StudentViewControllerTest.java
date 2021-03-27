@@ -12,6 +12,15 @@ import java.io.IOException;
  */
 class StudentViewControllerTest extends TestFxBase {
 
+    static {
+        if (Boolean.getBoolean("headless")) {
+            System.setProperty("testfx.robot", "glass");
+            System.setProperty("testfx.headless", "true");
+            System.setProperty("prism.order", "sw");
+            System.setProperty("prism.text", "t2k");
+        }
+    }
+
     /*
         These dto's are used in various tests as well as in @Start.
      */

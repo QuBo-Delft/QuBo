@@ -21,6 +21,16 @@ import java.util.UUID;
  * This class tests the QuBoCodesController which controls the QuBoCodes.fxml.
  */
 class QuBoCodesControllerTest extends TestFxBase {
+
+    static {
+        if (Boolean.getBoolean("headless")) {
+            System.setProperty("testfx.robot", "glass");
+            System.setProperty("testfx.headless", "true");
+            System.setProperty("prism.order", "sw");
+            System.setProperty("prism.text", "t2k");
+        }
+    }
+
     /*
         These elements are used for the clipBoardTest method.
      */
