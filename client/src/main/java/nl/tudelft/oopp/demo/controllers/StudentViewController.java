@@ -323,6 +323,7 @@ public class StudentViewController {
             //Bind properties for easier management
             space.managedProperty().bind(space.visibleProperty());
             space.visibleProperty().bind(this.questionContent.visibleProperty());
+
             VBox questionVbox = new VBox(this.questionContent, space);
 
             questionVbox.setSpacing(10);
