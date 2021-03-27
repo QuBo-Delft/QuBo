@@ -20,6 +20,9 @@
 - As a TA I want to join a question board using a code that is reserved for administrators so that I can moderate it.
 - As a TA I want to delete certain questions so that the questions on the board stay relevant.
 ---
+- As an admin I want to be able to restart the server without losing any data so that all scheduled question boards remain accessible.
+- As an admin I want to be able to recover the system state if the server goes down so that no data is lost.
+---
 ### Should have
 ---
 - As a lecturer I want to have new questions appear automatically so that I don't have to manually refresh the question board.
@@ -28,22 +31,27 @@
 - As a lecturer I want to join question boards using the lecture codes after the lectures so that I can see all questions and written answers, if any.
 - As a lecturer I want to export questions and written answers in textual format so that I can easily upload them elsewhere.
 - As a lecturer I want to add written answers to questions so that I can respond to unanswered questions after the lecture has ended.
+- As a lecturer I want to ban specific IP addresses so that they are not able to influence the state of the question board and do not distract others.
 ---
 - As a student I want to upvote questions so that I can tell the lecturer which questions I would like to see answered first.
 - As a student I want to have new questions appear automatically so that I don't have to manually refresh the question board.
 - As a student I want to delete my own questions so that they won't interfere with the lecture in case they are no longer relevant.
 - As a student I want to indicate how I experience the pace of the lecture in a continuous fashion so that the lecturer can take that into account.
 - As a student I want to change my pace vote so that my pace vote accurately reflects how I experience the pace of the lecture.
+- As a student I want to pick a username upon entering a question board so that others can recognise me.
 ---
 - As a TA I want to have new questions appear automatically so that I don't have to manually refresh the question board.
 - As a TA I want to add written answers to questions during and after lectures so that I can respond to easy questions myself or summarise the lecturer's verbal answers in textual form.
 - As a TA I want to join question boards using the lecture codes after the lectures so that I can see all questions and written answers, if any.
+- As a TA I want to ban specific IP addresses so that they are not able to influence the state of the question board and do not distract others.
+---
+- As an admin I want to be able to see events with information on who caused the event (names and IP addresses) so that I can take action if a specific user is not behaving appropriately.
 ---
 ### Could have
 ---
 - As a lecturer I want to schedule question boards to open and close as specified so that I don't need to manually do that.
 - As a lecturer I want to see the most popular questions based upon multiple factors so that I can answer those questions first.
-- As a lecturer I want to set up a poll and receive statistics so that I can directly ask my students questions during the lecture.
+- As a lecturer I want to set up a poll and receive statistics in real time so that I can directly ask my students questions.
 - As a lecturer I want to close a poll once the voting has concluded so that the results are accurate.
 - As a lecturer I want to delete a poll once it is no longer necessary so that it does not clutter the interface.
 - As a lecturer I want to change the colours of the interface so that the application will be more appealing to use.
@@ -80,4 +88,7 @@
 - As a TA I want to log in with my university account so that the question boards I moderate automatically appear.
 - As a TA I want to highlight relevant questions so that the lecturer can answer them first.
 - As a TA I want to merge similar questions, by either writing a summarised question myself or choosing the most relevant one so that the board will stay concise.
+- As a TA I want to see when another moderator is answering or rephrasing a question so that I know that this task is already being taken care of.
+---
+- As an admin I want to limit the number of actions per user per time period so that the server does not overload.
 ---
