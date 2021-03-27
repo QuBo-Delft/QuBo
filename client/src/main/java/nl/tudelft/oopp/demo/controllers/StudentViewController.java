@@ -325,7 +325,6 @@ public class StudentViewController {
             space.visibleProperty().bind(this.questionContent.visibleProperty());
 
             VBox questionVbox = new VBox(this.questionContent, space);
-
             questionVbox.setSpacing(10);
 
             return questionVbox;
