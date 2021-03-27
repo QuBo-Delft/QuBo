@@ -27,6 +27,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.demo.controllers.helpers.NoFocusModel;
 import nl.tudelft.oopp.demo.controllers.helpers.NoSelectionModel;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.demo.views.AlertDialog;
@@ -125,10 +126,13 @@ public class StudentViewController {
 
         questionList.setItems(data);
         questionList.setCellFactory(listView -> new QuestionListCell());
+
         questionList.setSelectionModel(new NoSelectionModel<>());
-        questionList.setFocusTraversable(false);
+        questionList.setFocusModel(new NoFocusModel<>());
+
         questionList.setEditable(true);
-        questionList.setStyle("-fx-background-insets: 10 ;");
+        //Remove border of focus
+        questionList.setStyle("-fx-background-insets: 0 ;");
     }
 
     /**
@@ -245,6 +249,11 @@ public class StudentViewController {
             //Bind the managed property to the visible property so that when the node is
             //not visible, it will also not be accounted for in the layout
             questionContent.managedProperty().bind(questionContent.visibleProperty());
+
+            //TODO:Search if questionId exists in upvoteMap and set editable
+            //this.setEditable(true);
+
+            this.setPadding(new Insets(0,10,20,0));
 
             Pane space = new Pane();
             VBox questionVbox = newQuestionVbox(space);
