@@ -486,7 +486,7 @@ public class StudentViewController {
      * This method runs when the user selects Delete from the options Menu.
      * Displays a confirmation dialogue and two buttons ("Yes" and "Cancel").
      * /
-     * Yes -> Sends a request to the server to delete question
+     * Yes -> Sends a request to the server to delete the question.
      * Cancel -> Cancels the action
      *
      * @param gridpane      GridPane of the cell (Needed to add a row for the confirmation dialogue)
