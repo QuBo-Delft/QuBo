@@ -538,7 +538,7 @@ public class StudentViewController {
 
         if (response == null) {
             //If response failed
-            AlertDialog.display("", "Question deletion failed.");
+            AlertDialog.display("Unsuccessful Request", "Failed to delete your question, please try again.");
         } else {
             //If response successful
             AlertDialog.display("", "Question deletion successful.");
