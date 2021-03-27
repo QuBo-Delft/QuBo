@@ -540,7 +540,7 @@ public class StudentViewController {
             //If the request failed
             AlertDialog.display("Unsuccessful Request", "Failed to delete your question, please try again.");
         } else {
-            //If response successful
+            //If the request was successful
             AlertDialog.display("", "Question deletion successful.");
             //TODO: Display successful removal label and icon
             //gridPane.setVisible(false);
