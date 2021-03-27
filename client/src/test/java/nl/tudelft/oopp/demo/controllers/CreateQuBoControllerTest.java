@@ -2,6 +2,7 @@ package nl.tudelft.oopp.demo.controllers;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -17,24 +18,19 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-//@SuppressWarnings("ALL")
+@SuppressWarnings("ALL")
 class CreateQuBoControllerTest extends TestFxBase {
 
     /*
-        These dates and formatted dates are used in various tests regarding scheduling a question board
+        These dates and and objects are used for various tests. The objects are instantiated in @Start
      */
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
     LocalDate yesterday = LocalDate.now().minusDays(1);
     LocalDate today = LocalDate.now();
     LocalDate tomorrow = LocalDate.now().plusDays(1);
 
-    String yesterdayStr = yesterday.format(formatter);
-    String todayStr = today.format(formatter);
-    String tomorrowStr = tomorrow.format(formatter);
-
     Spinner hourSpinner;
     Spinner minSpinner;
+    DatePicker picker;
 
     //Initiate testing done through the TestFX library
     @Start
@@ -44,6 +40,7 @@ class CreateQuBoControllerTest extends TestFxBase {
 
         hourSpinner = (Spinner) scene.lookup("#hoursSpinner");
         minSpinner = (Spinner) scene.lookup("#minutesSpinner");
+        picker = (DatePicker) scene.lookup("#startDate");
     }
 
     /*
@@ -144,7 +141,7 @@ class CreateQuBoControllerTest extends TestFxBase {
         robot.clickOn("#title");
         robot.write("QuBo");
         robot.clickOn("#startDate");
-        robot.write(yesterdayStr);
+        picker.setValue(yesterday);
         robot.clickOn("#scheduleBtn");
         FxAssert.verifyThat("#errorDateTime", Node::isVisible);
         FxAssert.verifyThat("#errorTitle", NodeMatchers.isInvisible());
@@ -157,7 +154,7 @@ class CreateQuBoControllerTest extends TestFxBase {
         robot.clickOn("#title");
         robot.write("QuBo");
         robot.clickOn("#startDate");
-        robot.write(todayStr);
+        picker.setValue(today);
         hourSpinner.getValueFactory().setValue(hourBefore);
         robot.clickOn("#scheduleBtn");
         FxAssert.verifyThat("#errorDateTime", Node::isVisible);
@@ -172,7 +169,7 @@ class CreateQuBoControllerTest extends TestFxBase {
         robot.clickOn("#title");
         robot.write("QuBo");
         robot.clickOn("#startDate");
-        robot.write(todayStr);
+        picker.setValue(today);
         hourSpinner.getValueFactory().setValue(hourCurrent);
         minSpinner.getValueFactory().setValue(minBefore);
         robot.clickOn("#scheduleBtn");
@@ -186,7 +183,7 @@ class CreateQuBoControllerTest extends TestFxBase {
         robot.clickOn("#title");
         robot.write("QuBo");
         robot.clickOn("#startDate");
-        robot.write(tomorrowStr);
+        picker.setValue(tomorrow);
         robot.press(KeyCode.ENTER);
         robot.clickOn("#scheduleBtn");
         FxAssert.verifyThat(robot.window("(Created Question Board)"), WindowMatchers.isShowing());
@@ -196,14 +193,14 @@ class CreateQuBoControllerTest extends TestFxBase {
     @Test
     void scheduleBtnClickedDateTodayTimeCurrent(FxRobot robot) {
         int hourCurrent = LocalDateTime.now().getHour();
-        int minCurrent = LocalDateTime.now().getMinute();
+        int minCurrent = LocalDateTime.now().plusMinutes(1).getMinute();
         robot.clickOn("#title");
         robot.write("QuBo");
         robot.clickOn("#startDate");
-        robot.write(todayStr);
+        picker.setValue(today);
         hourSpinner.getValueFactory().setValue(hourCurrent);
         minSpinner.getValueFactory().setValue(minCurrent);
         robot.clickOn("#scheduleBtn");
-        FxAssert.verifyThat(robot.window(""), WindowMatchers.isShowing());
+        FxAssert.verifyThat(robot.window("Created Question Board"), WindowMatchers.isShowing());
     }
 }
