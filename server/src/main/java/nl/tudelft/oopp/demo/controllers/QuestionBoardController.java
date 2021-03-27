@@ -215,8 +215,8 @@ public class QuestionBoardController {
     @RequestMapping(value = "/{boardid}/pace", method = GET)
     @ResponseBody
     public PaceDetailsDto retrievePaceDetails(
-            @PathVariable("boardid") UUID boardId,
-            @RequestParam("code") UUID moderatorCode) {
+        @PathVariable("boardid") UUID boardId,
+        @RequestParam("code") UUID moderatorCode) {
         // 400 is thrown upon bad formatting automatically
         QuestionBoard questionBoard = service.getBoardById(boardId);
         // Throw 404 when the board does not exist
@@ -224,12 +224,12 @@ public class QuestionBoardController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }
         //Throw 403 if the provided moderator code does not equal that of the question board
-        if (questionBoard.getModeratorCode() != moderatorCode) {
+        if (!questionBoard.getModeratorCode().equals(moderatorCode)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid moderator code");
         }
 
-        //TODO: Get the data and return it
-        return null;
+        var dto = paceVoteService.getAggregatedVotes(boardId);
+        return dto;
     }
 
 
@@ -271,7 +271,7 @@ public class QuestionBoardController {
         UUID paceVoteBoardId = vote.getQuestionBoard().getId();
         if (!paceVoteBoardId.equals(boardId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pace vote was not found in "
-                    + "requested Question board");
+                + "requested Question board");
         }
         PaceVoteDetailsDto dto = modelMapper.map(vote, PaceVoteDetailsDto.class);
         // Delete actual vote
