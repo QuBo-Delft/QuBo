@@ -525,7 +525,7 @@ public class StudentViewController {
      * This method runs when the Delete button (created in deleteQuestion) is clicked.
      * Sends a deleteQuestion request to the server.
      * /
-     * If successful -> Displays alert
+     * If the request is successful -> Displays an alert.
      * If failed -> Displays successful removal label and icon
      *
      * @param gridPane      GridPane of the cell (Needed to add a row for the confirmation dialogue)
