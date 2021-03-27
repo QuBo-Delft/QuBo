@@ -25,7 +25,7 @@ class JoinQuBoControllerTest extends TestFxBase {
     @Start
     void start(Stage stage) throws IOException {
         String fxmlSheet = "JoinQuBo";
-        start(stage, fxmlSheet);
+        preStart(stage, fxmlSheet);
     }
 
     // Creates a closed and open QuBo for testing purposes

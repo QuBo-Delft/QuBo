@@ -28,6 +28,10 @@ public class QuBoCodesController {
     private Label studentCopySuccessful;
     @FXML
     private Button backToHome;
+    @FXML
+    private Button copyAdminBtn;
+    @FXML
+    private Button copyStudentBtn;
 
     private final PauseTransition pause = new PauseTransition(Duration.seconds(1));
     private Clipboard clipboard = Clipboard.getSystemClipboard();

@@ -58,8 +58,8 @@
             </Label>
             <Label fx:id="adminCode" prefHeight="17.0" prefWidth="92.0" styleClass="codes" text="********" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
             <Label fx:id="studentCode" prefHeight="17.0" prefWidth="92.0" styleClass="codes" text="********" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-            <Button mnemonicParsing="false" onAction="#copyAdminCode" styleClass="copyButton" text="Copy Admin Code" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
-            <Button mnemonicParsing="false" onAction="#copyStudentCode" styleClass="copyButton" text="Copy Student Code" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
+            <Button fx:id="copyAdminBtn" mnemonicParsing="false" onAction="#copyAdminCode" styleClass="copyButton" text="Copy Admin Code" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+            <Button fx:id="copyStudentBtn" mnemonicParsing="false" onAction="#copyStudentCode" styleClass="copyButton" text="Copy Student Code" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
       <Label fx:id="adminCopySuccessful" text="Admin code copied successfully!" textFill="#006516" visible="false" GridPane.columnIndex="5" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
       <Label fx:id="studentCopySuccessful" text="Student code copied successfully!" textFill="#006516" visible="false" GridPane.columnIndex="5" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
             <Button fx:id="backToHome" mnemonicParsing="false" onAction="#backToHome" text="Back to Homepage" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="TOP" />

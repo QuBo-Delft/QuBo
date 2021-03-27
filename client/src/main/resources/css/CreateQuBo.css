@@ -67,7 +67,7 @@
     -fx-faint-focus-color: #E5A86D;
 }
 
-#cancelButton {
+.cancelButton {
     -fx-background-color: #D8D1C7;
     -fx-background-radius: 6;
     -fx-min-width: 80;

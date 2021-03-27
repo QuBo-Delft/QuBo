@@ -2,7 +2,6 @@ package nl.tudelft.oopp.demo.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,7 +10,6 @@ import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
-import nl.tudelft.oopp.demo.views.AlertDialog;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 
@@ -23,24 +21,62 @@ import java.util.UUID;
 
 @ExtendWith(ApplicationExtension.class)
 public abstract class TestFxBase {
+    private static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create();
 
-    public Scene start(Stage stage, String fxmlSheet) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
+    public Scene preStart(Stage stage, String fxmlSheet) throws IOException {
+        FXMLLoader loadedFxml = loader(fxmlSheet);
+        return start(stage, loadedFxml);
+    }
 
-        // By giving the resource path, it is able to display a specific fxml file
-        URL xmlUrl = getClass().getResource("/fxmlsheets/" + fxmlSheet + ".fxml");
-        loader.setLocation(xmlUrl);
-        Parent root = loader.load();
-
+    public Scene start(Stage stage, FXMLLoader loadedFxml) throws IOException {
+        Parent root = loadedFxml.load();
         stage.setScene(new Scene(root));
         stage.show();
 
         return stage.getScene();
     }
 
-    private static QuestionBoardCreationDto QuBoBuilder(Timestamp startTime) {
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create();
+    public Scene startCreation(Stage stage, String fxmlSheet, QuestionBoardCreationDto qc) throws IOException {
+        FXMLLoader loadedFxml = loader(fxmlSheet);
 
+        // Get the controller of QuBoCodes
+        QuBoCodesController controller = loadedFxml.getController();
+
+        // Transfer the data for QuBoCodes
+        controller.displayCodes(qc);
+
+        return start(stage, loadedFxml);
+    }
+
+    public Scene startDetails(Stage stage, String fxmlSheet, UUID boardIdT) throws IOException {
+        FXMLLoader loadedFxml = loader(fxmlSheet);
+
+        String resBody = ServerCommunication.retrieveBoardDetails(boardIdT);
+
+        QuestionBoardDetailsDto qd = gson.fromJson(resBody, QuestionBoardDetailsDto.class);
+
+        if (fxmlSheet.equals("StudentView")) {
+            // Get the controller of StudentView
+            StudentViewController controller = loadedFxml.getController();
+        } else {
+            //Get the controller of ModeratorView
+            ModeratorViewController controller = loadedFxml.getController();
+        }
+
+        UUID boardId = qd.getId();
+        //TODO:currentStage.setTitle(qd.getTitle());
+        return start(stage, loadedFxml);
+    }
+
+    public FXMLLoader loader(String fxmlSheet) {
+        FXMLLoader loader = new FXMLLoader();
+        // By giving the resource path, it is able to display a specific fxml file
+        URL xmlUrl = getClass().getResource("/fxmlsheets/" + fxmlSheet + ".fxml");
+        loader.setLocation(xmlUrl);
+        return loader;
+    }
+
+    private static QuestionBoardCreationDto QuBoBuilder(Timestamp startTime) {
         QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel("QuBo", startTime);
 
         // Send the request and retrieve the string body of QuestionBoardCreationDto

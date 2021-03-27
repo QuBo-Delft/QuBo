@@ -26,14 +26,14 @@
     <VBox alignment="CENTER" prefHeight="200.0" prefWidth="233.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
         <Label fx:id="errorMessageLabel" prefHeight="34.0" text="Error: Could not find the requested question board!&#10;Please check if you inserted the code correctly!" textAlignment="CENTER" textFill="RED" visible="false" VBox.vgrow="ALWAYS" />
         <TextField fx:id="questionBoardCode" alignment="CENTER" promptText="Enter code here..." />
-        <Button id="join-button" fx:id="joinBtn" mnemonicParsing="false" onAction="#joinButtonClicked" text="Join" textAlignment="CENTER" />
+        <Button fx:id="joinBtn" styleClass="joinBtn" mnemonicParsing="false" onAction="#joinButtonClicked" text="Join" textAlignment="CENTER" />
         <opaqueInsets>
             <Insets />
         </opaqueInsets>
     </VBox>
     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
         <Label id="or" text="or" />
-        <Button id="create-qb-button" fx:id="createBtn" mnemonicParsing="false" onAction="#createButtonClicked" text="Create&#10;Question Board" textAlignment="CENTER" />
+        <Button fx:id="createBtn" styleClass="createBtn" mnemonicParsing="false" onAction="#createButtonClicked" text="Create&#10;Question Board" textAlignment="CENTER" />
         <opaqueInsets>
             <Insets />
         </opaqueInsets>

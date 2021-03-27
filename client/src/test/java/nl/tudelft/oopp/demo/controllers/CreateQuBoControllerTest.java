@@ -3,6 +3,7 @@ package nl.tudelft.oopp.demo.controllers;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Spinner;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+//@SuppressWarnings("ALL")
 class CreateQuBoControllerTest extends TestFxBase {
 
     /*
@@ -38,7 +40,7 @@ class CreateQuBoControllerTest extends TestFxBase {
     @Start
     void start(Stage stage) throws IOException {
         String fxmlSheet = "CreateQuBo";
-        Scene scene = start(stage, fxmlSheet);
+        Scene scene = preStart(stage, fxmlSheet);
 
         hourSpinner = (Spinner) scene.lookup("#hoursSpinner");
         minSpinner = (Spinner) scene.lookup("#minutesSpinner");
@@ -72,6 +74,13 @@ class CreateQuBoControllerTest extends TestFxBase {
         robot.write("null");
         robot.clickOn("#createBtn");
         FxAssert.verifyThat(robot.window("(Created Question Board)"), WindowMatchers.isShowing());
+    }
+
+    // Click cancel button and check whether home screen is shown
+    @Test
+    void cancelBtnClick(FxRobot robot) {
+        robot.clickOn("#cancelBtn");
+        FxAssert.verifyThat(robot.window("(Join Question Board)"), WindowMatchers.isShowing());
     }
 
     // Click create now button while title has proper name
@@ -178,6 +187,7 @@ class CreateQuBoControllerTest extends TestFxBase {
         robot.write("QuBo");
         robot.clickOn("#startDate");
         robot.write(tomorrowStr);
+        robot.press(KeyCode.ENTER);
         robot.clickOn("#scheduleBtn");
         FxAssert.verifyThat(robot.window("(Created Question Board)"), WindowMatchers.isShowing());
     }
@@ -194,6 +204,6 @@ class CreateQuBoControllerTest extends TestFxBase {
         hourSpinner.getValueFactory().setValue(hourCurrent);
         minSpinner.getValueFactory().setValue(minCurrent);
         robot.clickOn("#scheduleBtn");
-        FxAssert.verifyThat(robot.window("(Created Question Board)"), WindowMatchers.isShowing());
+        FxAssert.verifyThat(robot.window(""), WindowMatchers.isShowing());
     }
 }

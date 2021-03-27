@@ -127,7 +127,7 @@
             <Insets />
          </GridPane.margin>
             </Button>
-      <Button id="cancelButton" fx:id="cancelBtn" accessibleHelp="This button can be used to return to the homescreen of the application." alignment="CENTER" mnemonicParsing="false" onAction="#cancelBtnClicked" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+      <Button fx:id="cancelBtn" accessibleHelp="This button can be used to return to the homescreen of the application." alignment="CENTER" mnemonicParsing="false" onAction="#cancelBtnClicked" styleClass="cancelButton" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets />
          </GridPane.margin>

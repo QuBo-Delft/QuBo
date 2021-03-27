@@ -25,10 +25,9 @@ public class JoinQuBoController {
     @FXML
     private Label errorMessageLabel;
     @FXML
-    private Button createBtn;
-    @FXML
     private Button joinBtn;
-
+    @FXML
+    private Button createBtn;
 
     private static final Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
@@ -72,6 +71,7 @@ public class JoinQuBoController {
         // We check whether the question board exists; If not show the error message label.
         if (resBody == null) {
             errorMessageLabel.setVisible(true);
+            return;
         }
 
         QuestionBoardDetailsDto questionBoard = gson.fromJson(resBody, QuestionBoardDetailsDto.class);
