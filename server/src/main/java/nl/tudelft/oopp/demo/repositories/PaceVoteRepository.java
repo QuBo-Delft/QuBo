@@ -1,6 +1,5 @@
 package nl.tudelft.oopp.demo.repositories;
 
-import java.util.Set;
 import java.util.UUID;
 import javax.transaction.Transactional;
 import nl.tudelft.oopp.demo.entities.PaceType;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository("PaceVoteRepository")
 public interface PaceVoteRepository extends JpaRepository<PaceVote, UUID> {
-    Set<PaceVote> getPaceVotesByQuestionBoard(QuestionBoard boardId);
-
     PaceVote getById(UUID paceVoteId);
 
     @Transactional
