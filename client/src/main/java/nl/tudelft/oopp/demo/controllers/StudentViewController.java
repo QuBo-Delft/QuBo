@@ -9,9 +9,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.Menu;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.Region;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -20,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Label;
@@ -28,6 +27,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.demo.controllers.helpers.NoSelectionModel;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.demo.views.AlertDialog;
 import nl.tudelft.oopp.demo.views.ConfirmationDialog;
@@ -37,7 +37,7 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.utilities.sorting.Sorting;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -68,11 +68,14 @@ public class StudentViewController {
     private ToggleButton polls;
     @FXML
     private Button leaveQuBo;
-
     private boolean sideMenuOpen;
 
-    private HashSet<UUID> upvoteList = new HashSet<>();
-    private HashSet<UUID> askedQuestionList = new HashSet<>();
+    private final Gson gson = new GsonBuilder()
+        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+        .create();
+
+    private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
+    private HashMap<UUID, UUID> askedQuestionsMap = new HashMap<>();
 
     private QuestionBoardDetailsDto quBo;
     private QuestionDetailsDto[] answeredQuestions;
@@ -105,14 +108,27 @@ public class StudentViewController {
 
     private void testQuestions() {
         ObservableList<Question> data = FXCollections.observableArrayList();
-        data.addAll(new Question(2, "What is life?"),
-            new Question(42,"Trolley problem."
+
+        data.addAll(new Question(UUID.randomUUID(), 2, "What is life?"),
+            new Question(UUID.randomUUID(), 42,"Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."),
+            new Question(UUID.randomUUID(), 42,"Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."),
+            new Question(UUID.randomUUID(), 42,"Trolley problem."
                 + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
                 + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
                 + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
 
         questionList.setItems(data);
         questionList.setCellFactory(listView -> new QuestionListCell());
+        questionList.setSelectionModel(new NoSelectionModel<>());
+        questionList.setFocusTraversable(false);
+        questionList.setEditable(true);
+        questionList.setStyle("-fx-background-insets: 10 ;");
     }
 
     /**
@@ -126,20 +142,17 @@ public class StudentViewController {
 
         //Uncomment this part when you need to test the student view individually
         //To be deleted in final version
-
         if (quBo == null) {
             divideQuestions(null);
             return;
         }
+        //
 
         String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
 
         if (jsonQuestions == null) {
             divideQuestions(null);
         } else {
-            Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
-                .create();
             QuestionDetailsDto[] questions = gson.fromJson(jsonQuestions, QuestionDetailsDto[].class);
 
             //Divide the questions over two lists and sort them.
@@ -197,9 +210,12 @@ public class StudentViewController {
 
     private static class Question {
         private UUID questionId;
-        private UUID code;
         private int upvoteNumber;
         private String questionContent;
+
+        public UUID getQuestionId() {
+            return questionId;
+        }
 
         public int getUpvoteNumber() {
             return upvoteNumber;
@@ -209,7 +225,8 @@ public class StudentViewController {
             return questionContent;
         }
 
-        public Question(int upvoteNumber, String questionContent) {
+        public Question(UUID questionId, int upvoteNumber, String questionContent) {
+            this.questionId = questionId;
             this.upvoteNumber = upvoteNumber;
             this.questionContent = questionContent;
         }
@@ -218,7 +235,6 @@ public class StudentViewController {
     private class QuestionListCell extends ListCell<Question> {
         private GridPane content;
         private UUID questionId;
-        private UUID code;
         private Label upvoteNumber;
         private Text questionContent;
 
@@ -230,12 +246,49 @@ public class StudentViewController {
             //not visible, it will also not be accounted for in the layout
             questionContent.managedProperty().bind(questionContent.visibleProperty());
 
+            Pane space = new Pane();
+            VBox questionVbox = newQuestionVbox(space);
+            MenuButton options = newOptionsMenu(questionVbox, space);
+
+            //Create new GridPane and add nodes to it
+            content = new GridPane();
+            content.addColumn(0, newUpvoteVbox(upvoteNumber));
+            content.addColumn(1, questionVbox);
+            content.addColumn(2, options);
+
+            content.setPadding(new Insets(6,3,8,3));
+            GridPane.setMargin(content, new Insets(0,10,0,0));
+
+            ColumnConstraints col2 = new ColumnConstraints();
+            col2.setMaxWidth(GridPane.USE_PREF_SIZE);
+            col2.setHgrow(Priority.ALWAYS);
+            content.setGridLinesVisible(true);
+            content.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
+                new ColumnConstraints(50));
+
+            //Make questionContent resize with width of cell
+            double paddingWidth = questionList.getPadding().getLeft()
+                    +  questionList.getPadding().getRight() + content.getPadding().getLeft()
+                    + content.getPadding().getRight() + 130;
+            questionContent.wrappingWidthProperty().bind(questionList.widthProperty()
+                    .subtract(paddingWidth));
+
+            //Set alignment of children in the GridPane
+            GridPane.setValignment(options, VPos.TOP);
+            GridPane.setHalignment(options, HPos.RIGHT);
+        }
+
+        public VBox newUpvoteVbox(Label upvoteNumber) {
             //Create the Vbox for placing the upvote button and upvote number
             ToggleButton upvoteTriangle = new ToggleButton("up");
             VBox upvote = new VBox(upvoteTriangle, upvoteNumber);
             upvote.setSpacing(5);
-            upvote.setAlignment(Pos.CENTER);
+            upvote.setAlignment(Pos.TOP_CENTER);
 
+            return upvote;
+        }
+
+        public MenuButton newOptionsMenu(VBox questionVbox, Pane space) {
             //Create the edit and delete menu items
             MenuItem edit = new MenuItem("Edit");
             MenuItem delete = new MenuItem("Delete");
@@ -243,34 +296,26 @@ public class StudentViewController {
             MenuButton options = new MenuButton();
             options.getItems().addAll(edit, delete);
 
-            //Create GridPane and add nodes to it
-            content = new GridPane();
-            ColumnConstraints col2 = new ColumnConstraints();
-            col2.setHgrow(Priority.ALWAYS);
-
-            content.setGridLinesVisible(true);
-            content.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
-                    new ColumnConstraints(50));
-
-            content.addColumn(0, upvote);
-            VBox questionVbox = new VBox(questionContent);
-            content.addColumn(1, questionVbox);
-            content.addColumn(2, options);
-
-            //Make questionContent resize with width of cell
-            double paddingWidth = questionList.getPadding().getLeft()
-                    +  questionList.getPadding().getRight() + 120;
-            questionContent.wrappingWidthProperty().bind(questionList.widthProperty()
-                    .subtract(paddingWidth));
-
             //Add action listeners to options menu
-            edit.setOnAction(event -> editQuestion(questionContent, questionVbox, options, questionId, code));
-            delete.setOnAction(event -> deleteQuestionOption(content, options, questionId, code));
+            edit.setOnAction(event -> editQuestion(questionContent, questionVbox, options,
+                questionId, askedQuestionsMap.get(questionId), space));
+            delete.setOnAction(event -> deleteQuestionOption(content, options, questionId,
+                askedQuestionsMap.get(questionId), space));
 
-            //Set alignment of children in the GridPane
-            upvote.setAlignment(Pos.TOP_CENTER);
-            GridPane.setValignment(options, VPos.TOP);
-            GridPane.setHalignment(options, HPos.RIGHT);
+            return options;
+        }
+
+        public VBox newQuestionVbox(Pane space) {
+            int spaceHeight = 20;
+            space.setPrefHeight(spaceHeight);
+            space.setPrefHeight(spaceHeight);
+            space.setPrefHeight(spaceHeight);
+            space.managedProperty().bind(space.visibleProperty());
+            space.visibleProperty().bind(this.questionContent.visibleProperty());
+            VBox questionVbox = new VBox(this.questionContent, space);
+            questionVbox.setSpacing(10);
+
+            return questionVbox;
         }
 
         @Override
@@ -280,6 +325,7 @@ public class StudentViewController {
             if (item != null && !empty) {
                 upvoteNumber.setText(Integer.toString(item.getUpvoteNumber()));
                 questionContent.setText(item.getQuestionContent());
+                questionId = item.getQuestionId();
                 setGraphic(content);
             } else {
                 setGraphic(null);
@@ -288,19 +334,24 @@ public class StudentViewController {
     }
 
     public void editQuestion(Text questionContent, VBox questionVbox, MenuButton options,
-                             UUID questionId, UUID code) {
+                             UUID questionId, UUID code, Pane space) {
         options.setDisable(true);
 
         TextArea input = new TextArea();
         input.setWrapText(true);
         input.prefWidthProperty().bind(questionContent.wrappingWidthProperty());
+        input.minWidthProperty().bind(questionContent.wrappingWidthProperty());
+        input.maxWidthProperty().bind(questionContent.wrappingWidthProperty());
+        input.setPrefRowCount(5);
 
         Button cancel = new Button("Cancel");
         Button update = new Button("Update");
         HBox buttons = new HBox(cancel, update);
         buttons.setAlignment(Pos.CENTER_RIGHT);
+        buttons.setSpacing(15);
 
-        update.setOnAction(event -> updateQuestionContent(options, questionId, code, input.getText()));
+        update.setOnAction(event -> updateQuestionContent(options, questionId, code, input.getText(),
+            questionContent, questionVbox, input, buttons));
         cancel.setOnAction(event -> cancelEdit(options, questionVbox, input, buttons, questionContent));
 
         questionContent.setVisible(false);
@@ -309,14 +360,20 @@ public class StudentViewController {
         input.setText(questionContent.getText());
     }
 
-    public void updateQuestionContent(MenuButton options, UUID questionId, UUID code, String text) {
-        options.setDisable(false);
+    public void updateQuestionContent(MenuButton options, UUID questionId, UUID code, String text,
+                                      Text questionContent, VBox questionVbox, TextArea input,
+                                      HBox buttons) {
         String response = ServerCommunication.editQuestion(questionId, code, text);
 
         if (response == null) {
             AlertDialog.display("", "Question update failed.");
         } else {
             AlertDialog.display("", "Question update successful.");
+            questionVbox.getChildren().remove(input);
+            questionVbox.getChildren().remove(buttons);
+            questionContent.setText(text);
+            questionContent.setVisible(true);
+            options.setDisable(false);
         }
     }
 
@@ -328,16 +385,19 @@ public class StudentViewController {
         questionContent.setVisible(true);
     }
 
-    public void deleteQuestionOption(GridPane gridpane, MenuButton options, UUID questionId, UUID code) {
+    public void deleteQuestionOption(GridPane gridpane, MenuButton options, UUID questionId, UUID code,
+                                     Pane space) {
         options.setDisable(true);
 
         Label confirmation = new Label("Are you sure you want to delete this question?");
+        confirmation.setPadding(new Insets(0,5,0,0));
         confirmation.setWrapText(true);
         Button yes = new Button("Yes");
         Button cancel = new Button("Cancel");
 
         HBox dialogue = new HBox(confirmation, yes, cancel);
         dialogue.setPadding(new Insets(5,10,5,10));
+        dialogue.setSpacing(15);
         dialogue.setAlignment(Pos.CENTER);
 
         gridpane.addRow(1, dialogue);
