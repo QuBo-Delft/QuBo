@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -45,6 +46,9 @@ public class QuestionBoard {
 
     @OneToMany(mappedBy = "questionBoard")
     private Set<PaceVote> paceVotes;
+
+    @OneToOne(mappedBy = "questionBoard")
+    private Poll poll;
 
     /**
      * Create a new QuestionBoard instance.
