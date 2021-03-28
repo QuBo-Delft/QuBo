@@ -90,7 +90,7 @@ public class SceneLoader {
      * @param qd    The QuestionBoardDetailsDto object that brings data for the
      *              student view of a question board.
      */
-    public void loadStudentView(QuestionBoardDetailsDto qd, Stage currentStage) {
+    public void loadStudentView(QuestionBoardDetailsDto qd, String userName, Stage currentStage) {
         // Create an FXMLLoader of StudentView.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlsheets/StudentView.fxml"));
 
@@ -115,6 +115,7 @@ public class SceneLoader {
         StudentViewController controller = loader.getController();
         loader.setController(controller);
         controller.setQuBo(qd);
+        controller.setAuthorName(userName);
 
         // TODO: need a method to update data in studentView
 
@@ -130,7 +131,7 @@ public class SceneLoader {
      * @param quBo  The QuestionBoardDetailsDto object associated with the question board that the moderator
      *      wants to join.
      */
-    public static void loadModeratorView(QuestionBoardDetailsDto quBo, Stage currentStage) {
+    public static void loadModeratorView(QuestionBoardDetailsDto quBo, String userName, Stage currentStage) {
         // Create an FXMLLoader of ModeratorView.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/ModeratorView.fxml"));
 
