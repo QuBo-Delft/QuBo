@@ -13,27 +13,25 @@ import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.UUID;
 
 /**
  * Controller for the JoinQuBo.fxml
  */
 public class JoinQuBoController {
-
-    @FXML // fx:id="questionBoardCode"
+    // Input field for the question board code
+    @FXML
     private TextField questionBoardCode;
-
-    @FXML // fx:id="userName"
+    // Input field for the user name
+    @FXML
     private TextField userName;
-
-    @FXML // fx:id="errorMessageLabel"
+    // Error message shown on incorrect question board code entered or empty username
+    @FXML
     private Label errorMessageLabel;
-
+    // Button to be clicked when wanting to join a question board
     @FXML
     private Button joinBtn;
-
+    // Button to be clicked when wanting to create a question board
     @FXML
     private Button createBtn;
 
@@ -77,8 +75,7 @@ public class JoinQuBoController {
         String user = userName.getText();
         // Check if the user entered a user name.
         if (user.length() == 0) {
-            errorMessageLabel.setText("Error: No username was entered!"
-                + "\nPlease make sure to enter a username!");
+            errorMessageLabel.setText("Error: No username was entered. Please enter a username");
             errorMessageLabel.setVisible(true);
             return;
         }
