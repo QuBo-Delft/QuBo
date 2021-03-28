@@ -2,6 +2,7 @@ package nl.tudelft.oopp.demo.repositories;
 
 import nl.tudelft.oopp.demo.entities.Poll;
 import nl.tudelft.oopp.demo.entities.PollOption;
+import nl.tudelft.oopp.demo.entities.PollVote;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,13 +14,14 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class PollOptionRepositoryTests {
+public class PollVoteRepositoryTest {
+    @Autowired
+    private PollVoteRepository pollVoteRepository;
+
     @Autowired
     private PollOptionRepository pollOptionRepository;
 
@@ -49,15 +51,21 @@ public class PollOptionRepositoryTests {
         option.setPoll(poll);
         pollOptionRepository.save(option);
 
+        PollVote vote = new PollVote();
+        vote.setPollOption(option);
+        pollVoteRepository.save(vote);
+
         // Act
-        PollOption result = pollOptionRepository.getById(option.getId());
+        PollVote result = pollVoteRepository.getById(vote.getId());
 
         // Assert
         assertNotNull(result);
-        assertEquals(option.getId(), result.getId());
-        assertEquals(option.getText(), result.getText());
-        assertEquals(option.getPoll().getId(), result.getPoll().getId());
-        assertEquals(option.getPoll().getQuestionBoard().getId(), result.getPoll().getQuestionBoard().getId());
+        assertEquals(vote.getId(), result.getId());
+        assertEquals(vote.getPollOption().getId(), result.getPollOption().getId());
+        assertEquals(vote.getPollOption().getPoll().getId(),
+                result.getPollOption().getPoll().getId());
+        assertEquals(vote.getPollOption().getPoll().getQuestionBoard().getId(),
+                result.getPollOption().getPoll().getQuestionBoard().getId());
     }
 
     @Test
@@ -78,9 +86,14 @@ public class PollOptionRepositoryTests {
         PollOption option = new PollOption();
         option.setText("Option A");
         option.setPoll(poll);
+        pollOptionRepository.save(option);
+
+        PollVote vote = new PollVote();
+        vote.setPollOption(option);
+        pollVoteRepository.save(vote);
 
         // Act
-        PollOption result = pollOptionRepository.getById(UUID.randomUUID());
+        PollVote result = pollVoteRepository.getById(UUID.randomUUID());
 
         // Assert
         assertNull(result);
