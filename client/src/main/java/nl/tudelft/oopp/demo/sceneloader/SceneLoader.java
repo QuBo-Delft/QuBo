@@ -48,6 +48,7 @@ public class SceneLoader {
 
         // Display the new scene
         currentStage.setScene(new Scene(root));
+        currentStage.centerOnScreen();
     }
 
     /**
@@ -82,6 +83,7 @@ public class SceneLoader {
 
         // Display the new scene
         currentStage.setScene(new Scene(root));
+        currentStage.centerOnScreen();
     }
 
     /**
@@ -182,6 +184,7 @@ public class SceneLoader {
         }
 
         currentStage.setScene(new Scene(root));
+        currentStage.centerOnScreen();
     }
 
 }
