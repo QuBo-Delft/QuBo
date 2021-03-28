@@ -64,7 +64,14 @@ subprojects {
         outputs.dir snippetsDir
         useJUnitPlatform()
 
-        jvmArgs "-Dheadless=${project.hasProperty('headless') ? project.headless : true}"
+        systemProperty 'java.awt.headless', 'true'
+        systemProperty 'testfx.robot', 'glass'
+        systemProperty 'testfx.headless', 'true'
+        systemProperty 'prism.order', 'sw'
+        systemProperty 'prism.text', 't2k'
+        systemProperty 'testfx.setup.timeout', '2500'
+
+        jvmArgs "-Dheadless=true"
 
         jacoco {
             enabled = true

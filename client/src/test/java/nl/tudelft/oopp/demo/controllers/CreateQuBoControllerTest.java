@@ -25,10 +25,13 @@ class CreateQuBoControllerTest extends TestFxBase {
 
     static {
         if (Boolean.getBoolean("headless")) {
+            System.setProperty("java.awt.headless", "true");
             System.setProperty("testfx.robot", "glass");
+            System.setProperty("glass.platform", "Monocle");
+            System.setProperty("monocle.platform", "Headless");
             System.setProperty("testfx.headless", "true");
             System.setProperty("prism.order", "sw");
-            System.setProperty("prism.text", "t2k");
+            System.setProperty("prism.useFontConfig", "false");
         }
     }
 
