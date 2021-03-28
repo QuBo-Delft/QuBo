@@ -453,7 +453,7 @@ public class StudentViewController {
 
     /**
      * This method is called when the upvote button is toggled off/deselected.
-     * Sends a request to delete a vote to the server, and executes different behaviour depending
+     * Sends a request to delete a vote from the server, and executes different behaviour depending
      * on the received response.
      *
      * @param questionId        The UUID of the question that the upvote needs to be removed from.
