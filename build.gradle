@@ -68,7 +68,7 @@ subprojects {
         systemProperty 'testfx.robot', 'glass'
         systemProperty 'testfx.headless', 'true'
         systemProperty 'prism.order', 'sw'
-        systemProperty 'prism.text', 't2k'
+        //systemProperty 'prism.text', 't2k'
         systemProperty 'testfx.setup.timeout', '8500'
 
         jvmArgs "-Dheadless=true -Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.verbose=true"
