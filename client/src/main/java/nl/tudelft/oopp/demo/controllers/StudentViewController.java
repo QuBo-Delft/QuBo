@@ -137,6 +137,14 @@ public class StudentViewController {
 
         questionList.setItems(data);
         questionList.setCellFactory(listView -> new QuestionListCell());
+
+        //Make ListCells unable to be selected individually (remove blue highlighting)
+        questionList.setSelectionModel(new NoSelectionModel<>());
+        questionList.setFocusModel(new NoFocusModel<>());
+        //Remove border of focus
+        questionList.setStyle("-fx-background-insets: 0 ;");
+
+        questionList.setEditable(true);
     }
 
     /**
@@ -250,8 +258,8 @@ public class StudentViewController {
             content = new GridPane();
             upvoteNumber = new Label();
             questionContent = new Text();
-            //Bind the managed property to the visible property so that when the node is
-            //not visible, it will also not be accounted for in the layout
+            //Bind the managed property to the visible property so that the node is not accounted for
+            //in the layout when it is not visible.
             questionContent.managedProperty().bind(questionContent.visibleProperty());
 
             //TODO:Search if questionId exists in upvoteMap and set editable
@@ -311,6 +319,8 @@ public class StudentViewController {
             MenuButton options = new MenuButton();
             options.getItems().addAll(edit, delete);
 
+            options.visibleProperty().bind(options.disableProperty().not());
+
             //Add action listeners to options menu
             edit.setOnAction(event -> editQuestionOption(questionContent, questionVbox, options,
                 questionId, secretCodeMap.get(questionId)));
@@ -326,14 +336,14 @@ public class StudentViewController {
             //Set pane to fixed height
             int spaceHeight = 20;
             space.setPrefHeight(spaceHeight);
-            space.setPrefHeight(spaceHeight);
-            space.setPrefHeight(spaceHeight);
+            space.setMinHeight(spaceHeight);
+            space.setMaxHeight(spaceHeight);
 
             //Bind properties for easier management
             space.managedProperty().bind(space.visibleProperty());
             space.visibleProperty().bind(this.questionContent.visibleProperty());
-            VBox questionVbox = new VBox(this.questionContent, space);
 
+            VBox questionVbox = new VBox(this.questionContent, space);
             questionVbox.setSpacing(10);
 
             return questionVbox;
@@ -513,9 +523,9 @@ public class StudentViewController {
      * This method runs when the Update button (created in editQuestion) is clicked.
      * Sends an editQuestion request to the server.
      * /
-     * If request successful -> Displays alert and removes text area and buttons, updates question
-     * content locally as well
-     * If request failed -> Displays alert and doesn't change anything, prevents user losing edited question
+     * If the request is successful -> Displays alert, removes the text area and buttons, and updates
+     * the question content locally as well.
+     * If the request fails -> Displays an alert and prevents the user from losing the edited question.
      *
      * @param options           The options menu node (Needs to be disabled when editing)
      * @param questionId        The UUID of the question that is being edited
@@ -534,17 +544,16 @@ public class StudentViewController {
 
         if (response == null) {
             //If request failed
-            AlertDialog.display("", "Question update failed.");
+            AlertDialog.display("Unsuccessful Request", "Failed to update your question, please try again.");
         } else {
             //If request successful
-            AlertDialog.display("", "Question update successful.");
             //Remove text area and buttons
             questionVbox.getChildren().remove(input);
             questionVbox.getChildren().remove(buttons);
             //Set edited text to question content area and show
             questionContent.setText(text);
             questionContent.setVisible(true);
-            //Enable options menu as editing action has been completed successfully
+            //Enable options menu as editing has been completed successfully
             options.setDisable(false);
         }
     }
@@ -571,8 +580,8 @@ public class StudentViewController {
      * This method runs when the user selects Delete from the options Menu.
      * Displays a confirmation dialogue and two buttons ("Yes" and "Cancel").
      * /
-     * Yes -> Sends a request to the server to delete question
-     * Cancel -> Cancels the action
+     * Yes -> Sends a request to the server to delete the question.
+     * Cancel -> Cancels the action.
      *
      * @param gridpane      GridPane of the cell (Needed to add a row for the confirmation dialogue)
      * @param options       The options menu node (Needs to be disabled when confirmation dialogue shows up)
@@ -610,8 +619,8 @@ public class StudentViewController {
      * This method runs when the Delete button (created in deleteQuestion) is clicked.
      * Sends a deleteQuestion request to the server.
      * /
-     * If successful -> Displays alert
-     * If failed -> Displays successful removal label and icon
+     * If the request is successful -> Displays an alert.
+     * If the request fails -> Displays successful removal label and icon.
      *
      * @param gridPane      GridPane of the cell (Needed to add a row for the confirmation dialogue)
      * @param questionId    The UUID of the question that is being edited
@@ -622,10 +631,10 @@ public class StudentViewController {
         String response = ServerCommunication.deleteQuestion(questionId, code);
 
         if (response == null) {
-            //If response failed
-            AlertDialog.display("", "Question deletion failed.");
+            //If the request failed
+            AlertDialog.display("Unsuccessful Request", "Failed to delete your question, please try again.");
         } else {
-            //If response successful
+            //If the request was successful
             AlertDialog.display("", "Question deletion successful.");
             //TODO: Display successful removal label and icon
             //gridPane.setVisible(false);

@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.MultipleSelectionModel;
 
 //This class is a selection model for the ListView which overrides certain functionalities making
-//the items on the ListView unselectable (no ugly highlighting)
+//the items on the ListView unselectable.
 
 //source: https://stackoverflow.com/a/46186195/
 public class NoSelectionModel<T> extends MultipleSelectionModel<T> {
