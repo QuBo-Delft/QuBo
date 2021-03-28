@@ -83,6 +83,8 @@ public class StudentViewController {
     //HashMap of questionId:secretCode, needed when editing and deleting questions
     private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
 
+    private String userName;
+
     private QuestionBoardDetailsDto quBo;
     private QuestionDetailsDto[] answeredQuestions;
     private QuestionDetailsDto[] unansweredQuestions;
@@ -94,6 +96,15 @@ public class StudentViewController {
      */
     public void setQuBo(QuestionBoardDetailsDto quBo) {
         this.quBo = quBo;
+    }
+
+    /**
+     * Method that sets the username of the application user.
+     *
+     * @param userName  The name of the student that joined the question board.
+     */
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     /**
