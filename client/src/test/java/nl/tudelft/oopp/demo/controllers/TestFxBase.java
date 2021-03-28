@@ -25,18 +25,6 @@ import java.util.UUID;
 @ExtendWith(ApplicationExtension.class)
 public abstract class TestFxBase {
 
-    static {
-        if (Boolean.getBoolean("headless")) {
-            System.setProperty("java.awt.headless", "true");
-            System.setProperty("testfx.robot", "glass");
-            System.setProperty("glass.platform", "Monocle");
-            System.setProperty("monocle.platform", "Headless");
-            System.setProperty("testfx.headless", "true");
-            System.setProperty("prism.order", "sw");
-            System.setProperty("prism.useFontConfig", "false");
-        }
-    }
-
     private static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create();
 
     /**

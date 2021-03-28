@@ -23,18 +23,6 @@ import java.time.LocalDateTime;
 @SuppressWarnings("ALL")
 class CreateQuBoControllerTest extends TestFxBase {
 
-    static {
-        if (Boolean.getBoolean("headless")) {
-            System.setProperty("java.awt.headless", "true");
-            System.setProperty("testfx.robot", "glass");
-            System.setProperty("glass.platform", "Monocle");
-            System.setProperty("monocle.platform", "Headless");
-            System.setProperty("testfx.headless", "true");
-            System.setProperty("prism.order", "sw");
-            System.setProperty("prism.useFontConfig", "false");
-        }
-    }
-
     /*
         These dates and and objects are used for various tests. The objects are instantiated in @Start.
      */
