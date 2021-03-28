@@ -115,7 +115,7 @@ public class SceneLoader {
         StudentViewController controller = loader.getController();
         loader.setController(controller);
         controller.setQuBo(qd);
-        controller.setUserName(userName);
+        controller.setAuthorName(userName);
 
         // TODO: need a method to update data in studentView
 
