@@ -34,7 +34,7 @@ public class Poll {
     private boolean open;
 
     @OneToOne
-    @JoinColumn(name = "question_board_id", nullable = false)
+    @JoinColumn(name = "board_id", nullable = false)
     private QuestionBoard questionBoard;
 
     @OneToMany(mappedBy = "poll", cascade = CascadeType.REMOVE, orphanRemoval = true)

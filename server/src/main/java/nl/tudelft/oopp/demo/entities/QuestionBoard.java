@@ -132,4 +132,12 @@ public class QuestionBoard {
     public void setPaceVotes(Set<PaceVote> paceVotes) {
         this.paceVotes = paceVotes;
     }
+
+    public Poll getPoll() {
+        return poll;
+    }
+
+    public void setPoll(Poll poll) {
+        this.poll = poll;
+    }
 }
