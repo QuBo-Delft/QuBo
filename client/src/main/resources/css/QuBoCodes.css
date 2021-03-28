@@ -12,7 +12,7 @@
 }
 
 .codes {
-    -fx-min-width: 135;
+    -fx-min-width: 115;
 
     -fx-font-family: "Bahnschrift";
     -fx-font-size: 14;
@@ -22,12 +22,14 @@
 .copyButton {
     -fx-background-color: #B9B3A1;
     -fx-background-radius: 6;
-    -fx-min-width: 160;
+    -fx-pref-width: 30px;
+    -fx-pref-height: 30px;
     -fx-effect: dropshadow(gaussian, #8D8776 , 2,0,0,1);
 
-    -fx-font-weight: bold;
-    -fx-text-fill: #725E54;
-    -fx-font-size: 14;
+    -fx-background-image: url('/images/qubocodes/qubocodes_copy_codes.png');
+    -fx-background-size: 25px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
 
 .attribute {

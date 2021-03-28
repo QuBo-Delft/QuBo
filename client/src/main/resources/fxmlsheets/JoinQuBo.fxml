@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.demo.controllers.JoinQuBoController">
+<GridPane alignment="CENTER_LEFT" maxHeight="400" maxWidth="600" minHeight="400" minWidth="600" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.demo.controllers.JoinQuBoController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="219.20001220703125" minWidth="10.0" percentWidth="30.0" prefWidth="110.0" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="307.20001220703125" minWidth="10.0" percentWidth="40.0" />
@@ -17,7 +23,7 @@
         <RowConstraints maxHeight="181.0" minHeight="10.0" prefHeight="174.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="128.0" minHeight="10.0" prefHeight="101.0" vgrow="SOMETIMES" />
     </rowConstraints>
-    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="233.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="233.0" spacing="10.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
         <Label fx:id="errorMessageLabel" prefHeight="34.0" text="Error: Could not find the requested question board!&#10;Please check if you inserted the code correctly!" textAlignment="CENTER" textFill="RED" visible="false" VBox.vgrow="ALWAYS" />
         <TextField fx:id="questionBoardCode" alignment="CENTER" promptText="Enter code here..." />
       <TextField fx:id="userName" alignment="CENTER" promptText="Enter user name here..." />

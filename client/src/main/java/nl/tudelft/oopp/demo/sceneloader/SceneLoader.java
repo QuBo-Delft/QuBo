@@ -123,6 +123,8 @@ public class SceneLoader {
 
         // Close current stage and show new stage
         currentStage.close();
+        newStage.setMinHeight(550);
+        newStage.setMinWidth(850);
         newStage.show();
     }
 
@@ -183,6 +185,8 @@ public class SceneLoader {
             return;
         }
 
+        currentStage.setMinWidth(Double.MIN_VALUE);
+        currentStage.setMinHeight(Double.MIN_VALUE);
         currentStage.setScene(new Scene(root));
         currentStage.centerOnScreen();
     }
