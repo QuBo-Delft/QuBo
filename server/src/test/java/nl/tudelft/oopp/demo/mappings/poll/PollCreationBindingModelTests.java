@@ -1,7 +1,6 @@
 package nl.tudelft.oopp.demo.mappings.poll;
 
 import nl.tudelft.oopp.demo.config.custommappings.PollCreationBindingModelToPollConverter;
-import nl.tudelft.oopp.demo.config.custommappings.QuestionToQuestionDetailsDtoConverter;
 import nl.tudelft.oopp.demo.dtos.poll.PollCreationBindingModel;
 import nl.tudelft.oopp.demo.entities.Poll;
 import nl.tudelft.oopp.demo.entities.PollOption;
@@ -18,6 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class PollCreationBindingModelTests {
     private ModelMapper mapper;
 
+    /**
+     * Sets up the modelmapper used for tests. Uses the custom mapping for PollCreationBindingModels to Polls.
+     */
     @BeforeEach
     public void setUp() {
         mapper = new ModelMapper();
