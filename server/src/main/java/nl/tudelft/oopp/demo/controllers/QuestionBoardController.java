@@ -13,6 +13,8 @@ import javax.validation.Valid;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteDetailsDto;
+import nl.tudelft.oopp.demo.dtos.poll.PollCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.poll.PollCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
@@ -20,12 +22,15 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.entities.PaceVote;
+import nl.tudelft.oopp.demo.entities.Poll;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.services.PaceVoteService;
+import nl.tudelft.oopp.demo.services.PollService;
 import nl.tudelft.oopp.demo.services.QuestionBoardService;
 import nl.tudelft.oopp.demo.services.QuestionService;
 
+import nl.tudelft.oopp.demo.services.exceptions.ConflictException;
 import org.modelmapper.ModelMapper;
 
 import org.modelmapper.TypeToken;
@@ -49,6 +54,7 @@ public class QuestionBoardController {
     private final QuestionBoardService service;
     private final QuestionService questionService;
     private final PaceVoteService paceVoteService;
+    private final PollService pollService;
 
     private final ModelMapper modelMapper;
 
@@ -58,15 +64,18 @@ public class QuestionBoardController {
      * @param service         The QuestionBoardService.
      * @param questionService The QuestionService.
      * @param paceVoteService The PaceVoteService
+     * @param pollService     The PollService
      * @param modelMapper     The ModelMapper.
      */
     public QuestionBoardController(QuestionBoardService service,
                                    QuestionService questionService,
                                    PaceVoteService paceVoteService,
+                                   PollService pollService,
                                    ModelMapper modelMapper) {
         this.service = service;
         this.questionService = questionService;
         this.paceVoteService = paceVoteService;
+        this.pollService = pollService;
         this.modelMapper = modelMapper;
     }
 
@@ -244,6 +253,39 @@ public class QuestionBoardController {
         PaceVoteDetailsDto dto = modelMapper.map(vote, PaceVoteDetailsDto.class);
         // Delete actual vote
         paceVoteService.deleteVote(vote);
+        return dto;
+    }
+
+    /**
+     * POST endpoint to create a Poll.
+     *
+     * @param pollModel The binding model passed by the client containing information to be used
+     *                  in creating a new Poll.
+     * @return the question board
+     */
+    @RequestMapping(value = "/{boardid}/poll", method = POST, consumes = "application/json")
+    @ResponseBody
+    public PollCreationDto createPoll(
+            @PathVariable("boardid") UUID boardId,
+            @RequestParam("code") UUID moderatorCode,
+            @Valid @RequestBody PollCreationBindingModel pollModel) {
+        QuestionBoard qb = service.getBoardById(boardId);
+
+        //Check if the question board exists
+        if (qb == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        //Check if the moderator code of the question board is equal to the code that was provided
+        //by the client.
+        if (!qb.getModeratorCode().equals(moderatorCode)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid moderator code");
+        }
+
+        //Create a new poll
+        Poll poll = pollService.createPoll(pollModel, boardId);
+
+        //Convert the poll into a PollCreationDto that is returned.
+        PollCreationDto dto = modelMapper.map(poll, PollCreationDto.class);
         return dto;
     }
 
