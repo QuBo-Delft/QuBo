@@ -97,6 +97,15 @@ public class StudentViewController {
     }
 
     /**
+     * Method that sets the username of the application user.
+     *
+     * @param authorName    The name of the student that joined the question board.
+     */
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    /**
      * Code that is run upon loading StudentView.fxml
      */
     @FXML

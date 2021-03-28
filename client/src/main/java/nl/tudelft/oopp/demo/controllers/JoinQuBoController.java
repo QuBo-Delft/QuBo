@@ -13,6 +13,8 @@ import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -20,12 +22,18 @@ import java.util.UUID;
  */
 public class JoinQuBoController {
 
-    @FXML
+    @FXML // fx:id="questionBoardCode"
     private TextField questionBoardCode;
-    @FXML
+
+    @FXML // fx:id="userName"
+    private TextField userName;
+
+    @FXML // fx:id="errorMessageLabel"
     private Label errorMessageLabel;
+
     @FXML
     private Button joinBtn;
+
     @FXML
     private Button createBtn;
 
@@ -66,6 +74,15 @@ public class JoinQuBoController {
             return;
         }
 
+        String user = userName.getText();
+        // Check if the user entered a user name.
+        if (user.length() == 0) {
+            errorMessageLabel.setText("Error: No username was entered!"
+                + "\nPlease make sure to enter a username!");
+            errorMessageLabel.setVisible(true);
+            return;
+        }
+
         String resBody = ServerCommunication.retrieveBoardDetails(boardCode);
 
         // We check whether the question board exists; If not show the error message label.
@@ -80,9 +97,9 @@ public class JoinQuBoController {
         //Load the student view if the code entered by the user was the board ID of the question board.
         //Load the moderator view if this is not the case.
         if (boardCode.equals(questionBoard.getId())) {
-            new SceneLoader().loadStudentView(questionBoard, stage);
+            new SceneLoader().loadStudentView(questionBoard, user, stage);
         } else {
-            SceneLoader.loadModeratorView(questionBoard, stage);
+            SceneLoader.loadModeratorView(questionBoard, user, stage);
         }
     }
 }
