@@ -20,10 +20,22 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * This is the base class used for all JavaFX testing by using the TestFX library.
+ * This is the base class used for all JavaFX testing by using the TestFX library. To run JavaFX tests,
+ * first run the server-side DemoApplication.class. After having started the server-side application,
+ * run any of the controller tests. By default they are in headless mode, to set this to "headfull" mode,
+ * navigate to the global gradle.build and set headless in the jvmArgs to false.
  */
 @ExtendWith(ApplicationExtension.class)
 public abstract class TestFxBase {
+
+    static {
+        if (Boolean.getBoolean("headless")) {
+            System.setProperty("java.awt.headless", "true");
+            System.setProperty("testfx.robot", "glass");
+            System.setProperty("testfx.headless", "true");
+            System.setProperty("prism.order", "sw");
+        }
+    }
 
     private static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create();
 

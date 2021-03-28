@@ -64,19 +64,14 @@ subprojects {
         outputs.dir snippetsDir
         useJUnitPlatform()
 
-        systemProperty 'java.awt.headless', 'true'
-        systemProperty 'testfx.robot', 'glass'
-        systemProperty 'testfx.headless', 'true'
-        systemProperty 'prism.order', 'sw'
-        //systemProperty 'prism.text', 't2k'
-        systemProperty 'testfx.setup.timeout', '8500'
-
-        jvmArgs "-Dheadless=true -Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.verbose=true"
+        // Set to false to enable GUI/"headfull" controller testing through TestFX
+        jvmArgs "-Dheadless=true"
 
         jacoco {
             enabled = true
             includes = ['nl.tudelft.*']
-            excludes = []
+            // Excludes the client-side controller tests from the GitLab CI Pipeline as they are not compatible
+            excludes = ['nl.tudelft.oopp.demo.controllers']
         }
 
     }
