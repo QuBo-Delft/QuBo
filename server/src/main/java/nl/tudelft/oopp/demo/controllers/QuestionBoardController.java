@@ -1,15 +1,9 @@
 package nl.tudelft.oopp.demo.controllers;
 
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
 import java.util.Set;
 import java.util.UUID;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 import nl.tudelft.oopp.demo.dtos.pace.PaceDetailsDto;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
@@ -26,15 +20,17 @@ import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.services.PaceVoteService;
 import nl.tudelft.oopp.demo.services.QuestionBoardService;
 import nl.tudelft.oopp.demo.services.QuestionService;
-
 import org.modelmapper.ModelMapper;
-
 import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
@@ -190,14 +186,16 @@ public class QuestionBoardController {
      *
      * @param boardId ID property of a board.
      * @param model   The binding model passed by the client containing the question text.
+     * @param request The HTTPServletRequest to get the IP of the user.
      * @return The newly-created question.
      */
     @RequestMapping(value = "/{boardid}/question", method = POST, consumes = "application/json")
     @ResponseBody
     public QuestionCreationDto createQuestion(
         @PathVariable("boardid") UUID boardId,
-        @Valid @RequestBody QuestionCreationBindingModel model) {
-        Question question = questionService.createQuestion(model, boardId);
+        @Valid @RequestBody QuestionCreationBindingModel model,
+        HttpServletRequest request) {
+        Question question = questionService.createQuestion(model, boardId, request.getRemoteAddr());
         QuestionCreationDto dto = modelMapper.map(question, QuestionCreationDto.class);
         return dto;
     }
