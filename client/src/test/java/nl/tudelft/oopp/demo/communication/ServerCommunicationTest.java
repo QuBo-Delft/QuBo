@@ -12,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -806,5 +808,74 @@ public class ServerCommunicationTest {
         // Verify if the request was truly made
         httpClientMock.verify()
                 .delete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2).called();
+    }
+
+    // Test if the addPoll method returns a non-null response body after being called
+    // with a valid boardId and moderator code, and receiving a response with status code 200.
+    @Test
+    public void testAddPollThroughValidRequest() {
+        // Arrange
+        String text = "Test Poll";
+        Set<String> pollOptions = new HashSet<>();
+        pollOptions.add("Option A");
+        pollOptions.add("Option B");
+
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2)
+                .doReturnStatus(200);
+        // Act
+        String responseBody = ServerCommunication.addPoll(uuid1, uuid2, text, pollOptions);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2).called();
+    }
+
+    // Test if the addPoll method returns null after being called with an invalid boardId and
+    // an invalid moderator code, and receiving a response with status code 404 with a failureToken
+    // as its body.
+    @Test
+    public void testAddPollThroughInvalidRequest() {
+        // Arrange
+        String text = "Test Poll";
+        Set<String> pollOptions = new HashSet<>();
+        pollOptions.add("Option A");
+        pollOptions.add("Option B");
+
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2)
+                .doReturnStatus(404).doReturn(failureToken);
+
+        // Act
+        String responseBody = ServerCommunication.addPoll(uuid1, uuid2, text, pollOptions);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2).called();
+    }
+
+    // Test if the addPoll method returns the successtoken after being called with a valid boardId and
+    // moderator code, and receiving a response with status code 200 with a successToken as its body.
+    @Test
+    public void testAddPollVoteGivingCorrectResponseBody() {
+        // Arrange
+        String text = "Test Poll";
+        Set<String> pollOptions = new HashSet<>();
+        pollOptions.add("Option A");
+        pollOptions.add("Option B");
+
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2)
+                .doReturn(successToken);
+
+        // Act
+        String responseBody = ServerCommunication.addPoll(uuid1, uuid2, text, pollOptions);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2).called();
     }
 }
