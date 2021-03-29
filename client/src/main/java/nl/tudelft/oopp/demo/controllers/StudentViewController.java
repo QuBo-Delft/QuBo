@@ -9,6 +9,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -26,7 +27,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.answer.AnswerDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.demo.controllers.helpers.NoFocusModel;
 import nl.tudelft.oopp.demo.controllers.helpers.NoSelectionModel;
@@ -42,7 +43,6 @@ import nl.tudelft.oopp.demo.views.GetTextDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -113,10 +113,10 @@ public class StudentViewController {
      */
     @FXML
     private void initialize() {
-        testQuestions();
+//        testQuestions();
+        startUpProperties();
         //Display the questions
         displayQuestions();
-        startUpProperties();
     }
 
     private void startUpProperties() {
@@ -140,34 +140,16 @@ public class StudentViewController {
     private void testQuestions() {
         ObservableList<Question> data = FXCollections.observableArrayList();
 
-        data.addAll(new Question(UUID.randomUUID(), 2, "What is life?"),
+        data.addAll(new Question(UUID.randomUUID(), 2, "What is life?",
+                "ChickenWings", null),
             new Question(UUID.randomUUID(), 42,"Trolley problem."
                 + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
                 + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."),
-            new Question(UUID.randomUUID(), 42,"Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."),
-            new Question(UUID.randomUUID(), 42,"Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."),
-            new Question(UUID.randomUUID(), 42,"Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem.",
+                "ChickenWings", null));
 
         questionList.setItems(data);
         questionList.setCellFactory(listView -> new QuestionListCell());
-
-        //Make ListCells unable to be selected individually (remove blue highlighting)
-        questionList.setSelectionModel(new NoSelectionModel<>());
-        questionList.setFocusModel(new NoFocusModel<>());
-        //Remove border of focus
-        questionList.setStyle("-fx-background-insets: 0 ;");
-
-        questionList.setEditable(true);
     }
 
     /**
@@ -203,6 +185,33 @@ public class StudentViewController {
             }
         }
 
+        if (unansweredQuestions.length != 0) { //There exists unanswered questions
+            //Clear current questions
+            questionList.getItems().clear();
+
+            ObservableList<Question> data = FXCollections.observableArrayList();
+            //For each question in the list create a new Question object
+            for (QuestionDetailsDto question : unansweredQuestions) {
+                Question newQu = new Question(question.getId(), question.getUpvotes(),
+                    question.getText(), question.getAuthorName(), null);
+
+                //Get Answers if there are any
+                if (question.getAnswers().size() != 0) {
+                    List<String> answers = new ArrayList<>();
+                    for (AnswerDetailsDto answer : question.getAnswers()) {
+                        answers.add(answer.getText());
+                    }
+
+                    newQu.setAnswers(answers);
+                }
+
+                //Add the question to the ObservableList
+                data.add(newQu);
+            }
+
+            questionList.setItems(data);
+            questionList.setCellFactory(listView -> new QuestionListCell());
+        }
 
         //TODO: Display the questions in the list view by accessing class attributes.
     }
@@ -241,6 +250,7 @@ public class StudentViewController {
     }
 
     public void displayBoardInfo() {
+        displayQuestions();
     }
 
     public void displayHelpDoc() {
@@ -250,6 +260,8 @@ public class StudentViewController {
         private UUID questionId;
         private int upvoteNumber;
         private String questionContent;
+        private String authorName;
+        private List<String> answers;
 
         public UUID getQuestionId() {
             return questionId;
@@ -263,37 +275,64 @@ public class StudentViewController {
             return questionContent;
         }
 
-        public Question(UUID questionId, int upvoteNumber, String questionContent) {
+        public String getAuthorName() {
+            return authorName;
+        }
+
+        public List<String> getAnswers() {
+            return answers;
+        }
+
+        public void setAnswers(List<String> answers) {
+            this.answers = answers;
+        }
+
+        public Question(UUID questionId, int upvoteNumber, String questionContent, String authorName,
+                        List<String> answers) {
             this.questionId = questionId;
             this.upvoteNumber = upvoteNumber;
             this.questionContent = questionContent;
+            this.authorName = authorName;
+            this.answers = answers;
         }
     }
 
     private class QuestionListCell extends ListCell<Question> {
         private GridPane content;
+
         private UUID questionId;
         private Label upvoteNumber;
         private Text questionContent;
 
+        private Label authorName;
+        private List<String> answers;
+
         public QuestionListCell() {
             super();
+            questionId = null;
             content = new GridPane();
             upvoteNumber = new Label();
             questionContent = new Text();
+            authorName = new Label();
+            answers = new ArrayList<>();
+
             //Bind the managed property to the visible property so that the node is not accounted for
             //in the layout when it is not visible.
             questionContent.managedProperty().bind(questionContent.visibleProperty());
 
-            //TODO:Search if questionId exists in upvoteMap and set editable
-            //this.setEditable(true);
-
             this.setPadding(new Insets(0,10,20,0));
 
-            VBox questionVbox = newQuestionVbox();
-            MenuButton options = newOptionsMenu(questionVbox);
+            VBox questionVbox = newQuestionVbox(authorName);
 
-            //Add nodes to gridpane
+            //Determine whether the question was asked by the user
+            //If yes create and display the options menu
+            MenuButton options = new MenuButton();
+            if (secretCodeMap.containsKey(questionId)) {
+                options = newOptionsMenu(questionVbox);
+                this.setEditable(true);
+            }
+
+            //Add nodes to the gridpane
             content.addColumn(0, newUpvoteVbox(upvoteNumber));
             content.addColumn(1, questionVbox);
             content.addColumn(2, options);
@@ -328,7 +367,12 @@ public class StudentViewController {
             upvote.setAlignment(Pos.TOP_CENTER);
 
             //Set event listener
-            upvoteTriangle.setOnAction(event -> upvoteQuestion(questionId, upvoteTriangle));
+            upvoteTriangle.setOnAction(event -> upvoteQuestion(questionId, upvoteTriangle, upvoteNumber));
+
+            //Set upvote triangle to selected if question has been upvoted
+            if (upvoteMap.containsKey(questionId)) {
+                upvoteTriangle.setSelected(true);
+            }
 
             return upvote;
         }
@@ -341,6 +385,7 @@ public class StudentViewController {
             MenuButton options = new MenuButton();
             options.getItems().addAll(edit, delete);
 
+            //Bind properties so that the visibility depends on the disabled property
             options.visibleProperty().bind(options.disableProperty().not());
 
             //Add action listeners to options menu
@@ -352,11 +397,14 @@ public class StudentViewController {
             return options;
         }
 
-        public VBox newQuestionVbox() {
-            //Create a pane for spacing purposes
-            Pane space = new Pane();
+        public VBox newQuestionVbox(Label authorName) {
+            //Create a pane for putting the author name
+            HBox authorHbox = new HBox(authorName);
+            authorHbox.setAlignment(Pos.BOTTOM_RIGHT);
+            BorderPane space = new BorderPane(authorHbox);
+
             //Set pane to fixed height
-            int spaceHeight = 20;
+            int spaceHeight = 40;
             space.setPrefHeight(spaceHeight);
             space.setMinHeight(spaceHeight);
             space.setMaxHeight(spaceHeight);
@@ -378,12 +426,23 @@ public class StudentViewController {
             if (item != null && !empty) {
                 upvoteNumber.setText(Integer.toString(item.getUpvoteNumber()));
                 questionContent.setText(item.getQuestionContent());
+                authorName.setText(item.getAuthorName());
                 questionId = item.getQuestionId();
+                answers = item.getAnswers();
+
+
+
                 setGraphic(content);
             } else {
                 setGraphic(null);
             }
         }
+
+        protected void functionDisplay() {
+
+        }
+
+
     }
 
     /**
@@ -436,7 +495,7 @@ public class StudentViewController {
      * @param questionId        UUID of the question that the user decides to upvote.
      * @param upvoteTriangle    The ToggleButton which the user clicks to add a vote.
      */
-    public void upvoteQuestion(UUID questionId, ToggleButton upvoteTriangle) {
+    public void upvoteQuestion(UUID questionId, ToggleButton upvoteTriangle, Label upvoteNumber) {
         if (upvoteTriangle.isSelected()) {
             //Code that runs when the button is activated
             //Check if the question has already been upvoted
@@ -444,10 +503,10 @@ public class StudentViewController {
                 AlertDialog.display("", "You have already upvoted this question!");
                 return;
             }
-            toggleUpvoteTrue(questionId, upvoteTriangle);
+            toggleUpvoteTrue(questionId, upvoteTriangle, upvoteNumber);
         } else {
             //Code that runs when the button is deactivated
-            toggleUpvoteFalse(questionId, upvoteTriangle);
+            toggleUpvoteFalse(questionId, upvoteTriangle, upvoteNumber);
         }
     }
 
@@ -459,7 +518,7 @@ public class StudentViewController {
      * @param questionId        The UUID of the question that has been upvoted.
      * @param upvoteTriangle    The upvote ToggleButton (Needs to be deselected if request fails).
      */
-    public void toggleUpvoteTrue(UUID questionId, ToggleButton upvoteTriangle) {
+    public void toggleUpvoteTrue(UUID questionId, ToggleButton upvoteTriangle, Label upvoteNumber) {
         String response = ServerCommunication.addQuestionVote(questionId);
 
         if (response == null) {
@@ -470,6 +529,10 @@ public class StudentViewController {
             //When the request is successful, store the question UUID with the vote UUID in the HashMap
             QuestionVoteDetailsDto dto = gson.fromJson(response, QuestionVoteDetailsDto.class);
             upvoteMap.put(questionId, dto.getId());
+            //Update upvote number locally
+            int number = Integer.parseInt(upvoteNumber.getText());
+            number++;
+            upvoteNumber.setText(Integer.toString(number));
         }
     }
 
@@ -481,7 +544,7 @@ public class StudentViewController {
      * @param questionId        The UUID of the question that the upvote needs to be removed from.
      * @param upvoteTriangle    The upvote ToggleButton (Needs to be reselected if request fails).
      */
-    public void toggleUpvoteFalse(UUID questionId, ToggleButton upvoteTriangle) {
+    public void toggleUpvoteFalse(UUID questionId, ToggleButton upvoteTriangle, Label upvoteNumber) {
         String response = ServerCommunication.deleteQuestionVote(questionId, upvoteMap.get(questionId));
 
         if (response == null) {
@@ -491,6 +554,10 @@ public class StudentViewController {
         } else {
             //When the request is successful, remove upvote from the HashMap
             upvoteMap.remove(questionId);
+            //Update upvote number locally
+            int number = Integer.parseInt(upvoteNumber.getText());
+            number--;
+            upvoteNumber.setText(Integer.toString(number));
         }
     }
 
@@ -619,7 +686,7 @@ public class StudentViewController {
         confirmation.setPadding(new Insets(0,5,0,0));
         confirmation.setWrapText(true);
         //Set width bounds to the dialogue so it doesn't overflow the question box
-        Double widthBind = questionList.getPadding().getLeft()
+        double widthBind = questionList.getPadding().getLeft()
             +  questionList.getPadding().getRight() + 200;
         confirmation.prefWidthProperty().bind(questionList.widthProperty().subtract(widthBind));
 
