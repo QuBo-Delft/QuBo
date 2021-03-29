@@ -184,7 +184,7 @@ public class SceneLoader {
         }
 
         currentStage.setScene(new Scene(root));
-        currentStage.setTitle("Join Question Board");
+        currentStage.setTitle("QuBo");
     }
 
 }
