@@ -815,7 +815,6 @@ public class ServerCommunicationTest {
     @Test
     public void testAddPollThroughValidRequest() {
         // Arrange
-        String text = "Test Poll";
         Set<String> pollOptions = new HashSet<>();
         pollOptions.add("Option A");
         pollOptions.add("Option B");
@@ -824,7 +823,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2)
                 .doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication.addPoll(uuid1, uuid2, text, pollOptions);
+        String responseBody = ServerCommunication.addPoll(uuid1, uuid2, "Test Poll", pollOptions);
 
         // Assert
         assertNotNull(responseBody);
@@ -838,7 +837,6 @@ public class ServerCommunicationTest {
     @Test
     public void testAddPollThroughInvalidRequest() {
         // Arrange
-        String text = "Test Poll";
         Set<String> pollOptions = new HashSet<>();
         pollOptions.add("Option A");
         pollOptions.add("Option B");
@@ -848,7 +846,7 @@ public class ServerCommunicationTest {
                 .doReturnStatus(404).doReturn(failureToken);
 
         // Act
-        String responseBody = ServerCommunication.addPoll(uuid1, uuid2, text, pollOptions);
+        String responseBody = ServerCommunication.addPoll(uuid1, uuid2, "Test Poll", pollOptions);
 
         // Assert
         assertNull(responseBody);
@@ -861,7 +859,6 @@ public class ServerCommunicationTest {
     @Test
     public void testAddPollVoteGivingCorrectResponseBody() {
         // Arrange
-        String text = "Test Poll";
         Set<String> pollOptions = new HashSet<>();
         pollOptions.add("Option A");
         pollOptions.add("Option B");
@@ -871,7 +868,7 @@ public class ServerCommunicationTest {
                 .doReturn(successToken);
 
         // Act
-        String responseBody = ServerCommunication.addPoll(uuid1, uuid2, text, pollOptions);
+        String responseBody = ServerCommunication.addPoll(uuid1, uuid2, "Test Poll", pollOptions);
 
         // Assert
         assertEquals(successToken, responseBody);
