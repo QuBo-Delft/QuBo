@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -59,7 +60,7 @@ public class StudentViewController {
     @FXML
     private VBox sideMenu;
     @FXML
-    private Pane paceVotePane;
+    private BorderPane paceVotePane;
     @FXML
     public Button askQuestion;
     @FXML
@@ -79,6 +80,7 @@ public class StudentViewController {
     @FXML
     private Label boardStatusText;
 
+    //Records if the side menu was open before hiding
     private boolean sideMenuOpen;
 
     @FXML
@@ -153,6 +155,7 @@ public class StudentViewController {
         sideMenu.setVisible(false);
 
         sideMenu.prefWidthProperty().bind(content.widthProperty().multiply(0.45));
+        paceVotePane.visibleProperty().bind(sideMenu.visibleProperty().not());
 
         //Make ListCells unable to be selected individually (remove blue highlighting)
         unAnsQuListView.setSelectionModel(new NoSelectionModel<>());
@@ -347,13 +350,9 @@ public class StudentViewController {
      */
     public void showHideSideBar() {
         if (hamburger.isSelected()) {
-            if (sideMenuOpen) {
-                paceVotePane.setVisible(false);
-            }
             sideMenu.setVisible(sideMenuOpen);
             sideBar.setVisible(true);
         } else {
-            paceVotePane.setVisible(true);
             sideMenu.setVisible(false);
             sideBar.setVisible(false);
         }
@@ -368,14 +367,12 @@ public class StudentViewController {
             sideMenu.getChildren().clear();
             showAnsQuestions();
         } else if (!sideMenu.isVisible()) {
-            paceVotePane.setVisible(false);
             sideMenuOpen = true;
             showAnsQuestions();
         } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
             sideMenuOpen = false;
-            paceVotePane.setVisible(true);
         }
     }
 
@@ -399,14 +396,12 @@ public class StudentViewController {
             sideMenu.getChildren().clear();
             showPolls();
         } else if (!sideMenu.isVisible()) {
-            paceVotePane.setVisible(false);
             sideMenuOpen = true;
             showPolls();
         } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
             sideMenuOpen = false;
-            paceVotePane.setVisible(true);
         }
     }
 
