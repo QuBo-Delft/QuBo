@@ -97,7 +97,7 @@ class CreateQuBoControllerTest extends TestFxBase {
     @Test
     void cancelBtnClick(FxRobot robot) {
         robot.clickOn("#cancelBtn");
-        FxAssert.verifyThat(robot.window("(Join Question Board)"), WindowMatchers.isShowing());
+        FxAssert.verifyThat(robot.window("(QuBo)"), WindowMatchers.isShowing());
     }
 
     /**
