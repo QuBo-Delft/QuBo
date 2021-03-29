@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class PollCreationBindingModel {
     @NotNull
-    @Length(min = 5)
+    @Length(min = 1)
     private String text;
 
     @NotNull
