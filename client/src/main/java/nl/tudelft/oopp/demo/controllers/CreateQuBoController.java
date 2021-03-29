@@ -59,7 +59,7 @@ public class CreateQuBoController {
             .create();
 
     /**
-     * Code that is run upon loading StudentView.fxml
+     * Code that is run upon loading StudentView.fxml.
      * Sources: https://stackoverflow.com/questions/32346893/javafx-datepicker-not-updating-value,
      * https://stackoverflow.com/questions/42385584/changevalue-listener-spinner-javafx.
      */
@@ -79,7 +79,6 @@ public class CreateQuBoController {
             updateSpinner(hoursSpinner, newValue));
 
         //Change the value of the minutes spinner when the focus changes.
-        //Source:
         minutesSpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) ->
                 updateSpinner(minutesSpinner, newValue));
     }
@@ -223,7 +222,7 @@ public class CreateQuBoController {
      */
     public void titleTextHandler() {
         if (errorTitle.isVisible()) {
-            errorTitle.setVisible(title.getText().length() <= 0);
+            errorTitle.setVisible(title.getText().length() == 0);
         }
     }
 
