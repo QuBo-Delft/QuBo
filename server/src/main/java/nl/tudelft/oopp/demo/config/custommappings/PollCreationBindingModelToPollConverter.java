@@ -28,19 +28,18 @@ public class PollCreationBindingModelToPollConverter {
      */
     @PostConstruct
     public void init() {
-        Converter<Set<String>, Set<PollOption>> converter =
-                new AbstractConverter<Set<String>, Set<PollOption>>() {
+        Converter<Set<String>, Set<PollOption>> converter = new AbstractConverter<>() {
+            @Override
+            protected Set<PollOption> convert(Set<String> source) {
                 Set<PollOption> result = new HashSet<>();
-                @Override
-                protected Set<PollOption> convert(Set<String> source) {
-                    source.forEach(string -> {
-                        PollOption option = new PollOption();
-                        option.setText(string);
-                        result.add(option);
-                    });
-                    return result;
-                }
-            };
+                source.forEach(string -> {
+                    PollOption option = new PollOption();
+                    option.setText(string);
+                    result.add(option);
+                });
+                return result;
+            }
+        };
         mapper.addMappings(new PropertyMap<PollCreationBindingModel, Poll>() {
             @Override
             protected void configure() {
