@@ -21,26 +21,12 @@
     -fx-text-fill: #736d69;
 }
 
-/*.yesBtn:hover {*/
-/*    -fx-background-color: #6fd007;*/
-/*    -fx-effect: dropshadow( three-pass-box, #56a404, 10.0, 0.0, 0.5, 4.0);*/
-/*    -fx-font-weight: bold;*/
-/*    -fx-text-fill: #e9fdca;*/
-/*}*/
-
 .yesBtn:hover {
     -fx-background-color: #fffdfd;
     -fx-effect: dropshadow( three-pass-box, #736d69, 10.0, 0.0, 0.5, 3.0);
     -fx-font-weight: bold;
     -fx-text-fill: black;
 }
-
-/*.noBtn:hover {*/
-/*    -fx-background-color: #11b8e2;*/
-/*    -fx-effect: dropshadow( three-pass-box, #0981a0, 10.0, 0.0, 0.5, 4.0);*/
-/*    -fx-font-weight: bold;*/
-/*    -fx-text-fill: #c9f9ff;*/
-/*}*/
 
 .noBtn:hover {
     -fx-background-color: #fffdfd;

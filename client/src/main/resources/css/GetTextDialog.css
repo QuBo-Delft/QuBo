@@ -21,19 +21,6 @@
     -fx-text-fill: #baac8f;
 }
 
-/*.submitBtn:hover {*/
-/*    -fx-background-color: #6bd203;*/
-/*    -fx-effect: dropshadow( three-pass-box, #53990a, 10.0, 0.0, 0.5, 4.0);*/
-/*    -fx-font-weight: bold;*/
-/*    -fx-text-fill: #f5ffe2;*/
-/*}*/
-
-/*.cancelBtn:hover {*/
-/*    -fx-background-color: #e30c3e;*/
-/*    -fx-effect: dropshadow( three-pass-box, #920431, 10.0, 0.0, 0.5, 4.0);*/
-/*    -fx-font-weight: bold;*/
-/*    -fx-text-fill: #ffe2e7;*/
-/*}*/
 .submitBtn:hover {
     -fx-background-color: #fffdfd;
     -fx-effect: dropshadow( three-pass-box, #988d7c, 10.0, 0.0, 0.5, 3.0);
