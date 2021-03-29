@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import nl.tudelft.oopp.demo.dtos.pace.PaceDetailsDto;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteDetailsDto;
@@ -201,6 +202,37 @@ public class QuestionBoardController {
         return dto;
     }
 
+
+    /**
+     * GET endpoint to retrieve the aggregated pace details.
+     * Throw 400 upon wrong UUID formatting.
+     * Throw 404 upon requesting non-existent boardid.
+     *
+     * @param boardId       ID property of a board.
+     * @param moderatorCode The moderator code passed by the client.
+     * @return The newly-created pace details object.
+     */
+    @RequestMapping(value = "/{boardid}/pace", method = GET)
+    @ResponseBody
+    public PaceDetailsDto retrievePaceDetails(
+        @PathVariable("boardid") UUID boardId,
+        @RequestParam("code") UUID moderatorCode) {
+        // 400 is thrown upon bad formatting automatically
+        QuestionBoard questionBoard = service.getBoardById(boardId);
+        // Throw 404 when the board does not exist
+        if (questionBoard == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        //Throw 403 if the provided moderator code does not equal that of the question board
+        if (!questionBoard.getModeratorCode().equals(moderatorCode)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid moderator code");
+        }
+
+        var dto = paceVoteService.getAggregatedVotes(boardId);
+        return dto;
+    }
+
+
     /**
      * POST endpoint for registering PaceVotes.
      *
@@ -239,7 +271,7 @@ public class QuestionBoardController {
         UUID paceVoteBoardId = vote.getQuestionBoard().getId();
         if (!paceVoteBoardId.equals(boardId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pace vote was not found in "
-                    + "requested Question board");
+                + "requested Question board");
         }
         PaceVoteDetailsDto dto = modelMapper.map(vote, PaceVoteDetailsDto.class);
         // Delete actual vote

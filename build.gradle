@@ -40,6 +40,7 @@ subprojects {
                 enabled = true
                 element = 'CLASS'
                 includes = ['nl.tudelft.*']
+                //excludes = ['nl.tudelft.oopp.demo.controllers.*']
 
                 limit {
                     counter = 'LINE'
@@ -61,13 +62,18 @@ subprojects {
 
 
     test {
+        exclude 'nl/tudelft/oopp/demo/controllers/**'
         outputs.dir snippetsDir
         useJUnitPlatform()
+
+        // Set to false to enable GUI/"headfull" controller testing through TestFX
+        jvmArgs "-Dheadless=true"
 
         jacoco {
             enabled = true
             includes = ['nl.tudelft.*']
-            excludes = []
+            // Excludes the client-side controller tests from the GitLab CI Pipeline as they are not compatible
+            excludes = ['nl.tudelft.oopp.demo.controllers.*']
         }
 
     }
