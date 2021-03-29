@@ -41,11 +41,11 @@
                     <Insets left="30.0" right="20.0" top="20.0" />
                  </padding>
               </ListView>
-              <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0">
-                 <padding>
-                    <Insets bottom="20.0" left="20.0" top="15.0" />
-                 </padding>
-              </VBox>
+                  <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" top="15.0" />
+                     </padding>
+                  </VBox>
             </HBox>
             <Pane fx:id="paceVotePane" maxHeight="160.0" maxWidth="140.0" prefHeight="4.0" prefWidth="57.0" StackPane.alignment="BOTTOM_RIGHT">
                   <VBox minHeight="160.0" minWidth="140.0">

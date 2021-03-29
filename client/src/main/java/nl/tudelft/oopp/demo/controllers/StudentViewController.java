@@ -126,6 +126,8 @@ public class StudentViewController {
         sideBar.setVisible(false);
         sideMenu.setVisible(false);
 
+        sideMenu.prefWidthProperty().bind(content.widthProperty().multiply(0.45));
+
         //Make ListCells unable to be selected individually (remove blue highlighting)
         questionList.setSelectionModel(new NoSelectionModel<>());
         questionList.setFocusModel(new NoFocusModel<>());
@@ -139,6 +141,18 @@ public class StudentViewController {
         ObservableList<Question> data = FXCollections.observableArrayList();
 
         data.addAll(new Question(UUID.randomUUID(), 2, "What is life?"),
+            new Question(UUID.randomUUID(), 42,"Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."),
+            new Question(UUID.randomUUID(), 42,"Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."),
+            new Question(UUID.randomUUID(), 42,"Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."),
             new Question(UUID.randomUUID(), 42,"Trolley problem."
                 + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
                 + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
@@ -293,8 +307,7 @@ public class StudentViewController {
 
             //Make questionContent resize with width of cell
             double paddingWidth = questionList.getPadding().getLeft()
-                    +  questionList.getPadding().getRight() + content.getPadding().getLeft()
-                    + content.getPadding().getRight() + 140;
+                    +  questionList.getPadding().getRight() + 140;
             questionContent.wrappingWidthProperty().bind(questionList.widthProperty()
                     .subtract(paddingWidth));
 
@@ -605,6 +618,11 @@ public class StudentViewController {
         Label confirmation = new Label("Are you sure you want to delete this question?");
         confirmation.setPadding(new Insets(0,5,0,0));
         confirmation.setWrapText(true);
+        //Set width bounds to the dialogue so it doesn't overflow the question box
+        Double widthBind = questionList.getPadding().getLeft()
+            +  questionList.getPadding().getRight() + 200;
+        confirmation.prefWidthProperty().bind(questionList.widthProperty().subtract(widthBind));
+
         //Create buttons
         Button yes = new Button("Yes");
         Button cancel = new Button("Cancel");
