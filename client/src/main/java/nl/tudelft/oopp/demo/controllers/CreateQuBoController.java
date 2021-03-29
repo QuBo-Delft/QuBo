@@ -190,7 +190,7 @@ public class CreateQuBoController {
      * not empty, but the label was being displayed, it will get hidden again.
      */
     public void titleTextHandler() {
-        errorTitle.setVisible(title.getText().isEmpty());
+        errorTitle.setVisible(title.getText().length() <= 0);
     }
 
     /**

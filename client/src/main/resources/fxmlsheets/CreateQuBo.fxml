@@ -58,7 +58,7 @@
       </GridPane.margin>
       </VBox>
       <VBox spacing="1.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                  <DatePicker fx:id="startDate" accessibleHelp="This field can be used to specify a date for the meeting to be scheduled on." accessibleRoleDescription="Date picker" onAction="#dateInputHandler" onKeyReleased="#dateInputHandler" onMouseClicked="#dateInputHandler" promptText="Date">
+                  <DatePicker fx:id="startDate" accessibleHelp="This field can be used to specify a date for the meeting to be scheduled on." accessibleRoleDescription="Date picker" onAction="#dateInputHandler" onInputMethodTextChanged="#dateInputHandler" promptText="Date">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
@@ -82,7 +82,7 @@
                      </HBox.margin>
                   </Label>
                   <VBox>
-                              <Spinner fx:id="minutesSpinner" accessibleHelp="This field can be used to choose an opening minute on the specified date." accessibleRoleDescription="Minute picker" editable="true" onKeyReleased="#dateInputHandler" onMouseClicked="#dateInputHandler" prefHeight="27.0" prefWidth="83.0">
+                              <Spinner fx:id="minutesSpinner" accessibleHelp="This field can be used to choose an opening minute on the specified date." accessibleRoleDescription="Minute picker" editable="true" onKeyReleased="#dateInputHandler" onMouseReleased="#dateInputHandler" prefHeight="27.0" prefWidth="83.0">
                                  <valueFactory>
                                     <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="0" max="59" min="0" />
                                  </valueFactory>
@@ -124,7 +124,7 @@
          </GridPane.margin>
       </Button>
     <VBox spacing="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                  <TextField fx:id="title" accessibleHelp="This field can be used to specify the name of a question board." onKeyReleased="#titleTextHandler" onMouseClicked="#titleTextHandler" promptText="Title of question board" />
+                  <TextField fx:id="title" accessibleHelp="This field can be used to specify the name of a question board." onKeyReleased="#titleTextHandler" promptText="Title of question board" />
                <Label fx:id="errorTitle" accessibleHelp="You cannot leave the title field empty, please enter a title." accessibleRoleDescription="Error message" styleClass="errorMessageLabel" text="Error: The title field is blank" textFill="RED" visible="false">
             <VBox.margin>
                <Insets top="5.0" />
