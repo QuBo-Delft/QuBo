@@ -26,6 +26,8 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
+import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.demo.controllers.helpers.NoFocusModel;
 import nl.tudelft.oopp.demo.controllers.helpers.NoSelectionModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
@@ -40,6 +42,7 @@ import nl.tudelft.oopp.demo.views.GetTextDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -97,6 +100,15 @@ public class StudentViewController {
     }
 
     /**
+     * Method that sets the username of the application user.
+     *
+     * @param authorName    The name of the student that joined the question board.
+     */
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    /**
      * Code that is run upon loading StudentView.fxml
      */
     @FXML
@@ -104,12 +116,23 @@ public class StudentViewController {
         testQuestions();
         //Display the questions
         displayQuestions();
+        startUpProperties();
+    }
 
+    private void startUpProperties() {
         //Hide side menu and sidebar
         sideBar.managedProperty().bind(sideBar.visibleProperty());
         sideMenu.managedProperty().bind(sideMenu.visibleProperty());
         sideBar.setVisible(false);
         sideMenu.setVisible(false);
+
+        //Make ListCells unable to be selected individually (remove blue highlighting)
+        questionList.setSelectionModel(new NoSelectionModel<>());
+        questionList.setFocusModel(new NoFocusModel<>());
+        //Remove border of focus
+        questionList.setStyle("-fx-background-insets: 0 ;");
+
+        questionList.setEditable(true);
     }
 
     private void testQuestions() {
@@ -291,6 +314,9 @@ public class StudentViewController {
             upvote.setSpacing(5);
             upvote.setAlignment(Pos.TOP_CENTER);
 
+            //Set event listener
+            upvoteTriangle.setOnAction(event -> upvoteQuestion(questionId, upvoteTriangle));
+
             return upvote;
         }
 
@@ -375,7 +401,84 @@ public class StudentViewController {
         // Map the secretCode as the value to the question ID as the key
         secretCodeMap.put(questionId, secretCode);
 
+        //Request automatic upvote
+        String response = ServerCommunication.addQuestionVote(questionId);
+        if (response == null) {
+            //When the request fails, display alert
+            AlertDialog.display("", "Automatic upvote failed.");
+        } else {
+            //When the request is successful, store the question UUID with the vote UUID in the HashMap
+            QuestionVoteDetailsDto vote = gson.fromJson(response, QuestionVoteDetailsDto.class);
+            upvoteMap.put(questionId, vote.getId());
+        }
+
         // TODO: Update the view of questions
+    }
+
+    /**
+     * This method is run when the upvote button is clicked.
+     * When the ToggleButton is activated: Sends a request to the server to add a vote.
+     * When the ToggleButton is deactivated: Sends a request to the server to remove the vote.
+     *
+     * @param questionId        UUID of the question that the user decides to upvote.
+     * @param upvoteTriangle    The ToggleButton which the user clicks to add a vote.
+     */
+    public void upvoteQuestion(UUID questionId, ToggleButton upvoteTriangle) {
+        if (upvoteTriangle.isSelected()) {
+            //Code that runs when the button is activated
+            //Check if the question has already been upvoted
+            if (upvoteMap.containsKey(questionId)) {
+                AlertDialog.display("", "You have already upvoted this question!");
+                return;
+            }
+            toggleUpvoteTrue(questionId, upvoteTriangle);
+        } else {
+            //Code that runs when the button is deactivated
+            toggleUpvoteFalse(questionId, upvoteTriangle);
+        }
+    }
+
+    /**
+     * This method is called when the upvote button is toggled on/selected.
+     * Sends a request to add a vote to the server, and executes different behaviour depending
+     * on the received response.
+     *
+     * @param questionId        The UUID of the question that has been upvoted.
+     * @param upvoteTriangle    The upvote ToggleButton (Needs to be deselected if request fails).
+     */
+    public void toggleUpvoteTrue(UUID questionId, ToggleButton upvoteTriangle) {
+        String response = ServerCommunication.addQuestionVote(questionId);
+
+        if (response == null) {
+            AlertDialog.display("", "Upvote failed.");
+            //Unselect the button as the upvote action failed
+            upvoteTriangle.setSelected(false);
+        } else {
+            //When the request is successful, store the question UUID with the vote UUID in the HashMap
+            QuestionVoteDetailsDto dto = gson.fromJson(response, QuestionVoteDetailsDto.class);
+            upvoteMap.put(questionId, dto.getId());
+        }
+    }
+
+    /**
+     * This method is called when the upvote button is toggled off/deselected.
+     * Sends a request to delete a vote from the server, and executes different behaviour depending
+     * on the received response.
+     *
+     * @param questionId        The UUID of the question that the upvote needs to be removed from.
+     * @param upvoteTriangle    The upvote ToggleButton (Needs to be reselected if request fails).
+     */
+    public void toggleUpvoteFalse(UUID questionId, ToggleButton upvoteTriangle) {
+        String response = ServerCommunication.deleteQuestionVote(questionId, upvoteMap.get(questionId));
+
+        if (response == null) {
+            AlertDialog.display("", "Canceling upvote failed.");
+            //Reselect the button as the un-upvote action failed
+            upvoteTriangle.setSelected(true);
+        } else {
+            //When the request is successful, remove upvote from the HashMap
+            upvoteMap.remove(questionId);
+        }
     }
 
     /**
