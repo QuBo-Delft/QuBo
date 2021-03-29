@@ -189,8 +189,10 @@ public class SceneLoader {
             return;
         }
 
+        // Clear stage min size limit
         currentStage.setMinWidth(Double.MIN_VALUE);
         currentStage.setMinHeight(Double.MIN_VALUE);
+
         currentStage.setScene(new Scene(root));
         currentStage.setTitle("QuBo");
         currentStage.centerOnScreen();
