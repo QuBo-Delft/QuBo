@@ -3,14 +3,22 @@
 }
 
 .button {
-    -fx-background-color: #baac8f;
     -fx-background-radius: 6;
     -fx-min-height: 40;
     -fx-min-width: 80;
     -fx-effect: dropshadow(gaussian, #8D8776 , 2,0,0,1);
     -fx-font-family: "Arial";
-    -fx-text-fill: #f1ede9;
     -fx-font-size: 17;
+}
+
+.submitBtn {
+    -fx-background-color: #baac8f;
+    -fx-text-fill: #fffdfd;
+}
+
+.cancelBtn {
+    -fx-background-color: #fffdfd;
+    -fx-text-fill: #baac8f;
 }
 
 .submitBtn:hover {
@@ -51,6 +59,6 @@
     -fx-border-style: solid;
     -fx-border-width: 3px;
     -fx-border-color: #d2cac1;
-    -fx-prompt-text-fill: #b7a8a7;
+    -fx-prompt-text-fill: #a29494;
     -fx-effect: dropshadow( three-pass-box, #ece8e8, 10.0, 0.0, 0.5, 4.0);
 }

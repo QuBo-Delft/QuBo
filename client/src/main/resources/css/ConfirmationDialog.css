@@ -3,14 +3,22 @@
 }
 
 .button {
-    -fx-background-color: #baac8f;
     -fx-background-radius: 6;
     -fx-min-height: 35;
     -fx-min-width: 75;
     -fx-effect: dropshadow(gaussian, #8D8776 , 2,0,0,1);
     -fx-font-family: "Arial";
-    -fx-text-fill: #f1ede9;
     -fx-font-size: 16;
+}
+
+.yesBtn {
+    -fx-background-color: #736d69;
+    -fx-text-fill: #fffdfd;
+}
+
+.noBtn {
+    -fx-background-color: #ddd5cf;
+    -fx-text-fill: #736d69;
 }
 
 .yesBtn:hover {
