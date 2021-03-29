@@ -7,36 +7,43 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.demo.controllers.CreateQuBoController">
+<GridPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.demo.controllers.CreateQuBoController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
-    <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
-      <ColumnConstraints hgrow="SOMETIMES" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+    <ColumnConstraints hgrow="SOMETIMES" percentWidth="16.0" />
+    <ColumnConstraints hgrow="SOMETIMES" percentWidth="40.0" />
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="8.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" />
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="12.0" />
       <ColumnConstraints />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints prefHeight="80.0" vgrow="SOMETIMES" />
-    <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+    <RowConstraints percentHeight="25.0" prefHeight="80.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+      <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
+      <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
+    <RowConstraints percentHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints vgrow="SOMETIMES" />
-    <RowConstraints vgrow="SOMETIMES" />
-      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
   </rowConstraints>
-      <Label alignment="CENTER" styleClass="attribute" text="Title:" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+      <Label alignment="CENTER" styleClass="attribute" text="Title:" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
          <GridPane.margin>
             <Insets right="15.0" />
          </GridPane.margin>
       </Label>
-            <Label styleClass="attribute" text="Schedule:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
+            <Label styleClass="attribute" text="Schedule:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6" GridPane.valignment="TOP">
          <GridPane.margin>
             <Insets right="15.0" />
          </GridPane.margin>
             </Label>
-            <Button accessibleHelp="This button can be used to immediately create a question board." mnemonicParsing="false" onAction="#createNowBtnClicked" styleClass="createQuBo" text="Create Now" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <Button fx:id="createBtn" accessibleHelp="This button can be used to immediately create a question board." mnemonicParsing="false" onAction="#createNowBtnClicked" styleClass="createQuBo" text="Create Now" textAlignment="CENTER" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <font>
                   <Font size="16.0" />
                </font>
             </Button>
-            <Label id="or" text="or" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Label id="or" text="or" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP">
                <font>
                   <Font size="16.0" />
                </font>
@@ -44,7 +51,7 @@
          <Insets />
       </GridPane.margin>
             </Label>
-      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2">
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                   <Label id="titleMessage" mouseTransparent="true" text="Create Question Board">
                      <font>
                         <Font size="21.0" />
@@ -53,19 +60,20 @@
                   <Insets bottom="5.0" left="30.0" right="15.0" top="15.0" />
                </VBox.margin>
                   </Label>
+       <Line endX="400.0" startX="-100.0" styleClass="line" />
       <GridPane.margin>
          <Insets bottom="30.0" />
       </GridPane.margin>
       </VBox>
       <VBox spacing="1.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                  <DatePicker fx:id="startDate" accessibleHelp="This field can be used to specify a date for the meeting to be scheduled on." accessibleRoleDescription="Date picker" onAction="#dateInputHandler" onInputMethodTextChanged="#dateInputHandler" onMouseReleased="#dateInputHandler" promptText="Date">
+                  <DatePicker fx:id="startDate" styleClass="datePicker" accessibleHelp="This field can be used to specify a date for the meeting to be scheduled on." accessibleRoleDescription="Date picker" onAction="#dateInputHandler" onInputMethodTextChanged="#dateInputHandler" onMouseReleased="#dateInputHandler" promptText="Date">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
             </DatePicker>
             <HBox prefWidth="200.0">
                   <VBox>
-                              <Spinner fx:id="hoursSpinner" accessibleHelp="This field can be used to choose an opening hour on the specified date." accessibleRoleDescription="Hour picker" editable="true" onInputMethodTextChanged="#dateInputHandler" onKeyPressed="#dateInputHandler" onKeyTyped="#dateInputHandler" onMouseClicked="#dateInputHandler" onMouseReleased="#dateInputHandler" prefHeight="27.0" prefWidth="89.0">
+                              <Spinner fx:id="hoursSpinner" styleClass="spinner" accessibleHelp="This field can be used to choose an opening hour on the specified date." accessibleRoleDescription="Hour picker" editable="true" onInputMethodTextChanged="#dateInputHandler" onKeyPressed="#dateInputHandler" onKeyTyped="#dateInputHandler" onMouseClicked="#dateInputHandler" onMouseReleased="#dateInputHandler" prefHeight="27.0" prefWidth="89.0">
                                  <valueFactory>
                                     <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="0" max="23" min="0" />
                                  </valueFactory>
@@ -82,7 +90,7 @@
                      </HBox.margin>
                   </Label>
                   <VBox>
-                              <Spinner fx:id="minutesSpinner" accessibleHelp="This field can be used to choose an opening minute on the specified date." accessibleRoleDescription="Minute picker" editable="true" onInputMethodTextChanged="#dateInputHandler" onKeyPressed="#dateInputHandler" onKeyTyped="#dateInputHandler" onMouseReleased="#dateInputHandler" prefHeight="27.0" prefWidth="83.0">
+                              <Spinner fx:id="minutesSpinner" styleClass="spinner" accessibleHelp="This field can be used to choose an opening minute on the specified date." accessibleRoleDescription="Minute picker" editable="true" onInputMethodTextChanged="#dateInputHandler" onKeyPressed="#dateInputHandler" onKeyTyped="#dateInputHandler" onMouseReleased="#dateInputHandler" prefHeight="27.0" prefWidth="83.0">
                                  <valueFactory>
                                     <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="0" max="59" min="0" />
                                  </valueFactory>
@@ -110,7 +118,7 @@
             <Insets />
          </GridPane.margin>
       </VBox>
-            <Button accessibleHelp="This button can be clicked to schedule a question board on the specified date and time." mnemonicParsing="false" onAction="#scheduleBtnClicked" styleClass="createQuBo" text="Schedule&#10;Question Board" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
+            <Button fx:id="scheduleBtn" styleClass="createQuBo" accessibleHelp="This button can be clicked to schedule a question board on the specified date and time." maxHeight="64.0" maxWidth="137.0" minHeight="64.0" minWidth="137.0" mnemonicParsing="false" onAction="#scheduleBtnClicked" prefHeight="64.0" prefWidth="137.0" text="Schedule&#10;Question Board" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="TOP">
                <font>
                   <Font size="16.0" />
                </font>
@@ -118,12 +126,12 @@
             <Insets />
          </GridPane.margin>
             </Button>
-      <Button id="cancelButton" fx:id="cancelBtn" accessibleHelp="This button can be used to return to the homescreen of the application." alignment="CENTER" mnemonicParsing="false" onAction="#cancelBtnClicked" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+      <Button  fx:id="cancelBtn" styleClass="cancelButton" accessibleHelp="This button can be used to return to the homescreen of the application." alignment="CENTER" mnemonicParsing="false" onAction="#cancelBtnClicked" text="Cancel" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7">
          <GridPane.margin>
             <Insets />
          </GridPane.margin>
       </Button>
-    <VBox spacing="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+    <VBox spacing="1.0" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2">
                   <TextField fx:id="title" accessibleHelp="This field can be used to specify the name of a question board." onKeyReleased="#titleTextHandler" promptText="Title of question board" />
                <Label fx:id="errorTitle" accessibleHelp="You cannot leave the title field empty, please enter a title." accessibleRoleDescription="Error message" styleClass="errorMessageLabel" text="Error: The title field is blank" textFill="RED" visible="false">
             <VBox.margin>

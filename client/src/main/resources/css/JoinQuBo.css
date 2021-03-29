@@ -9,7 +9,7 @@
     -fx-effect: dropshadow(gaussian, #A39E8C , 4,0,0,1);
 }
 
-#join-button {
+.joinBtn {
     -fx-background-color: #E87920;
     -fx-background-radius: 8;
     -fx-min-height: 40;
@@ -22,7 +22,7 @@
     -fx-text-fill: #F0DED7;
 }
 
-#create-qb-button {
+.createBtn {
     -fx-background-color: #EEA24D;
     -fx-background-radius: 6;
     -fx-min-height: 50;
@@ -52,7 +52,7 @@
     -fx-faint-focus-color: #E5A86D;
 }
 
-#errorMessageLabel {
+.errorMessageLabel {
     -fx-font-style: italic;
     -fx-font-family: "Bahnschrift";
     -fx-text-fill: #DF4D1C;

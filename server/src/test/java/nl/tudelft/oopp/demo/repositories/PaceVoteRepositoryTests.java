@@ -88,4 +88,78 @@ public class PaceVoteRepositoryTests {
         // Assert
         assertNull(paceVoteRepository.getById(vote.getId()));
     }
+
+    @Test
+    public void countByQuestionBoardAndPaceType_withPaceVotes_returnsCorrectCount() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.from(Instant.now()));
+        board.setTitle("Test board 1");
+        questionBoardRepository.save(board);
+
+        PaceVote vote1 = new PaceVote();
+        vote1.setPaceType(PaceType.TOO_FAST);
+        vote1.setQuestionBoard(board);
+        paceVoteRepository.save(vote1);
+
+        PaceVote vote2 = new PaceVote();
+        vote2.setPaceType(PaceType.TOO_FAST);
+        vote2.setQuestionBoard(board);
+        paceVoteRepository.save(vote2);
+
+        PaceVote vote3 = new PaceVote();
+        vote3.setPaceType(PaceType.JUST_RIGHT);
+        vote3.setQuestionBoard(board);
+        paceVoteRepository.save(vote3);
+
+        QuestionBoard board2 = new QuestionBoard();
+        board2.setModeratorCode(UUID.randomUUID());
+        board2.setStartTime(Timestamp.from(Instant.now()));
+        board2.setTitle("Test board 2");
+        questionBoardRepository.save(board2);
+
+        PaceVote vote4 = new PaceVote();
+        vote4.setPaceType(PaceType.TOO_FAST);
+        vote4.setQuestionBoard(board2);
+        paceVoteRepository.save(vote4);
+
+        // Act
+        int result = paceVoteRepository.countByQuestionBoardAndPaceType(board, PaceType.TOO_FAST);
+
+        // Assert
+        assertEquals(2, result);
+    }
+
+    @Test
+    public void countByQuestionBoardAndPaceType_withNoPaceVotes_returnsZero() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.from(Instant.now()));
+        board.setTitle("Test board 1");
+        questionBoardRepository.save(board);
+
+        PaceVote vote3 = new PaceVote();
+        vote3.setPaceType(PaceType.JUST_RIGHT);
+        vote3.setQuestionBoard(board);
+        paceVoteRepository.save(vote3);
+
+        QuestionBoard board2 = new QuestionBoard();
+        board2.setModeratorCode(UUID.randomUUID());
+        board2.setStartTime(Timestamp.from(Instant.now()));
+        board2.setTitle("Test board 2");
+        questionBoardRepository.save(board2);
+
+        PaceVote vote4 = new PaceVote();
+        vote4.setPaceType(PaceType.TOO_FAST);
+        vote4.setQuestionBoard(board2);
+        paceVoteRepository.save(vote4);
+
+        // Act
+        int result = paceVoteRepository.countByQuestionBoardAndPaceType(board, PaceType.TOO_FAST);
+
+        // Assert
+        assertEquals(0, result);
+    }
 }
