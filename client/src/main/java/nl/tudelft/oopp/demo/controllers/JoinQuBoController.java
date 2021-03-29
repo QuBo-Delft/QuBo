@@ -99,4 +99,22 @@ public class JoinQuBoController {
             SceneLoader.loadModeratorView(questionBoard, user, stage);
         }
     }
+
+    /**
+     * Method that handles text field input changes.
+     */
+    @FXML
+    public void textHandler() {
+        if (errorMessageLabel.isVisible() && !errorMessageLabel.getText()
+                .equals("Error: No username was entered. Please enter a username")) {
+            try {
+                UUID boardCode = UUID.fromString(questionBoardCode.getText());
+            } catch (IllegalArgumentException exception) {
+                return;
+            }
+            errorMessageLabel.setVisible(false);
+        } else if (errorMessageLabel.isVisible()) {
+            errorMessageLabel.setVisible(userName.getText().length() > 0);
+        }
+    }
 }
