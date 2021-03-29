@@ -248,12 +248,12 @@ public class StudentViewController {
 
     /**
      * This method is called by the SceneLoader and sets the title text and board open or closed icon.
-     * If the board is open, it also displays it's start time.
+     * If the board is open, it also displays its start time.
      */
     public void setBoardDetails() {
         boardTitle.setText(quBo.getTitle());
         if (quBo.isClosed()) {
-            boardStatusText.setText("board closed, making changes is no longer possible ");
+            boardStatusText.setText("Question board is closed, making changes is no longer possible ");
             boardStatusIcon.setImage(new Image(getClass().getResource("/icons/status_closed.png").toString()));
         } else {
             boardStatusText.setText("board open since " + quBo.getStartTime().toString());
