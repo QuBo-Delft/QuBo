@@ -47,12 +47,13 @@ public class QuestionService {
      *
      * @param model   The details of the new question.
      * @param boardId The id of the board which the question should be assigned to.
+     * @param userIp  The IP address of the user who asked the question.
      * @return The newly-created question.
      * @throws NotFoundException  if the board doesn't exist.
      * @throws ForbiddenException if the startTime of the board is after the current time or
      *                            the board is closed.
      */
-    public Question createQuestion(QuestionCreationBindingModel model, UUID boardId) {
+    public Question createQuestion(QuestionCreationBindingModel model, UUID boardId, String userIp) {
         QuestionBoard board = questionBoardRepository.getById(boardId);
         if (board == null) {
             throw new NotFoundException("Question board does not exist");
@@ -66,6 +67,7 @@ public class QuestionService {
         }
 
         Question question = modelMapper.map(model, Question.class);
+        question.setIp(userIp);
         question.setQuestionBoard(board);
         question.setSecretCode(UUID.randomUUID());
         question.setTimestamp(Timestamp.from(Instant.now()));

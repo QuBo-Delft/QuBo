@@ -47,6 +47,9 @@ public class Question {
     @Column(name = "answered")
     private Timestamp answered;
 
+    @Column(name = "ip")
+    private String ip;
+
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Answer> answers;
 
@@ -154,5 +157,13 @@ public class Question {
 
     public void setAnswered(Timestamp answered) {
         this.answered = answered;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }
