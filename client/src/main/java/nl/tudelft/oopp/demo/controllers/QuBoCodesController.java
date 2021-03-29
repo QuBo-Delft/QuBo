@@ -61,6 +61,13 @@ public class QuBoCodesController {
         content.putString(adminCode.getText());
         clipboard.setContent(content);
 
+        //If the studentCopySuccessful label is visible, set it to invisible
+        //This check is necessary as clicking on the copy admin code button quickly after the copy student
+        //code button interrupts the PauseTransition
+        if (studentCopySuccessful.isVisible()) {
+            studentCopySuccessful.setVisible(false);
+        }
+
         //Shows adminCopySuccessful label for 1 second and hides it again
         if (!adminCopySuccessful.isVisible()) {
             adminCopySuccessful.setVisible(true);
@@ -77,6 +84,13 @@ public class QuBoCodesController {
     public void copyStudentCode() {
         content.putString(studentCode.getText());
         clipboard.setContent(content);
+
+        //If the adminCopySuccessful label is visible, set it to invisible
+        //This check is necessary as clicking on the copy student code button quickly after the copy admin
+        //code button interrupts the PauseTransition
+        if (adminCopySuccessful.isVisible()) {
+            adminCopySuccessful.setVisible(false);
+        }
 
         //Shows studentCopySuccessful label for 1 second and hides it again
         if (!studentCopySuccessful.isVisible()) {
