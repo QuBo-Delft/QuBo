@@ -9,6 +9,9 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.image.Image;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -26,7 +29,6 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.demo.controllers.helpers.NoFocusModel;
 import nl.tudelft.oopp.demo.controllers.helpers.NoSelectionModel;
@@ -40,9 +42,9 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.utilities.sorting.Sorting;
 import nl.tudelft.oopp.demo.views.GetTextDialog;
 
+import javafx.scene.image.ImageView;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,6 +75,15 @@ public class StudentViewController {
     private ToggleButton polls;
     @FXML
     private Button leaveQuBo;
+    @FXML
+    private Label boardTitle;
+    @FXML
+    private ImageView boardStatusIcon;
+    @FXML
+    private MenuItem studentCodeItem;
+    @FXML
+    private Label boardStatusText;
+
     private boolean sideMenuOpen;
 
     private String authorName;
@@ -85,6 +96,9 @@ public class StudentViewController {
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
     //HashMap of questionId:secretCode, needed when editing and deleting questions
     private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
+
+    private Clipboard clipboard = Clipboard.getSystemClipboard();
+    private ClipboardContent clipboardContent = new ClipboardContent();
 
     private QuestionBoardDetailsDto quBo;
     private QuestionDetailsDto[] answeredQuestions;
@@ -116,6 +130,7 @@ public class StudentViewController {
         testQuestions();
         //Display the questions
         displayQuestions();
+        //displayBoardInfo();
         startUpProperties();
     }
 
@@ -133,6 +148,11 @@ public class StudentViewController {
         questionList.setStyle("-fx-background-insets: 0 ;");
 
         questionList.setEditable(true);
+    }
+
+    public void copyStudentCode() {
+        clipboardContent.putString(quBo.getId().toString());
+        clipboard.setContent(clipboardContent);
     }
 
     private void testQuestions() {
@@ -224,6 +244,20 @@ public class StudentViewController {
         //respective class attributes.
         answeredQuestions = answered.toArray(new QuestionDetailsDto[0]);
         unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
+    }
+
+    /**
+     * This method is called by the SceneLoader and sets the title text and board open or closed icon.
+     * If the board is open, it also displays its start time.
+     */
+    public void setBoardDetails() {
+        boardTitle.setText(quBo.getTitle());
+        if (quBo.isClosed()) {
+            boardStatusText.setText("Question board is closed, making changes is no longer possible ");
+            boardStatusIcon.setImage(new Image(getClass().getResource("/icons/status_closed.png").toString()));
+        } else {
+            boardStatusText.setText("board open since " + quBo.getStartTime().toString());
+        }
     }
 
     public void displayBoardInfo() {

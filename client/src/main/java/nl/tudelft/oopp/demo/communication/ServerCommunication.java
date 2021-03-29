@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteDetailsDto;
+import nl.tudelft.oopp.demo.dtos.poll.PollCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
@@ -14,6 +15,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Set;
 import java.util.UUID;
 
 public class ServerCommunication {
@@ -468,6 +470,38 @@ public class ServerCommunication {
         //Check if the deleted pace vote had the same ID
         PaceVoteDetailsDto deletedVote = gson.fromJson(response.body(), PaceVoteDetailsDto.class);
         if (!deletedVote.getId().equals(paceVoteId)) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+    /**
+     * Adds a poll to the question board.
+     * Communicates with the /api/board/{boardid}/poll?code={moderatorcode} server endpoint.
+     *
+     * @param boardId       The ID of the question board to which a poll should be added.
+     * @param moderatorCode The moderator code of the question board to which the poll should be added.
+     * @param pollText      The text that is associated with the poll.
+     * @param pollOptions   The set of answer options of the poll.
+     * @return The PaceVoteCreationDto in JSON String format if the vote was added successfully.
+     */
+    public static String addPoll(UUID boardId, UUID moderatorCode, String pollText, Set<String> pollOptions) {
+        //Create a PollCreationBindingModel
+        PollCreationBindingModel pollModel = new PollCreationBindingModel();
+        pollModel.setText(pollText);
+        pollModel.setPollOptions(pollOptions);
+
+        //Set up the variables needed to call the post method
+        String requestBody = gson.toJson(pollModel);
+        String fullUrl = subUrl + "/api/board/" + boardId + "/poll?code=" + moderatorCode;
+
+        //Request the poll creation, and retrieve the response
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+                "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
             return null;
         }
 
