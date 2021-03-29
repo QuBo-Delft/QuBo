@@ -66,14 +66,14 @@
       </GridPane.margin>
       </VBox>
       <VBox spacing="1.0" GridPane.columnIndex="2" GridPane.rowIndex="6">
-                  <DatePicker fx:id="startDate" accessibleHelp="This field can be used to specify a date for the meeting to be scheduled on." accessibleRoleDescription="Date picker" onAction="#dateInputHandler" onKeyReleased="#dateInputHandler" onMouseClicked="#dateInputHandler" promptText="Date">
+                  <DatePicker fx:id="startDate" styleClass="datePicker" accessibleHelp="This field can be used to specify a date for the meeting to be scheduled on." accessibleRoleDescription="Date picker" onAction="#dateInputHandler" onKeyReleased="#dateInputHandler" onMouseClicked="#dateInputHandler" promptText="Date">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
             </DatePicker>
             <HBox prefWidth="200.0">
                   <VBox>
-                              <Spinner fx:id="hoursSpinner" accessibleHelp="This field can be used to choose an opening hour on the specified date." accessibleRoleDescription="Hour picker" editable="true" onKeyReleased="#dateInputHandler" onMouseClicked="#dateInputHandler" prefHeight="27.0" prefWidth="89.0">
+                              <Spinner fx:id="hoursSpinner" styleClass="spinner" accessibleHelp="This field can be used to choose an opening hour on the specified date." accessibleRoleDescription="Hour picker" editable="true" onKeyReleased="#dateInputHandler" onMouseClicked="#dateInputHandler" prefHeight="27.0" prefWidth="89.0">
                                  <valueFactory>
                                     <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="0" max="23" min="0" />
                                  </valueFactory>
@@ -90,7 +90,7 @@
                      </HBox.margin>
                   </Label>
                   <VBox>
-                              <Spinner fx:id="minutesSpinner" accessibleHelp="This field can be used to choose an opening minute on the specified date." accessibleRoleDescription="Minute picker" editable="true" onKeyReleased="#dateInputHandler" onMouseClicked="#dateInputHandler" prefHeight="27.0" prefWidth="83.0">
+                              <Spinner fx:id="minutesSpinner" styleClass="spinner" accessibleHelp="This field can be used to choose an opening minute on the specified date." accessibleRoleDescription="Minute picker" editable="true" onKeyReleased="#dateInputHandler" onMouseClicked="#dateInputHandler" prefHeight="27.0" prefWidth="83.0">
                                  <valueFactory>
                                     <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="0" max="59" min="0" />
                                  </valueFactory>
