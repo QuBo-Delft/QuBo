@@ -13,6 +13,8 @@ import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteCreationDto;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class MainApp {
@@ -159,9 +161,16 @@ public class MainApp {
         System.out.println("The pace vote has been deleted: " + ((ServerCommunication
             .deletePaceVote(boardId, paceVoteId)) != null));
 
+        //Add a poll to the question board
+        Set<String> pollOptions = new HashSet<>(2);
+        pollOptions.add("Option A");
+        pollOptions.add("Option B");
+        System.out.println("This poll has been added: "
+                + (gson.toJson(ServerCommunication.addPoll(boardId, moderatorCode, "Test Poll", pollOptions))));
+
+
         //Close the question board
         System.out.println("The fact that this question board has been closed is: "
                 + ((ServerCommunication.closeBoardRequest(boardId, moderatorCode)) != null));
-
     }
 }

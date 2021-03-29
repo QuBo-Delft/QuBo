@@ -6,6 +6,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Priority;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.image.Image;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -31,6 +38,7 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.utilities.sorting.Sorting;
 import nl.tudelft.oopp.demo.views.GetTextDialog;
 
+import javafx.scene.image.ImageView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +69,15 @@ public class StudentViewController {
     private ToggleButton polls;
     @FXML
     private Button leaveQuBo;
+    @FXML
+    private Label boardTitle;
+    @FXML
+    private ImageView boardStatusIcon;
+    @FXML
+    private MenuItem studentCodeItem;
+    @FXML
+    private Label boardStatusText;
+
     private boolean sideMenuOpen;
 
     @FXML
@@ -77,6 +94,9 @@ public class StudentViewController {
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
     //HashMap of questionId:secretCode, needed when editing and deleting questions
     private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
+
+    private Clipboard clipboard = Clipboard.getSystemClipboard();
+    private ClipboardContent clipboardContent = new ClipboardContent();
 
     private QuestionBoardDetailsDto quBo;
     private QuestionDetailsDto[] answeredQuestions = new QuestionDetailsDto[0];
@@ -98,6 +118,20 @@ public class StudentViewController {
      */
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    /**
+     * This method is called by the SceneLoader and sets the title text and board open or closed icon.
+     * If the board is open, it also displays its start time.
+     */
+    public void setBoardDetails() {
+        boardTitle.setText(quBo.getTitle());
+        if (quBo.isClosed()) {
+            boardStatusText.setText("Question board is closed, making changes is no longer possible ");
+            boardStatusIcon.setImage(new Image(getClass().getResource("/icons/status_closed.png").toString()));
+        } else {
+            boardStatusText.setText("board open since " + quBo.getStartTime().toString());
+        }
     }
 
     /**
@@ -252,9 +286,12 @@ public class StudentViewController {
         unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
     }
 
-    //Temporary refresh button
     public void displayBoardInfo() {
-        displayQuestions();
+    }
+
+    public void copyStudentCode() {
+        clipboardContent.putString(quBo.getId().toString());
+        clipboard.setContent(clipboardContent);
     }
 
     public void displayHelpDoc() {

@@ -1,6 +1,10 @@
 package nl.tudelft.oopp.demo.services;
 
+import java.time.Instant;
+import java.util.UUID;
+import nl.tudelft.oopp.demo.dtos.pace.PaceDetailsDto;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
+import nl.tudelft.oopp.demo.entities.PaceType;
 import nl.tudelft.oopp.demo.entities.PaceVote;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.repositories.PaceVoteRepository;
@@ -9,10 +13,6 @@ import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
-
-import java.time.Instant;
-import java.util.UUID;
 
 @Service
 public class PaceVoteService {
@@ -29,8 +29,8 @@ public class PaceVoteService {
      * @param modelMapper             The ModelMapper
      */
     public PaceVoteService(
-            PaceVoteRepository paceVoteRepository, QuestionBoardRepository questionBoardRepository,
-            ModelMapper modelMapper) {
+        PaceVoteRepository paceVoteRepository, QuestionBoardRepository questionBoardRepository,
+        ModelMapper modelMapper) {
         this.paceVoteRepository = paceVoteRepository;
         this.questionBoardRepository = questionBoardRepository;
         this.modelMapper = modelMapper;
@@ -43,7 +43,7 @@ public class PaceVoteService {
      * @param paceVoteModel The pace vote model.
      * @param boardId       The board ID.
      * @return The PaceVote object that was just registered.
-     * @throws NotFoundException if the provided QuestionBoard does not exist.
+     * @throws NotFoundException  if the provided QuestionBoard does not exist.
      * @throws ForbiddenException if the QuestionBoard is not active.
      */
     public PaceVote registerVote(PaceVoteCreationBindingModel paceVoteModel, UUID boardId) {
@@ -56,7 +56,7 @@ public class PaceVoteService {
         // Check if board is active
         Instant now = Instant.now();
         if (now.isBefore(board.getStartTime().toInstant())
-                || board.isClosed()) {
+            || board.isClosed()) {
             throw new ForbiddenException("Question board is not active");
         }
 
@@ -86,5 +86,25 @@ public class PaceVoteService {
         this.paceVoteRepository.deletePaceVoteById(vote.getId());
     }
 
+    /**
+     * Gets the number of PaceVotes for a given board, grouped by type.
+     *
+     * @param boardId The board id.
+     * @return A DTO containing the number of PaceVotes.
+     */
+    public PaceDetailsDto getAggregatedVotes(UUID boardId) {
+        QuestionBoard board = questionBoardRepository.getById(boardId);
+        // Check if QuestionBoard with this ID exists
+        if (board == null) {
+            throw new NotFoundException("Question board does not exist");
+        }
 
+        int justRight = paceVoteRepository.countByQuestionBoardAndPaceType(board, PaceType.JUST_RIGHT);
+        int tooSlow = paceVoteRepository.countByQuestionBoardAndPaceType(board, PaceType.TOO_SLOW);
+        int tooFast = paceVoteRepository.countByQuestionBoardAndPaceType(board, PaceType.TOO_FAST);
+
+        PaceDetailsDto dto = new PaceDetailsDto(justRight, tooFast, tooSlow);
+
+        return dto;
+    }
 }

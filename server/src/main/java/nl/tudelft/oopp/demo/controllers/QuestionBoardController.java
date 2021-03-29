@@ -1,18 +1,15 @@
 package nl.tudelft.oopp.demo.controllers;
 
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
 import java.util.Set;
 import java.util.UUID;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
+import nl.tudelft.oopp.demo.dtos.pace.PaceDetailsDto;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.demo.dtos.pacevote.PaceVoteDetailsDto;
+import nl.tudelft.oopp.demo.dtos.poll.PollCreationBindingModel;
+import nl.tudelft.oopp.demo.dtos.poll.PollCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
@@ -20,20 +17,24 @@ import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.entities.PaceVote;
+import nl.tudelft.oopp.demo.entities.Poll;
 import nl.tudelft.oopp.demo.entities.Question;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.services.PaceVoteService;
+import nl.tudelft.oopp.demo.services.PollService;
 import nl.tudelft.oopp.demo.services.QuestionBoardService;
 import nl.tudelft.oopp.demo.services.QuestionService;
-
 import org.modelmapper.ModelMapper;
-
 import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
@@ -49,6 +50,7 @@ public class QuestionBoardController {
     private final QuestionBoardService service;
     private final QuestionService questionService;
     private final PaceVoteService paceVoteService;
+    private final PollService pollService;
 
     private final ModelMapper modelMapper;
 
@@ -58,15 +60,18 @@ public class QuestionBoardController {
      * @param service         The QuestionBoardService.
      * @param questionService The QuestionService.
      * @param paceVoteService The PaceVoteService
+     * @param pollService     The PollService
      * @param modelMapper     The ModelMapper.
      */
     public QuestionBoardController(QuestionBoardService service,
                                    QuestionService questionService,
                                    PaceVoteService paceVoteService,
+                                   PollService pollService,
                                    ModelMapper modelMapper) {
         this.service = service;
         this.questionService = questionService;
         this.paceVoteService = paceVoteService;
+        this.pollService = pollService;
         this.modelMapper = modelMapper;
     }
 
@@ -189,17 +194,50 @@ public class QuestionBoardController {
      *
      * @param boardId ID property of a board.
      * @param model   The binding model passed by the client containing the question text.
+     * @param request The HTTPServletRequest to get the IP of the user.
      * @return The newly-created question.
      */
     @RequestMapping(value = "/{boardid}/question", method = POST, consumes = "application/json")
     @ResponseBody
     public QuestionCreationDto createQuestion(
         @PathVariable("boardid") UUID boardId,
-        @Valid @RequestBody QuestionCreationBindingModel model) {
-        Question question = questionService.createQuestion(model, boardId);
+        @Valid @RequestBody QuestionCreationBindingModel model,
+        HttpServletRequest request) {
+        Question question = questionService.createQuestion(model, boardId, request.getRemoteAddr());
         QuestionCreationDto dto = modelMapper.map(question, QuestionCreationDto.class);
         return dto;
     }
+
+
+    /**
+     * GET endpoint to retrieve the aggregated pace details.
+     * Throw 400 upon wrong UUID formatting.
+     * Throw 404 upon requesting non-existent boardid.
+     *
+     * @param boardId       ID property of a board.
+     * @param moderatorCode The moderator code passed by the client.
+     * @return The newly-created pace details object.
+     */
+    @RequestMapping(value = "/{boardid}/pace", method = GET)
+    @ResponseBody
+    public PaceDetailsDto retrievePaceDetails(
+        @PathVariable("boardid") UUID boardId,
+        @RequestParam("code") UUID moderatorCode) {
+        // 400 is thrown upon bad formatting automatically
+        QuestionBoard questionBoard = service.getBoardById(boardId);
+        // Throw 404 when the board does not exist
+        if (questionBoard == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        //Throw 403 if the provided moderator code does not equal that of the question board
+        if (!questionBoard.getModeratorCode().equals(moderatorCode)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid moderator code");
+        }
+
+        var dto = paceVoteService.getAggregatedVotes(boardId);
+        return dto;
+    }
+
 
     /**
      * POST endpoint for registering PaceVotes.
@@ -239,11 +277,44 @@ public class QuestionBoardController {
         UUID paceVoteBoardId = vote.getQuestionBoard().getId();
         if (!paceVoteBoardId.equals(boardId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pace vote was not found in "
-                    + "requested Question board");
+                + "requested Question board");
         }
         PaceVoteDetailsDto dto = modelMapper.map(vote, PaceVoteDetailsDto.class);
         // Delete actual vote
         paceVoteService.deleteVote(vote);
+        return dto;
+    }
+
+    /**
+     * POST endpoint to create a Poll.
+     *
+     * @param pollModel The binding model passed by the client containing information to be used
+     *                  in creating a new Poll.
+     * @return the question board
+     */
+    @RequestMapping(value = "/{boardid}/poll", method = POST, consumes = "application/json")
+    @ResponseBody
+    public PollCreationDto createPoll(
+            @PathVariable("boardid") UUID boardId,
+            @RequestParam("code") UUID moderatorCode,
+            @Valid @RequestBody PollCreationBindingModel pollModel) {
+        QuestionBoard qb = service.getBoardById(boardId);
+
+        //Check if the question board exists
+        if (qb == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        //Check if the moderator code of the question board is equal to the code that was provided
+        //by the client.
+        if (!qb.getModeratorCode().equals(moderatorCode)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid moderator code");
+        }
+
+        //Create a new poll
+        Poll poll = pollService.createPoll(pollModel, boardId);
+
+        //Convert the poll into a PollCreationDto that is returned.
+        PollCreationDto dto = modelMapper.map(poll, PollCreationDto.class);
         return dto;
     }
 

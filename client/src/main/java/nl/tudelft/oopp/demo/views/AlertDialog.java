@@ -1,6 +1,8 @@
 package nl.tudelft.oopp.demo.views;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.DialogPane;
+import javafx.stage.StageStyle;
 
 public class AlertDialog {
     
@@ -13,10 +15,13 @@ public class AlertDialog {
      */
     public static void display(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
-        alert.setTitle(title);
-        alert.setHeaderText(null);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setHeaderText(title);
         alert.setContentText(message);
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("/css/AlertDialog.css");
+        dialogPane.getStyleClass().add("aDialog");
         alert.showAndWait();
     }
 
