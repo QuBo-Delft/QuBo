@@ -2,11 +2,15 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -19,14 +23,32 @@
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="550" minWidth="850" prefHeight="550.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.demo.controllers.StudentViewController">
    <top>
       <HBox fx:id="topBar" alignment="CENTER" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="TOP_LEFT">
-         <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" scaleX="0.6" scaleY="0.6" translateX="1.0">
+         <ImageView fx:id="boardStatusIcon" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" scaleX="0.6" scaleY="0.6" translateX="1.0">
+               <Image url="@../icons/status_open.png" />
          </ImageView>
-         <ImageView fitHeight="45.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" />
-         <Label maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" text="Lecture Title" wrapText="true" HBox.hgrow="ALWAYS">
-            <font>
-               <Font size="16.0" />
-            </font>
-         </Label>
+         <Separator orientation="VERTICAL" prefHeight="200.0">
+            <padding>
+               <Insets bottom="5.0" top="5.0" />
+            </padding>
+         </Separator>
+         <VBox maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+               <Label fx:id="boardTitle" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" text="Lecture Title">
+                  <font>
+                     <Font size="16.0" />
+                  </font>
+                  <contextMenu>
+                     <ContextMenu>
+                       <items>
+                         <MenuItem fx:id="studentCodeItem" mnemonicParsing="false" onAction="#copyStudentCode" text="Copy Student Code" />
+                       </items>
+                     </ContextMenu>
+                  </contextMenu>
+                  <tooltip>
+                     <Tooltip text="Right-click to copy student code" />
+                  </tooltip>
+               </Label>
+               <Label fx:id="boardStatusText" maxWidth="1.7976931348623157E308" text="open" />
+         </VBox>
          <Button fx:id="boardInfo" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="40.0" prefWidth="40.0" text="Button" />
          <Pane maxHeight="40.0" maxWidth="150.0" minHeight="40.0" minWidth="40.0" prefHeight="40.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
          <Button fx:id="helpDoc" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#displayHelpDoc" prefHeight="40.0" prefWidth="40.0" text="Help" />
