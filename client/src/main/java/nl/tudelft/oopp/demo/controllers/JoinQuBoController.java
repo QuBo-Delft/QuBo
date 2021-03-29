@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -15,8 +12,6 @@ import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -95,6 +90,24 @@ public class JoinQuBoController {
             new SceneLoader().loadStudentView(questionBoard, user, stage);
         } else {
             SceneLoader.loadModeratorView(questionBoard, user, stage);
+        }
+    }
+
+    /**
+     * Method that handles text field input changes.
+     */
+    @FXML
+    public void textHandler() {
+        if (errorMessageLabel.isVisible() && !errorMessageLabel.getText()
+                .equals("Error: No username was entered!\nPlease make sure to enter a username!")) {
+            try {
+                UUID boardCode = UUID.fromString(questionBoardCode.getText());
+            } catch (IllegalArgumentException exception) {
+                return;
+            }
+            errorMessageLabel.setVisible(false);
+        } else if (errorMessageLabel.isVisible()) {
+            errorMessageLabel.setVisible(userName.getText().length() > 0);
         }
     }
 }

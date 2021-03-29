@@ -5,12 +5,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
@@ -51,6 +53,32 @@ public class CreateQuBoController {
     private static final Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
             .create();
+
+    /**
+     * Code that is run upon loading StudentView.fxml
+     * Sources: https://stackoverflow.com/questions/32346893/javafx-datepicker-not-updating-value,
+     * https://stackoverflow.com/questions/42385584/changevalue-listener-spinner-javafx.
+     */
+    @FXML
+    private void initialize() {
+        //Change the value of the date picker when the user types.
+        startDate.getEditor().textProperty().addListener(((observable, oldValue, newValue) -> {
+            try {
+                startDate.setValue(startDate.getConverter().fromString(startDate.getEditor().getText()));
+            } catch (Exception e) {
+                errorDateTime.setVisible(true);
+            }
+        }));
+
+        //Change the value of the hours spinner when the user types.
+        hoursSpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) ->
+            updateSpinner(hoursSpinner, newValue));
+
+        //Change the value of the minutes spinner when the focus changes.
+        //Source:
+        minutesSpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) ->
+                updateSpinner(minutesSpinner, newValue));
+    }
 
     /**
      * Once the user clicks the "create now" button, this method will be invoked
@@ -190,7 +218,36 @@ public class CreateQuBoController {
      * not empty, but the label was being displayed, it will get hidden again.
      */
     public void titleTextHandler() {
-        errorTitle.setVisible(title.getText().length() <= 0);
+        if (errorTitle.isVisible()) {
+            errorTitle.setVisible(title.getText().length() <= 0);
+        }
+    }
+
+    /**
+     * This method updates spinner values when the user types in the corresponding text field.
+     * Source: https://stackoverflow.com/questions/42385584/changevalue-listener-spinner-javafx.
+     *
+     * @param spinner   The spinner whose value should be updated.
+     * @param value     The value that the spinner should be updated to.
+     */
+    public void updateSpinner(Spinner<Integer> spinner, String value) {
+        try {
+            //If the spinner's editor is empty, do not change anything.
+            if ("".equals(value)) {
+                return;
+            }
+
+            SpinnerValueFactory<Integer> factory = spinner.getValueFactory();
+            StringConverter<Integer> converter = factory.getConverter();
+
+            Integer hour = converter.fromString(value);
+
+            //Update the spinner's value
+            factory.setValue(hour);
+            dateInputHandler();
+        } catch (Exception e) {
+            errorDateTime.setVisible(true);
+        }
     }
 
     /**
