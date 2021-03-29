@@ -45,6 +45,10 @@ public class CreateQuBoController {
     private Label errorTitle;
     @FXML
     private Button cancelBtn;
+    @FXML
+    private Button scheduleBtn;
+    @FXML
+    private Button createBtn;
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
 
@@ -162,7 +166,7 @@ public class CreateQuBoController {
      * @param startTime     The start time of the question board.
      * @return true if and only the start time is after the current time.
      */
-    public boolean isStartTimeBeforeCurrentTime(Date startTime) {
+    public static boolean isStartTimeBeforeCurrentTime(Date startTime) {
         Calendar c1 = Calendar.getInstance();
         Calendar c2 = Calendar.getInstance();
         c1.setTime(startTime);
