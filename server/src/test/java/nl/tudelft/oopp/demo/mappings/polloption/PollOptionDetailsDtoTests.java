@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PollOptionDetailsDtoTests {
     private ModelMapper mapper;
@@ -41,9 +41,9 @@ public class PollOptionDetailsDtoTests {
         option.setText("Option A");
         option.setPoll(poll);
         PollOption option2 = new PollOption();
-        option.setId(UUID.randomUUID());
-        option.setText("Option B");
-        option.setPoll(poll);
+        option2.setId(UUID.randomUUID());
+        option2.setText("Option B");
+        option2.setPoll(poll);
 
         Set<PollOption> optionSet = new HashSet<>();
         optionSet.add(option);

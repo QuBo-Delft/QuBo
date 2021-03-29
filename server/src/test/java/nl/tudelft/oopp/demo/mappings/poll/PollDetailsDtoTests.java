@@ -14,7 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PollDetailsDtoTests {
     private ModelMapper mapper;
@@ -57,17 +59,17 @@ public class PollDetailsDtoTests {
         PollDetailsDto pollDto = mapper.map(poll, PollDetailsDto.class);
 
         // Assert
-        PollOptionDetailsDto[] optionDtos = pollDto.getOptions().toArray(new PollOptionDetailsDto[0]);
-
         assertEquals(poll.getId(), pollDto.getId());
         assertEquals(poll.getText(), pollDto.getText());
         assertEquals(poll.getPollOptions().size(), pollDto.getOptions().size());
+
+        PollOptionDetailsDto[] optionDtos = pollDto.getOptions().toArray(new PollOptionDetailsDto[0]);
+
         assertNotEquals(optionDtos[0], optionDtos[1]);
         assertTrue((optionDtos[0].getOptionId() == option.getId()
                 && optionDtos[0].getOptionText().equals(option.getText()))
                 || (optionDtos[0].getOptionId() == option2.getId()
                 && optionDtos[0].getOptionText().equals(option2.getText())));
-        assertNotNull(optionDtos[0].getOptionText());
         assertTrue((optionDtos[1].getOptionId() == option.getId()
                 && optionDtos[1].getOptionText().equals(option.getText()))
                 || (optionDtos[1].getOptionId() == option2.getId()
