@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * This class tests the QuBoCodesController which controls the QuBoCodes.fxml.
+ * This class tests the QuBoCodesController which controls QuBoCodes.fxml.
  */
 class QuBoCodesControllerTest extends TestFxBase {
 
@@ -34,7 +34,7 @@ class QuBoCodesControllerTest extends TestFxBase {
      * Initiate testing done through the TestFX library.
      *
      * @param stage Test stage created by the TestFX library.
-     * @throws IOException IOException thrown by incorrect load in start method.
+     * @throws IOException Thrown by incorrect load in start method.
      */
     @Start
     void start(Stage stage) throws IOException {
@@ -43,7 +43,7 @@ class QuBoCodesControllerTest extends TestFxBase {
     }
 
     /**
-     * Verify title is correct.
+     * Verify the title.
      */
     @Test
     void verifyTitle() {
@@ -51,7 +51,7 @@ class QuBoCodesControllerTest extends TestFxBase {
     }
 
     /**
-     * Verify startTime is correct.
+     * Verify the startTime.
      */
     @Test
     void verifyStartTime() {
@@ -60,7 +60,7 @@ class QuBoCodesControllerTest extends TestFxBase {
     }
 
     /**
-     * Verify admin code is correct.
+     * Verify the admin code.
      */
     @Test
     void verifyAdmin() {
@@ -69,7 +69,7 @@ class QuBoCodesControllerTest extends TestFxBase {
     }
 
     /**
-     * Verify student code is correct.
+     * Verify student code.
      */
     @Test
     void verifyStudent() {
@@ -119,7 +119,7 @@ class QuBoCodesControllerTest extends TestFxBase {
     }
 
     /**
-     * Test whether the labels are hidden on default.
+     * Test whether the labels are hidden by default.
      */
     @Test
     void copyNoCodes() {
@@ -139,7 +139,7 @@ class QuBoCodesControllerTest extends TestFxBase {
     }
 
     /**
-     * This method checks whether the clipboard actually contains the correct code copied.
+     * This method checks whether the clipboard actually contains the correct code after copying it.
      * When this method fails, an IOException or UnsupportedFlavorException shall be thrown.
      * Either of these exceptions will make the test calling this method fail automatically.
      */

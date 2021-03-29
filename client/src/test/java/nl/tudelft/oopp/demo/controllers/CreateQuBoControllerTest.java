@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 class CreateQuBoControllerTest extends TestFxBase {
 
     /*
-        These dates and and objects are used for various tests. The objects are instantiated in @Start.
+        These dates and objects are used for various tests. The objects are instantiated in @Start.
      */
     LocalDate yesterday = LocalDate.now().minusDays(1);
     LocalDate today = LocalDate.now();
@@ -38,7 +38,7 @@ class CreateQuBoControllerTest extends TestFxBase {
      * Initiate testing done through the TestFX library.
      *
      * @param stage Test stage created by the TestFX library.
-     * @throws IOException IOException thrown by incorrect load in start method.
+     * @throws IOException Thrown by incorrect load in start method.
      */
     @Start
     void start(Stage stage) throws IOException {
@@ -169,7 +169,7 @@ class CreateQuBoControllerTest extends TestFxBase {
 
     /*
         The tests regarding clicking the schedule a QuBo button below will have titles
-        properly inserted, as the title input functionality is tested above and on no failing tests above
+        properly inserted, as the title input functionality is tested above and on all tests above
         can be deemed as correct and working.
      */
 

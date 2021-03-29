@@ -17,12 +17,12 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * This class tests the JoinQuBoController which controls the JoinQuBo.fxml.
+ * This class tests the JoinQuBoController which controls JoinQuBo.fxml.
  */
 class JoinQuBoControllerTest extends TestFxBase {
 
     /*
-        These Strings allow store the UUIDs to string from the @BeforeAll.
+        These Strings will be used to store the toString representations of the UUIDs created in the @BeforeAll.
      */
     static String openBoard;
     static String openBoardModerator;
@@ -39,7 +39,7 @@ class JoinQuBoControllerTest extends TestFxBase {
      * Initiate testing done through the TestFX library.
      *
      * @param stage Test stage created by the TestFX library.
-     * @throws IOException IOException thrown by incorrect load in start method.
+     * @throws IOException Thrown by incorrect load in start method.
      */
     @Start
     void start(Stage stage) throws IOException {

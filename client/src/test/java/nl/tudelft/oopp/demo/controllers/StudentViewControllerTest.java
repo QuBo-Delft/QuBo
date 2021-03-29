@@ -8,7 +8,7 @@ import org.testfx.framework.junit5.Start;
 import java.io.IOException;
 
 /**
- * This class tests the StudentViewController which controls the StudentView.fxml.
+ * This class tests the StudentViewController which controls StudentView.fxml.
  */
 class StudentViewControllerTest extends TestFxBase {
 
@@ -22,7 +22,7 @@ class StudentViewControllerTest extends TestFxBase {
      * Initiate testing done through the TestFX library.
      *
      * @param stage Test stage created by the TestFX library.
-     * @throws IOException IOException thrown by incorrect load in start method.
+     * @throws IOException Thrown by incorrect load in start method.
      */
     @Start
     void start(Stage stage) throws IOException {
