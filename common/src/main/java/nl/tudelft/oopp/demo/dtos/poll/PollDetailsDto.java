@@ -1,0 +1,41 @@
+package nl.tudelft.oopp.demo.dtos.poll;
+
+import nl.tudelft.oopp.demo.dtos.polloption.PollOptionDetailsDto;
+
+import java.util.Set;
+import java.util.UUID;
+
+public class PollDetailsDto {
+    private UUID id;
+
+    private String text;
+
+    private Set<PollOptionDetailsDto> options;
+
+    public PollDetailsDto() {
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public Set<PollOptionDetailsDto> getOptions() {
+        return options;
+    }
+
+    public void setOptions(Set<PollOptionDetailsDto> options) {
+        this.options = options;
+    }
+}
