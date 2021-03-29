@@ -48,17 +48,18 @@ public class SceneLoader {
 
         // Display the new scene
         currentStage.setScene(new Scene(root));
+        currentStage.setTitle("Create Question Board");
         currentStage.centerOnScreen();
     }
 
     /**
      * This method aims to load the page that displays the student code and moderator code.
      *
-     * @param qd    The QuestionBoardCreationDto object to be transferred to the controller
+     * @param qc    The QuestionBoardCreationDto object to be transferred to the controller
      *              of QuestionBoardCodes.
      *
      */
-    public static void loadQuestionBoardCodes(QuestionBoardCreationDto qd, Stage currentStage) {
+    public static void loadQuestionBoardCodes(QuestionBoardCreationDto qc, Stage currentStage) {
         // Create an FXMLLoader of QuBoCodes.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/QuBoCodes.fxml"));
 
@@ -73,7 +74,7 @@ public class SceneLoader {
         QuBoCodesController controller = loader.getController();
 
         // Transfer the data for QuBoCodes
-        controller.displayCodes(qd);
+        controller.displayCodes(qc);
 
         // Check if root is null
         if (root == null) {
@@ -83,6 +84,7 @@ public class SceneLoader {
 
         // Display the new scene
         currentStage.setScene(new Scene(root));
+        currentStage.setTitle("Created Question Board");
         currentStage.centerOnScreen();
     }
 
@@ -126,16 +128,17 @@ public class SceneLoader {
         newStage.setMinHeight(550);
         newStage.setMinWidth(850);
         newStage.show();
+        newStage.setTitle(qd.getTitle());
     }
 
     /**
      * This method loads the moderator view of the question board associated with the QuestionBoardDetailsDto
      * passed to the method.
      *
-     * @param quBo  The QuestionBoardDetailsDto object associated with the question board that the moderator
+     * @param qd  The QuestionBoardDetailsDto object associated with the question board that the moderator
      *      wants to join.
      */
-    public static void loadModeratorView(QuestionBoardDetailsDto quBo, String userName, Stage currentStage) {
+    public static void loadModeratorView(QuestionBoardDetailsDto qd, String userName, Stage currentStage) {
         // Create an FXMLLoader of ModeratorView.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/ModeratorView.fxml"));
 
@@ -149,7 +152,7 @@ public class SceneLoader {
         //Get the controller of ModeratorView
         ModeratorViewController controller = loader.getController();
 
-        UUID boardId = quBo.getId();
+        UUID boardId = qd.getId();
 
         // TODO: need a method to update data in moderatorView
 
@@ -161,6 +164,7 @@ public class SceneLoader {
 
         //Display the new scene
         currentStage.setScene(new Scene(root));
+        currentStage.setTitle(qd.getTitle() + " - Moderator");
     }
 
     /**
@@ -188,6 +192,7 @@ public class SceneLoader {
         currentStage.setMinWidth(Double.MIN_VALUE);
         currentStage.setMinHeight(Double.MIN_VALUE);
         currentStage.setScene(new Scene(root));
+        currentStage.setTitle("QuBo");
         currentStage.centerOnScreen();
     }
 
