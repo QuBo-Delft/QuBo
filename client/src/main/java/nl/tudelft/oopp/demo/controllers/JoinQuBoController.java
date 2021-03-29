@@ -106,7 +106,7 @@ public class JoinQuBoController {
     @FXML
     public void textHandler() {
         if (errorMessageLabel.isVisible() && !errorMessageLabel.getText()
-                .equals("Error: No username was entered!\nPlease make sure to enter a username!")) {
+                .equals("Error: No username was entered! Please make sure to enter a username!")) {
             try {
                 UUID boardCode = UUID.fromString(questionBoardCode.getText());
             } catch (IllegalArgumentException exception) {
