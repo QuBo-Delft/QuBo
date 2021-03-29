@@ -40,6 +40,7 @@ subprojects {
                 enabled = true
                 element = 'CLASS'
                 includes = ['nl.tudelft.*']
+                //excludes = ['nl.tudelft.oopp.demo.controllers.*']
 
                 limit {
                     counter = 'LINE'
@@ -61,12 +62,12 @@ subprojects {
 
 
     test {
+        exclude 'nl/tudelft/oopp/demo/controllers/**'
         outputs.dir snippetsDir
         useJUnitPlatform()
 
         // Set to false to enable GUI/"headfull" controller testing through TestFX
-        jvmArgs "-Dheadless=true "
-        exclude '**/**ControllerTest'
+        jvmArgs "-Dheadless=true"
 
         jacoco {
             enabled = true
