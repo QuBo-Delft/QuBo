@@ -4,12 +4,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.controllers.CreateQuBoController;
 import nl.tudelft.oopp.demo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.demo.controllers.QuBoCodesController;
 import nl.tudelft.oopp.demo.controllers.StudentViewController;
-import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.views.AlertDialog;
@@ -120,6 +118,7 @@ public class SceneLoader {
         loader.setController(controller);
         controller.setQuBo(qd);
         controller.setAuthorName(userName);
+        controller.setBoardDetails();
 
         // TODO: need a method to update data in studentView
 

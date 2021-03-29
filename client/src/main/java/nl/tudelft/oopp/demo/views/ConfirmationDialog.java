@@ -29,11 +29,14 @@ public class ConfirmationDialog {
         Stage window = new Stage();
         // Block user action
         window.initModality(Modality.APPLICATION_MODAL);
+        window.setMinWidth(350);
+        window.setMinHeight(200);
 
-        // Set title and message parameter into their respective labels
+        // Set title and message parameter into their respective labels, and set their stylesheets
         Label title = new Label(titleParam);
-        title.setStyle("-fx-font-size: 18");
+        title.getStyleClass().add("titleLabel");
         Label message = new Label(messageParam);
+        message.getStyleClass().add("messageLabel");
         // Wrap Text if too long
         int maxWidth = 340;
         title.setWrapText(true);
@@ -45,12 +48,14 @@ public class ConfirmationDialog {
         title.setTextAlignment(TextAlignment.CENTER);
         message.setAlignment(Pos.CENTER);
         message.setTextAlignment(TextAlignment.CENTER);
+        // Set padding for the title
+        title.setPadding(new Insets(-5, 0, 8, 0));
 
         // Create the buttons
         Button yesButton = new Button("Yes");
+        yesButton.getStyleClass().add("yesBtn");
         Button noButton = new Button("No");
-        yesButton.setStyle("-fx-font-size: 15");
-        noButton.setStyle("-fx-font-size: 15");
+        noButton.getStyleClass().add("noBtn");
         // Set button click action
         yesButton.setOnAction(e -> {
             answer = true;
@@ -78,6 +83,7 @@ public class ConfirmationDialog {
 
         // Set the scene to dialogue
         Scene scene = new Scene(dialogue);
+        scene.getStylesheets().add("/css/ConfirmationDialog.css");
         // Hide the title bar of the window
         window.initStyle(StageStyle.UNDECORATED);
         // Display this dialog

@@ -37,12 +37,10 @@ public class GetTextDialog {
 
         // Block the user from performing other actions
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setMinWidth(250);
+        window.setHeight(405);
+        window.setWidth(720);
         // Hide the title bar of the window
         window.initStyle(StageStyle.UNDECORATED);
-
-        Label messageLabel = new Label();
-        messageLabel.setStyle("-fx-font-style: italic; -fx-font-size: 13");
 
         TextArea inputField = new TextArea();
         inputField.setPromptText(message);
@@ -57,6 +55,8 @@ public class GetTextDialog {
         cancelButton.setOnAction(e -> {
             window.close();
         });
+
+        Label messageLabel = new Label();
 
         // The submit button's text is set to be the submitBtnText
         Button submitButton = new Button(submitBtnText);
@@ -75,6 +75,10 @@ public class GetTextDialog {
                 window.close();
             }
         });
+
+        // Add style classes to the elements
+        submitButton.getStyleClass().add("submitBtn");
+        cancelButton.getStyleClass().add("cancelBtn");
 
         // The top hHox, act like a spacer
         HBox topHBox = new HBox(25);
@@ -106,6 +110,7 @@ public class GetTextDialog {
         layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);
+        scene.getStylesheets().add("/css/GetTextDialog.css");
         // Display the dialog
         window.setScene(scene);
         // Can return back only if the current dialog is closed
