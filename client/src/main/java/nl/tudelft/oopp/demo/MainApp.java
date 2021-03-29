@@ -166,7 +166,7 @@ public class MainApp {
         pollOptions.add("Option A");
         pollOptions.add("Option B");
         System.out.println("This poll has been added: "
-                + ((ServerCommunication.addPoll(boardId, moderatorCode, "Test Poll", pollOptions)) != null));
+                + (gson.toJson(ServerCommunication.addPoll(boardId, moderatorCode, "Test Poll", pollOptions))));
 
 
         //Close the question board
