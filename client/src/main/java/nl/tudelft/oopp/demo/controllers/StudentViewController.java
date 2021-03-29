@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -45,8 +46,6 @@ public class StudentViewController {
     @FXML
     private StackPane content;
     @FXML
-    private ListView<Question> unAnsQuestionList;
-    @FXML
     private VBox sideBar;
     @FXML
     private VBox sideMenu;
@@ -64,6 +63,10 @@ public class StudentViewController {
     private Button leaveQuBo;
     private boolean sideMenuOpen;
 
+    @FXML
+    private ListView<Question> unAnsQuListView;
+    private ListView<Question> ansQuListView = new ListView<>();
+
     private String authorName;
 
     private static final Gson gson = new GsonBuilder()
@@ -76,8 +79,8 @@ public class StudentViewController {
     private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
 
     private QuestionBoardDetailsDto quBo;
-    private QuestionDetailsDto[] answeredQuestions;
-    private QuestionDetailsDto[] unansweredQuestions;
+    private QuestionDetailsDto[] answeredQuestions = new QuestionDetailsDto[0];
+    private QuestionDetailsDto[] unansweredQuestions = new QuestionDetailsDto[0];
 
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
@@ -117,28 +120,32 @@ public class StudentViewController {
         sideMenu.prefWidthProperty().bind(content.widthProperty().multiply(0.45));
 
         //Make ListCells unable to be selected individually (remove blue highlighting)
-        unAnsQuestionList.setSelectionModel(new NoSelectionModel<>());
-        unAnsQuestionList.setFocusModel(new NoFocusModel<>());
-        //Remove border of focus
-        unAnsQuestionList.setStyle("-fx-background-insets: 0 ;");
+        unAnsQuListView.setSelectionModel(new NoSelectionModel<>());
+        unAnsQuListView.setFocusModel(new NoFocusModel<>());
+        ansQuListView.setSelectionModel(new NoSelectionModel<>());
+        ansQuListView.setFocusModel(new NoFocusModel<>());
 
-        unAnsQuestionList.setEditable(true);
+        //Remove border of focus
+        unAnsQuListView.setStyle("-fx-background-insets: 0 ;");
+        ansQuListView.setStyle("-fx-background-insets: 0 ;");
+
+        unAnsQuListView.setEditable(true);
     }
 
-//    private void testQuestions() {
-//        ObservableList<Question> data = FXCollections.observableArrayList();
-//
-//        data.addAll(new Question(UUID.randomUUID(), 2, "What is life?",
-//                "ChickenWings", null),
-//            new Question(UUID.randomUUID(), 42,"Trolley problem."
-//                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-//                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-//                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem.",
-//                "ChickenWings", null));
-//
-//        questionList.setItems(data);
-//        questionList.setCellFactory(listView -> new QuestionListCell());
-//    }
+    //private void testQuestions() {
+    //    ObservableList<Question> data = FXCollections.observableArrayList();
+    //
+    //    data.addAll(new Question(UUID.randomUUID(), 2, "What is life?",
+    //            "ChickenWings", null),
+    //        new Question(UUID.randomUUID(), 42,"Trolley problem."
+    //            + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+    //            + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+    //            + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem.",
+    //            "ChickenWings", null));
+    //
+    //    questionList.setItems(data);
+    //    questionList.setCellFactory(listView -> new QuestionListCell());
+    //}
 
     /**
      * Method that displays the questions that are in the question board on the screen. Answered questions
@@ -167,52 +174,28 @@ public class StudentViewController {
             divideQuestions(questions);
             if (unansweredQuestions != null) {
                 Sorting.sortOnUpvotes(unansweredQuestions);
+            } else {
+                unansweredQuestions = new QuestionDetailsDto[0];
             }
             if (answeredQuestions != null) {
                 Sorting.sortOnTimeAnswered(answeredQuestions);
+            } else {
+                answeredQuestions = new QuestionDetailsDto[0];
             }
         }
 
-        if (unansweredQuestions.length != 0) { //There exists unanswered questions
-            //Clear current questions
-            unAnsQuestionList.getItems().clear();
-
-            ObservableList<Question> data = FXCollections.observableArrayList();
-            //For each question in the list create a new Question object
-            for (QuestionDetailsDto question : unansweredQuestions) {
-                Question newQu = new Question(question.getId(), question.getUpvotes(),
-                    question.getText(), question.getAuthorName(), null);
-
-                //Get Answers if there are any
-                if (question.getAnswers().size() != 0) {
-                    List<String> answers = new ArrayList<>();
-                    for (AnswerDetailsDto answer : question.getAnswers()) {
-                        answers.add(answer.getText());
-                    }
-
-                    newQu.setAnswers(answers);
-                }
-
-                //Add the question to the ObservableList
-                data.add(newQu);
-            }
-
-            unAnsQuestionList.setItems(data);
-            unAnsQuestionList.setCellFactory(listView
-                -> new QuestionListCell(unAnsQuestionList, secretCodeMap, upvoteMap));
-        }
-
-        displayAnsweredQuestions();
+        mapQuestions(unAnsQuListView, unansweredQuestions);
+        mapQuestions(ansQuListView, answeredQuestions);
     }
 
-    private void displayAnsweredQuestions() {
-        if (answeredQuestions.length != 0) { //There exists unanswered questions
+    private void mapQuestions(ListView<Question> questionListView, QuestionDetailsDto[] questionList) {
+        if (questionList.length != 0) { //There exists unanswered questions
             //Clear current questions
-            unAnsQuestionList.getItems().clear();
+            questionListView.getItems().clear();
 
             ObservableList<Question> data = FXCollections.observableArrayList();
             //For each question in the list create a new Question object
-            for (QuestionDetailsDto question : answeredQuestions) {
+            for (QuestionDetailsDto question : questionList) {
                 Question newQu = new Question(question.getId(), question.getUpvotes(),
                     question.getText(), question.getAuthorName(), null);
 
@@ -222,17 +205,17 @@ public class StudentViewController {
                     for (AnswerDetailsDto answer : question.getAnswers()) {
                         answers.add(answer.getText());
                     }
-
                     newQu.setAnswers(answers);
                 }
-
                 //Add the question to the ObservableList
                 data.add(newQu);
             }
 
-            unAnsQuestionList.setItems(data);
-            unAnsQuestionList.setCellFactory(listView
-                -> new QuestionListCell(unAnsQuestionList, secretCodeMap, upvoteMap));
+            //Set new questions in the ListView
+            questionListView.setItems(data);
+            //Set the custom cell factory for the listview
+            questionListView.setCellFactory(listView
+                -> new QuestionListCell(questionListView, secretCodeMap, upvoteMap));
         }
     }
 
@@ -363,8 +346,8 @@ public class StudentViewController {
         Label title = new Label("Answered Questions");
         sideMenu.setVisible(true);
         sideMenu.getChildren().add(title);
-
-        //TODO: Fetch questions and display in a ListView
+        sideMenu.getChildren().add(ansQuListView);
+        VBox.setVgrow(ansQuListView, Priority.ALWAYS);
     }
 
     /**

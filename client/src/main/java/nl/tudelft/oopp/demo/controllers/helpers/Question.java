@@ -6,7 +6,7 @@ import java.util.UUID;
 public class Question {
     private UUID questionId;
     private int upvoteNumber;
-    private String questionContent;
+    private String questionBody;
     private String authorName;
     private List<String> answers;
 
@@ -19,7 +19,7 @@ public class Question {
     }
 
     public String getQuestionContent() {
-        return questionContent;
+        return questionBody;
     }
 
     public String getAuthorName() {
@@ -34,11 +34,20 @@ public class Question {
         this.answers = answers;
     }
 
-    public Question(UUID questionId, int upvoteNumber, String questionContent, String authorName,
+    /**
+     * Constructs a question object to be mapped onto a QuestionListCell.
+     *
+     * @param questionId        The ID of the question.
+     * @param upvoteNumber      The number of upvotes.
+     * @param questionBody      The body of the question.
+     * @param authorName        The author of the question.
+     * @param answers           The answer(s) to the question.
+     */
+    public Question(UUID questionId, int upvoteNumber, String questionBody, String authorName,
                     List<String> answers) {
         this.questionId = questionId;
         this.upvoteNumber = upvoteNumber;
-        this.questionContent = questionContent;
+        this.questionBody = questionBody;
         this.authorName = authorName;
         this.answers = answers;
     }

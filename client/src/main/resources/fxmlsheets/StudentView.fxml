@@ -36,40 +36,40 @@
    <center>
       <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
-                 <ListView fx:id="unAnsQuestionList" prefHeight="360.0" prefWidth="800.0">
+                 <ListView fx:id="unAnsQuListView" prefHeight="360.0" prefWidth="800.0">
                  <padding>
                     <Insets left="30.0" right="20.0" top="20.0" />
                  </padding>
               </ListView>
-                  <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0">
+                  <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0" spacing="10.0">
                      <padding>
-                        <Insets bottom="20.0" left="20.0" top="15.0" />
+                        <Insets left="20.0" right="20.0" top="15.0" />
                      </padding>
                   </VBox>
             </HBox>
          <BorderPane fx:id="paceVotePane" maxHeight="160.0" maxWidth="140.0" minHeight="160.0" minWidth="140.0" prefHeight="160.0" prefWidth="140.0" StackPane.alignment="BOTTOM_RIGHT">
             <center>
-                     <VBox minHeight="160.0" minWidth="140.0" spacing="10.0" BorderPane.alignment="CENTER">
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How is the current lecture pacing?" wrappingWidth="118.5263671875">
-                              <VBox.margin>
-                                 <Insets />
-                              </VBox.margin>
-                           </Text>
-                                    <RadioButton mnemonicParsing="false" text="Too fast">
-                              <VBox.margin>
-                                 <Insets />
-                              </VBox.margin>
-                           </RadioButton>
-                                    <RadioButton mnemonicParsing="false" text="All right">
-                              <VBox.margin>
-                                 <Insets />
-                              </VBox.margin>
-                           </RadioButton>
-                                    <RadioButton mnemonicParsing="false" text="Too slow" />
-                        <padding>
-                           <Insets left="15.0" right="15.0" top="15.0" />
-                        </padding>
-                     </VBox>
+                 <VBox minHeight="160.0" minWidth="140.0" spacing="10.0" BorderPane.alignment="CENTER">
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How is the current lecture pacing?" wrappingWidth="118.5263671875">
+                          <VBox.margin>
+                             <Insets />
+                          </VBox.margin>
+                       </Text>
+                                <RadioButton mnemonicParsing="false" text="Too fast">
+                          <VBox.margin>
+                             <Insets />
+                          </VBox.margin>
+                       </RadioButton>
+                                <RadioButton mnemonicParsing="false" text="All right">
+                          <VBox.margin>
+                             <Insets />
+                          </VBox.margin>
+                       </RadioButton>
+                                <RadioButton mnemonicParsing="false" text="Too slow" />
+                    <padding>
+                       <Insets left="15.0" right="15.0" top="15.0" />
+                    </padding>
+                 </VBox>
             </center>
          </BorderPane>
           <Button fx:id="askQuestion" maxHeight="45.0" maxWidth="45.0" minHeight="45.0" minWidth="45.0" mnemonicParsing="false" onAction="#addQuestion" prefHeight="45.0" prefWidth="45.0" text="ASK" StackPane.alignment="BOTTOM_LEFT">

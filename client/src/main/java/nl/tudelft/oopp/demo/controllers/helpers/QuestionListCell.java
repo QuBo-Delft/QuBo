@@ -24,10 +24,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class QuestionListCell extends ListCell<Question> {
+    private GridPane questionPane;
     private GridPane content;
     private UUID questionId;
     private Label upvoteNumber;
-    private Text questionContent;
+    private Text questionBody;
     private Label authorName;
     private List<String> answers;
 
@@ -35,12 +36,21 @@ public class QuestionListCell extends ListCell<Question> {
     private HashMap<UUID, UUID> secretCodeMap;
     private HashMap<UUID, UUID> upvoteMap;
 
-    public QuestionListCell (ListView<Question> questionList, HashMap<UUID, UUID> secretCodeMap, HashMap<UUID, UUID> upvoteMap) {
+    /**
+     * This constructs a new cell for a question in the list view.
+     *
+     * @param questionList  The ListView in which the questions are displayed in.
+     * @param secretCodeMap The HashMap of questionIds and secretCodes.
+     * @param upvoteMap     The HashMap of questionIds and upvoteIds.
+     */
+    public QuestionListCell(ListView<Question> questionList, HashMap<UUID, UUID> secretCodeMap,
+                             HashMap<UUID, UUID> upvoteMap) {
         super();
         questionId = null;
+        questionPane = new GridPane();
         content = new GridPane();
         upvoteNumber = new Label();
-        questionContent = new Text();
+        questionBody = new Text();
         authorName = new Label();
         answers = new ArrayList<>();
 
@@ -49,6 +59,12 @@ public class QuestionListCell extends ListCell<Question> {
         this.upvoteMap = upvoteMap;
     }
 
+    /**
+     * Constructs and returns a new upvote box.
+     *
+     * @param upvoteNumber  The number of upvotes.
+     * @return              Returns a new upvote box to be displayed.
+     */
     public VBox newUpvoteVbox(Label upvoteNumber) {
         //Create the Vbox for placing the upvote button and upvote number
         ToggleButton upvoteTriangle = new ToggleButton("up");
@@ -68,6 +84,13 @@ public class QuestionListCell extends ListCell<Question> {
         return upvote;
     }
 
+    /**
+     * Constructs and returns a new options menu.
+     *
+     * @param questionVbox  The VBox containing the question body. (Needs to be passed on to the
+     *                      action listeners to be modified in the actions events.)
+     * @return              Returns a new options menu to be displayed.
+     */
     public MenuButton newOptionsMenu(VBox questionVbox) {
         //Create the edit and delete menu items
         MenuItem edit = new MenuItem("Edit");
@@ -81,14 +104,21 @@ public class QuestionListCell extends ListCell<Question> {
 
         //Add action listeners to options menu
         edit.setOnAction(event -> StudentViewActionEvents
-            .editQuestionOption(questionContent, questionVbox, options, questionId,
+            .editQuestionOption(questionBody, questionVbox, options, questionId,
                 secretCodeMap.get(questionId)));
-        delete.setOnAction(event -> StudentViewActionEvents.deleteQuestionOption(content, questionList,
+        delete.setOnAction(event -> StudentViewActionEvents.deleteQuestionOption(questionPane, questionList,
             options, questionId, secretCodeMap.get(questionId)));
 
         return options;
     }
 
+    /**
+     * Constructs and returns a new VBox containing the question body and the author name.
+     *
+     * @param authorName    Name of the author of the question.
+     * @return              Returns a new VBox containing the question body and the
+     *                      author name to be displayed.
+     */
     public VBox newQuestionVbox(Label authorName) {
         //Create a pane for putting the author name
         HBox authorHbox = new HBox(authorName);
@@ -103,9 +133,9 @@ public class QuestionListCell extends ListCell<Question> {
 
         //Bind properties for easier management
         space.managedProperty().bind(space.visibleProperty());
-        space.visibleProperty().bind(this.questionContent.visibleProperty());
+        space.visibleProperty().bind(this.questionBody.visibleProperty());
 
-        VBox questionVbox = new VBox(this.questionContent, space);
+        VBox questionVbox = new VBox(this.questionBody, space);
         questionVbox.setSpacing(10);
 
         return questionVbox;
@@ -117,7 +147,7 @@ public class QuestionListCell extends ListCell<Question> {
         //If the item was not null and empty was false, add content to the graphic
         if (item != null && !empty) {
             upvoteNumber.setText(Integer.toString(item.getUpvoteNumber()));
-            questionContent.setText(item.getQuestionContent());
+            questionBody.setText(item.getQuestionContent());
             authorName.setText(item.getAuthorName());
             questionId = item.getQuestionId();
             answers = item.getAnswers();
@@ -133,7 +163,7 @@ public class QuestionListCell extends ListCell<Question> {
     protected void cellDisplay() {
         //Bind the managed property to the visible property so that the node is not accounted for
         //in the layout when it is not visible.
-        questionContent.managedProperty().bind(questionContent.visibleProperty());
+        questionBody.managedProperty().bind(questionBody.visibleProperty());
 
         this.setPadding(new Insets(0,10,20,0));
 
@@ -148,29 +178,42 @@ public class QuestionListCell extends ListCell<Question> {
         }
 
         //Add nodes to the gridpane
-        content.addColumn(0, newUpvoteVbox(upvoteNumber));
-        content.addColumn(1, questionVbox);
-        content.addColumn(2, options);
+        questionPane.addColumn(0, newUpvoteVbox(upvoteNumber));
+        questionPane.addColumn(1, questionVbox);
+        questionPane.addColumn(2, options);
 
         //Set column constraints
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setMaxWidth(GridPane.USE_PREF_SIZE);
         col2.setHgrow(Priority.ALWAYS);
-        content.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
+        questionPane.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
             new ColumnConstraints(50));
 
         //Make questionContent resize with width of cell
         double paddingWidth = questionList.getPadding().getLeft()
-            +  questionList.getPadding().getRight() + 140;
-        questionContent.wrappingWidthProperty().bind(questionList.widthProperty()
-            .subtract(paddingWidth));
+            +  questionList.getPadding().getRight();
+        questionBody.wrappingWidthProperty().bind(questionList.widthProperty()
+            .subtract(paddingWidth + 140));
 
         //Make gridlines visible for clarity during development
-        content.setGridLinesVisible(true);
+        questionPane.setGridLinesVisible(true);
+
         //Set paddings
-        content.setPadding(new Insets(6,3,8,3));
+        questionPane.setPadding(new Insets(6,3,8,3));
+
         //Set alignment of children in the GridPane
         GridPane.setValignment(options, VPos.TOP);
         GridPane.setHalignment(options, HPos.RIGHT);
+
+        content.addRow(0, questionPane);
+        //Add the answers
+        for (int i = 0; i < answers.size(); i++) {
+            Text answer = new Text(answers.get(i));
+            BorderPane answerPane = new BorderPane(answer);
+            answer.wrappingWidthProperty().bind(questionList.widthProperty()
+                .subtract(paddingWidth + 40));
+
+            content.addRow((i + 1), answerPane);
+        }
     }
 }
