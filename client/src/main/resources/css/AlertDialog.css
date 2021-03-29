@@ -1,0 +1,47 @@
+.aDialog{
+    -fx-background-color: #f3f1ee;
+    -fx-padding: 7 7 7 7;
+}
+
+.aDialog > *.button-bar > *.container{
+    -fx-background-color: #f3f1ee;
+}
+
+.aDialog > *.label.content{
+    -fx-text-fill: #403333;
+    -fx-font-size: 16;
+    -fx-font-family: "Arial";
+}
+
+.aDialog:header *.header-panel{
+    -fx-background-color: #f3f1ee;
+    -fx-alignment: center;
+}
+
+.aDialog:header *.header-panel *.label{
+    -fx-font-weight: bold;
+    -fx-text-fill: #584643;
+    -fx-font-size: 19;
+    -fx-font-family: "Arial"
+}
+
+.aDialog .button{
+    -fx-background-color: #baac8f;
+    -fx-background-radius: 6;
+    -fx-min-height: 35;
+    -fx-min-width: 75;
+    -fx-padding: 5 5 5 5;
+
+    -fx-alignment: CENTER;
+    -fx-wrap-text: true;
+    -fx-effect: dropshadow( three-pass-box, #626234, 10.0, 0.0, 0.0, 0.0);
+    -fx-font-family: "Arial";
+    -fx-text-fill: #f1ede9;
+    -fx-font-size: 17;
+}
+
+.aDialog .button:hover{
+    -fx-background-color:white;
+    -fx-text-fill:black;
+    -fx-font-weight:bold;
+}
