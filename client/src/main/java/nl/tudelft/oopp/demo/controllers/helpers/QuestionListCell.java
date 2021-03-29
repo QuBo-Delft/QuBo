@@ -207,13 +207,15 @@ public class QuestionListCell extends ListCell<Question> {
 
         content.addRow(0, questionPane);
         //Add the answers
-        for (int i = 0; i < answers.size(); i++) {
-            Text answer = new Text(answers.get(i));
-            BorderPane answerPane = new BorderPane(answer);
-            answer.wrappingWidthProperty().bind(questionList.widthProperty()
-                .subtract(paddingWidth + 40));
+        if (answers != null && answers.size() != 0) {
+            for (int i = 0; i < answers.size(); i++) {
+                Text answer = new Text(answers.get(i));
+                BorderPane answerPane = new BorderPane(answer);
+                answer.wrappingWidthProperty().bind(questionList.widthProperty()
+                    .subtract(paddingWidth + 40));
 
-            content.addRow((i + 1), answerPane);
+                content.addRow((i + 1), answerPane);
+            }
         }
     }
 }
