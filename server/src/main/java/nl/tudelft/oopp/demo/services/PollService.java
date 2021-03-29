@@ -81,4 +81,31 @@ public class PollService {
 
         return poll;
     }
+
+    /**
+     * Retrieves a Poll through the ID of its question board.
+     *
+     * @param questionBoard The question board associated with the poll.
+     * @return The Poll associated with the question board.
+     */
+    public Poll getPollByBoard(QuestionBoard questionBoard) {
+        Poll poll = questionBoard.getPoll();
+
+        //If there is no poll associated with the question board, throw a NotFoundException
+        if (poll == null) {
+            throw new NotFoundException("There is no poll associated with this question board.");
+        }
+
+        return poll;
+    }
+
+    /**
+     * Retrieves a Poll through its ID.
+     *
+     * @param pollId    The ID of the the poll that should be retrieved.
+     * @return The Poll associated with the ID.
+     */
+    public Poll getPollById(UUID pollId) {
+        return pollRepository.getById(pollId);
+    }
 }
