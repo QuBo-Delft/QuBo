@@ -135,7 +135,7 @@ class QuBoCodesControllerTest extends TestFxBase {
     @Test
     void backToHome(FxRobot robot) {
         robot.clickOn("#backToHome");
-        FxAssert.verifyThat(robot.window("(Join Question Board)"), WindowMatchers.isShowing());
+        FxAssert.verifyThat(robot.window("(QuBo)"), WindowMatchers.isShowing());
     }
 
     /**
