@@ -5,31 +5,17 @@ import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.Priority;
-import javafx.scene.text.Text;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.demo.controllers.helpers.Question;
 import nl.tudelft.oopp.demo.controllers.helpers.QuestionListCell;
-import nl.tudelft.oopp.demo.controllers.helpers.StudentViewActionEvents;
 import nl.tudelft.oopp.demo.dtos.answer.AnswerDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.demo.controllers.helpers.NoFocusModel;
@@ -59,7 +45,7 @@ public class StudentViewController {
     @FXML
     private StackPane content;
     @FXML
-    private ListView<Question> questionList;
+    private ListView<Question> unAnsQuestionList;
     @FXML
     private VBox sideBar;
     @FXML
@@ -93,14 +79,6 @@ public class StudentViewController {
     private QuestionDetailsDto[] answeredQuestions;
     private QuestionDetailsDto[] unansweredQuestions;
 
-    public HashMap<UUID, UUID> getUpvoteMap() {
-        return upvoteMap;
-    }
-
-    public HashMap<UUID, UUID> getSecretCodeMap() {
-        return secretCodeMap;
-    }
-
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
      *
@@ -124,7 +102,6 @@ public class StudentViewController {
      */
     @FXML
     private void initialize() {
-//        testQuestions();
         startUpProperties();
         //Display the questions
         displayQuestions();
@@ -140,28 +117,28 @@ public class StudentViewController {
         sideMenu.prefWidthProperty().bind(content.widthProperty().multiply(0.45));
 
         //Make ListCells unable to be selected individually (remove blue highlighting)
-        questionList.setSelectionModel(new NoSelectionModel<>());
-        questionList.setFocusModel(new NoFocusModel<>());
+        unAnsQuestionList.setSelectionModel(new NoSelectionModel<>());
+        unAnsQuestionList.setFocusModel(new NoFocusModel<>());
         //Remove border of focus
-        questionList.setStyle("-fx-background-insets: 0 ;");
+        unAnsQuestionList.setStyle("-fx-background-insets: 0 ;");
 
-        questionList.setEditable(true);
+        unAnsQuestionList.setEditable(true);
     }
 
-    private void testQuestions() {
-        ObservableList<Question> data = FXCollections.observableArrayList();
-
-        data.addAll(new Question(UUID.randomUUID(), 2, "What is life?",
-                "ChickenWings", null),
-            new Question(UUID.randomUUID(), 42,"Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem.",
-                "ChickenWings", null));
-
-        questionList.setItems(data);
-        questionList.setCellFactory(listView -> new QuestionListCell());
-    }
+//    private void testQuestions() {
+//        ObservableList<Question> data = FXCollections.observableArrayList();
+//
+//        data.addAll(new Question(UUID.randomUUID(), 2, "What is life?",
+//                "ChickenWings", null),
+//            new Question(UUID.randomUUID(), 42,"Trolley problem."
+//                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+//                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
+//                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem.",
+//                "ChickenWings", null));
+//
+//        questionList.setItems(data);
+//        questionList.setCellFactory(listView -> new QuestionListCell());
+//    }
 
     /**
      * Method that displays the questions that are in the question board on the screen. Answered questions
@@ -198,7 +175,7 @@ public class StudentViewController {
 
         if (unansweredQuestions.length != 0) { //There exists unanswered questions
             //Clear current questions
-            questionList.getItems().clear();
+            unAnsQuestionList.getItems().clear();
 
             ObservableList<Question> data = FXCollections.observableArrayList();
             //For each question in the list create a new Question object
@@ -220,11 +197,43 @@ public class StudentViewController {
                 data.add(newQu);
             }
 
-            questionList.setItems(data);
-            questionList.setCellFactory(listView -> new QuestionListCell());
+            unAnsQuestionList.setItems(data);
+            unAnsQuestionList.setCellFactory(listView
+                -> new QuestionListCell(unAnsQuestionList, secretCodeMap, upvoteMap));
         }
 
-        //TODO: Display the questions in the list view by accessing class attributes.
+        displayAnsweredQuestions();
+    }
+
+    private void displayAnsweredQuestions() {
+        if (answeredQuestions.length != 0) { //There exists unanswered questions
+            //Clear current questions
+            unAnsQuestionList.getItems().clear();
+
+            ObservableList<Question> data = FXCollections.observableArrayList();
+            //For each question in the list create a new Question object
+            for (QuestionDetailsDto question : answeredQuestions) {
+                Question newQu = new Question(question.getId(), question.getUpvotes(),
+                    question.getText(), question.getAuthorName(), null);
+
+                //Get Answers if there are any
+                if (question.getAnswers().size() != 0) {
+                    List<String> answers = new ArrayList<>();
+                    for (AnswerDetailsDto answer : question.getAnswers()) {
+                        answers.add(answer.getText());
+                    }
+
+                    newQu.setAnswers(answers);
+                }
+
+                //Add the question to the ObservableList
+                data.add(newQu);
+            }
+
+            unAnsQuestionList.setItems(data);
+            unAnsQuestionList.setCellFactory(listView
+                -> new QuestionListCell(unAnsQuestionList, secretCodeMap, upvoteMap));
+        }
     }
 
     /**
@@ -260,6 +269,7 @@ public class StudentViewController {
         unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
     }
 
+    //Temporary refresh button
     public void displayBoardInfo() {
         displayQuestions();
     }

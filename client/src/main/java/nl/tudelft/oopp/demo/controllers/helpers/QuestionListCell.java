@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
@@ -16,23 +17,25 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import nl.tudelft.oopp.demo.controllers.StudentViewController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 public class QuestionListCell extends ListCell<Question> {
     private GridPane content;
-
     private UUID questionId;
     private Label upvoteNumber;
     private Text questionContent;
-
     private Label authorName;
     private List<String> answers;
 
-    public QuestionListCell() {
+    private ListView<Question> questionList;
+    private HashMap<UUID, UUID> secretCodeMap;
+    private HashMap<UUID, UUID> upvoteMap;
+
+    public QuestionListCell (ListView<Question> questionList, HashMap<UUID, UUID> secretCodeMap, HashMap<UUID, UUID> upvoteMap) {
         super();
         questionId = null;
         content = new GridPane();
@@ -40,6 +43,10 @@ public class QuestionListCell extends ListCell<Question> {
         questionContent = new Text();
         authorName = new Label();
         answers = new ArrayList<>();
+
+        this.questionList = questionList;
+        this.secretCodeMap = secretCodeMap;
+        this.upvoteMap = upvoteMap;
     }
 
     public VBox newUpvoteVbox(Label upvoteNumber) {
@@ -50,8 +57,7 @@ public class QuestionListCell extends ListCell<Question> {
         upvote.setAlignment(Pos.TOP_CENTER);
 
         //Set event listener
-        upvoteTriangle.setOnAction(event -> StudentViewActionEvents.upvoteQuestion(questionId,
-            StudentViewController.getUpvoteMap(),
+        upvoteTriangle.setOnAction(event -> StudentViewActionEvents.upvoteQuestion(questionId, upvoteMap,
             upvoteTriangle, upvoteNumber));
 
         //Set upvote triangle to selected if question has been upvoted
@@ -106,7 +112,7 @@ public class QuestionListCell extends ListCell<Question> {
     }
 
     @Override
-    protected void updateItem(StudentViewController.Question item, boolean empty) {
+    protected void updateItem(Question item, boolean empty) {
         super.updateItem(item, empty);
         //If the item was not null and empty was false, add content to the graphic
         if (item != null && !empty) {

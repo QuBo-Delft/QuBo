@@ -15,7 +15,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import nl.tudelft.oopp.demo.communication.ServerCommunication;
-import nl.tudelft.oopp.demo.controllers.StudentViewController;
 import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.demo.views.AlertDialog;
 
@@ -59,7 +58,8 @@ public class StudentViewActionEvents {
      * @param questionId        The UUID of the question that has been upvoted.
      * @param upvoteTriangle    The upvote ToggleButton (Needs to be deselected if request fails).
      */
-    public static void toggleUpvoteTrue(UUID questionId, HashMap<UUID, UUID> upvoteMap, ToggleButton upvoteTriangle, Label upvoteNumber) {
+    public static void toggleUpvoteTrue(UUID questionId, HashMap<UUID, UUID> upvoteMap,
+                                        ToggleButton upvoteTriangle, Label upvoteNumber) {
         String response = ServerCommunication.addQuestionVote(questionId);
 
         if (response == null) {
@@ -85,7 +85,8 @@ public class StudentViewActionEvents {
      * @param questionId        The UUID of the question that the upvote needs to be removed from.
      * @param upvoteTriangle    The upvote ToggleButton (Needs to be reselected if request fails).
      */
-    public static void toggleUpvoteFalse(UUID questionId, HashMap<UUID, UUID> upvoteMap, ToggleButton upvoteTriangle, Label upvoteNumber) {
+    public static void toggleUpvoteFalse(UUID questionId, HashMap<UUID, UUID> upvoteMap,
+                                         ToggleButton upvoteTriangle, Label upvoteNumber) {
         String response = ServerCommunication.deleteQuestionVote(questionId, upvoteMap.get(questionId));
 
         if (response == null) {
@@ -273,8 +274,8 @@ public class StudentViewActionEvents {
             //If the request was successful
             AlertDialog.display("", "Question deletion successful.");
             //TODO: Display successful removal label and icon
-            //gridPane.setVisible(false);
-            //gridPane.setManaged(false);
+            gridPane.setVisible(false);
+            gridPane.setManaged(false);
         }
     }
 
