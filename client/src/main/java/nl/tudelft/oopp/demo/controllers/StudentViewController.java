@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Priority;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -286,7 +287,9 @@ public class StudentViewController {
         unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
     }
 
+    //Temporary refresh button
     public void displayBoardInfo() {
+        displayQuestions();
     }
 
     public void copyStudentCode() {
