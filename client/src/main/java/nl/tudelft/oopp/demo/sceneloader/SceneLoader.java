@@ -4,10 +4,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.demo.communication.ServerCommunication;
 import nl.tudelft.oopp.demo.controllers.CreateQuBoController;
 import nl.tudelft.oopp.demo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.demo.controllers.QuBoCodesController;
 import nl.tudelft.oopp.demo.controllers.StudentViewController;
+import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.demo.views.AlertDialog;
@@ -47,6 +49,7 @@ public class SceneLoader {
         // Display the new scene
         currentStage.setScene(new Scene(root));
         currentStage.setTitle("Create Question Board");
+        currentStage.centerOnScreen();
     }
 
     /**
@@ -82,6 +85,7 @@ public class SceneLoader {
         // Display the new scene
         currentStage.setScene(new Scene(root));
         currentStage.setTitle("Created Question Board");
+        currentStage.centerOnScreen();
     }
 
     /**
@@ -121,6 +125,8 @@ public class SceneLoader {
 
         // Close current stage and show new stage
         currentStage.close();
+        newStage.setMinHeight(550);
+        newStage.setMinWidth(850);
         newStage.show();
         newStage.setTitle(qd.getTitle());
     }
@@ -183,8 +189,13 @@ public class SceneLoader {
             return;
         }
 
+        // Clear stage min size limit
+        currentStage.setMinWidth(Double.MIN_VALUE);
+        currentStage.setMinHeight(Double.MIN_VALUE);
+
         currentStage.setScene(new Scene(root));
         currentStage.setTitle("QuBo");
+        currentStage.centerOnScreen();
     }
 
 }
