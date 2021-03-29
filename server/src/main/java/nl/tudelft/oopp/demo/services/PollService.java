@@ -1,7 +1,10 @@
 package nl.tudelft.oopp.demo.services;
 
+import java.time.Instant;
+import java.util.UUID;
 import nl.tudelft.oopp.demo.dtos.poll.PollCreationBindingModel;
 import nl.tudelft.oopp.demo.entities.Poll;
+import nl.tudelft.oopp.demo.entities.PollOption;
 import nl.tudelft.oopp.demo.entities.QuestionBoard;
 import nl.tudelft.oopp.demo.repositories.PollRepository;
 import nl.tudelft.oopp.demo.repositories.QuestionBoardRepository;
@@ -10,9 +13,6 @@ import nl.tudelft.oopp.demo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.demo.services.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.UUID;
 
 
 @Service
@@ -31,8 +31,8 @@ public class PollService {
      * @param modelMapper             The ModelMapper.
      */
     public PollService(
-            QuestionBoardRepository questionBoardRepository, PollRepository pollRepository,
-            ModelMapper modelMapper) {
+        QuestionBoardRepository questionBoardRepository, PollRepository pollRepository,
+        ModelMapper modelMapper) {
         this.questionBoardRepository = questionBoardRepository;
         this.pollRepository = pollRepository;
         this.modelMapper = modelMapper;
@@ -64,7 +64,7 @@ public class PollService {
 
         //If the question board has not yet been opened or has already been closed, throw a ForbiddenException.
         if (now.isBefore(board.getStartTime().toInstant())
-                || board.isClosed()) {
+            || board.isClosed()) {
             throw new ForbiddenException("Question board is not active");
         }
 
@@ -72,6 +72,11 @@ public class PollService {
         Poll poll = modelMapper.map(model, Poll.class);
         poll.setQuestionBoard(board);
         poll.setOpen(true);
+
+        for (PollOption option : poll.getPollOptions()) {
+            option.setPoll(poll);
+        }
+
         pollRepository.save(poll);
 
         return poll;

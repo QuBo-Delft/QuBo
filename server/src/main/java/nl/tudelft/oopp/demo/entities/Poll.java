@@ -37,15 +37,15 @@ public class Poll {
     @JoinColumn(name = "board_id", nullable = false)
     private QuestionBoard questionBoard;
 
-    @OneToMany(mappedBy = "poll", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "poll", cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true)
     private Set<PollOption> pollOptions;
 
     /**
      * Create a new instance of an open Poll.
      *
-     * @param text              The question associated with the poll.
-     * @param questionBoard     The question board in which the poll was created.
-     * @param pollOptions       The answer options of the poll.
+     * @param text          The question associated with the poll.
+     * @param questionBoard The question board in which the poll was created.
+     * @param pollOptions   The answer options of the poll.
      */
     public Poll(String text, QuestionBoard questionBoard, Set<PollOption> pollOptions) {
         this.text = text;
