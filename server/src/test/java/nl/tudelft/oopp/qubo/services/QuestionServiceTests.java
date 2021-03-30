@@ -3,6 +3,7 @@ package nl.tudelft.oopp.qubo.services;
 import java.sql.Timestamp;
 import java.util.UUID;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationBindingModel;
+import nl.tudelft.oopp.qubo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import nl.tudelft.oopp.qubo.repositories.QuestionBoardRepository;
@@ -205,4 +206,71 @@ public class QuestionServiceTests {
         // Assert
         assertNull(actual);
     }
+
+    @Test
+    public void editQuestion_withValidData_worksCorrectly() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.valueOf("2021-03-01 00:01:00"));
+        board.setTitle("Test board");
+        board.setClosed(true);
+        questionBoardRepository.save(board);
+
+        Question question = new Question();
+        question.setAuthorName("Author");
+        question.setText("Test question");
+        question.setSecretCode(UUID.randomUUID());
+        question.setTimestamp(Timestamp.valueOf("2021-03-01 00:01:00"));
+        question.setQuestionBoard(board);
+        questionRepository.save(question);
+
+        String newText = "New text of question";
+
+        QuestionEditingBindingModel model = new QuestionEditingBindingModel();
+        model.setText(newText);
+
+        // Act
+        Question modified = questionService.editQuestion(question.getId(), model);
+
+        // Assert
+        assertEquals(question.getId(), modified.getId());
+        assertEquals(newText, modified.getText());
+
+        Question inDb = questionRepository.getQuestionById(question.getId());
+        assertEquals(newText, inDb.getText());
+        assertEquals(board.getId(), inDb.getQuestionBoard().getId());
+    }
+
+    @Test
+    public void editQuestion_withNonexistentQuestionId_throwsNotFoundException() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.valueOf("2021-03-01 00:01:00"));
+        board.setTitle("Test board");
+        board.setClosed(false);
+        questionBoardRepository.save(board);
+
+        Question question = new Question();
+        question.setAuthorName("Author");
+        question.setText("Test question");
+        question.setSecretCode(UUID.randomUUID());
+        question.setTimestamp(Timestamp.valueOf("2021-03-01 00:01:00"));
+        question.setQuestionBoard(board);
+        questionRepository.save(question);
+
+        String newText = "New text of question";
+
+        QuestionEditingBindingModel model = new QuestionEditingBindingModel();
+        model.setText(newText);
+
+        // Act
+        NotFoundException exception = assertThrows(NotFoundException.class,
+            () -> questionService.editQuestion(UUID.randomUUID(), model));
+
+        // Assert
+        assertEquals("Question does not exist", exception.getMessage());
+    }
+
 }
