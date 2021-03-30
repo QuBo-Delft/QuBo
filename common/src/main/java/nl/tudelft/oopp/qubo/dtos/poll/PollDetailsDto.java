@@ -10,6 +10,8 @@ public class PollDetailsDto {
 
     private String text;
 
+    private boolean open;
+
     private Set<PollOptionDetailsDto> options;
 
     public PollDetailsDto() {
@@ -29,6 +31,14 @@ public class PollDetailsDto {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
     }
 
     public Set<PollOptionDetailsDto> getOptions() {

@@ -57,6 +57,7 @@ public class PollDetailsDtoTests {
         // Assert
         assertEquals(poll.getId(), pollDto.getId());
         assertEquals(poll.getText(), pollDto.getText());
+        assertEquals(poll.isOpen(), pollDto.isOpen());
         assertEquals(poll.getPollOptions().size(), pollDto.getOptions().size());
 
         PollOptionDetailsDto[] optionDtos = pollDto.getOptions().toArray(new PollOptionDetailsDto[0]);
