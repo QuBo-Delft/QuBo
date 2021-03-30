@@ -346,7 +346,7 @@ public class StudentViewController {
     }
 
     public void showHideAnsQPoll() {
-        SideBarControl.
+        SideBarControl.showHideSelected();
     }
 
     /**
