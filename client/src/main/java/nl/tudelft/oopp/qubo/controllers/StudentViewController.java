@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
 import nl.tudelft.oopp.qubo.controllers.structures.Question;
 import nl.tudelft.oopp.qubo.controllers.structures.QuestionListCell;
@@ -98,8 +99,6 @@ public class StudentViewController {
     private ClipboardContent clipboardContent = new ClipboardContent();
 
     private QuestionBoardDetailsDto quBo;
-    private QuestionDetailsDto[] answeredQuestions = new QuestionDetailsDto[0];
-    private QuestionDetailsDto[] unansweredQuestions = new QuestionDetailsDto[0];
 
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
@@ -141,7 +140,7 @@ public class StudentViewController {
     private void initialize() {
         startUpProperties();
         //Display the questions
-        displayQuestions();
+        QuestionRefresh.displayQuestions(quBo, unAnsQuListView, ansQuListView);
     }
 
     private void startUpProperties() {
@@ -167,110 +166,11 @@ public class StudentViewController {
         unAnsQuListView.setEditable(true);
     }
 
-    /**
-     * Method that displays the questions that are in the question board on the screen. Answered questions
-     * will be sorted by the time at which they were answered, and unanswered questions will be sorted by
-     * the number of upvotes they have received.
-     */
-    private void displayQuestions() {
-        // To be deleted in final version
-        if (quBo == null) {
-            divideQuestions(null);
-            return;
-        }
-        //
 
-        //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
-        //not null.
-        String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
-
-        if (jsonQuestions == null) {
-            divideQuestions(null);
-        } else {
-            QuestionDetailsDto[] questions = gson.fromJson(jsonQuestions, QuestionDetailsDto[].class);
-
-            //Divide the questions over two lists and sort them.
-            divideQuestions(questions);
-            if (unansweredQuestions.length == 0) {
-                unAnsQuListView.getItems().clear();
-            } else {
-                Sorting.sortOnUpvotes(unansweredQuestions);
-                mapQuestions(unAnsQuListView, unansweredQuestions);
-            }
-
-            if (answeredQuestions.length == 0) {
-                ansQuListView.getItems().clear();
-            } else {
-                Sorting.sortOnTimeAnswered(answeredQuestions);
-                mapQuestions(ansQuListView, answeredQuestions);
-            }
-        }
-    }
-
-    /**
-     * This method will be used to divide the question list into a list of answered questions,
-     * and a list of unanswered questions.
-     *
-     * @param questions The question array that needs to be divided.
-     */
-    private void divideQuestions(QuestionDetailsDto[] questions) {
-        //If there are no questions, initialise the questions lists with empty arrays and return.
-        if (questions == null || questions.length == 0) {
-            answeredQuestions = new QuestionDetailsDto[0];
-            unansweredQuestions = new QuestionDetailsDto[0];
-            return;
-        }
-
-        //Initialise two lists to contain the answered and unanswered questions.
-        List<QuestionDetailsDto> answered = new ArrayList<>();
-        List<QuestionDetailsDto> unanswered = new ArrayList<>();
-
-        //Divide the questions over the two lists.
-        for (QuestionDetailsDto question : questions) {
-            if (question.getAnswered() != null) {
-                answered.add(question);
-            } else {
-                unanswered.add(question);
-            }
-        }
-
-        //Convert the list of answered and unanswered questions to arrays and store them in their
-        //respective class attributes.
-        answeredQuestions = answered.toArray(new QuestionDetailsDto[0]);
-        unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
-    }
-
-    private void mapQuestions(ListView<Question> questionListView, QuestionDetailsDto[] questionList) {
-        ObservableList<Question> data = FXCollections.observableArrayList();
-
-        //For each question in the list create a new Question object
-        for (QuestionDetailsDto question : questionList) {
-            Question newQu = new Question(question.getId(), question.getUpvotes(),
-                question.getText(), question.getAuthorName(), null);
-
-            //Get Answers if there are any
-            if (question.getAnswers().size() != 0) {
-                List<String> answers = new ArrayList<>();
-                for (AnswerDetailsDto answer : question.getAnswers()) {
-                    answers.add(answer.getText());
-                }
-                newQu.setAnswers(answers);
-            }
-            //Add the question to the ObservableList
-            data.add(newQu);
-        }
-
-        questionListView.getItems().clear();
-        //Set new questions in the ListView
-        questionListView.setItems(data);
-        //Set the custom cell factory for the listview
-        questionListView.setCellFactory(listView
-            -> new QuestionListCell(questionListView, secretCodeMap, upvoteMap));
-    }
 
     //Temporary refresh button
     public void displayBoardInfo() {
-        displayQuestions();
+        QuestionRefresh.displayQuestions(quBo, unAnsQuListView, ansQuListView);
     }
 
     public void copyStudentCode() {
@@ -312,7 +212,7 @@ public class StudentViewController {
         //Request automatic upvote
         autoUpvote(questionId);
 
-        displayQuestions();
+        QuestionRefresh.displayQuestions(quBo, unAnsQuListView, ansQuListView);
     }
 
     /**
@@ -357,17 +257,6 @@ public class StudentViewController {
      */
     public void showHidePolls() {
         sideMenuOpen = SideBarControl.showHideSelected(polls, ansQuestions, sideMenu, ansQuListView);
-    }
-
-    /**
-     * Shows the content of the poll menu.
-     */
-    public void showPolls() {
-        Label title = new Label("Polls");
-        sideMenu.setVisible(true);
-        sideMenu.getChildren().add(title);
-
-        //TODO: Fetch polls and display in a ListView
     }
 
     /**
