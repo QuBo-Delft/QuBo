@@ -30,7 +30,7 @@
   
 15. English is to be spoken during all meetings. This prevents the exclusion of those not sharing the same first language or cultural background. It also ensures professionalism.
   
-16. All group members should be reasonably available and reachable between 9 am till 5 pm CET (UTC/GMT+1).
+16. All group members should be reasonably available and reachable between 9 am and 5 pm CET (UTC/GMT+1).
   
 16. All group members are expected to have at least one free evening from Monday till Friday. They are also expected to have one free time slot during the weekend for a meeting to be planned.
   
@@ -44,7 +44,7 @@
   
 22. Issue weights and task estimates should be determined in team process with at least the appropriate members present. During the discussion, those present should make use of the predetermined values we decided on inspired by planning poker.
   
-23. All group members have the aspiration for an 8 or higher as the final grade. Everyone's work and input should therefore be representative of such. Think of this in meeting the Code of Conduct in terms of code quality, activity, amount of hours put into the project, et cetera.
+23. All group members have the aspiration for an 8 or higher as the final grade. Everyone's work and input should therefore be representative of this. To meet this, a high standard in terms of code quality, activity, communication and working hours should be maintained.
   
 24. All group members are expected to put around 15 hours per week into the project.
   
