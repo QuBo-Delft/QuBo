@@ -12,6 +12,7 @@ import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -150,5 +151,58 @@ public class QuestionServiceTests {
 
         // Assert
         assertEquals("Question board is not active", exception.getMessage());
+    }
+
+    @Test
+    public void getQuestionById_withValidQuestionId_returnsCorrectQuestion() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.valueOf("2021-03-01 00:01:00"));
+        board.setTitle("Test board");
+        board.setClosed(true);
+        questionBoardRepository.save(board);
+
+        Question expected = new Question();
+        expected.setAuthorName("Author");
+        expected.setText("Test question");
+        expected.setSecretCode(UUID.randomUUID());
+        expected.setTimestamp(Timestamp.valueOf("2021-03-01 00:01:00"));
+        expected.setQuestionBoard(board);
+        questionRepository.save(expected);
+
+        // Act
+        Question actual = questionService.getQuestionById(expected.getId());
+
+        // Assert
+        assertNotNull(actual);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getText(), actual.getText());
+        assertEquals(board.getId(), actual.getQuestionBoard().getId());
+    }
+
+    @Test
+    public void getQuestionById_withNonexistentQuestionId_returnsNull() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.valueOf("2021-03-01 00:01:00"));
+        board.setTitle("Test board");
+        board.setClosed(true);
+        questionBoardRepository.save(board);
+
+        Question expected = new Question();
+        expected.setAuthorName("Author");
+        expected.setText("Test question");
+        expected.setSecretCode(UUID.randomUUID());
+        expected.setTimestamp(Timestamp.valueOf("2021-03-01 00:01:00"));
+        expected.setQuestionBoard(board);
+        questionRepository.save(expected);
+
+        // Act
+        Question actual = questionService.getQuestionById(UUID.randomUUID());
+
+        // Assert
+        assertNull(actual);
     }
 }
