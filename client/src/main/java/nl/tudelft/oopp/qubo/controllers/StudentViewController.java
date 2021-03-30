@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
 import nl.tudelft.oopp.qubo.controllers.structures.Question;
 import nl.tudelft.oopp.qubo.controllers.structures.QuestionListCell;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
@@ -126,7 +127,8 @@ public class StudentViewController {
         boardTitle.setText(quBo.getTitle());
         if (quBo.isClosed()) {
             boardStatusText.setText("Question board is closed, making changes is no longer possible ");
-            boardStatusIcon.setImage(new Image(getClass().getResource("/icons/status_closed.png").toString()));
+            boardStatusIcon.setImage(new Image(getClass().getResource(
+                "/images/qubo/status_closed.png").toString()));
         } else {
             boardStatusText.setText("board open since " + quBo.getStartTime().toString());
         }
@@ -341,6 +343,10 @@ public class StudentViewController {
             sideMenu.setVisible(false);
             sideBar.setVisible(false);
         }
+    }
+
+    public void showHideAnsQPoll() {
+        SideBarControl.
     }
 
     /**

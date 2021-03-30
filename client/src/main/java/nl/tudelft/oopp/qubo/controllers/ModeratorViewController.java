@@ -18,11 +18,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import nl.tudelft.oopp.demo.controllers.helpers.Question;
-import nl.tudelft.oopp.demo.dtos.question.QuestionDetailsDto;
-import nl.tudelft.oopp.demo.dtos.questionboard.QuestionBoardDetailsDto;
-import nl.tudelft.oopp.demo.sceneloader.SceneLoader;
-import nl.tudelft.oopp.demo.views.ConfirmationDialog;
+import nl.tudelft.oopp.qubo.controllers.structures.Question;
+import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
+import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -87,18 +87,32 @@ public class ModeratorViewController {
     private QuestionDetailsDto[] answeredQuestions = new QuestionDetailsDto[0];
     private QuestionDetailsDto[] unansweredQuestions = new QuestionDetailsDto[0];
 
-
-
     /**
      * Toggles the visibility of the sideBar.
      */
     public void showHideSideBar() {
         if (hamburger.isSelected()) {
+            //Show side menu if it was previously open
             sideMenu.setVisible(sideMenuOpen);
             sideBar.setVisible(true);
         } else {
+            //Hide both the side menu and sidebar
             sideMenu.setVisible(false);
             sideBar.setVisible(false);
+        }
+    }
+
+    /**
+     * Toggles the visibility of the side menu.
+     */
+    public void showHideAnsQPoll() {
+        if (ansQuestions.isSelected() && polls.isSelected()) {
+            polls.setSelected(!polls.isSelected());
+            sideMenu.getChildren().clear();
+            showAnsQuestions();
+        } else if (polls.isSelected()) {
+            ansQuestions.setSelected(false);
+
         }
     }
 
