@@ -47,7 +47,6 @@ public class QuestionBoardController {
     private final QuestionBoardService service;
     private final QuestionService questionService;
     private final PaceVoteService paceVoteService;
-    private final PollService pollService;
 
     private final ModelMapper modelMapper;
 
