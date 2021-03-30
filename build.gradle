@@ -40,7 +40,7 @@ subprojects {
                 enabled = true
                 element = 'CLASS'
                 includes = ['nl.tudelft.*']
-                //excludes = ['nl.tudelft.oopp.demo.controllers.*']
+                //excludes = ['nl.tudelft.oopp.qubo.controllers.*']
 
                 limit {
                     counter = 'LINE'
@@ -62,7 +62,7 @@ subprojects {
 
 
     test {
-        exclude 'nl/tudelft/oopp/demo/controllers/**'
+        exclude 'nl/tudelft/oopp/qubo/controllers/**'
         outputs.dir snippetsDir
         useJUnitPlatform()
 
@@ -73,7 +73,7 @@ subprojects {
             enabled = true
             includes = ['nl.tudelft.*']
             // Excludes the client-side controller tests from the GitLab CI Pipeline as they are not compatible
-            excludes = ['nl.tudelft.oopp.demo.controllers.*']
+            excludes = ['nl.tudelft.oopp.qubo.controllers.*']
         }
 
     }
