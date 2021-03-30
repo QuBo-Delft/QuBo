@@ -17,24 +17,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionRefresh {
-    private QuestionBoardDetailsDto quBo;
+    private static QuestionBoardDetailsDto thisQuBo;
     
     private static QuestionDetailsDto[] answeredQuestions;
     private static QuestionDetailsDto[] unansweredQuestions;
 
+    private static ListView<Question> unAnsQuListView;
+    private static ListView<Question> ansQuListView;
+
+
     private static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         .create();
+
+    public static void refresh(QuestionBoardDetailsDto quBo, ListView<Question> unAnsLV,
+                               ListView<Question> ansLV) {
+        thisQuBo = quBo;
+        unAnsQuListView = unAnsLV;
+        ansQuListView = ansLV;
+    }
 
     /**
      * Method that displays the questions that are in the question board on the screen. Answered questions
      * will be sorted by the time at which they were answered, and unanswered questions will be sorted by
      * the number of upvotes they have received.
      */
-    public static void displayQuestions(QuestionBoardDetailsDto quBo, ListView<Question> unAnsQuListView,
-                                        ListView<Question> ansQuListView) {
+    public static void displayQuestions() {
         // To be deleted in final version
-        if (quBo == null) {
+        if (thisQuBo == null) {
             divideQuestions(null);
             return;
         }
@@ -42,7 +52,7 @@ public class QuestionRefresh {
 
         //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
         //not null.
-        String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
+        String jsonQuestions = ServerCommunication.retrieveQuestions(thisQuBo.getId());
 
         if (jsonQuestions == null) {
             divideQuestions(null);
