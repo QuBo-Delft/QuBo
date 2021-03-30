@@ -10,8 +10,9 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
 import javax.annotation.PostConstruct;
-import java.util.HashSet;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
 
 public class PollToPollDetailsDtoConverter {
 
@@ -30,11 +31,9 @@ public class PollToPollDetailsDtoConverter {
         Converter<Set<PollOption>, Set<PollOptionDetailsDto>> converter = new AbstractConverter<>() {
             @Override
             protected Set<PollOptionDetailsDto> convert(Set<PollOption> source) {
-                Set<PollOptionDetailsDto> result = new HashSet<>();
-                source.forEach(pollOption -> {
-                    PollOptionDetailsDto optionDto = mapper.map(pollOption, PollOptionDetailsDto.class);
-                    result.add(optionDto);
-                });
+                Set<PollOptionDetailsDto> result = source.stream()
+                        .map(pollOption -> mapper.map(pollOption, PollOptionDetailsDto.class))
+                        .collect(toSet());
                 return result;
             }
         };
