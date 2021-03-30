@@ -47,7 +47,6 @@ public class QuestionListCell extends ListCell<Question> {
                              HashMap<UUID, UUID> upvoteMap) {
         super();
         questionId = null;
-        questionPane = new GridPane();
         content = new GridPane();
         upvoteNumber = new Label();
         questionBody = new Text();
@@ -57,88 +56,6 @@ public class QuestionListCell extends ListCell<Question> {
         this.questionList = questionList;
         this.secretCodeMap = secretCodeMap;
         this.upvoteMap = upvoteMap;
-    }
-
-    /**
-     * Constructs and returns a new upvote box.
-     *
-     * @param upvoteNumber  The number of upvotes.
-     * @return              Returns a new upvote box to be displayed.
-     */
-    public VBox newUpvoteVbox(Label upvoteNumber) {
-        //Create the Vbox for placing the upvote button and upvote number
-        ToggleButton upvoteTriangle = new ToggleButton("up");
-        VBox upvote = new VBox(upvoteTriangle, upvoteNumber);
-        upvote.setSpacing(5);
-        upvote.setAlignment(Pos.TOP_CENTER);
-
-        //Set event listener
-        upvoteTriangle.setOnAction(event -> StudentViewActionEvents.upvoteQuestion(questionId, upvoteMap,
-            upvoteTriangle, upvoteNumber));
-
-        //Set upvote triangle to selected if question has been upvoted
-        if (upvoteMap.containsKey(questionId)) {
-            upvoteTriangle.setSelected(true);
-        }
-
-        return upvote;
-    }
-
-    /**
-     * Constructs and returns a new options menu.
-     *
-     * @param questionVbox  The VBox containing the question body. (Needs to be passed on to the
-     *                      action listeners to be modified in the actions events.)
-     * @return              Returns a new options menu to be displayed.
-     */
-    public MenuButton newOptionsMenu(VBox questionVbox) {
-        //Create the edit and delete menu items
-        MenuItem edit = new MenuItem("Edit");
-        MenuItem delete = new MenuItem("Delete");
-        //Create options menu and add the edit and delete menu items
-        MenuButton options = new MenuButton();
-        options.getItems().addAll(edit, delete);
-
-        //Bind properties so that the visibility depends on the disabled property
-        options.visibleProperty().bind(options.disableProperty().not());
-
-        //Add action listeners to options menu
-        edit.setOnAction(event -> StudentViewActionEvents
-            .editQuestionOption(questionBody, questionVbox, options, questionId,
-                secretCodeMap.get(questionId)));
-        delete.setOnAction(event -> StudentViewActionEvents.deleteQuestionOption(questionPane, questionList,
-            options, questionId, secretCodeMap.get(questionId)));
-
-        return options;
-    }
-
-    /**
-     * Constructs and returns a new VBox containing the question body and the author name.
-     *
-     * @param authorName    Name of the author of the question.
-     * @return              Returns a new VBox containing the question body and the
-     *                      author name to be displayed.
-     */
-    public VBox newQuestionVbox(Label authorName) {
-        //Create a pane for putting the author name
-        HBox authorHbox = new HBox(authorName);
-        authorHbox.setAlignment(Pos.BOTTOM_RIGHT);
-        BorderPane space = new BorderPane(authorHbox);
-
-        //Set pane to fixed height
-        int spaceHeight = 40;
-        space.setPrefHeight(spaceHeight);
-        space.setMinHeight(spaceHeight);
-        space.setMaxHeight(spaceHeight);
-
-        //Bind properties for easier management
-        space.managedProperty().bind(space.visibleProperty());
-        space.visibleProperty().bind(this.questionBody.visibleProperty());
-
-        VBox questionVbox = new VBox(this.questionBody, space);
-        questionVbox.setSpacing(10);
-
-        return questionVbox;
     }
 
     @Override
@@ -165,9 +82,49 @@ public class QuestionListCell extends ListCell<Question> {
         //in the layout when it is not visible.
         questionBody.managedProperty().bind(questionBody.visibleProperty());
 
+        //Set padding for individual cell (needed to prevent horizontal overflow)
         this.setPadding(new Insets(0,10,20,0));
 
-        VBox questionVbox = newQuestionVbox(authorName);
+        //Calculate and store the width of the padding for resizing control
+        double paddingWidth = questionList.getPadding().getLeft()
+            +  questionList.getPadding().getRight();
+
+        //Construct a new questionPane to hold the question and add to content pane
+        questionPane = newQuestionPane(paddingWidth);
+        content.addRow(0, questionPane);
+
+        //Add the answers if there are any
+        if (answers != null && answers.size() != 0) {
+            addAnswers(paddingWidth);
+        }
+    }
+
+    /**
+     * This method adds the answers to a question if there are any.
+     *
+     * @param paddingWidth  The width of the padding of the ListView (Needed for resizing purposes.)
+     */
+    public void addAnswers(double paddingWidth) {
+        for (int i = 0; i < answers.size(); i++) {
+            Text answer = new Text(answers.get(i));
+            BorderPane answerPane = new BorderPane(answer);
+            answer.wrappingWidthProperty().bind(questionList.widthProperty()
+                .subtract(paddingWidth + 40));
+
+            content.addRow((i + 1), answerPane);
+        }
+    }
+
+    /**
+     * This method constructs a new questionPane to hold the upvote button, upvote number,
+     * question body, options menu, and author name.
+     *
+     * @param paddingWidth  The width of the padding of the ListView (Needed for resizing purposes.)
+     * @return              A GridPane containing above mentioned information
+     */
+    public GridPane newQuestionPane(double paddingWidth) {
+        GridPane gridpane = new GridPane();
+        VBox questionVbox = newQuestionVbox();
 
         //Determine whether the question was asked by the user
         //If yes create and display the options menu
@@ -175,47 +132,114 @@ public class QuestionListCell extends ListCell<Question> {
         if (secretCodeMap.containsKey(questionId)) {
             options = newOptionsMenu(questionVbox);
             this.setEditable(true);
+        } else {
+            options.setVisible(false);
         }
 
+        //Make questionContent resize with width of cell
+        questionBody.wrappingWidthProperty().bind(questionList.widthProperty()
+            .subtract(paddingWidth + 140));
+
         //Add nodes to the gridpane
-        questionPane.addColumn(0, newUpvoteVbox(upvoteNumber));
-        questionPane.addColumn(1, questionVbox);
-        questionPane.addColumn(2, options);
+        gridpane.addColumn(0, newUpvoteVbox());
+        gridpane.addColumn(1, questionVbox);
+        gridpane.addColumn(2, options);
 
         //Set column constraints
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setMaxWidth(GridPane.USE_PREF_SIZE);
         col2.setHgrow(Priority.ALWAYS);
-        questionPane.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
+        gridpane.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
             new ColumnConstraints(50));
 
-        //Make questionContent resize with width of cell
-        double paddingWidth = questionList.getPadding().getLeft()
-            +  questionList.getPadding().getRight();
-        questionBody.wrappingWidthProperty().bind(questionList.widthProperty()
-            .subtract(paddingWidth + 140));
-
-        //Make gridlines visible for clarity during development
-        questionPane.setGridLinesVisible(true);
-
         //Set paddings
-        questionPane.setPadding(new Insets(6,3,8,3));
+        gridpane.setPadding(new Insets(6,3,8,3));
 
         //Set alignment of children in the GridPane
         GridPane.setValignment(options, VPos.TOP);
         GridPane.setHalignment(options, HPos.RIGHT);
 
-        content.addRow(0, questionPane);
-        //Add the answers
-        if (answers != null && answers.size() != 0) {
-            for (int i = 0; i < answers.size(); i++) {
-                Text answer = new Text(answers.get(i));
-                BorderPane answerPane = new BorderPane(answer);
-                answer.wrappingWidthProperty().bind(questionList.widthProperty()
-                    .subtract(paddingWidth + 40));
+        return gridpane;
+    }
 
-                content.addRow((i + 1), answerPane);
-            }
+    /**
+     * Constructs and returns a new upvote box.
+     *
+     * @return              Returns a new upvote box to be displayed.
+     */
+    public VBox newUpvoteVbox() {
+        //Create the Vbox for placing the upvote button and upvote number
+        ToggleButton upvoteTriangle = new ToggleButton("up");
+        VBox upvote = new VBox(upvoteTriangle, upvoteNumber);
+        upvote.setSpacing(5);
+        upvote.setAlignment(Pos.TOP_CENTER);
+
+        //Set event listener
+        upvoteTriangle.setOnAction(event -> StudentViewActionEvents.upvoteQuestion(questionId, upvoteMap,
+            upvoteTriangle, upvoteNumber));
+
+        //Set upvote triangle to selected if question has been upvoted
+        if (upvoteMap.containsKey(questionId)) {
+            upvoteTriangle.setSelected(true);
         }
+
+        return upvote;
+    }
+
+    /**
+     * Constructs and returns a new options menu.
+     *
+     * @param questionVbox  The VBox containing the question body. (Needs to be passed on to the
+     *                      action listeners to be modified in the actions events.)
+     * @return              Returns a new options menu to be displayed.
+     */
+    @SuppressWarnings("checkstyle:MethodParamPad")
+    public MenuButton newOptionsMenu(VBox questionVbox) {
+        //Create the edit and delete menu items
+        MenuItem edit = new MenuItem("Edit");
+        MenuItem delete = new MenuItem("Delete");
+        //Create options menu and add the edit and delete menu items
+        MenuButton options = new MenuButton();
+        options.getItems().addAll(edit, delete);
+
+        //Bind properties so that the visibility depends on the disabled property
+        options.visibleProperty().bind(options.disableProperty().not());
+
+        //Add action listeners to options menu
+        edit.setOnAction(event -> StudentViewActionEvents
+            .editQuestionOption(questionBody, questionVbox, options, questionId,
+                secretCodeMap.get(questionId)));
+        delete.setOnAction(event -> StudentViewActionEvents.deleteQuestionOption(
+            content, questionPane, questionList, options, questionId, secretCodeMap.get(questionId)));
+
+        return options;
+    }
+
+    /**
+     * Constructs and returns a new VBox containing the question body and the author name.
+     *
+     * @return              Returns a new VBox containing the question body and the
+     *                      author name to be displayed.
+     */
+    public VBox newQuestionVbox() {
+        //Create a pane for putting the author name
+        HBox authorHbox = new HBox(authorName);
+        authorHbox.setAlignment(Pos.BOTTOM_RIGHT);
+        BorderPane space = new BorderPane(authorHbox);
+
+        //Set pane to fixed height
+        int spaceHeight = 40;
+        space.setPrefHeight(spaceHeight);
+        space.setMinHeight(spaceHeight);
+        space.setMaxHeight(spaceHeight);
+
+        //Bind properties for easier management
+        space.managedProperty().bind(space.visibleProperty());
+        space.visibleProperty().bind(this.questionBody.visibleProperty());
+
+        VBox questionVbox = new VBox(this.questionBody, space);
+        questionVbox.setSpacing(10);
+
+        return questionVbox;
     }
 }

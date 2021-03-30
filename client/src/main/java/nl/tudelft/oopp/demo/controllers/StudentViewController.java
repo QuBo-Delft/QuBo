@@ -8,17 +8,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
@@ -170,30 +165,12 @@ public class StudentViewController {
         unAnsQuListView.setEditable(true);
     }
 
-    //private void testQuestions() {
-    //    ObservableList<Question> data = FXCollections.observableArrayList();
-    //
-    //    data.addAll(new Question(UUID.randomUUID(), 2, "What is life?",
-    //            "ChickenWings", null),
-    //        new Question(UUID.randomUUID(), 42,"Trolley problem."
-    //            + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-    //            + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-    //            + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem.",
-    //            "ChickenWings", null));
-    //
-    //    questionList.setItems(data);
-    //    questionList.setCellFactory(listView -> new QuestionListCell());
-    //}
-
     /**
      * Method that displays the questions that are in the question board on the screen. Answered questions
      * will be sorted by the time at which they were answered, and unanswered questions will be sorted by
      * the number of upvotes they have received.
      */
     private void displayQuestions() {
-        //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
-        //not null.
-
         // To be deleted in final version
         if (quBo == null) {
             divideQuestions(null);
@@ -201,6 +178,8 @@ public class StudentViewController {
         }
         //
 
+        //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
+        //not null.
         String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
 
         if (jsonQuestions == null) {
@@ -210,50 +189,19 @@ public class StudentViewController {
 
             //Divide the questions over two lists and sort them.
             divideQuestions(questions);
-            if (unansweredQuestions != null) {
+            if (unansweredQuestions.length == 0) {
+                unAnsQuListView.getItems().clear();
+            } else {
                 Sorting.sortOnUpvotes(unansweredQuestions);
-            } else {
-                unansweredQuestions = new QuestionDetailsDto[0];
+                mapQuestions(unAnsQuListView, unansweredQuestions);
             }
-            if (answeredQuestions != null) {
+
+            if (answeredQuestions.length == 0) {
+                ansQuListView.getItems().clear();
+            } else {
                 Sorting.sortOnTimeAnswered(answeredQuestions);
-            } else {
-                answeredQuestions = new QuestionDetailsDto[0];
+                mapQuestions(ansQuListView, answeredQuestions);
             }
-        }
-
-        mapQuestions(unAnsQuListView, unansweredQuestions);
-        mapQuestions(ansQuListView, answeredQuestions);
-    }
-
-    private void mapQuestions(ListView<Question> questionListView, QuestionDetailsDto[] questionList) {
-        if (questionList.length != 0) { //There exists unanswered questions
-            //Clear current questions
-            questionListView.getItems().clear();
-
-            ObservableList<Question> data = FXCollections.observableArrayList();
-            //For each question in the list create a new Question object
-            for (QuestionDetailsDto question : questionList) {
-                Question newQu = new Question(question.getId(), question.getUpvotes(),
-                    question.getText(), question.getAuthorName(), null);
-
-                //Get Answers if there are any
-                if (question.getAnswers().size() != 0) {
-                    List<String> answers = new ArrayList<>();
-                    for (AnswerDetailsDto answer : question.getAnswers()) {
-                        answers.add(answer.getText());
-                    }
-                    newQu.setAnswers(answers);
-                }
-                //Add the question to the ObservableList
-                data.add(newQu);
-            }
-
-            //Set new questions in the ListView
-            questionListView.setItems(data);
-            //Set the custom cell factory for the listview
-            questionListView.setCellFactory(listView
-                -> new QuestionListCell(questionListView, secretCodeMap, upvoteMap));
         }
     }
 
@@ -288,6 +236,34 @@ public class StudentViewController {
         //respective class attributes.
         answeredQuestions = answered.toArray(new QuestionDetailsDto[0]);
         unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
+    }
+
+    private void mapQuestions(ListView<Question> questionListView, QuestionDetailsDto[] questionList) {
+        ObservableList<Question> data = FXCollections.observableArrayList();
+
+        //For each question in the list create a new Question object
+        for (QuestionDetailsDto question : questionList) {
+            Question newQu = new Question(question.getId(), question.getUpvotes(),
+                question.getText(), question.getAuthorName(), null);
+
+            //Get Answers if there are any
+            if (question.getAnswers().size() != 0) {
+                List<String> answers = new ArrayList<>();
+                for (AnswerDetailsDto answer : question.getAnswers()) {
+                    answers.add(answer.getText());
+                }
+                newQu.setAnswers(answers);
+            }
+            //Add the question to the ObservableList
+            data.add(newQu);
+        }
+
+        questionListView.getItems().clear();
+        //Set new questions in the ListView
+        questionListView.setItems(data);
+        //Set the custom cell factory for the listview
+        questionListView.setCellFactory(listView
+            -> new QuestionListCell(questionListView, secretCodeMap, upvoteMap));
     }
 
     //Temporary refresh button
@@ -332,6 +308,17 @@ public class StudentViewController {
         secretCodeMap.put(questionId, secretCode);
 
         //Request automatic upvote
+        autoUpvote(questionId);
+
+        displayQuestions();
+    }
+
+    /**
+     * This method auto-upvotes the question that the user has just asked.
+     *
+     * @param questionId    UUID of the question that was just asked.
+     */
+    public void autoUpvote(UUID questionId) {
         String response = ServerCommunication.addQuestionVote(questionId);
         if (response == null) {
             //When the request fails, display alert
@@ -341,8 +328,6 @@ public class StudentViewController {
             QuestionVoteDetailsDto vote = gson.fromJson(response, QuestionVoteDetailsDto.class);
             upvoteMap.put(questionId, vote.getId());
         }
-
-        // TODO: Update the view of questions
     }
 
     /**

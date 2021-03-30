@@ -214,12 +214,14 @@ public class StudentViewActionEvents {
      * Yes -> Sends a request to the server to delete the question.
      * Cancel -> Cancels the action.
      *
-     * @param gridpane      GridPane of the cell (Needed to add a row for the confirmation dialogue)
+     * @param content       GridPane of the cell (Needs to be hidden after deletion)
+     * @param questionPane  GridPane of the question (Needed to add a row for the confirmation dialogue)
      * @param options       The options menu node (Needs to be disabled when confirmation dialogue shows up)
      * @param questionId    The UUID of the question that is being deleted
      * @param code          Secret code of the question
      */
-    public static void deleteQuestionOption(GridPane gridpane, ListView<Question> questionList,
+    public static void deleteQuestionOption(GridPane content, GridPane questionPane,
+                                            ListView<Question> questionList,
                                             MenuButton options, UUID questionId, UUID code) {
         //Disable options menu
         options.setDisable(true);
@@ -244,12 +246,12 @@ public class StudentViewActionEvents {
         dialogue.setAlignment(Pos.CENTER);
 
         //Show confirmation dialogue
-        gridpane.addRow(1, dialogue);
+        questionPane.addRow(1, dialogue);
         GridPane.setColumnSpan(dialogue, GridPane.REMAINING);
 
         //Set action listeners
-        yes.setOnAction(event -> deleteQuestion(gridpane, questionId, code));
-        cancel.setOnAction(event -> cancelDeletion(options, gridpane, dialogue));
+        yes.setOnAction(event -> deleteQuestion(content, questionId, code));
+        cancel.setOnAction(event -> cancelDeletion(options, questionPane, dialogue));
     }
 
     /**
@@ -259,11 +261,11 @@ public class StudentViewActionEvents {
      * If the request is successful -> Displays an alert.
      * If the request fails -> Displays successful removal label and icon.
      *
-     * @param gridPane      GridPane of the cell (Needed to add a row for the confirmation dialogue)
+     * @param content       GridPane of the cell (Needs to be hidden after deletion)
      * @param questionId    The UUID of the question that is being edited
      * @param code          Secret code of the question
      */
-    public static void deleteQuestion(GridPane gridPane, UUID questionId, UUID code) {
+    public static void deleteQuestion(GridPane content, UUID questionId, UUID code) {
         //Send a request to the server
         String response = ServerCommunication.deleteQuestion(questionId, code);
 
@@ -274,8 +276,8 @@ public class StudentViewActionEvents {
             //If the request was successful
             AlertDialog.display("", "Question deletion successful.");
             //TODO: Display successful removal label and icon
-            gridPane.setVisible(false);
-            gridPane.setManaged(false);
+            content.setVisible(false);
+            content.setManaged(false);
         }
     }
 
