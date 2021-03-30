@@ -61,12 +61,10 @@ public class QuestionBoardController {
     public QuestionBoardController(QuestionBoardService service,
                                    QuestionService questionService,
                                    PaceVoteService paceVoteService,
-                                   PollService pollService,
                                    ModelMapper modelMapper) {
         this.service = service;
         this.questionService = questionService;
         this.paceVoteService = paceVoteService;
-        this.pollService = pollService;
         this.modelMapper = modelMapper;
     }
 
