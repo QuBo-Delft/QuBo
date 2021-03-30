@@ -11,16 +11,20 @@ import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import nl.tudelft.oopp.qubo.repositories.AnswerRepository;
 import nl.tudelft.oopp.qubo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.qubo.repositories.QuestionRepository;
+import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ActiveProfiles("mockCurrentTimeProvider")
 public class AnswerServiceTests {
     @Autowired
     private AnswerRepository answerRepository;
@@ -33,6 +37,9 @@ public class AnswerServiceTests {
 
     @Autowired
     private AnswerService answerService;
+
+    @Autowired
+    private CurrentTimeProvider mockCurrentTimeProvider;
 
     @Test
     public void addAnswerToQuestion_withValidQuestion_worksCorrectly() {
@@ -54,6 +61,9 @@ public class AnswerServiceTests {
         AnswerCreationBindingModel model = new AnswerCreationBindingModel();
         model.setText("Test answer");
 
+        Timestamp testTime = Timestamp.valueOf("2021-03-01 00:02:00");
+        Mockito.when(mockCurrentTimeProvider.getCurrentTime()).thenReturn(testTime.toInstant());
+
         // Act
         Answer result = answerService.addAnswerToQuestion(model, question);
 
@@ -65,5 +75,7 @@ public class AnswerServiceTests {
         assertEquals(inDb.get(0).getText(), result.getText());
         assertEquals(model.getText(), result.getText());
         assertEquals(question.getId(), result.getQuestion().getId());
+        assertEquals(inDb.get(0).getTimestamp(), result.getTimestamp());
+        assertEquals(testTime, result.getTimestamp());
     }
 }
