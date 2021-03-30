@@ -5,33 +5,26 @@ import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.Priority;
-import javafx.scene.text.Text;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.controllers.structures.Question;
+import nl.tudelft.oopp.qubo.controllers.structures.QuestionListCell;
+import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
-import nl.tudelft.oopp.qubo.controllers.helpers.NoFocusModel;
-import nl.tudelft.oopp.qubo.controllers.helpers.NoSelectionModel;
+import nl.tudelft.oopp.qubo.controllers.structures.NoFocusModel;
+import nl.tudelft.oopp.qubo.controllers.structures.NoSelectionModel;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
@@ -58,13 +51,11 @@ public class StudentViewController {
     @FXML
     private StackPane content;
     @FXML
-    private ListView<Question> questionList;
-    @FXML
     private VBox sideBar;
     @FXML
     private VBox sideMenu;
     @FXML
-    private Pane paceVotePane;
+    private BorderPane paceVotePane;
     @FXML
     public Button askQuestion;
     @FXML
@@ -84,7 +75,12 @@ public class StudentViewController {
     @FXML
     private Label boardStatusText;
 
+    //Records if the side menu was open before hiding
     private boolean sideMenuOpen;
+
+    @FXML
+    private ListView<Question> unAnsQuListView;
+    private ListView<Question> ansQuListView = new ListView<>();
 
     private String authorName;
 
@@ -101,8 +97,8 @@ public class StudentViewController {
     private ClipboardContent clipboardContent = new ClipboardContent();
 
     private QuestionBoardDetailsDto quBo;
-    private QuestionDetailsDto[] answeredQuestions;
-    private QuestionDetailsDto[] unansweredQuestions;
+    private QuestionDetailsDto[] answeredQuestions = new QuestionDetailsDto[0];
+    private QuestionDetailsDto[] unansweredQuestions = new QuestionDetailsDto[0];
 
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
@@ -123,15 +119,27 @@ public class StudentViewController {
     }
 
     /**
+     * This method is called by the SceneLoader and sets the title text and board open or closed icon.
+     * If the board is open, it also displays its start time.
+     */
+    public void setBoardDetails() {
+        boardTitle.setText(quBo.getTitle());
+        if (quBo.isClosed()) {
+            boardStatusText.setText("Question board is closed, making changes is no longer possible ");
+            boardStatusIcon.setImage(new Image(getClass().getResource("/icons/status_closed.png").toString()));
+        } else {
+            boardStatusText.setText("board open since " + quBo.getStartTime().toString());
+        }
+    }
+
+    /**
      * Code that is run upon loading StudentView.fxml
      */
     @FXML
     private void initialize() {
-        testQuestions();
+        startUpProperties();
         //Display the questions
         displayQuestions();
-        //displayBoardInfo();
-        startUpProperties();
     }
 
     private void startUpProperties() {
@@ -141,39 +149,20 @@ public class StudentViewController {
         sideBar.setVisible(false);
         sideMenu.setVisible(false);
 
-        //Make ListCells unable to be selected individually (remove blue highlighting)
-        questionList.setSelectionModel(new NoSelectionModel<>());
-        questionList.setFocusModel(new NoFocusModel<>());
-        //Remove border of focus
-        questionList.setStyle("-fx-background-insets: 0 ;");
-
-        questionList.setEditable(true);
-    }
-
-    public void copyStudentCode() {
-        clipboardContent.putString(quBo.getId().toString());
-        clipboard.setContent(clipboardContent);
-    }
-
-    private void testQuestions() {
-        ObservableList<Question> data = FXCollections.observableArrayList();
-
-        data.addAll(new Question(UUID.randomUUID(), 2, "What is life?"),
-            new Question(UUID.randomUUID(), 42,"Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."
-                + "Trolley problem.Trolley problem.Trolley problem.Trolley problem.Trolley problem."));
-
-        questionList.setItems(data);
-        questionList.setCellFactory(listView -> new QuestionListCell());
+        sideMenu.prefWidthProperty().bind(content.widthProperty().multiply(0.45));
+        paceVotePane.visibleProperty().bind(sideMenu.visibleProperty().not());
 
         //Make ListCells unable to be selected individually (remove blue highlighting)
-        questionList.setSelectionModel(new NoSelectionModel<>());
-        questionList.setFocusModel(new NoFocusModel<>());
-        //Remove border of focus
-        questionList.setStyle("-fx-background-insets: 0 ;");
+        unAnsQuListView.setSelectionModel(new NoSelectionModel<>());
+        unAnsQuListView.setFocusModel(new NoFocusModel<>());
+        ansQuListView.setSelectionModel(new NoSelectionModel<>());
+        ansQuListView.setFocusModel(new NoFocusModel<>());
 
-        questionList.setEditable(true);
+        //Remove border of focus
+        unAnsQuListView.setStyle("-fx-background-insets: 0 ;");
+        ansQuListView.setStyle("-fx-background-insets: 0 ;");
+
+        unAnsQuListView.setEditable(true);
     }
 
     /**
@@ -182,9 +171,6 @@ public class StudentViewController {
      * the number of upvotes they have received.
      */
     private void displayQuestions() {
-        //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
-        //not null.
-
         // To be deleted in final version
         if (quBo == null) {
             divideQuestions(null);
@@ -192,6 +178,8 @@ public class StudentViewController {
         }
         //
 
+        //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
+        //not null.
         String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
 
         if (jsonQuestions == null) {
@@ -201,16 +189,20 @@ public class StudentViewController {
 
             //Divide the questions over two lists and sort them.
             divideQuestions(questions);
-            if (unansweredQuestions != null) {
+            if (unansweredQuestions.length == 0) {
+                unAnsQuListView.getItems().clear();
+            } else {
                 Sorting.sortOnUpvotes(unansweredQuestions);
+                mapQuestions(unAnsQuListView, unansweredQuestions);
             }
-            if (answeredQuestions != null) {
+
+            if (answeredQuestions.length == 0) {
+                ansQuListView.getItems().clear();
+            } else {
                 Sorting.sortOnTimeAnswered(answeredQuestions);
+                mapQuestions(ansQuListView, answeredQuestions);
             }
         }
-
-
-        //TODO: Display the questions in the list view by accessing class attributes.
     }
 
     /**
@@ -246,165 +238,45 @@ public class StudentViewController {
         unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
     }
 
-    /**
-     * This method is called by the SceneLoader and sets the title text and board open or closed icon.
-     * If the board is open, it also displays its start time.
-     */
-    public void setBoardDetails() {
-        boardTitle.setText(quBo.getTitle());
-        if (quBo.isClosed()) {
-            boardStatusText.setText("Question board is closed, making changes is no longer possible ");
-            boardStatusIcon.setImage(new Image(getClass().getResource("/icons/status_closed.png").toString()));
-        } else {
-            boardStatusText.setText("board open since " + quBo.getStartTime().toString());
+    private void mapQuestions(ListView<Question> questionListView, QuestionDetailsDto[] questionList) {
+        ObservableList<Question> data = FXCollections.observableArrayList();
+
+        //For each question in the list create a new Question object
+        for (QuestionDetailsDto question : questionList) {
+            Question newQu = new Question(question.getId(), question.getUpvotes(),
+                question.getText(), question.getAuthorName(), null);
+
+            //Get Answers if there are any
+            if (question.getAnswers().size() != 0) {
+                List<String> answers = new ArrayList<>();
+                for (AnswerDetailsDto answer : question.getAnswers()) {
+                    answers.add(answer.getText());
+                }
+                newQu.setAnswers(answers);
+            }
+            //Add the question to the ObservableList
+            data.add(newQu);
         }
+
+        questionListView.getItems().clear();
+        //Set new questions in the ListView
+        questionListView.setItems(data);
+        //Set the custom cell factory for the listview
+        questionListView.setCellFactory(listView
+            -> new QuestionListCell(questionListView, secretCodeMap, upvoteMap));
     }
 
+    //Temporary refresh button
     public void displayBoardInfo() {
+        displayQuestions();
+    }
+
+    public void copyStudentCode() {
+        clipboardContent.putString(quBo.getId().toString());
+        clipboard.setContent(clipboardContent);
     }
 
     public void displayHelpDoc() {
-    }
-
-    private static class Question {
-        private UUID questionId;
-        private int upvoteNumber;
-        private String questionContent;
-
-        public UUID getQuestionId() {
-            return questionId;
-        }
-
-        public int getUpvoteNumber() {
-            return upvoteNumber;
-        }
-
-        public String getQuestionContent() {
-            return questionContent;
-        }
-
-        public Question(UUID questionId, int upvoteNumber, String questionContent) {
-            this.questionId = questionId;
-            this.upvoteNumber = upvoteNumber;
-            this.questionContent = questionContent;
-        }
-    }
-
-    private class QuestionListCell extends ListCell<Question> {
-        private GridPane content;
-        private UUID questionId;
-        private Label upvoteNumber;
-        private Text questionContent;
-
-        public QuestionListCell() {
-            super();
-            content = new GridPane();
-            upvoteNumber = new Label();
-            questionContent = new Text();
-            //Bind the managed property to the visible property so that the node is not accounted for
-            //in the layout when it is not visible.
-            questionContent.managedProperty().bind(questionContent.visibleProperty());
-
-            //TODO:Search if questionId exists in upvoteMap and set editable
-            //this.setEditable(true);
-
-            this.setPadding(new Insets(0,10,20,0));
-
-            VBox questionVbox = newQuestionVbox();
-            MenuButton options = newOptionsMenu(questionVbox);
-
-            //Add nodes to gridpane
-            content.addColumn(0, newUpvoteVbox(upvoteNumber));
-            content.addColumn(1, questionVbox);
-            content.addColumn(2, options);
-
-            //Set column constraints
-            ColumnConstraints col2 = new ColumnConstraints();
-            col2.setMaxWidth(GridPane.USE_PREF_SIZE);
-            col2.setHgrow(Priority.ALWAYS);
-            content.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
-                new ColumnConstraints(50));
-
-            //Make questionContent resize with width of cell
-            double paddingWidth = questionList.getPadding().getLeft()
-                    +  questionList.getPadding().getRight() + content.getPadding().getLeft()
-                    + content.getPadding().getRight() + 140;
-            questionContent.wrappingWidthProperty().bind(questionList.widthProperty()
-                    .subtract(paddingWidth));
-
-            //Make gridlines visible for clarity during development
-            content.setGridLinesVisible(true);
-            //Set paddings
-            content.setPadding(new Insets(6,3,8,3));
-            //Set alignment of children in the GridPane
-            GridPane.setValignment(options, VPos.TOP);
-            GridPane.setHalignment(options, HPos.RIGHT);
-        }
-
-        public VBox newUpvoteVbox(Label upvoteNumber) {
-            //Create the Vbox for placing the upvote button and upvote number
-            ToggleButton upvoteTriangle = new ToggleButton("up");
-            VBox upvote = new VBox(upvoteTriangle, upvoteNumber);
-            upvote.setSpacing(5);
-            upvote.setAlignment(Pos.TOP_CENTER);
-
-            //Set event listener
-            upvoteTriangle.setOnAction(event -> upvoteQuestion(questionId, upvoteTriangle));
-
-            return upvote;
-        }
-
-        public MenuButton newOptionsMenu(VBox questionVbox) {
-            //Create the edit and delete menu items
-            MenuItem edit = new MenuItem("Edit");
-            MenuItem delete = new MenuItem("Delete");
-            //Create options menu and add the edit and delete menu items
-            MenuButton options = new MenuButton();
-            options.getItems().addAll(edit, delete);
-
-            options.visibleProperty().bind(options.disableProperty().not());
-
-            //Add action listeners to options menu
-            edit.setOnAction(event -> editQuestionOption(questionContent, questionVbox, options,
-                questionId, secretCodeMap.get(questionId)));
-            delete.setOnAction(event -> deleteQuestionOption(content, options, questionId,
-                secretCodeMap.get(questionId)));
-
-            return options;
-        }
-
-        public VBox newQuestionVbox() {
-            //Create a pane for spacing purposes
-            Pane space = new Pane();
-            //Set pane to fixed height
-            int spaceHeight = 20;
-            space.setPrefHeight(spaceHeight);
-            space.setMinHeight(spaceHeight);
-            space.setMaxHeight(spaceHeight);
-
-            //Bind properties for easier management
-            space.managedProperty().bind(space.visibleProperty());
-            space.visibleProperty().bind(this.questionContent.visibleProperty());
-
-            VBox questionVbox = new VBox(this.questionContent, space);
-            questionVbox.setSpacing(10);
-
-            return questionVbox;
-        }
-
-        @Override
-        protected void updateItem(Question item, boolean empty) {
-            super.updateItem(item, empty);
-            //If the item was not null and empty was false, add content to the graphic
-            if (item != null && !empty) {
-                upvoteNumber.setText(Integer.toString(item.getUpvoteNumber()));
-                questionContent.setText(item.getQuestionContent());
-                questionId = item.getQuestionId();
-                setGraphic(content);
-            } else {
-                setGraphic(null);
-            }
-        }
     }
 
     /**
@@ -436,6 +308,17 @@ public class StudentViewController {
         secretCodeMap.put(questionId, secretCode);
 
         //Request automatic upvote
+        autoUpvote(questionId);
+
+        displayQuestions();
+    }
+
+    /**
+     * This method auto-upvotes the question that the user has just asked.
+     *
+     * @param questionId    UUID of the question that was just asked.
+     */
+    public void autoUpvote(UUID questionId) {
         String response = ServerCommunication.addQuestionVote(questionId);
         if (response == null) {
             //When the request fails, display alert
@@ -445,257 +328,6 @@ public class StudentViewController {
             QuestionVoteDetailsDto vote = gson.fromJson(response, QuestionVoteDetailsDto.class);
             upvoteMap.put(questionId, vote.getId());
         }
-
-        // TODO: Update the view of questions
-    }
-
-    /**
-     * This method is run when the upvote button is clicked.
-     * When the ToggleButton is activated: Sends a request to the server to add a vote.
-     * When the ToggleButton is deactivated: Sends a request to the server to remove the vote.
-     *
-     * @param questionId        UUID of the question that the user decides to upvote.
-     * @param upvoteTriangle    The ToggleButton which the user clicks to add a vote.
-     */
-    public void upvoteQuestion(UUID questionId, ToggleButton upvoteTriangle) {
-        if (upvoteTriangle.isSelected()) {
-            //Code that runs when the button is activated
-            //Check if the question has already been upvoted
-            if (upvoteMap.containsKey(questionId)) {
-                AlertDialog.display("", "You have already upvoted this question!");
-                return;
-            }
-            toggleUpvoteTrue(questionId, upvoteTriangle);
-        } else {
-            //Code that runs when the button is deactivated
-            toggleUpvoteFalse(questionId, upvoteTriangle);
-        }
-    }
-
-    /**
-     * This method is called when the upvote button is toggled on/selected.
-     * Sends a request to add a vote to the server, and executes different behaviour depending
-     * on the received response.
-     *
-     * @param questionId        The UUID of the question that has been upvoted.
-     * @param upvoteTriangle    The upvote ToggleButton (Needs to be deselected if request fails).
-     */
-    public void toggleUpvoteTrue(UUID questionId, ToggleButton upvoteTriangle) {
-        String response = ServerCommunication.addQuestionVote(questionId);
-
-        if (response == null) {
-            AlertDialog.display("", "Upvote failed.");
-            //Unselect the button as the upvote action failed
-            upvoteTriangle.setSelected(false);
-        } else {
-            //When the request is successful, store the question UUID with the vote UUID in the HashMap
-            QuestionVoteDetailsDto dto = gson.fromJson(response, QuestionVoteDetailsDto.class);
-            upvoteMap.put(questionId, dto.getId());
-        }
-    }
-
-    /**
-     * This method is called when the upvote button is toggled off/deselected.
-     * Sends a request to delete a vote from the server, and executes different behaviour depending
-     * on the received response.
-     *
-     * @param questionId        The UUID of the question that the upvote needs to be removed from.
-     * @param upvoteTriangle    The upvote ToggleButton (Needs to be reselected if request fails).
-     */
-    public void toggleUpvoteFalse(UUID questionId, ToggleButton upvoteTriangle) {
-        String response = ServerCommunication.deleteQuestionVote(questionId, upvoteMap.get(questionId));
-
-        if (response == null) {
-            AlertDialog.display("", "Canceling upvote failed.");
-            //Reselect the button as the un-upvote action failed
-            upvoteTriangle.setSelected(true);
-        } else {
-            //When the request is successful, remove upvote from the HashMap
-            upvoteMap.remove(questionId);
-        }
-    }
-
-    /**
-     * This method runs when the user selects Edit from the options Menu.
-     * Hides the original Text node and displays a Text Area node with the content of the
-     * original question set in the Text Area for easier editing.
-     * /
-     * Displays two buttons ("Cancel" and "Update").
-     * Update -> Sends a request to the server to update question content
-     * Cancel -> Cancels the action
-     *
-     * @param questionContent   Text node of the question content (Needs to be hidden when editing)
-     * @param questionVbox      VBox containing question content (Needed to display the text area in it)
-     * @param options           The options menu node (Needs to be disabled when editing)
-     * @param questionId        The UUID of the question that is being edited
-     * @param code              Secret code of the question
-     */
-    public void editQuestionOption(Text questionContent, VBox questionVbox, MenuButton options,
-                                   UUID questionId, UUID code) {
-        //Disable options menu
-        options.setDisable(true);
-
-        //Create a new TextArea and bind its size
-        TextArea input = new TextArea();
-        input.setWrapText(true);
-        input.prefWidthProperty().bind(questionContent.wrappingWidthProperty());
-        input.minWidthProperty().bind(questionContent.wrappingWidthProperty());
-        input.maxWidthProperty().bind(questionContent.wrappingWidthProperty());
-        input.setPrefRowCount(5);
-
-        //Create the buttons and set their alignments
-        Button cancel = new Button("Cancel");
-        Button update = new Button("Update");
-        HBox buttons = new HBox(cancel, update);
-        buttons.setAlignment(Pos.CENTER_RIGHT);
-        buttons.setSpacing(15);
-
-        //Set action listeners for the buttons
-        update.setOnAction(event -> updateQuestion(options, questionId, code, input.getText(),
-            questionContent, questionVbox, input, buttons));
-        cancel.setOnAction(event -> cancelEdit(options, questionVbox, input, buttons, questionContent));
-
-        //Hide question text and display text area
-        questionContent.setVisible(false);
-        questionVbox.getChildren().add(input);
-        questionVbox.getChildren().add(buttons);
-        input.setText(questionContent.getText());
-    }
-
-    /**
-     * This method runs when the Update button (created in editQuestion) is clicked.
-     * Sends an editQuestion request to the server.
-     * /
-     * If the request is successful -> Displays alert, removes the text area and buttons, and updates
-     * the question content locally as well.
-     * If the request fails -> Displays an alert and prevents the user from losing the edited question.
-     *
-     * @param options           The options menu node (Needs to be disabled when editing)
-     * @param questionId        The UUID of the question that is being edited
-     * @param code              Secret code of the question
-     * @param text              Content of the text area (Edited question)
-     * @param questionContent   Text node of the question content (Needs to be shown after successful edit)
-     * @param questionVbox      VBox containing question content (Needed to remove the text area in it)
-     * @param input             The Text Area node (Needs to be removed after a successful edit)
-     * @param buttons           The HBox containing the buttons (Needs to be removed after a successful edit)
-     */
-    public void updateQuestion(MenuButton options, UUID questionId, UUID code, String text,
-                               Text questionContent, VBox questionVbox, TextArea input,
-                               HBox buttons) {
-        //Send a request to the server
-        String response = ServerCommunication.editQuestion(questionId, code, text);
-
-        if (response == null) {
-            //If request failed
-            AlertDialog.display("Unsuccessful Request", "Failed to update your question, please try again.");
-        } else {
-            //If request successful
-            //Remove text area and buttons
-            questionVbox.getChildren().remove(input);
-            questionVbox.getChildren().remove(buttons);
-            //Set edited text to question content area and show
-            questionContent.setText(text);
-            questionContent.setVisible(true);
-            //Enable options menu as editing has been completed successfully
-            options.setDisable(false);
-        }
-    }
-
-    /**
-     * This method runs when the Cancel button (created in editQuestion) is clicked.
-     * Removes all the nodes that were added when editing the question and displays original question.
-     *
-     * @param options           The options menu node (Needs to be disabled when editing)
-     * @param questionVbox      VBox containing question content (Needed to remove the text area in it)
-     * @param input             The Text Area node (Needs to be removed after a successful edit)
-     * @param buttons           The HBox containing the buttons (Needs to be removed after a successful edit)
-     * @param questionContent   Text node of the question content (Needs to be shown after successful edit)
-     */
-    public void cancelEdit(MenuButton options, VBox questionVbox, TextArea input,
-                            HBox buttons, Text questionContent) {
-        options.setDisable(false);
-        questionVbox.getChildren().remove(input);
-        questionVbox.getChildren().remove(buttons);
-        questionContent.setVisible(true);
-    }
-
-    /**
-     * This method runs when the user selects Delete from the options Menu.
-     * Displays a confirmation dialogue and two buttons ("Yes" and "Cancel").
-     * /
-     * Yes -> Sends a request to the server to delete the question.
-     * Cancel -> Cancels the action.
-     *
-     * @param gridpane      GridPane of the cell (Needed to add a row for the confirmation dialogue)
-     * @param options       The options menu node (Needs to be disabled when confirmation dialogue shows up)
-     * @param questionId    The UUID of the question that is being deleted
-     * @param code          Secret code of the question
-     */
-    public void deleteQuestionOption(GridPane gridpane, MenuButton options, UUID questionId, UUID code) {
-        //Disable options menu
-        options.setDisable(true);
-
-        //Create new label
-        Label confirmation = new Label("Are you sure you want to delete this question?");
-        confirmation.setPadding(new Insets(0,5,0,0));
-        confirmation.setWrapText(true);
-        //Create buttons
-        Button yes = new Button("Yes");
-        Button cancel = new Button("Cancel");
-        HBox dialogue = new HBox(confirmation, yes, cancel);
-
-        //Set layouts
-        dialogue.setPadding(new Insets(5,10,5,10));
-        dialogue.setSpacing(15);
-        dialogue.setAlignment(Pos.CENTER);
-
-        //Show confirmation dialogue
-        gridpane.addRow(1, dialogue);
-        GridPane.setColumnSpan(dialogue, GridPane.REMAINING);
-
-        //Set action listeners
-        yes.setOnAction(event -> deleteQuestion(gridpane, questionId, code));
-        cancel.setOnAction(event -> cancelDeletion(options, gridpane, dialogue));
-    }
-
-    /**
-     * This method runs when the Delete button (created in deleteQuestion) is clicked.
-     * Sends a deleteQuestion request to the server.
-     * /
-     * If the request is successful -> Displays an alert.
-     * If the request fails -> Displays successful removal label and icon.
-     *
-     * @param gridPane      GridPane of the cell (Needed to add a row for the confirmation dialogue)
-     * @param questionId    The UUID of the question that is being edited
-     * @param code          Secret code of the question
-     */
-    public void deleteQuestion(GridPane gridPane, UUID questionId, UUID code) {
-        //Send a request to the server
-        String response = ServerCommunication.deleteQuestion(questionId, code);
-
-        if (response == null) {
-            //If the request failed
-            AlertDialog.display("Unsuccessful Request", "Failed to delete your question, please try again.");
-        } else {
-            //If the request was successful
-            AlertDialog.display("", "Question deletion successful.");
-            //TODO: Display successful removal label and icon
-            //gridPane.setVisible(false);
-            //gridPane.setManaged(false);
-        }
-    }
-
-    /**
-     * This method runs when the Cancel button (created in deleteQuestion) is clicked.
-     * Removes the confirmation dialogue and enables the options menu.
-     *
-     * @param options   The options menu node (Needs to be enabled)
-     * @param gridPane  GridPane of the cell (Needed to remove row of confirmation dialogue)
-     * @param dialogue  The confirmation dialogue (Needs to be removed)
-     */
-    public void cancelDeletion(MenuButton options, GridPane gridPane, HBox dialogue) {
-        gridPane.getChildren().remove(dialogue);
-        options.setDisable(false);
     }
 
     /**
@@ -703,13 +335,9 @@ public class StudentViewController {
      */
     public void showHideSideBar() {
         if (hamburger.isSelected()) {
-            if (sideMenuOpen) {
-                paceVotePane.setVisible(false);
-            }
             sideMenu.setVisible(sideMenuOpen);
             sideBar.setVisible(true);
         } else {
-            paceVotePane.setVisible(true);
             sideMenu.setVisible(false);
             sideBar.setVisible(false);
         }
@@ -724,14 +352,12 @@ public class StudentViewController {
             sideMenu.getChildren().clear();
             showAnsQuestions();
         } else if (!sideMenu.isVisible()) {
-            paceVotePane.setVisible(false);
             sideMenuOpen = true;
             showAnsQuestions();
         } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
             sideMenuOpen = false;
-            paceVotePane.setVisible(true);
         }
     }
 
@@ -742,8 +368,8 @@ public class StudentViewController {
         Label title = new Label("Answered Questions");
         sideMenu.setVisible(true);
         sideMenu.getChildren().add(title);
-
-        //TODO: Fetch questions and display in a ListView
+        sideMenu.getChildren().add(ansQuListView);
+        VBox.setVgrow(ansQuListView, Priority.ALWAYS);
     }
 
     /**
@@ -755,14 +381,12 @@ public class StudentViewController {
             sideMenu.getChildren().clear();
             showPolls();
         } else if (!sideMenu.isVisible()) {
-            paceVotePane.setVisible(false);
             sideMenuOpen = true;
             showPolls();
         } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
             sideMenuOpen = false;
-            paceVotePane.setVisible(true);
         }
     }
 
