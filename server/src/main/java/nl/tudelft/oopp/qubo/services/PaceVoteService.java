@@ -11,15 +11,19 @@ import nl.tudelft.oopp.qubo.repositories.PaceVoteRepository;
 import nl.tudelft.oopp.qubo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
+import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PaceVoteService {
     private final PaceVoteRepository paceVoteRepository;
+
     private final QuestionBoardRepository questionBoardRepository;
 
     private final ModelMapper modelMapper;
+
+    private final CurrentTimeProvider currentTimeProvider;
 
     /**
      * Creates an instance of the PaceVoteService.
@@ -27,13 +31,16 @@ public class PaceVoteService {
      * @param paceVoteRepository      The PaceVoteRepository
      * @param questionBoardRepository The QuestionBoardRepository
      * @param modelMapper             The ModelMapper
+     * @param currentTimeProvider     The CurrentTimeProvider.
      */
     public PaceVoteService(
         PaceVoteRepository paceVoteRepository, QuestionBoardRepository questionBoardRepository,
-        ModelMapper modelMapper) {
+        ModelMapper modelMapper,
+        CurrentTimeProvider currentTimeProvider) {
         this.paceVoteRepository = paceVoteRepository;
         this.questionBoardRepository = questionBoardRepository;
         this.modelMapper = modelMapper;
+        this.currentTimeProvider = currentTimeProvider;
     }
 
     /**
@@ -54,7 +61,7 @@ public class PaceVoteService {
         }
 
         // Check if board is active
-        Instant now = Instant.now();
+        Instant now = currentTimeProvider.getCurrentTime();
         if (now.isBefore(board.getStartTime().toInstant())
             || board.isClosed()) {
             throw new ForbiddenException("Question board is not active");
