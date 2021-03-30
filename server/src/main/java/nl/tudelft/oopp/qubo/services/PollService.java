@@ -98,7 +98,7 @@ public class PollService {
      * @param poll  The poll that is to be deleted.
      */
     public void deletePoll(Poll poll) {
-        // Delete paceVote from database
-        this.pollRepository.deletePollById(poll.getId());
+        // Delete poll from database
+        pollRepository.deletePollById(poll.getId());
     }
 }

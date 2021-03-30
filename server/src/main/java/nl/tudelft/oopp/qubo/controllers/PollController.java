@@ -123,15 +123,15 @@ public class PollController {
      * Throw 404 upon requesting a non-existent poll.
      * Throw 403 when the provided moderator code does not match that of the question board.
      *
-     * @param boardId       The ID of the question board whose poll should be deleted.
-     * @param moderatorCode The moderator code of the question board.
+     * @param boardId   The ID of the question board whose poll should be deleted.
+     * @param code      The moderator code of the question board.
      * @return The PollDetailsDto containing details about the deleted poll.
      */
     @RequestMapping(value = "/{boardid}/poll", method = DELETE)
     @ResponseBody
     public PollDetailsDto deletePoll(
             @PathVariable("boardid") UUID boardId,
-            @RequestParam("moderatorcode") UUID moderatorCode) {
+            @RequestParam("code") UUID code) {
         QuestionBoard board = questionBoardService.getBoardById(boardId);
         // Check if the question board exists
         if (board == null) {
@@ -140,7 +140,7 @@ public class PollController {
 
         // Check if the provided moderator code matches that of the question board whose poll should be deleted
         UUID moderator = board.getModeratorCode();
-        if (!moderatorCode.equals(moderator)) {
+        if (!code.equals(moderator)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The provided moderator code does not"
                     + "match that of the question board.");
         }
