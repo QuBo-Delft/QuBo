@@ -8,8 +8,6 @@ import nl.tudelft.oopp.qubo.dtos.pace.PaceDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteDetailsDto;
-import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.poll.PollCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
@@ -17,7 +15,6 @@ import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.entities.PaceVote;
-import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import nl.tudelft.oopp.qubo.services.PaceVoteService;
@@ -282,39 +279,6 @@ public class QuestionBoardController {
         PaceVoteDetailsDto dto = modelMapper.map(vote, PaceVoteDetailsDto.class);
         // Delete actual vote
         paceVoteService.deleteVote(vote);
-        return dto;
-    }
-
-    /**
-     * POST endpoint to create a Poll.
-     *
-     * @param pollModel The binding model passed by the client containing information to be used
-     *                  in creating a new Poll.
-     * @return the question board
-     */
-    @RequestMapping(value = "/{boardid}/poll", method = POST, consumes = "application/json")
-    @ResponseBody
-    public PollCreationDto createPoll(
-            @PathVariable("boardid") UUID boardId,
-            @RequestParam("code") UUID moderatorCode,
-            @Valid @RequestBody PollCreationBindingModel pollModel) {
-        QuestionBoard qb = service.getBoardById(boardId);
-
-        //Check if the question board exists
-        if (qb == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
-        }
-        //Check if the moderator code of the question board is equal to the code that was provided
-        //by the client.
-        if (!qb.getModeratorCode().equals(moderatorCode)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid moderator code");
-        }
-
-        //Create a new poll
-        Poll poll = pollService.createPoll(pollModel, boardId);
-
-        //Convert the poll into a PollCreationDto that is returned.
-        PollCreationDto dto = modelMapper.map(poll, PollCreationDto.class);
         return dto;
     }
 
