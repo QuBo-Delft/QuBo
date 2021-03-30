@@ -21,8 +21,6 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
-import nl.tudelft.oopp.qubo.controllers.structures.Question;
-import nl.tudelft.oopp.qubo.controllers.structures.QuestionListCell;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.controllers.structures.NoFocusModel;
@@ -81,8 +79,8 @@ public class StudentViewController {
     private boolean sideMenuOpen;
 
     @FXML
-    private ListView<Question> unAnsQuListView;
-    private ListView<Question> ansQuListView = new ListView<>();
+    private VBox unAnsQuVbox;
+    private VBox ansQuVbox = new VBox();
 
     private String authorName;
 
@@ -99,6 +97,7 @@ public class StudentViewController {
     private ClipboardContent clipboardContent = new ClipboardContent();
 
     private QuestionBoardDetailsDto quBo;
+
 
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
@@ -140,7 +139,7 @@ public class StudentViewController {
     private void initialize() {
         startUpProperties();
         //Display the questions
-        QuestionRefresh.displayQuestions(quBo, unAnsQuListView, ansQuListView);
+        QuestionRefresh.refresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap);
     }
 
     private void startUpProperties() {
@@ -153,24 +152,15 @@ public class StudentViewController {
         sideMenu.prefWidthProperty().bind(content.widthProperty().multiply(0.45));
         paceVotePane.visibleProperty().bind(sideMenu.visibleProperty().not());
 
-        //Make ListCells unable to be selected individually (remove blue highlighting)
-        unAnsQuListView.setSelectionModel(new NoSelectionModel<>());
-        unAnsQuListView.setFocusModel(new NoFocusModel<>());
-        ansQuListView.setSelectionModel(new NoSelectionModel<>());
-        ansQuListView.setFocusModel(new NoFocusModel<>());
-
-        //Remove border of focus
-        unAnsQuListView.setStyle("-fx-background-insets: 0 ;");
-        ansQuListView.setStyle("-fx-background-insets: 0 ;");
-
-        unAnsQuListView.setEditable(true);
+        ansQuVbox.setFillWidth(true);
+        unAnsQuVbox.setFillWidth(true);
     }
 
 
 
     //Temporary refresh button
     public void displayBoardInfo() {
-        QuestionRefresh.displayQuestions(quBo, unAnsQuListView, ansQuListView);
+        QuestionRefresh.refresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap);
     }
 
     public void copyStudentCode() {
@@ -212,7 +202,7 @@ public class StudentViewController {
         //Request automatic upvote
         autoUpvote(questionId);
 
-        QuestionRefresh.displayQuestions(quBo, unAnsQuListView, ansQuListView);
+        QuestionRefresh.refresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap);
     }
 
     /**
@@ -249,14 +239,14 @@ public class StudentViewController {
      * Toggles the visibility of the answered questions menu.
      */
     public void showHideAnsQuestions() {
-        sideMenuOpen = SideBarControl.showHideSelected(ansQuestions, polls, sideMenu, ansQuListView);
+        sideMenuOpen = SideBarControl.showHideSelected(ansQuestions, polls, sideMenu, ansQuVbox);
     }
 
     /**
      * Toggles the visibility of the poll menu.
      */
     public void showHidePolls() {
-        sideMenuOpen = SideBarControl.showHideSelected(polls, ansQuestions, sideMenu, ansQuListView);
+        sideMenuOpen = SideBarControl.showHideSelected(polls, ansQuestions, sideMenu, ansQuVbox);
     }
 
     /**

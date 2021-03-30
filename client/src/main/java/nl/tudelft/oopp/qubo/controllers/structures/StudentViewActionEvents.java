@@ -221,7 +221,7 @@ public class StudentViewActionEvents {
      * @param code          Secret code of the question
      */
     public static void deleteQuestionOption(GridPane content, GridPane questionPane,
-                                            ListView<Question> questionList,
+                                            VBox questionContainer,
                                             MenuButton options, UUID questionId, UUID code) {
         //Disable options menu
         options.setDisable(true);
@@ -231,9 +231,9 @@ public class StudentViewActionEvents {
         confirmation.setPadding(new Insets(0,5,0,0));
         confirmation.setWrapText(true);
         //Set width bounds to the dialogue so it doesn't overflow the question box
-        double widthBind = questionList.getPadding().getLeft()
-            +  questionList.getPadding().getRight() + 200;
-        confirmation.prefWidthProperty().bind(questionList.widthProperty().subtract(widthBind));
+        double widthBind = questionContainer.getPadding().getLeft()
+            +  questionContainer.getPadding().getRight() + 200;
+        confirmation.prefWidthProperty().bind(questionContainer.widthProperty().subtract(widthBind));
 
         //Create buttons
         Button yes = new Button("Yes");

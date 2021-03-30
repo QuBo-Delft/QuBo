@@ -2,19 +2,18 @@ package nl.tudelft.oopp.qubo.controllers.helpers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.ListView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import nl.tudelft.oopp.qubo.communication.ServerCommunication;
-import nl.tudelft.oopp.qubo.controllers.structures.Question;
-import nl.tudelft.oopp.qubo.controllers.structures.QuestionListCell;
-import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
+import nl.tudelft.oopp.qubo.controllers.structures.QuestionItem;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.utilities.sorting.Sorting;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class QuestionRefresh {
     private static QuestionBoardDetailsDto thisQuBo;
@@ -22,19 +21,27 @@ public class QuestionRefresh {
     private static QuestionDetailsDto[] answeredQuestions;
     private static QuestionDetailsDto[] unansweredQuestions;
 
-    private static ListView<Question> unAnsQuListView;
-    private static ListView<Question> ansQuListView;
+    private static VBox unAnsQuVbox;
+    private static VBox ansQuVbox;
 
+    private static HashMap<UUID, UUID> secretCodeMap;
+    private static HashMap<UUID, UUID> upvoteMap;
 
     private static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         .create();
 
-    public static void refresh(QuestionBoardDetailsDto quBo, ListView<Question> unAnsLV,
-                               ListView<Question> ansLV) {
+    public static void refresh(QuestionBoardDetailsDto quBo, VBox unAnsLV,
+                               VBox ansLV, HashMap<UUID, UUID> upvote,
+                               HashMap<UUID, UUID> secret) {
         thisQuBo = quBo;
-        unAnsQuListView = unAnsLV;
-        ansQuListView = ansLV;
+        unAnsQuVbox = unAnsLV;
+        ansQuVbox = ansLV;
+
+        upvoteMap = upvote;
+        secretCodeMap = secret;
+
+        displayQuestions();
     }
 
     /**
@@ -62,17 +69,17 @@ public class QuestionRefresh {
             //Divide the questions over two lists and sort them.
             divideQuestions(questions);
 
-            sortAndMap(unAnsQuListView, unansweredQuestions);
-            sortAndMap(ansQuListView, answeredQuestions);
+            sortAndMap(unAnsQuVbox, unansweredQuestions);
+            sortAndMap(ansQuVbox, answeredQuestions);
         }
     }
 
-    private static void sortAndMap(ListView<Question> questionListView, QuestionDetailsDto[] questionArray) {
+    private static void sortAndMap(VBox questionVbox, QuestionDetailsDto[] questionArray) {
         if (questionArray.length == 0) {
-            questionListView.getItems().clear();
+            questionVbox.getChildren().clear();
         } else {
             Sorting.sortOnUpvotes(questionArray);
-            mapQuestions(questionListView, questionArray);
+            mapQuestions(questionVbox, questionArray);
         }
     }
 
@@ -109,31 +116,18 @@ public class QuestionRefresh {
         unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
     }
 
-    private static void mapQuestions(ListView<Question> questionListView, QuestionDetailsDto[] questionList) {
-        ObservableList<Question> data = FXCollections.observableArrayList();
+    private static void mapQuestions(VBox questionVbox, QuestionDetailsDto[] questionList) {
+        questionVbox.getChildren().clear();
 
         //For each question in the list create a new Question object
         for (QuestionDetailsDto question : questionList) {
-            Question newQu = new Question(question.getId(), question.getUpvotes(),
-                question.getText(), question.getAuthorName(), null);
+            GridPane newQu = new QuestionItem(question.getId(), question.getUpvotes(),
+                question.getText(), question.getAuthorName(), null, questionVbox,
+                upvoteMap, secretCodeMap);
 
-            //Get Answers if there are any
-            if (question.getAnswers().size() != 0) {
-                List<String> answers = new ArrayList<>();
-                for (AnswerDetailsDto answer : question.getAnswers()) {
-                    answers.add(answer.getText());
-                }
-                newQu.setAnswers(answers);
-            }
             //Add the question to the ObservableList
-            data.add(newQu);
+            questionVbox.getChildren().add(newQu);
         }
-
-        questionListView.getItems().clear();
-        //Set new questions in the ListView
-        questionListView.setItems(data);
-        //Set the custom cell factory for the listview
-        questionListView.setCellFactory(listView
-            -> new QuestionListCell(questionListView, secretCodeMap, upvoteMap));
     }
+
 }

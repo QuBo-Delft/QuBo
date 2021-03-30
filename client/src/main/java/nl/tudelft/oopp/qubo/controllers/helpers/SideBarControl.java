@@ -5,18 +5,17 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import nl.tudelft.oopp.qubo.controllers.structures.Question;
 
 public class SideBarControl {
     public static boolean showHideSelected(ToggleButton select, ToggleButton deselect, VBox sideMenu,
-                                           ListView<Question> ansQuListView) {
+                                           VBox ansQuVbox) {
         if (sideMenu.isVisible() && deselect.isSelected()) {
             deselect.setSelected(false);
             sideMenu.getChildren().clear();
-            toggleSelector(select, sideMenu, ansQuListView);
+            toggleSelector(select, sideMenu, ansQuVbox);
             return true;
         } else if (!sideMenu.isVisible()) {
-            toggleSelector(select, sideMenu, ansQuListView);
+            toggleSelector(select, sideMenu, ansQuVbox);
             return true;
         } else {
             sideMenu.getChildren().clear();
@@ -25,11 +24,11 @@ public class SideBarControl {
         }
     }
 
-    private static void toggleSelector(ToggleButton select, VBox sideMenu, ListView<Question> ansQuListView) {
+    private static void toggleSelector(ToggleButton select, VBox sideMenu, VBox ansQuVbox) {
         if (select.getId().equals("polls")) {
             showPolls(sideMenu);
         } else {
-            showAnsQuestions(sideMenu, ansQuListView);
+            showAnsQuestions(sideMenu, ansQuVbox);
         }
     }
 
@@ -41,11 +40,11 @@ public class SideBarControl {
         //TODO: Fetch polls and display in a ListView
     }
 
-    private static void showAnsQuestions(VBox sideMenu, ListView<Question> ansQuListView) {
+    private static void showAnsQuestions(VBox sideMenu, VBox ansQuVbox) {
         Label title = new Label("Answered Questions");
         sideMenu.setVisible(true);
         sideMenu.getChildren().add(title);
-        sideMenu.getChildren().add(ansQuListView);
-        VBox.setVgrow(ansQuListView, Priority.ALWAYS);
+        sideMenu.getChildren().add(ansQuVbox);
+        VBox.setVgrow(ansQuVbox, Priority.ALWAYS);
     }
 }
