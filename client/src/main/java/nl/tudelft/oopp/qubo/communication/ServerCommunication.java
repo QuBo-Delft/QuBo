@@ -508,4 +508,28 @@ public class ServerCommunication {
         return response.body();
     }
 
+    /**
+     * Deletes the poll from the board.
+     * Communicates with the /api/board/{boardid}/poll?code={moderatorcode} server endpoint.
+     *
+     * @param boardId       The ID of the question board whose poll should be deleted.
+     * @param moderatorCode The moderator code associated with the question board.
+     * @return The PollDetailsDto of the poll that was deleted in JSON String format if it existed,
+     *      null otherwise.
+     */
+    public static String deletePoll(UUID boardId, UUID moderatorCode) {
+        //Set up the variables required by the delete helper method
+        String fullUrl = subUrl + "api/board/" + boardId + "/poll?code=" + moderatorCode;
+
+        //Send the request to delete the question from the board and retrieve the response
+        HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
 }

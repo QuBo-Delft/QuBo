@@ -168,6 +168,9 @@ public class MainApp {
         System.out.println("This poll has been added: "
                 + (gson.toJson(ServerCommunication.addPoll(boardId, moderatorCode, "Test Poll", pollOptions))));
 
+        //Delete the poll that was added
+        System.out.println("This poll has been deleted: " + ServerCommunication
+                .deletePoll(boardId, moderatorCode));
 
         //Close the question board
         System.out.println("The fact that this question board has been closed is: "
