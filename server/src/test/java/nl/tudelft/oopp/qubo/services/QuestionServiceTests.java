@@ -273,4 +273,56 @@ public class QuestionServiceTests {
         assertEquals("Question does not exist", exception.getMessage());
     }
 
+    @Test
+    public void deleteQuestionById_withValidId_worksCorrectly() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.valueOf("2021-03-01 00:01:00"));
+        board.setTitle("Test board");
+        board.setClosed(true);
+        questionBoardRepository.save(board);
+
+        Question question = new Question();
+        question.setAuthorName("Author");
+        question.setText("Test question");
+        question.setSecretCode(UUID.randomUUID());
+        question.setTimestamp(Timestamp.valueOf("2021-03-01 00:01:00"));
+        question.setQuestionBoard(board);
+        questionRepository.save(question);
+
+        // Act
+        questionService.deleteQuestionById(question.getId());
+
+        // Assert
+        Question inDb = questionRepository.getQuestionById(question.getId());
+        assertNull(inDb);
+    }
+
+    @Test
+    public void deleteQuestion_withNonexistentId_doesNotDeleteQuestion() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.valueOf("2021-03-01 00:01:00"));
+        board.setTitle("Test board");
+        board.setClosed(true);
+        questionBoardRepository.save(board);
+
+        Question question = new Question();
+        question.setAuthorName("Author");
+        question.setText("Test question");
+        question.setSecretCode(UUID.randomUUID());
+        question.setTimestamp(Timestamp.valueOf("2021-03-01 00:01:00"));
+        question.setQuestionBoard(board);
+        questionRepository.save(question);
+
+        // Act
+        questionService.deleteQuestionById(UUID.randomUUID());
+
+        // Assert
+        Question inDb = questionRepository.getQuestionById(question.getId());
+        assertNotNull(inDb);
+    }
+
 }
