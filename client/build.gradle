@@ -2,7 +2,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
-mainClassName = "nl.tudelft.oopp.demo.MainApp"
+mainClassName = "nl.tudelft.oopp.qubo.MainApp"
 
 dependencies {
     compile project(path: ':common')
