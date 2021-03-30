@@ -484,7 +484,7 @@ public class ServerCommunication {
      * @param moderatorCode The moderator code of the question board to which the poll should be added.
      * @param pollText      The text that is associated with the poll.
      * @param pollOptions   The set of answer options of the poll.
-     * @return The PaceVoteCreationDto in JSON String format if the vote was added successfully.
+     * @return The PollCreationDto in JSON String format if the vote was added successfully.
      */
     public static String addPoll(UUID boardId, UUID moderatorCode, String pollText, Set<String> pollOptions) {
         //Create a PollCreationBindingModel
@@ -505,6 +505,29 @@ public class ServerCommunication {
             return null;
         }
 
+        return response.body();
+    }
+
+    /**
+     * Retrieves the details of the poll associated with the question board whose ID was provided.
+     * Communicates with the /api/board/{boardid}/poll server endpoint.
+     *
+     * @param boardId   The ID of the question board whose poll's details should be retrieved.
+     * @return The PollDetailsDto associated with the poll in JSON String format if there was a poll associated
+     *      with the question board whose ID was provided, null otherwise.
+     */
+    public static String retrievePollDetails(UUID boardId) {
+        //Create a request and response object, send the request, and retrieve the response
+        HttpRequest request = HttpRequest.newBuilder().GET()
+                .uri(URI.create(subUrl + "/api/board/" + boardId + "/poll")).build();
+        HttpResponse<String> response = sendRequest(request);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        //Return the JSON String representation of the PollDetailsDto
         return response.body();
     }
 
