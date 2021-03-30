@@ -60,12 +60,12 @@ public class PollController {
             @PathVariable("boardid") UUID boardId) {
         QuestionBoard qb = questionBoardService.getBoardById(boardId);
 
-        //If the question board does not exist, throw a 404
+        // If the question board does not exist, throw a 404
         if (qb == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }
 
-        //Obtain the poll associated with the question board and convert this to a PollDetailsDto
+        // Obtain the poll associated with the question board and convert this to a PollDetailsDto
         Poll poll = pollService.getPollByBoard(qb);
         PollDetailsDto pollDto = modelMapper.map(poll, PollDetailsDto.class);
 

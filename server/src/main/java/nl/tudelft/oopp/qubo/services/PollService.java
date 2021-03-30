@@ -91,7 +91,7 @@ public class PollService {
     public Poll getPollByBoard(QuestionBoard questionBoard) {
         Poll poll = questionBoard.getPoll();
 
-        //If there is no poll associated with the question board, throw a NotFoundException
+        // If there is no poll associated with the question board, throw a NotFoundException
         if (poll == null) {
             throw new NotFoundException("There is no poll associated with this question board.");
         }
