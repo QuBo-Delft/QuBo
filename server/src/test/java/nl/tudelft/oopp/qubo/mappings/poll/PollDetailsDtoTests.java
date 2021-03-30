@@ -1,6 +1,5 @@
 package nl.tudelft.oopp.qubo.mappings.poll;
 
-import nl.tudelft.oopp.qubo.config.custommappings.PollToPollDetailsDtoConverter;
 import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 import nl.tudelft.oopp.qubo.entities.Poll;
@@ -27,9 +26,6 @@ public class PollDetailsDtoTests {
     @BeforeEach
     public void setUp() {
         mapper = new ModelMapper();
-
-        var pollToPollDetailsDtoConverter = new PollToPollDetailsDtoConverter(mapper);
-        pollToPollDetailsDtoConverter.init();
     }
 
     @Test

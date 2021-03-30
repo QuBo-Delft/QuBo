@@ -1,15 +1,11 @@
 package nl.tudelft.oopp.qubo.mappings.polloption;
 
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
-import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
-import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,27 +24,12 @@ public class PollOptionDetailsDtoTests {
     @Test
     public void mapFromPollOptionToPollOptionDetailsDto() {
         // Arrange
-        QuestionBoard questionBoard = new QuestionBoard();
-
-        Poll poll = new Poll();
-        poll.setId(UUID.randomUUID());
-        poll.setText("Test poll");
-        poll.setOpen(true);
-        poll.setQuestionBoard(questionBoard);
-
         PollOption option = new PollOption();
         option.setId(UUID.randomUUID());
         option.setText("Option A");
-        option.setPoll(poll);
         PollOption option2 = new PollOption();
         option2.setId(UUID.randomUUID());
         option2.setText("Option B");
-        option2.setPoll(poll);
-
-        Set<PollOption> optionSet = new HashSet<>();
-        optionSet.add(option);
-        optionSet.add(option2);
-        poll.setPollOptions(optionSet);
 
         // Act
         PollOptionDetailsDto pollOptionDto = mapper.map(option, PollOptionDetailsDto.class);

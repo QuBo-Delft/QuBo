@@ -66,7 +66,13 @@ public class PollController {
         }
 
         // Obtain the poll associated with the question board and convert this to a PollDetailsDto
-        Poll poll = pollService.getPollByBoard(qb);
+        Poll poll = qb.getPoll();
+
+        // If there is no poll associated with the question board, throw a 404
+        if (poll == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no poll in this question board");
+        }
+
         PollDetailsDto pollDto = modelMapper.map(poll, PollDetailsDto.class);
 
         return pollDto;
