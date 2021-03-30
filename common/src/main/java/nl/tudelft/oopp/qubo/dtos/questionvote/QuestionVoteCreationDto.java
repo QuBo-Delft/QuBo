@@ -1,11 +1,11 @@
-package nl.tudelft.oopp.demo.dtos.questionvote;
+package nl.tudelft.oopp.qubo.dtos.questionvote;
 
 import java.util.UUID;
 
-public class QuestionVoteDetailsDto {
+public class QuestionVoteCreationDto {
     private UUID id;
 
-    public QuestionVoteDetailsDto() {
+    public QuestionVoteCreationDto() {
     }
 
     public UUID getId() {
@@ -16,4 +16,3 @@ public class QuestionVoteDetailsDto {
         this.id = id;
     }
 }
-

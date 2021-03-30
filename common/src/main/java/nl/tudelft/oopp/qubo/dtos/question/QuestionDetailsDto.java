@@ -1,9 +1,9 @@
-package nl.tudelft.oopp.demo.dtos.question;
+package nl.tudelft.oopp.qubo.dtos.question;
 
 import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;
-import nl.tudelft.oopp.demo.dtos.answer.AnswerDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
 
 public class QuestionDetailsDto {
     private UUID id;

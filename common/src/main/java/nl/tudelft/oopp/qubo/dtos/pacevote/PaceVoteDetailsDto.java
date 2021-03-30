@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo.dtos.pacevote;
+package nl.tudelft.oopp.qubo.dtos.pacevote;
 
 import java.util.UUID;
 

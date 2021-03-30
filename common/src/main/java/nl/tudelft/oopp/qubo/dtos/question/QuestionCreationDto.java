@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo.dtos.question;
+package nl.tudelft.oopp.qubo.dtos.question;
 
 import java.util.UUID;
 

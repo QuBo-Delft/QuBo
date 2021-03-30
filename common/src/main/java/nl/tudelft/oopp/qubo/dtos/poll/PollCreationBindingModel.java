@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo.dtos.poll;
+package nl.tudelft.oopp.qubo.dtos.poll;
 
 import org.hibernate.validator.constraints.Length;
 

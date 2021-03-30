@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo.dtos.question;
+package nl.tudelft.oopp.qubo.dtos.question;
 
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;

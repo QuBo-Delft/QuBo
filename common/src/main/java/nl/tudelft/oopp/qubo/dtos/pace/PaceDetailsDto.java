@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo.dtos.pace;
+package nl.tudelft.oopp.qubo.dtos.pace;
 
 public class PaceDetailsDto {
     private int justRightVotes;

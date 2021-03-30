@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo.dtos.questionboard;
+package nl.tudelft.oopp.qubo.dtos.questionboard;
 
 import java.sql.Timestamp;
 import java.util.UUID;

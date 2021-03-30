@@ -1,15 +1,13 @@
-package nl.tudelft.oopp.demo.dtos.question;
+package nl.tudelft.oopp.qubo.dtos.answer;
 
 import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
 
-public class QuestionEditingBindingModel {
+public class AnswerCreationBindingModel {
 
     @NotNull
-    @Length(min = 8)
     private String text;
 
-    public QuestionEditingBindingModel() {
+    public AnswerCreationBindingModel() {
     }
 
     public String getText() {

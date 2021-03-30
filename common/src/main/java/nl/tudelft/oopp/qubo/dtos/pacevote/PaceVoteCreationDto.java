@@ -1,12 +1,12 @@
-package nl.tudelft.oopp.demo.dtos.answer;
+package nl.tudelft.oopp.qubo.dtos.pacevote;
 
-import java.sql.Timestamp;
 import java.util.UUID;
 
-public class AnswerCreationDto {
+public class PaceVoteCreationDto {
+
     private UUID id;
 
-    public AnswerCreationDto() {
+    public PaceVoteCreationDto() {
     }
 
     public UUID getId() {
@@ -16,5 +16,6 @@ public class AnswerCreationDto {
     public void setId(UUID id) {
         this.id = id;
     }
+
 
 }
