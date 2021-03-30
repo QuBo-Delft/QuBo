@@ -4,17 +4,15 @@
 
 #titleMessage {
     -fx-min-width: 400;
-
     -fx-font-size: 22;
-    -fx-font-family: "BahnSchrift";
+    -fx-font-family: "Arial";
     -fx-text-fill: #893B18;
     -fx-text-alignment: left;
 }
 
 .codes {
     -fx-min-width: 115;
-
-    -fx-font-family: "Bahnschrift";
+    -fx-font-family: "Arial";
     -fx-font-size: 14;
     -fx-text-fill: #6B5E59;
 }
@@ -33,13 +31,13 @@
 }
 
 .attribute {
-    -fx-font-family: "Bahnschrift";
+    -fx-font-family: "Arial";
     -fx-font-size: 16;
     -fx-text-fill: #5C4f4B;
 }
 
 .value {
-    -fx-font-family: "Bahnschrift";
+    -fx-font-family: "Arial";
     -fx-font-size: 14;
     -fx-text-fill: #6B5E59;
 }
@@ -56,9 +54,8 @@
     -fx-min-height: 40;
     -fx-min-width: 80;
     -fx-effect: dropshadow(gaussian, #8D8776 , 2,0,0,1);
-
     -fx-font-weight: bold;
-    -fx-font-family: "BahnSchrift";
+    -fx-font-family: "Arial";
     -fx-font-size: 15;
     -fx-text-fill: #6B5E59;
 }
