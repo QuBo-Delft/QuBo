@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.qubo.controllers.helpers;
+package nl.tudelft.oopp.qubo.controllers.structures;
 
 import javafx.scene.control.FocusModel;
 
