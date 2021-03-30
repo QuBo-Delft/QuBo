@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.qubo.controllers.helpers;
+package nl.tudelft.oopp.qubo.controllers.structures;
 
 import java.util.List;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.qubo.controllers.helpers;
+package nl.tudelft.oopp.qubo.controllers.structures;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

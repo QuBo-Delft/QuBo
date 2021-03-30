@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.qubo.controllers.helpers;
+package nl.tudelft.oopp.qubo.controllers.structures;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
