@@ -42,7 +42,7 @@
   
 21. Meetings are to be held online on Discord, as meeting physically is currently not possible because of the pandemic.
   
-22. Issue weights and task estimates should be determined in team process with at least the appropriate members present. During the discussion, those present should make use of the predetermined values we decided on inspired by planning poker.
+22. Issue weights and task estimates should be determined in a team process with at least the appropriate members present. During the discussion, those present should make use of the predetermined values we decided on inspired by planning poker.
   
 23. All group members have the aspiration for an 8 or higher as the final grade. Everyone's work and input should therefore be representative of this. To meet this, a high standard in terms of code quality, activity, communication and working hours should be maintained.
   
