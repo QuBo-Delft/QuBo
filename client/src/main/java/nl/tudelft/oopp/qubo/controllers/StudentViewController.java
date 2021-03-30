@@ -787,7 +787,7 @@ public class StudentViewController {
         boolean backHome = ConfirmationDialog.display("Leave Question Board?",
             "You will have to use your code to join again.");
         if (backHome) {
-            SceneLoader.backToHome((Stage) leaveQuBo.getScene().getWindow());
+            SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
     }
 }

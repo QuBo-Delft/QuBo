@@ -103,7 +103,7 @@ public class QuBoCodesController {
      * This method takes you back to JoinQuBo after clicking the Back to Homepage button.
      */
     public void backToHome() {
-        SceneLoader.backToHome((Stage) backToHome.getScene().getWindow());
+        SceneLoader.defaultLoader((Stage) backToHome.getScene().getWindow(), "JoinQuBo");
     }
 
 }

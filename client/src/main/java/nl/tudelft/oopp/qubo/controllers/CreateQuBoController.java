@@ -154,7 +154,8 @@ public class CreateQuBoController {
      * When the user clicks the "cancel" button this method loads the home screen scene.
      */
     public void cancelBtnClicked() {
-        SceneLoader.backToHome((Stage) cancelBtn.getScene().getWindow());
+        SceneLoader.defaultLoader((Stage) cancelBtn.getScene().getWindow(),
+            "JoinQuBo");
     }
 
     /**

@@ -4,7 +4,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import nl.tudelft.oopp.qubo.controllers.CreateQuBoController;
 import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.controllers.QuBoCodesController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
@@ -15,186 +14,174 @@ import nl.tudelft.oopp.qubo.views.AlertDialog;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ * This class is used for scene and stage loading and generating when switching between fxml sheets.
+ */
 public class SceneLoader {
 
+    /**
+     * These variables get set when a method that uses them is called.
+     */
+    static QuestionBoardDetailsDto qd;
+    static QuestionBoardCreationDto qc;
+    static String userName;
 
     /**
-     * This method aims to load the page used to create question boards.
+     * This method aims to load the all scenes that do not require input details.
      *
-     * @param currentStage    The current stage that is displayed on-screen.
-     *
+     * @param stage The stage of the scene where the method is called.
+     * @param fxml  The fxml sheet to be loaded.
      */
-    public static void loadCreateQuBo(Stage currentStage) {
-        // Create an FXMLLoader of CreateQuBo.fxml
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/CreateQuBo.fxml"));
-
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Get the controller of CreateQuBo
-        CreateQuBoController controller = loader.getController();
-
-        // Check if root is null
-        if (root == null) {
-            AlertDialog.display("", "Unable to display the create question board form");
-            return;
-        }
-
-        // Display the new scene
-        currentStage.setScene(new Scene(root));
-        currentStage.setTitle("Create Question Board");
-        currentStage.centerOnScreen();
+    public static void defaultLoader(Stage stage, String fxml) {
+        // Start preparing the new scene
+        startLoading(stage, fxml);
     }
 
     /**
      * This method aims to load the page that displays the student code and moderator code.
      *
-     * @param qc    The QuestionBoardCreationDto object to be transferred to the controller
-     *              of QuestionBoardCodes.
-     *
+     * @param qcI   The QuestionBoardCreationDto object to be transferred.
+     * @param stage The stage of the scene where the method is called.
      */
-    public static void loadQuestionBoardCodes(QuestionBoardCreationDto qc, Stage currentStage) {
-        // Create an FXMLLoader of QuBoCodes.fxml
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/QuBoCodes.fxml"));
-
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Get the controller of QuBoCodes
-        QuBoCodesController controller = loader.getController();
-
-        // Transfer the data for QuBoCodes
-        controller.displayCodes(qc);
-
-        // Check if root is null
-        if (root == null) {
-            AlertDialog.display("", "Unable to display the codes");
-            return;
-        }
-
-        // Display the new scene
-        currentStage.setScene(new Scene(root));
-        currentStage.setTitle("Created Question Board");
-        currentStage.centerOnScreen();
+    public static void loadQuestionBoardCodes(QuestionBoardCreationDto qcI, Stage stage) {
+        qc = qcI;
+        // Start preparing the new scene
+        startLoading(stage, "QuBoCodes");
     }
 
     /**
-     * This method aims to load the page that displays the student view of a question board.
+     * This method aims to load the page that displays either the student view or the moderator view.
      *
-     * @param qd    The QuestionBoardDetailsDto object that brings data for the
-     *              student view of a question board.
+     * @param qdI       The QuestionBoardDetailsDto object to be transferred.
+     * @param stage     The stage of the scene where the method is called.
+     * @param userNameI The username to be transferred.
+     * @param fxml      The fxml sheet to be loaded.
      */
-    public void loadStudentView(QuestionBoardDetailsDto qd, String userName, Stage currentStage) {
-        // Create an FXMLLoader of StudentView.fxml
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlsheets/StudentView.fxml"));
-
-        // Create a new stage to load the student view
-        Stage newStage = new Stage();
-        Scene newScene = null;
-        // Check if file can be loaded
-        try {
-            newScene = new Scene(loader.load());
-            newStage.setScene(newScene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Check if newScene is null
-        if (newScene == null) {
-            AlertDialog.display("", "Unable to display the student view");
-            return;
-        }
-
-        // Get controller and initialize qb
-        StudentViewController controller = loader.getController();
-        loader.setController(controller);
-        controller.setQuBo(qd);
-        controller.setAuthorName(userName);
-        controller.setBoardDetails();
-
-        // TODO: need a method to update data in studentView
-
-        // Close current stage and show new stage
-        currentStage.close();
-        newStage.setMinHeight(550);
-        newStage.setMinWidth(850);
-        newStage.show();
-        newStage.setTitle(qd.getTitle());
+    public void viewLoader(QuestionBoardDetailsDto qdI, Stage stage, String userNameI, String fxml) {
+        qd = qdI;
+        userName = userNameI;
+        // Start preparing the new scene
+        startLoading(stage, fxml);
     }
 
     /**
-     * This method loads the moderator view of the question board associated with the QuestionBoardDetailsDto
-     * passed to the method.
+     * This method calls the necessary private methods to instantiate a scene with its proper details.
      *
-     * @param qd  The QuestionBoardDetailsDto object associated with the question board that the moderator
-     *      wants to join.
+     * @param stage The stage of the scene where the method is called.
+     * @param fxml  The fxml sheet to be loaded.
      */
-    public static void loadModeratorView(QuestionBoardDetailsDto qd, String userName, Stage currentStage) {
-        // Create an FXMLLoader of ModeratorView.fxml
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/ModeratorView.fxml"));
-
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //Get the controller of ModeratorView
-        ModeratorViewController controller = loader.getController();
-
-        UUID boardId = qd.getId();
-
-        // TODO: need a method to update data in moderatorView
-
-        //Check if the root is null
-        if (root == null) {
-            AlertDialog.display("", "Unable to display the moderator view");
-            return;
-        }
-
-        //Display the new scene
-        currentStage.setScene(new Scene(root));
-        currentStage.setTitle(qd.getTitle() + " - Moderator");
+    private static void startLoading(Stage stage, String fxml) {
+        // Create an FXMLLoader of the input fxml
+        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/" + fxml + ".fxml"));
+        // Check whether the root is valid
+        rootValid(loader, stage, fxml);
+        // Set values to the fxml controller if necessary
+        setController(fxml, loader);
+        // Set the title of the stage
+        setTitle(fxml, stage);
     }
 
     /**
-     * This method aims to load the JoinQuBo homepage and close the current stage.
+     * This method checks whether the root is valid and whether a proper scene can be generated.
+     * When this method is called for a student or moderator view, it creates a new stage.
+     * In all other cases it replaces the currently displayed scene by a new one.
      *
-     * @param currentStage    The stage of the scene where the method is called
+     * @param loader    The loader that is used to locate and read the fxml sheet.
+     * @param stage     The stage of the scene where the method is called.
+     * @param fxml      The fxml sheet to be loaded.
      */
-    public static void backToHome(Stage currentStage) {
-        //Create an FXMLLoader of JoinQuBo.fxml
-        FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/JoinQuBo.fxml"));
-
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private static void rootValid(FXMLLoader loader, Stage stage, String fxml) {
+        if (fxml.equals("StudentView") || fxml.equals("ModeratorView")) {
+            Stage newStage = new Stage();
+            Scene newScene = null;
+            // Check if file can be loaded
+            try {
+                newScene = new Scene(loader.load());
+                newStage.setScene(newScene);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (newScene == null) {
+                AlertDialog.display("", "Unable to display the requested view");
+                return;
+            }
+            // Close current stage and show new stage
+            stage.close();
+            newStage.setMinHeight(550);
+            newStage.setMinWidth(850);
+            newStage.show();
+        } else {
+            Parent root = null;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (root == null) {
+                AlertDialog.display("", "Unable to display the requested view");
+                return;
+            }
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
         }
-
-        // Check if root is null
-        if (root == null) {
-            AlertDialog.display("", "Unable to display the homepage");
-            return;
-        }
-
-        // Clear stage min size limit
-        currentStage.setMinWidth(Double.MIN_VALUE);
-        currentStage.setMinHeight(Double.MIN_VALUE);
-
-        currentStage.setScene(new Scene(root));
-        currentStage.setTitle("QuBo");
-        currentStage.centerOnScreen();
     }
 
+    /**
+     * Sets necessary values at controllers for some scenes.
+     *
+     * @param fxml      The fxml sheet to be loaded.
+     * @param loader    The loader that is used to locate and read the fxml sheet.
+     */
+    private static void setController(String fxml, FXMLLoader loader) {
+        switch (fxml) {
+            case ("QuBoCodes"):
+                QuBoCodesController controllerC = loader.getController();
+                controllerC.displayCodes(qc);
+                break;
+            case ("ModeratorView"):
+                ModeratorViewController controllerM = loader.getController();
+                UUID boardId = qd.getId();
+                // TODO: need a method to update data in moderatorView
+                break;
+            case ("StudentView"):
+                // Get controller and initialize qb
+                StudentViewController controllerS = loader.getController();
+                loader.setController(controllerS);
+                controllerS.setQuBo(qd);
+                controllerS.setAuthorName(userName);
+                controllerS.setBoardDetails();
+                // TODO: need a method to update data in studentView
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Sets the correct title for the scene that is to be displayed.
+     *
+     * @param fxml  The fxml sheet to be loaded.
+     * @param stage The stage of the scene where the method is called.
+     */
+    private static void setTitle(String fxml, Stage stage) {
+        switch (fxml) {
+            case ("StudentView"):
+                stage.setTitle(qd.getTitle());
+                break;
+            case ("ModeratorView"):
+                stage.setTitle(qd.getTitle() + " - Moderator");
+                break;
+            case ("QuBoCodes"):
+                stage.setTitle("Created Question Board");
+                break;
+            case ("CreateQuBo"):
+                stage.setTitle("Create Question Board");
+                break;
+            default:
+                stage.setTitle("QuBo");
+                stage.setMinWidth(Double.MIN_VALUE);
+                stage.setMinHeight(Double.MIN_VALUE);
+                break;
+        }
+    }
 }
