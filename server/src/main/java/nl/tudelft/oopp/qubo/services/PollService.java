@@ -81,4 +81,14 @@ public class PollService {
 
         return poll;
     }
+
+    /**
+     * Retrieves a Poll through its ID.
+     *
+     * @param pollId    The ID of the the poll that should be retrieved.
+     * @return The Poll associated with the ID.
+     */
+    public Poll getPollById(UUID pollId) {
+        return pollRepository.getById(pollId);
+    }
 }
