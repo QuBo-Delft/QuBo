@@ -43,7 +43,7 @@ public class SceneLoader {
      * @param qcI   The QuestionBoardCreationDto object to be transferred.
      * @param stage The stage of the scene where the method is called.
      */
-    public static void loadQuestionBoardCodes(QuestionBoardCreationDto qcI, Stage stage) {
+    public static void loadQuBoCodes(QuestionBoardCreationDto qcI, Stage stage) {
         qc = qcI;
         // Start preparing the new scene
         startLoading(stage, "QuBoCodes");

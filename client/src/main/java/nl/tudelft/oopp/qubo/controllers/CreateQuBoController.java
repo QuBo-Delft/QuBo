@@ -185,7 +185,7 @@ public class CreateQuBoController {
         // Load the page that displays student code and moderator code
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
 
-        SceneLoader.loadQuestionBoardCodes(questionBoardDto, stage);
+        SceneLoader.loadQuBoCodes(questionBoardDto, stage);
     }
 
     /**
