@@ -13,9 +13,11 @@ import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -386,6 +388,61 @@ public class QuestionServiceTests {
 
         // Assert
         assertEquals("Question was already marked as answered", exception.getMessage());
+    }
+
+    @Test
+    public void canModifyQuestion_withSecretCode_returnsTrue() {
+        // Arrange
+        UUID testSecretCode = UUID.randomUUID();
+
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+
+        Question question = new Question();
+        question.setSecretCode(testSecretCode);
+        question.setQuestionBoard(board);
+
+        // Act
+        boolean actual = questionService.canModifyQuestion(question, testSecretCode);
+
+        // Assert
+        assertTrue(actual);
+    }
+
+    @Test
+    public void canModifyQuestion_withModeratorCode_returnsTrue() {
+        // Arrange
+        UUID testModeratorCode = UUID.randomUUID();
+
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(testModeratorCode);
+
+        Question question = new Question();
+        question.setSecretCode(UUID.randomUUID());
+        question.setQuestionBoard(board);
+
+        // Act
+        boolean actual = questionService.canModifyQuestion(question, testModeratorCode);
+
+        // Assert
+        assertTrue(actual);
+    }
+
+    @Test
+    public void canModifyQuestion_withInvalidCode_returnsFalse() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+
+        Question question = new Question();
+        question.setSecretCode(UUID.randomUUID());
+        question.setQuestionBoard(board);
+
+        // Act
+        boolean actual = questionService.canModifyQuestion(question, UUID.randomUUID());
+
+        // Assert
+        assertFalse(actual);
     }
 
 }
