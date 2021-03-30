@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo.controllers.helpers;
+package nl.tudelft.oopp.qubo.controllers.helpers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,9 +14,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import nl.tudelft.oopp.demo.communication.ServerCommunication;
-import nl.tudelft.oopp.demo.dtos.questionvote.QuestionVoteDetailsDto;
-import nl.tudelft.oopp.demo.views.AlertDialog;
+import nl.tudelft.oopp.qubo.communication.ServerCommunication;
+import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
+import nl.tudelft.oopp.qubo.views.AlertDialog;
 
 import java.util.HashMap;
 import java.util.UUID;
