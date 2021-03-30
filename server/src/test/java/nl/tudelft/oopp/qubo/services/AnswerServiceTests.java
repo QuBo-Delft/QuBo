@@ -2,7 +2,7 @@ package nl.tudelft.oopp.qubo.services;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationBindingModel;
 import nl.tudelft.oopp.qubo.entities.Answer;
@@ -14,6 +14,7 @@ import nl.tudelft.oopp.qubo.repositories.QuestionRepository;
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -69,13 +70,14 @@ public class AnswerServiceTests {
 
         // Assert
         assertNotNull(result);
-        List<Answer> inDb = answerRepository.findAll();
-        assertEquals(1, inDb.size());
-        assertEquals(inDb.get(0).getId(), result.getId());
-        assertEquals(inDb.get(0).getText(), result.getText());
+        Optional<Answer> inDbOptional = answerRepository.findById(result.getId());
+        assertTrue(inDbOptional.isPresent());
+        Answer inDb = inDbOptional.get();
+        assertEquals(inDb.getId(), result.getId());
+        assertEquals(inDb.getText(), result.getText());
         assertEquals(model.getText(), result.getText());
         assertEquals(question.getId(), result.getQuestion().getId());
-        assertEquals(inDb.get(0).getTimestamp(), result.getTimestamp());
+        assertEquals(inDb.getTimestamp(), result.getTimestamp());
         assertEquals(testTime, result.getTimestamp());
     }
 }
