@@ -345,55 +345,18 @@ public class StudentViewController {
         }
     }
 
-    public void showHideAnsQPoll() {
-        SideBarControl.showHideSelected();
-    }
-
     /**
      * Toggles the visibility of the answered questions menu.
      */
     public void showHideAnsQuestions() {
-        if (sideMenu.isVisible() && polls.isSelected()) {
-            polls.setSelected(false);
-            sideMenu.getChildren().clear();
-            showAnsQuestions();
-        } else if (!sideMenu.isVisible()) {
-            sideMenuOpen = true;
-            showAnsQuestions();
-        } else {
-            sideMenu.getChildren().clear();
-            sideMenu.setVisible(false);
-            sideMenuOpen = false;
-        }
-    }
-
-    /**
-     * Shows the content of the answered questions menu.
-     */
-    public void showAnsQuestions() {
-        Label title = new Label("Answered Questions");
-        sideMenu.setVisible(true);
-        sideMenu.getChildren().add(title);
-        sideMenu.getChildren().add(ansQuListView);
-        VBox.setVgrow(ansQuListView, Priority.ALWAYS);
+        sideMenuOpen = SideBarControl.showHideSelected(ansQuestions, polls, sideMenu, ansQuListView);
     }
 
     /**
      * Toggles the visibility of the poll menu.
      */
     public void showHidePolls() {
-        if (sideMenu.isVisible() && ansQuestions.isSelected()) {
-            ansQuestions.setSelected(false);
-            sideMenu.getChildren().clear();
-            showPolls();
-        } else if (!sideMenu.isVisible()) {
-            sideMenuOpen = true;
-            showPolls();
-        } else {
-            sideMenu.getChildren().clear();
-            sideMenu.setVisible(false);
-            sideMenuOpen = false;
-        }
+        sideMenuOpen = SideBarControl.showHideSelected(polls, ansQuestions, sideMenu, ansQuListView);
     }
 
     /**

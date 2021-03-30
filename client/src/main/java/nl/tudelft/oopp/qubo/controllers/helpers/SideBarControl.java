@@ -9,19 +9,18 @@ import nl.tudelft.oopp.qubo.controllers.structures.Question;
 
 public class SideBarControl {
     public static boolean showHideSelected(ToggleButton select, ToggleButton deselect, VBox sideMenu,
-                                           ListView<Question> ansQuListView, boolean sideMenuOpen) {
+                                           ListView<Question> ansQuListView) {
         if (sideMenu.isVisible() && deselect.isSelected()) {
             deselect.setSelected(false);
             sideMenu.getChildren().clear();
             toggleSelector(select, sideMenu, ansQuListView);
+            return true;
         } else if (!sideMenu.isVisible()) {
-            sideMenuOpen = true;
             toggleSelector(select, sideMenu, ansQuListView);
             return true;
         } else {
             sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
-            sideMenuOpen = false;
             return false;
         }
     }
