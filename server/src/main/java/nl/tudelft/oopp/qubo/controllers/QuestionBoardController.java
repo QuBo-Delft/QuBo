@@ -55,7 +55,6 @@ public class QuestionBoardController {
      * @param service         The QuestionBoardService.
      * @param questionService The QuestionService.
      * @param paceVoteService The PaceVoteService
-     * @param pollService     The PollService
      * @param modelMapper     The ModelMapper.
      */
     public QuestionBoardController(QuestionBoardService service,
