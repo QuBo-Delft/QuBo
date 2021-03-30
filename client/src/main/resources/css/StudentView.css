@@ -1,7 +1,5 @@
 .root {
     -fx-background-color: #f1efe8;
-    -fx-min-height: 720;
-    -fx-min-width: 1024;
     -fx-spacing: 4;
 }
 
