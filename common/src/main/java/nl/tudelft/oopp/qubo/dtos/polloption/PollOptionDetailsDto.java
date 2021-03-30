@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo.dtos.polloption;
+package nl.tudelft.oopp.qubo.dtos.polloption;
 
 import java.util.UUID;
 

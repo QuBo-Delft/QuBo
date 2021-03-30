@@ -1,11 +1,11 @@
-package nl.tudelft.oopp.demo.mappings.poll;
+package nl.tudelft.oopp.qubo.mappings.poll;
 
-import nl.tudelft.oopp.demo.config.custommappings.PollToPollDetailsDtoConverter;
-import nl.tudelft.oopp.demo.dtos.poll.PollDetailsDto;
-import nl.tudelft.oopp.demo.dtos.polloption.PollOptionDetailsDto;
-import nl.tudelft.oopp.demo.entities.Poll;
-import nl.tudelft.oopp.demo.entities.PollOption;
-import nl.tudelft.oopp.demo.entities.QuestionBoard;
+import nl.tudelft.oopp.qubo.config.custommappings.PollToPollDetailsDtoConverter;
+import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
+import nl.tudelft.oopp.qubo.entities.Poll;
+import nl.tudelft.oopp.qubo.entities.PollOption;
+import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;

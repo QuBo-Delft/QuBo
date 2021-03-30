@@ -1,10 +1,10 @@
-package nl.tudelft.oopp.demo.controllers;
+package nl.tudelft.oopp.qubo.controllers;
 
-import nl.tudelft.oopp.demo.dtos.poll.PollDetailsDto;
-import nl.tudelft.oopp.demo.entities.Poll;
-import nl.tudelft.oopp.demo.entities.QuestionBoard;
-import nl.tudelft.oopp.demo.services.PollService;
-import nl.tudelft.oopp.demo.services.QuestionBoardService;
+import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
+import nl.tudelft.oopp.qubo.entities.Poll;
+import nl.tudelft.oopp.qubo.entities.QuestionBoard;
+import nl.tudelft.oopp.qubo.services.PollService;
+import nl.tudelft.oopp.qubo.services.QuestionBoardService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;

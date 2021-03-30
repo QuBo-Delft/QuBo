@@ -1,9 +1,9 @@
-package nl.tudelft.oopp.demo.config.custommappings;
+package nl.tudelft.oopp.qubo.config.custommappings;
 
-import nl.tudelft.oopp.demo.dtos.poll.PollDetailsDto;
-import nl.tudelft.oopp.demo.dtos.polloption.PollOptionDetailsDto;
-import nl.tudelft.oopp.demo.entities.Poll;
-import nl.tudelft.oopp.demo.entities.PollOption;
+import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
+import nl.tudelft.oopp.qubo.entities.Poll;
+import nl.tudelft.oopp.qubo.entities.PollOption;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;

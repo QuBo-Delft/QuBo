@@ -1,6 +1,6 @@
-package nl.tudelft.oopp.demo.dtos.poll;
+package nl.tudelft.oopp.qubo.dtos.poll;
 
-import nl.tudelft.oopp.demo.dtos.polloption.PollOptionDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 
 import java.util.Set;
 import java.util.UUID;
