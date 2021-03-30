@@ -70,9 +70,10 @@ public class QuestionListCell extends ListCell<Question> {
             answers = item.getAnswers();
 
             cellDisplay();
-
+            setStyle("-fx-background-color: #f1efe8;");
             setGraphic(content);
         } else {
+            setStyle("-fx-background-color: #f1efe8;");
             setGraphic(null);
         }
     }
@@ -97,6 +98,11 @@ public class QuestionListCell extends ListCell<Question> {
         if (answers != null && answers.size() != 0) {
             addAnswers(paddingWidth);
         }
+
+        content.getStyleClass().add("qPane");
+        questionBody.getStyleClass().add("qContent");
+        upvoteNumber.getStyleClass().add("qVotes");
+
     }
 
     /**
