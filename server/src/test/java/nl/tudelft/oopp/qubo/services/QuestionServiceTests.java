@@ -8,6 +8,7 @@ import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import nl.tudelft.oopp.qubo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.qubo.repositories.QuestionRepository;
+import nl.tudelft.oopp.qubo.services.exceptions.ConflictException;
 import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
@@ -323,6 +324,68 @@ public class QuestionServiceTests {
         // Assert
         Question inDb = questionRepository.getQuestionById(question.getId());
         assertNotNull(inDb);
+    }
+
+    @Test
+    public void markAsAnswered_withValidQuestionId_worksCorrectly() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.valueOf("2021-03-01 00:01:00"));
+        board.setTitle("Test board");
+        board.setClosed(true);
+        questionBoardRepository.save(board);
+
+        Question question = new Question();
+        question.setAuthorName("Author");
+        question.setText("Test question");
+        question.setSecretCode(UUID.randomUUID());
+        question.setTimestamp(Timestamp.valueOf("2021-03-01 00:01:00"));
+        question.setQuestionBoard(board);
+        questionRepository.save(question);
+
+        Timestamp testTime = Timestamp.valueOf("2021-03-01 00:02:00");
+        Mockito.when(mockCurrentTimeProvider.getCurrentTime()).thenReturn(testTime.toInstant());
+
+        // Act
+        Question marked = questionService.markAsAnswered(question.getId());
+
+        // Assert
+        assertEquals(question.getId(), marked.getId());
+        assertEquals(testTime, marked.getAnswered());
+
+        Question inDb = questionRepository.getQuestionById(question.getId());
+        assertEquals(testTime, inDb.getAnswered());
+    }
+
+    @Test
+    public void markAsAnswered_withAlreadyAnsweredQuestion_throwsConflictException() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.valueOf("2021-03-01 00:01:00"));
+        board.setTitle("Test board");
+        board.setClosed(true);
+        questionBoardRepository.save(board);
+
+        Question question = new Question();
+        question.setAuthorName("Author");
+        question.setText("Test question");
+        question.setSecretCode(UUID.randomUUID());
+        question.setTimestamp(Timestamp.valueOf("2021-03-01 00:01:00"));
+        question.setAnswered(Timestamp.valueOf("2021-03-01 00:01:30"));
+        question.setQuestionBoard(board);
+        questionRepository.save(question);
+
+        Timestamp testTime = Timestamp.valueOf("2021-03-01 00:02:00");
+        Mockito.when(mockCurrentTimeProvider.getCurrentTime()).thenReturn(testTime.toInstant());
+
+        // Act
+        ConflictException exception = assertThrows(ConflictException.class,
+            () -> questionService.markAsAnswered(question.getId()));
+
+        // Assert
+        assertEquals("Question was already marked as answered", exception.getMessage());
     }
 
 }
