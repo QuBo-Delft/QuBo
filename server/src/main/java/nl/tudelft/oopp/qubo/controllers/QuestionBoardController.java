@@ -18,7 +18,6 @@ import nl.tudelft.oopp.qubo.entities.PaceVote;
 import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import nl.tudelft.oopp.qubo.services.PaceVoteService;
-import nl.tudelft.oopp.qubo.services.PollService;
 import nl.tudelft.oopp.qubo.services.QuestionBoardService;
 import nl.tudelft.oopp.qubo.services.QuestionService;
 import org.modelmapper.ModelMapper;
