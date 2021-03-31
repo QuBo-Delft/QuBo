@@ -22,12 +22,12 @@ public class SceneLoader {
     /**
      * These variables get set when a method that uses them is called.
      */
-    static QuestionBoardDetailsDto qd;
-    static QuestionBoardCreationDto qc;
-    static String userName;
+    private static QuestionBoardDetailsDto qd;
+    private static QuestionBoardCreationDto qc;
+    private static String userName;
 
     /**
-     * This method aims to load the all scenes that do not require input details.
+     * This method aims to load all scenes that do not require input details.
      *
      * @param stage The stage of the scene where the method is called.
      * @param fxml  The fxml sheet to be loaded.
