@@ -54,6 +54,7 @@ public class GetTextDialog {
         Button cancelButton = new Button(cancelBtnText);
         cancelButton.setOnAction(e -> {
             window.close();
+            userInput = null;
         });
 
         Label messageLabel = new Label();
