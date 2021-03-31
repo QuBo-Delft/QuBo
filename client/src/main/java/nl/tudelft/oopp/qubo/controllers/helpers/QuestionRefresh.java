@@ -29,13 +29,17 @@ public class QuestionRefresh {
     private static HashMap<UUID, UUID> upvoteMap;
 
     private static ScrollPane unAnsQuScPane;
+    private static ScrollPane ansQuScPane;
+
+    private static UUID modCode = null;
 
     private static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         .create();
 
-    public static void refresh(QuestionBoardDetailsDto quBo, VBox unAnsLV, VBox ansLV, HashMap<UUID,
-                                        UUID> upvote, HashMap<UUID, UUID> secret, ScrollPane scrollpane) {
+    public static void studentRefresh(QuestionBoardDetailsDto quBo, VBox unAnsLV, VBox ansLV, HashMap<UUID,
+                                        UUID> upvote, HashMap<UUID, UUID> secret, ScrollPane unAnsScrollPane,
+                                        ScrollPane ansScrollPane) {
         thisQuBoId = quBo;
 
         unAnsQuVbox = unAnsLV;
@@ -44,7 +48,28 @@ public class QuestionRefresh {
         upvoteMap = upvote;
         secretCodeMap = secret;
 
-        unAnsQuScPane = scrollpane;
+        unAnsQuScPane = unAnsScrollPane;
+        ansQuScPane = ansScrollPane;
+
+        modCode = null;
+
+        displayQuestions();
+    }
+
+    public static void modRefresh(QuestionBoardDetailsDto quBo, UUID code, VBox unAnsLV, VBox ansLV,
+                                  HashMap<UUID, UUID> upvote, ScrollPane unAnsScrollPane,
+                                  ScrollPane ansScrollPane) {
+        thisQuBoId = quBo;
+
+        unAnsQuVbox = unAnsLV;
+        ansQuVbox = ansLV;
+
+        upvoteMap = upvote;
+
+        unAnsQuScPane = unAnsScrollPane;
+        ansQuScPane = ansScrollPane;
+
+        modCode = code;
 
         displayQuestions();
     }
@@ -74,17 +99,8 @@ public class QuestionRefresh {
             //Divide the questions over two lists and sort them.
             divideQuestions(questions);
 
-            sortAndMap(unAnsQuVbox, unansweredQuestions);
-            sortAndMap(ansQuVbox, answeredQuestions);
-        }
-    }
-
-    private static void sortAndMap(VBox questionVbox, QuestionDetailsDto[] questionArray) {
-        if (questionArray.length == 0) {
-            questionVbox.getChildren().clear();
-        } else {
-            Sorting.sortOnUpvotes(questionArray);
-            mapQuestions(questionVbox, questionArray);
+            sortAndMap(unAnsQuVbox, unansweredQuestions, unAnsQuScPane);
+            sortAndMap(ansQuVbox, answeredQuestions, ansQuScPane);
         }
     }
 
@@ -121,14 +137,30 @@ public class QuestionRefresh {
         unansweredQuestions = unanswered.toArray(new QuestionDetailsDto[0]);
     }
 
-    private static void mapQuestions(VBox questionVbox, QuestionDetailsDto[] questionList) {
+    private static void sortAndMap(VBox questionVbox, QuestionDetailsDto[] questionArray,
+                                   ScrollPane scrollpane) {
+        if (questionArray.length == 0) {
+            questionVbox.getChildren().clear();
+        } else {
+            Sorting.sortOnUpvotes(questionArray);
+            mapQuestions(questionVbox, questionArray, scrollpane);
+        }
+    }
+
+    private static void mapQuestions(VBox questionVbox, QuestionDetailsDto[] questionList,
+                                     ScrollPane scrollpane) {
         questionVbox.getChildren().clear();
 
         //For each question in the list create a new Question object
         for (QuestionDetailsDto question : questionList) {
-            GridPane newQu = new QuestionItem(question.getId(), question.getUpvotes(),
-                question.getText(), question.getAuthorName(), null, questionVbox,
-                upvoteMap, secretCodeMap, unAnsQuScPane);
+            QuestionItem newQu = new QuestionItem(question.getId(), question.getUpvotes(),
+                question.getText(), question.getAuthorName(), question.getAnswers(),
+                question.getAnswered(), questionVbox, scrollpane);
+
+            newQu.newUpvoteVbox(upvoteMap);
+
+            newQu.displayOptions(secretCodeMap, modCode);
+
 
             //Add the question to the ObservableList
             questionVbox.getChildren().add(newQu);

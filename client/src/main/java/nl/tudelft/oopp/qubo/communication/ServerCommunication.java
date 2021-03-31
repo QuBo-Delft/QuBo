@@ -342,7 +342,7 @@ public class ServerCommunication {
      *
      * @param questionId    The ID of the question to be marked as answered.
      * @param code          The moderator code that is associated with the board
-     *                      the question is part of, or the question's secret code.
+     *                      the question is part of.
      * @return The QuestionDetailsDto of the answered question in JSON String format
      *          if and only if the question has been marked as answered successfully.
      */

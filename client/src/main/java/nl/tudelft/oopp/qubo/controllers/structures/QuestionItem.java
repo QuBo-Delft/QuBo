@@ -16,32 +16,32 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class QuestionItem extends GridPane {
     private GridPane questionPane;
     private Label upvoteNumber;
+    private VBox questionVbox;
     private Text questionBody;
     private Label authorName;
     private ToggleButton upvoteTriangle;
 
     private UUID questionId;
-    private List<String> answers;
-    private VBox questionVbox;
+    private Set<AnswerDetailsDto> answers;
+    private Timestamp answeredTime;
 
-    private HashMap<UUID, UUID> upvoteMap;
-    private HashMap<UUID, UUID> secretCodeMap;
-
-    private ScrollPane unAnsQuScPane;
+    private ScrollPane quScPane;
     private VBox questionContainer;
 
-
     public QuestionItem(UUID questionId, int upvoteNumber, String questionBody, String authorName,
-                        List<String> answers, VBox questionContainer, HashMap<UUID, UUID> upvoteMap,
-                        HashMap<UUID, UUID> secretCodeMap, ScrollPane scrollPane) {
+                        Set<AnswerDetailsDto> answers, Timestamp answeredTime, VBox questionContainer,
+                        ScrollPane scrollPane) {
         this.upvoteNumber = new Label(Integer.toString(upvoteNumber));
         this.questionBody = new Text(questionBody);
         this.authorName = new Label(authorName);
@@ -49,12 +49,11 @@ public class QuestionItem extends GridPane {
 
         this.questionId = questionId;
         this.answers = answers;
-        this.questionContainer = questionContainer;
+        this.answeredTime = answeredTime;
 
-        this.upvoteMap = upvoteMap;
-        this.secretCodeMap = secretCodeMap;
+        this.questionContainer = questionContainer;
         
-        unAnsQuScPane = scrollPane;
+        quScPane = scrollPane;
 
         construct();
     }
@@ -71,8 +70,6 @@ public class QuestionItem extends GridPane {
         questionPane = newQuestionPane();
         this.addRow(0, questionPane);
 
-        displayOptions();
-
         //Add the answers if there are any
         if (answers != null && answers.size() != 0) {
             addAnswers();
@@ -83,15 +80,13 @@ public class QuestionItem extends GridPane {
 
     /**
      * This method adds the answers to a question if there are any.
-     *
-     *
      */
     public void addAnswers() {
-        for (int i = 0; i < answers.size(); i++) {
-            Text answer = new Text(answers.get(i));
+        int i = 1;
+        for (AnswerDetailsDto answerDetails : answers) {
+            Text answer = new Text(answerDetails.getText());
             BorderPane answerPane = new BorderPane(answer);
-//            answer.wrappingWidthProperty().bind(questionContainer.widthProperty()
-//                .subtract(80));
+            answer.wrappingWidthProperty().bind(questionBody.wrappingWidthProperty());
 
             this.addRow((i + 1), answerPane);
         }
@@ -109,12 +104,10 @@ public class QuestionItem extends GridPane {
         questionVbox = newQuestionVbox();
 
         //Add nodes to the gridpane
-        gridpane.addColumn(0, newUpvoteVbox());
         gridpane.addColumn(1, questionVbox);
 
         //Set column constraints
         ColumnConstraints col2 = new ColumnConstraints();
-//        col2.setMaxWidth(GridPane.USE_PREF_SIZE);
         col2.setHgrow(Priority.ALWAYS);
         gridpane.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
             new ColumnConstraints(50));
@@ -126,33 +119,10 @@ public class QuestionItem extends GridPane {
     }
 
     /**
-     * Constructs and returns a new upvote box.
-     *
-     * @return              Returns a new upvote box to be displayed.
-     */
-    public VBox newUpvoteVbox() {
-        //Create the Vbox for placing the upvote button and upvote number
-        VBox upvote = new VBox(upvoteTriangle, upvoteNumber);
-        upvote.setSpacing(5);
-        upvote.setAlignment(Pos.TOP_CENTER);
-
-        //Set event listener
-        upvoteTriangle.setOnAction(event -> StudentViewActionEvents.upvoteQuestion(questionId, upvoteMap,
-            upvoteTriangle, upvoteNumber));
-
-        //Set upvote triangle to selected if question has been upvoted
-        if (upvoteMap.containsKey(questionId)) {
-            upvoteTriangle.setSelected(true);
-        }
-
-        return upvote;
-    }
-
-    /**
      * Constructs and returns a new VBox containing the question body and the author name.
      *
-     * @return              Returns a new VBox containing the question body and the
-     *                      author name to be displayed.
+     * @return  Returns a new VBox containing the question body and the
+     *          author name to be displayed.
      */
     public VBox newQuestionVbox() {
         //Create a pane for putting the author name
@@ -170,8 +140,8 @@ public class QuestionItem extends GridPane {
         space.managedProperty().bind(space.visibleProperty());
         space.visibleProperty().bind(questionBody.visibleProperty());
 
-        //
-        questionBody.wrappingWidthProperty().bind(unAnsQuScPane.widthProperty().subtract(180));
+        //Bind the wrapping width of the question body so that it doesn't overflow
+        questionBody.wrappingWidthProperty().bind(quScPane.widthProperty().subtract(180));
 
         VBox vbox = new VBox(questionBody, space);
         vbox.setSpacing(10);
@@ -179,11 +149,14 @@ public class QuestionItem extends GridPane {
         return vbox;
     }
 
-    public void displayOptions() {
+    public void displayOptions(HashMap<UUID, UUID> secretCodeMap, UUID modCode) {
         //Determine whether the question was asked by the user
         //If yes create and display the options menu
-        if (secretCodeMap.containsKey(questionId)) {
-            MenuButton options = newOptionsMenu();
+        if (modCode != null) {
+            MenuButton options = newOptionsMenu(modCode, true);
+            questionPane.addColumn(2, options);
+        } else if (secretCodeMap.containsKey(questionId)) {
+            MenuButton options = newOptionsMenu(secretCodeMap.get(questionId), false);
             questionPane.addColumn(2, options);
         }
     }
@@ -193,13 +166,34 @@ public class QuestionItem extends GridPane {
      *
      * @return      Returns a new options menu to be displayed.
      */
-    public MenuButton newOptionsMenu() {
-        //Create the edit and delete menu items
-        MenuItem edit = new MenuItem("Edit");
-        MenuItem delete = new MenuItem("Delete");
-        //Create options menu and add the edit and delete menu items
+    public MenuButton newOptionsMenu(UUID code, boolean isMod) {
         MenuButton options = new MenuButton();
-        options.getItems().addAll(edit, delete);
+
+        //Create the edit menu item and set action event
+        MenuItem edit = new MenuItem("Edit");
+        edit.setOnAction(event -> QuBoActionEvents
+            .editQuestionOption(questionBody, questionVbox, options, questionId,
+                code));
+        options.getItems().add(edit);
+
+        if (isMod) {
+            MenuItem reply = new MenuItem("Reply");
+            reply.setOnAction(event -> QuBoActionEvents.editQuestionOption(questionBody, questionVbox,
+                options, questionId, code));
+            options.getItems().add(reply);
+
+            if (quScPane.getId().equals("unAnsQuScPane")) {
+                MenuItem markAsAns = new MenuItem("Mark As Answered");
+                markAsAns.setOnAction(event -> QuBoActionEvents.markAsAnsUnAns(questionId, code));
+                options.getItems().add(markAsAns);
+            }
+        }
+
+        //create the delete menu item and set action event
+        MenuItem delete = new MenuItem("Delete");
+        delete.setOnAction(event -> QuBoActionEvents.deleteQuestionOption(
+            this, questionPane, questionContainer, options, questionId, code));
+        options.getItems().add(delete);
 
         //Bind properties so that the visibility depends on the disabled property
         options.visibleProperty().bind(options.disableProperty().not());
@@ -208,13 +202,27 @@ public class QuestionItem extends GridPane {
         GridPane.setValignment(options, VPos.TOP);
         GridPane.setHalignment(options, HPos.RIGHT);
 
-        //Add action listeners to options menu
-        edit.setOnAction(event -> StudentViewActionEvents
-            .editQuestionOption(questionBody, questionVbox, options, questionId,
-                secretCodeMap.get(questionId)));
-        delete.setOnAction(event -> StudentViewActionEvents.deleteQuestionOption(
-            this, questionPane, questionContainer, options, questionId, secretCodeMap.get(questionId)));
-
         return options;
+    }
+
+    /**
+     * Constructs and returns a new upvote box.
+     */
+    public void newUpvoteVbox(HashMap<UUID, UUID> upvoteMap) {
+        //Create the Vbox for placing the upvote button and upvote number
+        VBox upvote = new VBox(upvoteTriangle, upvoteNumber);
+        upvote.setSpacing(8);
+        upvote.setAlignment(Pos.TOP_CENTER);
+
+        //Set event listener
+        upvoteTriangle.setOnAction(event -> QuBoActionEvents.upvoteQuestion(questionId, upvoteMap,
+            upvoteTriangle, upvoteNumber));
+
+        //Set upvote triangle to selected if question has been upvoted
+        if (upvoteMap.containsKey(questionId)) {
+            upvoteTriangle.setSelected(true);
+        }
+
+        questionPane.addColumn(0, upvote);
     }
 }

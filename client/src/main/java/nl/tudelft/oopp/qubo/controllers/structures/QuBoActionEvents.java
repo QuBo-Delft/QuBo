@@ -21,7 +21,7 @@ import nl.tudelft.oopp.qubo.views.AlertDialog;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class StudentViewActionEvents {
+public class QuBoActionEvents {
     private static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         .create();
@@ -275,7 +275,6 @@ public class StudentViewActionEvents {
         } else {
             //If the request was successful
             AlertDialog.display("", "Question deletion successful.");
-            //TODO: Display successful removal label and icon
             content.setVisible(false);
             content.setManaged(false);
         }
@@ -292,5 +291,18 @@ public class StudentViewActionEvents {
     public static void cancelDeletion(MenuButton options, GridPane gridPane, HBox dialogue) {
         gridPane.getChildren().remove(dialogue);
         options.setDisable(false);
+    }
+
+    public static void markAsAnsUnAns(UUID questionId, UUID code) {
+        String response = ServerCommunication.markQuestionAsAnswered(questionId, code);
+
+        if (response == null) {
+            //If the request failed
+            AlertDialog.display("Unsuccessful Request", "Failed to mark question as answered, "
+                + "please try again.");
+        } else {
+            //If the request was successful
+            AlertDialog.display("", "Question has been marked as answered.");
+        }
     }
 }

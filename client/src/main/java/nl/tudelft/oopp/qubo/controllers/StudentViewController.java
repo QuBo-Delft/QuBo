@@ -38,25 +38,16 @@ public class StudentViewController {
     @FXML
     private HBox topBar;
     @FXML
-    public Button boardInfo;
+    private Button boardInfo;
     @FXML
-    public Button helpDoc;
+    private Button helpDoc;
     @FXML
     private StackPane content;
     @FXML
-    private VBox sideBar;
-    @FXML
-    private VBox sideMenu;
-    @FXML
     private BorderPane paceVotePane;
     @FXML
-    public Button askQuestion;
-    @FXML
-    private ToggleButton hamburger;
-    @FXML
-    private ToggleButton ansQuestions;
-    @FXML
-    private ToggleButton polls;
+    private Button askQuestion;
+
     @FXML
     private Button leaveQuBo;
     @FXML
@@ -67,15 +58,39 @@ public class StudentViewController {
     private MenuItem studentCodeItem;
     @FXML
     private Label boardStatusText;
+
+    //Nodes from the unanswered question list
     @FXML
     private ScrollPane unAnsQuScPane;
+    @FXML
+    private VBox unAnsQuVbox;
+
+    //Nodes from the side menu
+    @FXML
+    private ToggleButton hamburger;
+    @FXML
+    private VBox sideBar;
+    @FXML
+    private VBox sideMenu;
+    //Buttons
+    @FXML
+    private ToggleButton ansQuestions;
+    @FXML
+    private ToggleButton polls;
+    //Containers
+    @FXML
+    private Label sideMenuTitle;
+    @FXML
+    private VBox ansQuVbox;
+    @FXML
+    private VBox pollVbox;
+    @FXML
+    private ScrollPane sideMenuPane;
+
+
 
     //Records if the side menu was open before hiding
     private boolean sideMenuOpen;
-
-    @FXML
-    private VBox unAnsQuVbox;
-    private VBox ansQuVbox = new VBox();
 
     private String authorName;
 
@@ -134,7 +149,12 @@ public class StudentViewController {
     private void initialize() {
         startUpProperties();
         //Display the questions
-        QuestionRefresh.refresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane);
+        refresh();
+    }
+
+    private void refresh() {
+        QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
+            sideMenuPane);
     }
 
     private void startUpProperties() {
@@ -143,6 +163,9 @@ public class StudentViewController {
         sideMenu.managedProperty().bind(sideMenu.visibleProperty());
         sideBar.setVisible(false);
         sideMenu.setVisible(false);
+
+        pollVbox.managedProperty().bind(pollVbox.visibleProperty());
+        ansQuVbox.managedProperty().bind(ansQuVbox.visibleProperty());
 
         sideMenu.prefWidthProperty().bind(content.widthProperty().multiply(0.45));
         paceVotePane.visibleProperty().bind(sideMenu.visibleProperty().not());
@@ -153,7 +176,7 @@ public class StudentViewController {
 
     //Temporary refresh button
     public void displayBoardInfo() {
-        QuestionRefresh.refresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane);
+        refresh();
     }
 
     public void copyStudentCode() {
@@ -195,7 +218,7 @@ public class StudentViewController {
         //Request automatic upvote
         autoUpvote(questionId);
 
-        QuestionRefresh.refresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane);
+        refresh();
     }
 
     /**
@@ -232,14 +255,18 @@ public class StudentViewController {
      * Toggles the visibility of the answered questions menu.
      */
     public void showHideAnsQuestions() {
-        sideMenuOpen = SideBarControl.showHideSelected(ansQuestions, polls, sideMenu, ansQuVbox);
+        sideMenuOpen = sidebarLogic(ansQuestions, polls);
     }
 
     /**
      * Toggles the visibility of the poll menu.
      */
     public void showHidePolls() {
-        sideMenuOpen = SideBarControl.showHideSelected(polls, ansQuestions, sideMenu, ansQuVbox);
+        sideMenuOpen = sidebarLogic(polls, ansQuestions);
+    }
+
+    public boolean sidebarLogic(ToggleButton select, ToggleButton deselect) {
+        return SideBarControl.showHideSelected(select, deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox);
     }
 
     /**

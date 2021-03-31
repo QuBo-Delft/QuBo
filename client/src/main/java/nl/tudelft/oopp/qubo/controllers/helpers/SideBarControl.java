@@ -1,50 +1,47 @@
 package nl.tudelft.oopp.qubo.controllers.helpers;
 
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class SideBarControl {
     public static boolean showHideSelected(ToggleButton select, ToggleButton deselect, VBox sideMenu,
-                                           VBox ansQuVbox) {
+                                           Label sideMenuTitle, VBox ansQuVbox, VBox pollVbox) {
         if (sideMenu.isVisible() && deselect.isSelected()) {
             deselect.setSelected(false);
-            sideMenu.getChildren().clear();
-            toggleSelector(select, sideMenu, ansQuVbox);
+            toggleSelector(select, sideMenuTitle, ansQuVbox, pollVbox);
             return true;
         } else if (!sideMenu.isVisible()) {
-            toggleSelector(select, sideMenu, ansQuVbox);
+            sideMenu.setVisible(true);
+            toggleSelector(select, sideMenuTitle, ansQuVbox, pollVbox);
             return true;
         } else {
-            sideMenu.getChildren().clear();
             sideMenu.setVisible(false);
             return false;
         }
     }
 
-    private static void toggleSelector(ToggleButton select, VBox sideMenu, VBox ansQuVbox) {
+    private static void toggleSelector(ToggleButton select, Label sideMenuTitle,
+                                       VBox ansQuVbox, VBox pollVbox) {
         if (select.getId().equals("polls")) {
-            showPolls(sideMenu);
+            ansQuVbox.setVisible(false);
+            showPolls(sideMenuTitle, pollVbox);
         } else {
-            showAnsQuestions(sideMenu, ansQuVbox);
+            pollVbox.setVisible(false);
+            showAnsQuestions(sideMenuTitle, ansQuVbox);
         }
     }
 
-    private static void showPolls(VBox sideMenu) {
-        Label title = new Label("Polls");
-        sideMenu.setVisible(true);
-        sideMenu.getChildren().add(title);
+    private static void showPolls(Label sideMenuTitle, VBox pollVbox) {
+        sideMenuTitle.setText("Polls");
+        pollVbox.setVisible(true);
 
-        //TODO: Fetch polls and display in a ListView
+        //TODO: Fetch polls and display in VBox
     }
 
-    private static void showAnsQuestions(VBox sideMenu, VBox ansQuVbox) {
-        Label title = new Label("Answered Questions");
-        sideMenu.setVisible(true);
-        sideMenu.getChildren().add(title);
-        sideMenu.getChildren().add(ansQuVbox);
-        VBox.setVgrow(ansQuVbox, Priority.ALWAYS);
+    private static void showAnsQuestions(Label sideMenuTitle, VBox ansQuVbox) {
+        sideMenuTitle.setText("Answered Questions");
+        ansQuVbox.setVisible(true);
     }
 }
