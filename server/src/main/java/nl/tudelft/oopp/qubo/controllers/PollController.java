@@ -154,7 +154,7 @@ public class PollController {
 
         PollDetailsDto pollDto = modelMapper.map(poll, PollDetailsDto.class);
         // Delete the poll
-        pollService.deletePoll(poll);
+        pollService.deletePoll(poll.getId());
 
         return pollDto;
     }

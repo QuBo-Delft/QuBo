@@ -95,10 +95,10 @@ public class PollService {
     /**
      * Deletes a poll from the database.
      *
-     * @param poll  The poll that is to be deleted.
+     * @param pollId    The ID of the poll that is to be deleted.
      */
-    public void deletePoll(Poll poll) {
+    public void deletePoll(UUID pollId) {
         // Delete poll from database
-        pollRepository.deletePollById(poll.getId());
+        pollRepository.deletePollById(pollId);
     }
 }
