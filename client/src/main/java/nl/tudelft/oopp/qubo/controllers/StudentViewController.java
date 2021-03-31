@@ -2,13 +2,10 @@ package nl.tudelft.oopp.qubo.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -45,8 +42,6 @@ public class StudentViewController {
     private StackPane content;
     @FXML
     private BorderPane paceVotePane;
-    @FXML
-    private Button askQuestion;
 
     @FXML
     private Button leaveQuBo;
@@ -87,8 +82,6 @@ public class StudentViewController {
     @FXML
     private ScrollPane sideMenuPane;
 
-
-
     //Records if the side menu was open before hiding
     private boolean sideMenuOpen;
 
@@ -107,7 +100,6 @@ public class StudentViewController {
     private ClipboardContent clipboardContent = new ClipboardContent();
 
     private QuestionBoardDetailsDto quBo;
-
 
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
