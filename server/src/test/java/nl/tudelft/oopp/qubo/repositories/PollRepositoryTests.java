@@ -10,6 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -75,6 +76,27 @@ public class PollRepositoryTests {
         Poll result = pollRepository.getById(UUID.randomUUID());
 
         // Assert
+        assertNull(result);
+    }
+
+    @Test
+    public void deletePollById_withCorrectId_deletesPoll() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        questionBoardRepository.save(board);
+
+        Poll poll = new Poll();
+        poll.setText("Test poll");
+        poll.setOpen(false);
+        poll.setQuestionBoard(board);
+        poll.setPollOptions(new HashSet<>(2));
+
+        // Act
+        pollRepository.deletePollById(poll.getId());
+
+        // Assert
+        Poll result = pollRepository.getById(poll.getId());
         assertNull(result);
     }
 }
