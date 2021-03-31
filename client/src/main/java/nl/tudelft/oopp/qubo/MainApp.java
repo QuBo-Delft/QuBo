@@ -166,7 +166,11 @@ public class MainApp {
         pollOptions.add("Option A");
         pollOptions.add("Option B");
         System.out.println("This poll has been added: "
-                + (gson.toJson(ServerCommunication.addPoll(boardId, moderatorCode, "Test Poll", pollOptions))));
+                + (ServerCommunication.addPoll(boardId, moderatorCode, "Test Poll", pollOptions)));
+
+        //Retrieve the poll details of the poll that was just added
+        System.out.println("The current poll's details are:\n"
+                + (ServerCommunication.retrievePollDetails(boardId)));
 
         //Delete the poll that was added
         System.out.println("This poll has been deleted: " + ServerCommunication
