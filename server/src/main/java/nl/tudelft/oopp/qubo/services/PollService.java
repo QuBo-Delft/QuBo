@@ -99,7 +99,7 @@ public class PollService {
     /**
      * Retrieves a PollOption through its ID.
      *
-     * @param pollOptionId The ID of the the poll option that should be retrieved.
+     * @param pollOptionId The ID of the poll option that should be retrieved.
      * @return The PollOption associated with the ID.
      */
     public PollOption getPollOptionById(UUID pollOptionId) {

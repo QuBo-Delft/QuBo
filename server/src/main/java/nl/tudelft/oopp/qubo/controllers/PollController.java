@@ -126,12 +126,12 @@ public class PollController {
     /**
      * POST endpoint for voting on a poll.
      * Throw 400 upon wrong UUID formatting.
-     * Throw 404 if the option id does not exist, or the specified board id is not the id of its board.
      * Throw 403 if the poll associated with the option is closed.
+     * Throw 404 if the option id does not exist, or the specified board id is not the id of its board.
      *
      * @param boardId  The board ID.
-     * @param optionId The board ID.
-     * @return The PollVote DTO.
+     * @param optionId The option ID.
+     * @return The PollVoteCreation DTO.
      */
     @RequestMapping(value = "/{boardid}/poll/{optionid}/vote", method = POST)
     @ResponseBody

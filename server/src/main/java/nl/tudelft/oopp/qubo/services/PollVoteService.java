@@ -25,7 +25,7 @@ public class PollVoteService {
      *
      * @param optionId The id of the QuestionBoard.
      * @return The PollVote object that was just registered.
-     * @throws NotFoundException  if the option ID provided does not exist.
+     * @throws NotFoundException if the option ID provided does not exist.
      * @throws ForbiddenException if the poll is closed.
      */
     public PollVote registerVote(UUID optionId) {
