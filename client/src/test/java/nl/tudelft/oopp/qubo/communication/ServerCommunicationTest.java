@@ -948,8 +948,8 @@ public class ServerCommunicationTest {
                 .delete(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2).called();
     }
 
-    // Test if the deletePoll method returns null after being called with an invalid board ID and moderator code, and
-    // receiving a response with status code 400 and a failure token as its body.
+    // Test if the deletePoll method returns null after being called with an invalid board ID and moderator
+    // code, and receiving a response with status code 400 and a failure token as its body.
     @Test
     public void testDeletePollInvalidRequest() {
         // Arrange
@@ -967,8 +967,8 @@ public class ServerCommunicationTest {
                 .delete(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2).called();
     }
 
-    // Test if the deletePoll method returns null after being called with an invalid board ID and moderator code, and
-    // receiving a response with status code 403 and a failure token as its body.
+    // Test if the deletePoll method returns null after being called with an invalid board ID and moderator
+    // code, and receiving a response with status code 403 and a failure token as its body.
     @Test
     public void testDeletePollInvalidModCode() {
         // Arrange
@@ -986,8 +986,8 @@ public class ServerCommunicationTest {
                 .delete(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2).called();
     }
 
-    // Test if the deletePoll method returns null after being called with an invalid board ID and moderator code, and
-    // receiving a response with status code 404 and a failure token as its body.
+    // Test if the deletePoll method returns null after being called with an invalid board ID and moderator
+    // code, and receiving a response with status code 404 and a failure token as its body.
     @Test
     public void testDeletePollInvalidQuBo() {
         // Arrange
@@ -1005,8 +1005,8 @@ public class ServerCommunicationTest {
                 .delete(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2).called();
     }
 
-    // Test if the deletePoll method returns the success token after being called with a valid question board ID and
-    // moderator code and receiving a response with status code 200 and a success token as its body.
+    // Test if the deletePoll method returns the success token after being called with a valid question board
+    // ID and moderator code and receiving a response with status code 200 and a success token as its body.
     @Test
     public void testDeletePollGivingCorrectResponseBody() {
         // Arrange
