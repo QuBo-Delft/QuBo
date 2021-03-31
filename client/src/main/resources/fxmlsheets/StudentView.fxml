@@ -59,7 +59,7 @@
    <center>
       <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
-            <ScrollPane HBox.hgrow="ALWAYS">
+            <ScrollPane fx:id="unAnsQuScPane" HBox.hgrow="ALWAYS">
                <content>
                   <VBox fx:id="unAnsQuVbox" spacing="15.0" />
                </content>

@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.image.Image;
@@ -14,31 +15,23 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
-import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
-import nl.tudelft.oopp.qubo.controllers.structures.NoFocusModel;
-import nl.tudelft.oopp.qubo.controllers.structures.NoSelectionModel;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import nl.tudelft.oopp.qubo.communication.ServerCommunication;
-import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
-import nl.tudelft.oopp.qubo.utilities.sorting.Sorting;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
 
 import javafx.scene.image.ImageView;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class StudentViewController {
@@ -74,6 +67,8 @@ public class StudentViewController {
     private MenuItem studentCodeItem;
     @FXML
     private Label boardStatusText;
+    @FXML
+    private ScrollPane unAnsQuScPane;
 
     //Records if the side menu was open before hiding
     private boolean sideMenuOpen;
@@ -139,7 +134,7 @@ public class StudentViewController {
     private void initialize() {
         startUpProperties();
         //Display the questions
-        QuestionRefresh.refresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap);
+        QuestionRefresh.refresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane);
     }
 
     private void startUpProperties() {
@@ -156,11 +151,9 @@ public class StudentViewController {
         unAnsQuVbox.setFillWidth(true);
     }
 
-
-
     //Temporary refresh button
     public void displayBoardInfo() {
-        QuestionRefresh.refresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap);
+        QuestionRefresh.refresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane);
     }
 
     public void copyStudentCode() {
@@ -202,7 +195,7 @@ public class StudentViewController {
         //Request automatic upvote
         autoUpvote(questionId);
 
-        QuestionRefresh.refresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap);
+        QuestionRefresh.refresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane);
     }
 
     /**

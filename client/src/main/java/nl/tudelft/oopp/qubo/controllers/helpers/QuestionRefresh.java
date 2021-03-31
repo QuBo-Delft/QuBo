@@ -2,6 +2,7 @@ package nl.tudelft.oopp.qubo.controllers.helpers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import nl.tudelft.oopp.qubo.communication.ServerCommunication;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class QuestionRefresh {
-    private static QuestionBoardDetailsDto thisQuBo;
+    private static QuestionBoardDetailsDto thisQuBoId;
     
     private static QuestionDetailsDto[] answeredQuestions;
     private static QuestionDetailsDto[] unansweredQuestions;
@@ -27,19 +28,23 @@ public class QuestionRefresh {
     private static HashMap<UUID, UUID> secretCodeMap;
     private static HashMap<UUID, UUID> upvoteMap;
 
+    private static ScrollPane unAnsQuScPane;
+
     private static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         .create();
 
-    public static void refresh(QuestionBoardDetailsDto quBo, VBox unAnsLV,
-                               VBox ansLV, HashMap<UUID, UUID> upvote,
-                               HashMap<UUID, UUID> secret) {
-        thisQuBo = quBo;
+    public static void refresh(QuestionBoardDetailsDto quBo, VBox unAnsLV, VBox ansLV, HashMap<UUID,
+                                        UUID> upvote, HashMap<UUID, UUID> secret, ScrollPane scrollpane) {
+        thisQuBoId = quBo;
+
         unAnsQuVbox = unAnsLV;
         ansQuVbox = ansLV;
 
         upvoteMap = upvote;
         secretCodeMap = secret;
+
+        unAnsQuScPane = scrollpane;
 
         displayQuestions();
     }
@@ -51,7 +56,7 @@ public class QuestionRefresh {
      */
     public static void displayQuestions() {
         // To be deleted in final version
-        if (thisQuBo == null) {
+        if (thisQuBoId == null) {
             divideQuestions(null);
             return;
         }
@@ -59,7 +64,7 @@ public class QuestionRefresh {
 
         //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
         //not null.
-        String jsonQuestions = ServerCommunication.retrieveQuestions(thisQuBo.getId());
+        String jsonQuestions = ServerCommunication.retrieveQuestions(thisQuBoId.getId());
 
         if (jsonQuestions == null) {
             divideQuestions(null);
@@ -123,11 +128,10 @@ public class QuestionRefresh {
         for (QuestionDetailsDto question : questionList) {
             GridPane newQu = new QuestionItem(question.getId(), question.getUpvotes(),
                 question.getText(), question.getAuthorName(), null, questionVbox,
-                upvoteMap, secretCodeMap);
+                upvoteMap, secretCodeMap, unAnsQuScPane);
 
             //Add the question to the ObservableList
             questionVbox.getChildren().add(newQu);
         }
     }
-
 }
