@@ -21,7 +21,7 @@ import java.util.UUID;
 public class ServerCommunication {
 
     private static HttpClient client = HttpClient.newBuilder().build();
-    private static final String subUrl = "http://localhost:8080/";
+    private static final String subUrl = "http://localhost:8080/api/";
     private static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         .create();
@@ -137,7 +137,7 @@ public class ServerCommunication {
      * @return The QuestionBoardDetailsDto of the created board in JSON String format.
      */
     public static String createBoardRequest(QuestionBoardCreationBindingModel board) {
-        String fullUrl = subUrl + "api/board";
+        String fullUrl = subUrl + "board";
 
         //Convert the QuestionBoardCreationBindingModel to JSON
         String requestBody = gson.toJson(board);
@@ -164,7 +164,7 @@ public class ServerCommunication {
      */
     public static String closeBoardRequest(UUID boardId, UUID moderatorCode) {
         // Construct the full url for closing a question board
-        String fullUrl = subUrl + "api/board/" + boardId + "/close?code=" + moderatorCode;
+        String fullUrl = subUrl + "board/" + boardId + "/close?code=" + moderatorCode;
 
         //Send the http patch request and retrieve the response
         HttpResponse<String> response = patch(fullUrl);
@@ -189,7 +189,7 @@ public class ServerCommunication {
     public static String retrieveBoardDetailsThroughModCode(UUID moderatorCode) {
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(subUrl + "api/board/moderator?code=" + moderatorCode)).build();
+                .uri(URI.create(subUrl + "board/moderator?code=" + moderatorCode)).build();
         HttpResponse<String> response = sendRequest(request);
 
         //If the request was unsuccessful, return null
@@ -212,7 +212,7 @@ public class ServerCommunication {
     public static String retrieveBoardDetails(UUID boardID) {
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(subUrl + "api/board/" + boardID)).build();
+                .uri(URI.create(subUrl + "board/" + boardID)).build();
         HttpResponse<String> response = sendRequest(request);
 
         //Check if the response object is null in which case null is returned
@@ -241,7 +241,7 @@ public class ServerCommunication {
     public static String retrieveQuestions(UUID boardId) {
         //Send the request to retrieve the questions of the question board, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-            .uri(URI.create(subUrl + "api/board/" + boardId + "/questions"))
+            .uri(URI.create(subUrl + "board/" + boardId + "/questions"))
             .build();
         HttpResponse<String> response = sendRequest(request);
 
@@ -270,7 +270,7 @@ public class ServerCommunication {
         questionModel.setAuthorName(author);
 
         //Create a request and response object, send the request, and retrieve the response
-        String fullUrl = subUrl + "api/board/" + boardId + "/question";
+        String fullUrl = subUrl + "board/" + boardId + "/question";
         String requestBody = gson.toJson(questionModel);
         HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
             "application/json;charset=UTF-8");
@@ -296,7 +296,7 @@ public class ServerCommunication {
      */
     public static String editQuestion(UUID questionId, UUID code, String text) {
         //Set up the parameters required by the put helper method
-        String fullUrl = subUrl + "api/question/" + questionId + "?code=" + code;
+        String fullUrl = subUrl + "question/" + questionId + "?code=" + code;
 
         QuestionEditingBindingModel editedQuestion = new QuestionEditingBindingModel();
         editedQuestion.setText(text);
@@ -324,7 +324,7 @@ public class ServerCommunication {
      */
     public static String deleteQuestion(UUID questionId, UUID code) {
         //Set up the variables required by the delete helper method
-        String fullUrl = subUrl + "api/question/" + questionId + "?code=" + code;
+        String fullUrl = subUrl + "question/" + questionId + "?code=" + code;
 
         //Send the request to delete the question from the board and retrieve the response
         HttpResponse<String> response = delete(fullUrl);
@@ -348,7 +348,7 @@ public class ServerCommunication {
      */
     public static String markQuestionAsAnswered(UUID questionId, UUID code) {
         //Set up the variables required by the patch helper method
-        String fullUrl = subUrl + "api/question/" + questionId + "/answer?code=" + code;
+        String fullUrl = subUrl + "question/" + questionId + "/answer?code=" + code;
 
         //Send the request to mark the question as answered and retrieve the response
         HttpResponse<String> response = patch(fullUrl);
@@ -372,7 +372,7 @@ public class ServerCommunication {
      */
     public static String addQuestionVote(UUID questionId) {
         //Set up the parameters that need to be passed to the post helper method
-        String fullUrl = subUrl + "api/question/" + questionId + "/vote";
+        String fullUrl = subUrl + "question/" + questionId + "/vote";
         String requestBody = gson.toJson(questionId);
 
         //Send the request to add a vote, and retrieve the response
@@ -398,7 +398,7 @@ public class ServerCommunication {
      */
     public static String deleteQuestionVote(UUID questionId, UUID voteId) {
         //Set up the parameter required to call the delete helper method
-        String fullUrl = subUrl + "api/question/" + questionId + "/vote/" + voteId;
+        String fullUrl = subUrl + "question/" + questionId + "/vote/" + voteId;
 
         //Send the request to delete the vote, and retrieve the response
         HttpResponse<String> response = delete(fullUrl);
@@ -432,7 +432,7 @@ public class ServerCommunication {
 
         //Set up the variables needed to call the post method
         String requestBody = gson.toJson(paceModel);
-        String fullUrl = subUrl + "api/board/" + boardId + "/pace";
+        String fullUrl = subUrl + "board/" + boardId + "/pace";
 
         //Request the pace vote creation, and retrieve the response
         HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
@@ -457,7 +457,7 @@ public class ServerCommunication {
      */
     public static String deletePaceVote(UUID boardId, UUID paceVoteId) {
         //Set up the URL that will be sent to the delete helper method
-        String fullUrl = subUrl + "api/board/" + boardId + "/pace/" + paceVoteId;
+        String fullUrl = subUrl + "board/" + boardId + "/pace/" + paceVoteId;
 
         //Send the request to the server and receive the response
         HttpResponse<String> response = delete(fullUrl);
@@ -494,7 +494,7 @@ public class ServerCommunication {
 
         //Set up the variables needed to call the post method
         String requestBody = gson.toJson(pollModel);
-        String fullUrl = subUrl + "api/board/" + boardId + "/poll?code=" + moderatorCode;
+        String fullUrl = subUrl + "board/" + boardId + "/poll?code=" + moderatorCode;
 
         //Request the poll creation, and retrieve the response
         HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
@@ -519,7 +519,7 @@ public class ServerCommunication {
     public static String retrievePollDetails(UUID boardId) {
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(subUrl + "api/board/" + boardId + "/poll")).build();
+                .uri(URI.create(subUrl + "board/" + boardId + "/poll")).build();
         HttpResponse<String> response = sendRequest(request);
 
         //If the request was unsuccessful, return null
