@@ -140,7 +140,7 @@ public class PollController {
         // A 403 is thrown if the moderatorCode is invalid for closing a poll
         if (!moderatorCode.equals(qb.getModeratorCode())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "The provided moderatorCode is not valid " + "for this Question");
+                    "The provided moderatorCode is not valid for this Question");
         }
 
         // Get the poll associated with the question board
@@ -150,7 +150,6 @@ public class PollController {
         if (poll == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no poll in this question board");
         }
-
 
         Poll closedPoll = pollService.closePoll(poll.getId(), boardId);
         PollDetailsDto pollDto = modelMapper.map(closedPoll, PollDetailsDto.class);
