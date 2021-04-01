@@ -12,7 +12,6 @@ import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
-import nl.tudelft.oopp.qubo.services.PaceVoteService;
 import nl.tudelft.oopp.qubo.services.QuestionBoardService;
 import nl.tudelft.oopp.qubo.services.QuestionService;
 import org.modelmapper.ModelMapper;
@@ -39,7 +38,6 @@ public class QuestionBoardController {
 
     private final QuestionBoardService service;
     private final QuestionService questionService;
-    private final PaceVoteService paceVoteService;
 
     private final ModelMapper modelMapper;
 
@@ -48,16 +46,13 @@ public class QuestionBoardController {
      *
      * @param service         The QuestionBoardService.
      * @param questionService The QuestionService.
-     * @param paceVoteService The PaceVoteService
      * @param modelMapper     The ModelMapper.
      */
     public QuestionBoardController(QuestionBoardService service,
                                    QuestionService questionService,
-                                   PaceVoteService paceVoteService,
                                    ModelMapper modelMapper) {
         this.service = service;
         this.questionService = questionService;
-        this.paceVoteService = paceVoteService;
         this.modelMapper = modelMapper;
     }
 
