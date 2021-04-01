@@ -10,15 +10,19 @@ import nl.tudelft.oopp.qubo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.qubo.repositories.QuestionRepository;
 import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
+import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.management.timer.TimerMBean;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -29,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ActiveProfiles("mockCurrentTimeProvider")
 public class PaceVoteServiceTests {
 
     @Autowired
@@ -39,6 +44,9 @@ public class PaceVoteServiceTests {
 
     @Autowired
     private PaceVoteService paceVoteService;
+
+    @Autowired
+    private CurrentTimeProvider mockCurrentTimeProvider;
 
     @Test
     public void registerVote_withValidData_worksCorrectly() {
@@ -86,13 +94,36 @@ public class PaceVoteServiceTests {
     }
 
     @Test
-    public void registerVote_withNonActiveQuestionBoard_throwsForbiddenException() {
+    public void registerVote_withClosedQuestionBoard_throwsForbiddenException() {
         // Arrange
         QuestionBoard qb = new QuestionBoard();
         qb.setModeratorCode(UUID.randomUUID());
         qb.setStartTime(Timestamp.valueOf("2021-04-01 00:00:00"));
         qb.setTitle("Test board");
         qb.setClosed(true);
+        questionBoardRepository.save(qb);
+
+        PaceVoteCreationBindingModel creationModel = new PaceVoteCreationBindingModel();
+        creationModel.setPaceType(PaceType.JUST_RIGHT);
+
+        // Act
+        ForbiddenException exception = assertThrows(ForbiddenException.class,
+            () -> paceVoteService.registerVote(creationModel, qb.getId())
+        );
+        // Assert
+        assertEquals("Question board is not active", exception.getMessage());
+    }
+
+    @Test
+    public void registerVote_withNonActiveQuestionBoard_throwsForbiddenException() {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        Timestamp testTime = Timestamp.valueOf("2021-04-01 00:00:00");
+        Mockito.when(mockCurrentTimeProvider.getCurrentTime()).thenReturn(testTime.toInstant());
+        qb.setStartTime(Timestamp.valueOf("2021-05-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
         questionBoardRepository.save(qb);
 
         PaceVoteCreationBindingModel creationModel = new PaceVoteCreationBindingModel();
@@ -191,7 +222,6 @@ public class PaceVoteServiceTests {
         questionBoardRepository.save(qb);
         ModelMapper modelMapper = new ModelMapper();
 
-        // Act
         for (int i = 0; i < 4; i++) {
             PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
             model.setPaceType(PaceType.TOO_FAST);
@@ -213,6 +243,8 @@ public class PaceVoteServiceTests {
             vote.setQuestionBoard(qb);
             paceVoteRepository.save(vote);
         }
+
+        // Act
         PaceDetailsDto result = paceVoteService.getAggregatedVotes(qb.getId());
 
         // Assert
