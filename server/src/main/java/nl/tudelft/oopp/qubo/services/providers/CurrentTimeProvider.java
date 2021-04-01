@@ -11,7 +11,7 @@ public class CurrentTimeProvider {
     /**
      * Gets current time.
      *
-     * @return the current time
+     * @return The current time
      */
     public Instant getCurrentTime() {
         return Instant.now();
