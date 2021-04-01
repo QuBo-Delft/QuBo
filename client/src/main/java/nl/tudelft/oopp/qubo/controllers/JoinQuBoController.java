@@ -9,9 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
+import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 
 import java.util.UUID;
 
@@ -115,6 +117,18 @@ public class JoinQuBoController {
             errorMessageLabel.setVisible(false);
         } else if (errorMessageLabel.isVisible()) {
             errorMessageLabel.setVisible(userName.getText().length() > 0);
+        }
+    }
+
+    /**
+     * Closes the application after displaying a confirmation alert if the user selected yes.
+     */
+    public static void closeApplication(WindowEvent actionEvent) {
+        boolean close = ConfirmationDialog.display("Close Application",
+                "Are you sure you wish to close the application?");
+
+        if (!close) {
+            actionEvent.consume();
         }
     }
 }

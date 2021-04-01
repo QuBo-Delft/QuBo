@@ -4,9 +4,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
+import nl.tudelft.oopp.qubo.controllers.JoinQuBoController;
+import nl.tudelft.oopp.qubo.controllers.CreateQuBoController;
 import nl.tudelft.oopp.qubo.controllers.QuBoCodesController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
+import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
@@ -181,6 +183,30 @@ public class SceneLoader {
                 stage.setTitle("QuBo");
                 stage.setMinWidth(Double.MIN_VALUE);
                 stage.setMinHeight(Double.MIN_VALUE);
+                break;
+        }
+    }
+
+    /**
+     * Sets the correct close method for the scene that is to be displayed.
+     *
+     * @param fxml  The fxml sheet to be loaded.
+     * @param stage The stage of the scene on which the method is called.
+     */
+    private static void setCloseMethod(String fxml, Stage stage) {
+        switch (fxml) {
+            case "JoinQuBo":
+                stage.setOnCloseRequest(JoinQuBoController::closeApplication);
+                break;
+            case ("CreateQuBo"):
+                break;
+            case ("QuBoCodes"):
+                break;
+            case ("StudentView"):
+                break;
+            case ("ModeratorView"):
+                break;
+            default:
                 break;
         }
     }
