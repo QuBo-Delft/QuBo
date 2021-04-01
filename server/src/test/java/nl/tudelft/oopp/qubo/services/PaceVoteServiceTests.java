@@ -175,21 +175,21 @@ public class PaceVoteServiceTests {
         ModelMapper modelMapper = new ModelMapper();
 
         // Act
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
             model.setPaceType(PaceType.TOO_FAST);
             PaceVote vote = modelMapper.map(model, PaceVote.class);
             vote.setQuestionBoard(qb);
             paceVoteRepository.save(vote);
         }
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
             model.setPaceType(PaceType.JUST_RIGHT);
             PaceVote vote = modelMapper.map(model, PaceVote.class);
             vote.setQuestionBoard(qb);
             paceVoteRepository.save(vote);
         }
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
             model.setPaceType(PaceType.TOO_SLOW);
             PaceVote vote = modelMapper.map(model, PaceVote.class);
