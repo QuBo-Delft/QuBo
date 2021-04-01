@@ -50,7 +50,7 @@ public class JoinQuBoController {
         Stage currentStage = (Stage)((Node) event.getSource()).getScene().getWindow();
 
         //Load the create question board page
-        SceneLoader.loadCreateQuBo(currentStage);
+        SceneLoader.defaultLoader(currentStage, "CreateQuBo");
     }
 
     /**
@@ -94,9 +94,9 @@ public class JoinQuBoController {
         //Load the student view if the code entered by the user was the board ID of the question board.
         //Load the moderator view if this is not the case.
         if (boardCode.equals(questionBoard.getId())) {
-            new SceneLoader().loadStudentView(questionBoard, user, stage);
+            new SceneLoader().viewLoader(questionBoard, stage, user, "StudentView");
         } else {
-            SceneLoader.loadModeratorView(questionBoard, boardCode, user, stage);
+            new SceneLoader().viewLoader(questionBoard, stage, user, "ModeratorView", boardCode);
         }
     }
 

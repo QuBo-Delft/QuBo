@@ -25,7 +25,7 @@
     <top>
         <HBox fx:id="topBar" alignment="CENTER" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="TOP_LEFT">
             <ImageView fx:id="boardStatusIcon" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" scaleX="0.6" scaleY="0.6" translateX="1.0">
-                <Image url="@../icons/qubo/status_open.png" />
+                <Image url="@../icons/status_open.png" />
             </ImageView>
             <Separator orientation="VERTICAL" prefHeight="200.0">
                 <padding>
