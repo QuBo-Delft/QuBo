@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import nl.tudelft.oopp.qubo.controllers.JoinQuBoController;
 import nl.tudelft.oopp.qubo.controllers.CreateQuBoController;
 import nl.tudelft.oopp.qubo.controllers.QuBoCodesController;
@@ -196,11 +197,15 @@ public class SceneLoader {
      * @param stage The stage of the scene on which the method is called.
      */
     private static void setCloseMethod(String fxml, Stage stage) {
+        String message;
         switch (fxml) {
             case "JoinQuBo":
-                stage.setOnCloseRequest(JoinQuBoController::closeApplication);
+                message = null;
+                stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
                 break;
             case ("CreateQuBo"):
+                message = "'Cancel' will return you to the application homepage";
+                stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
                 break;
             case ("QuBoCodes"):
                 break;
@@ -211,5 +216,9 @@ public class SceneLoader {
             default:
                 break;
         }
+    }
+
+    private static void closeMethodHelper(WindowEvent windowEvent, String message) {
+
     }
 }

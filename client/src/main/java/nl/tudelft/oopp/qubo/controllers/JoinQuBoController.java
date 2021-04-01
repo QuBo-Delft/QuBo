@@ -120,15 +120,4 @@ public class JoinQuBoController {
         }
     }
 
-    /**
-     * Closes the application after displaying a confirmation alert if the user selected yes.
-     */
-    public static void closeApplication(WindowEvent actionEvent) {
-        boolean close = ConfirmationDialog.display("",
-                "Are you sure you wish to close the application?");
-
-        if (!close) {
-            actionEvent.consume();
-        }
-    }
 }
