@@ -30,17 +30,10 @@ public class SceneDisplay extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
+        //Load the application homepage
+        SceneLoader.defaultLoader(primaryStage, "JoinQuBo");
 
-        // By giving the resource path, it is able to display an specific fxml file
-        URL xmlUrl = getClass().getResource("/fxmlsheets/JoinQuBo.fxml");
-        loader.setLocation(xmlUrl);
-        Parent root = loader.load();
-
-        // Set the close method of the application homepage
-        SceneLoader.setCloseMethod("JoinQuBo", primaryStage);
-
-        primaryStage.setScene(new Scene(root));
+        //Show the application homepage
         primaryStage.show();
     }
 }
