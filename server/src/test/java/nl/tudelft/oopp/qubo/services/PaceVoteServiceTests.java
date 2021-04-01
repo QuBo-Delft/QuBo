@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.management.timer.TimerMBean;
@@ -48,12 +49,18 @@ public class PaceVoteServiceTests {
     @Autowired
     private CurrentTimeProvider mockCurrentTimeProvider;
 
+    @BeforeEach
+    public void setup() {
+        Timestamp testTime = Timestamp.valueOf("2021-04-01 00:00:00");
+        Mockito.when(mockCurrentTimeProvider.getCurrentTime()).thenReturn(testTime.toInstant());
+    }
+
     @Test
     public void registerVote_withValidData_worksCorrectly() {
         // Arrange
         QuestionBoard qb = new QuestionBoard();
         qb.setModeratorCode(UUID.randomUUID());
-        qb.setStartTime(Timestamp.valueOf("2021-04-01 00:00:00"));
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
         qb.setTitle("Test board");
         qb.setClosed(false);
         questionBoardRepository.save(qb);
@@ -78,7 +85,7 @@ public class PaceVoteServiceTests {
         // Arrange
         QuestionBoard qb = new QuestionBoard();
         qb.setModeratorCode(UUID.randomUUID());
-        qb.setStartTime(Timestamp.valueOf("2021-04-01 00:00:00"));
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
         qb.setTitle("Test board");
         qb.setClosed(false);
         questionBoardRepository.save(qb);
@@ -98,7 +105,7 @@ public class PaceVoteServiceTests {
         // Arrange
         QuestionBoard qb = new QuestionBoard();
         qb.setModeratorCode(UUID.randomUUID());
-        qb.setStartTime(Timestamp.valueOf("2021-04-01 00:00:00"));
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
         qb.setTitle("Test board");
         qb.setClosed(true);
         questionBoardRepository.save(qb);
@@ -119,8 +126,6 @@ public class PaceVoteServiceTests {
         // Arrange
         QuestionBoard qb = new QuestionBoard();
         qb.setModeratorCode(UUID.randomUUID());
-        Timestamp testTime = Timestamp.valueOf("2021-04-01 00:00:00");
-        Mockito.when(mockCurrentTimeProvider.getCurrentTime()).thenReturn(testTime.toInstant());
         qb.setStartTime(Timestamp.valueOf("2021-05-01 00:00:00"));
         qb.setTitle("Test board");
         qb.setClosed(false);
