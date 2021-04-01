@@ -22,6 +22,7 @@ import nl.tudelft.oopp.qubo.services.QuestionBoardService;
 import nl.tudelft.oopp.qubo.services.QuestionService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -194,8 +195,10 @@ public class QuestionBoardController {
     public QuestionCreationDto createQuestion(
         @PathVariable("boardid") UUID boardId,
         @Valid @RequestBody QuestionCreationBindingModel model,
-        HttpServletRequest request) {
-        Question question = questionService.createQuestion(model, boardId, request.getRemoteAddr());
+        HttpServletRequest request,
+        @Value("${qubo.anonymity.do_not_save_ips}") boolean doNotSaveIps) {
+        Question question = questionService.createQuestion(model, boardId,
+            doNotSaveIps ? null : request.getRemoteAddr());
         QuestionCreationDto dto = modelMapper.map(question, QuestionCreationDto.class);
         return dto;
     }
