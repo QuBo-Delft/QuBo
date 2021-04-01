@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.util.UUID;
 
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -113,6 +114,47 @@ public class PollController {
         }
 
         PollDetailsDto pollDto = modelMapper.map(poll, PollDetailsDto.class);
+
+        return pollDto;
+    }
+
+    /**
+     * DELETE endpoint for deleting Polls.
+     * Throw 404 upon requesting a non-existent poll.
+     * Throw 403 when the provided moderator code does not match that of the question board.
+     *
+     * @param boardId   The ID of the question board whose poll should be deleted.
+     * @param code      The moderator code of the question board.
+     * @return The PollDetailsDto containing details about the deleted poll.
+     */
+    @RequestMapping(value = "/{boardid}/poll", method = DELETE)
+    @ResponseBody
+    public PollDetailsDto deletePoll(
+            @PathVariable("boardid") UUID boardId,
+            @RequestParam("code") UUID code) {
+        QuestionBoard board = questionBoardService.getBoardById(boardId);
+        // Check if the question board exists
+        if (board == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This question board does not exist.");
+        }
+
+        // Check if the provided moderator code matches that of the question board whose poll should be deleted
+        UUID moderator = board.getModeratorCode();
+        if (!code.equals(moderator)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The provided moderator code does not"
+                    + "match that of the question board.");
+        }
+
+        Poll poll = board.getPoll();
+        // Check if there is a poll associated with the question board
+        if (poll == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is currently no poll in this"
+                    + "question board.");
+        }
+
+        PollDetailsDto pollDto = modelMapper.map(poll, PollDetailsDto.class);
+        // Delete the poll
+        pollService.deletePoll(poll.getId());
 
         return pollDto;
     }

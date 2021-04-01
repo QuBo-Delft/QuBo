@@ -97,4 +97,13 @@ public class PollService {
     public Poll getPollById(UUID pollId) {
         return pollRepository.getById(pollId);
     }
+
+    /**
+     * Deletes a poll from the database.
+     *
+     * @param pollId    The ID of the poll that is to be deleted.
+     */
+    public void deletePoll(UUID pollId) {
+        pollRepository.deletePollById(pollId);
+    }
 }
