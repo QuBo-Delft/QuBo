@@ -13,6 +13,7 @@ import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
+import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -196,11 +197,11 @@ public class SceneLoader {
      * @param fxml  The fxml sheet to be loaded.
      * @param stage The stage of the scene on which the method is called.
      */
-    private static void setCloseMethod(String fxml, Stage stage) {
+    public static void setCloseMethod(String fxml, Stage stage) {
         String message;
         switch (fxml) {
             case "JoinQuBo":
-                message = null;
+                message = "";
                 stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
                 break;
             case ("CreateQuBo"):
@@ -219,6 +220,11 @@ public class SceneLoader {
     }
 
     private static void closeMethodHelper(WindowEvent windowEvent, String message) {
+        boolean close = ConfirmationDialog.display("Close Application",
+                "Are you sure you wish to close the application?\n" + message);
 
+        if (!close) {
+            windowEvent.consume();
+        }
     }
 }

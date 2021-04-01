@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.controllers.JoinQuBoController;
+import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,8 +37,10 @@ public class SceneDisplay extends Application {
         loader.setLocation(xmlUrl);
         Parent root = loader.load();
 
+        // Set the close method of the application homepage
+        SceneLoader.setCloseMethod("JoinQuBo", primaryStage);
+
         primaryStage.setScene(new Scene(root));
-        primaryStage.setOnCloseRequest(JoinQuBoController::closeApplication);
         primaryStage.show();
     }
 }
