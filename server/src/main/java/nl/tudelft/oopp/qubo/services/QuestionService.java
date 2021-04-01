@@ -12,6 +12,7 @@ import nl.tudelft.oopp.qubo.repositories.QuestionRepository;
 import nl.tudelft.oopp.qubo.services.exceptions.ConflictException;
 import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
+import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -24,19 +25,24 @@ public class QuestionService {
 
     private final ModelMapper modelMapper;
 
+    private final CurrentTimeProvider currentTimeProvider;
+
     /**
      * Creates an instance of a QuestionService.
      *
      * @param questionBoardRepository A QuestionBoardRepository.
      * @param questionRepository      A QuestionRepository.
      * @param modelMapper             The ModelMapper.
+     * @param currentTimeProvider     The CurrentTimeProvider.
      */
     public QuestionService(
         QuestionBoardRepository questionBoardRepository, QuestionRepository questionRepository,
-        ModelMapper modelMapper) {
+        ModelMapper modelMapper,
+        CurrentTimeProvider currentTimeProvider) {
         this.questionBoardRepository = questionBoardRepository;
         this.questionRepository = questionRepository;
         this.modelMapper = modelMapper;
+        this.currentTimeProvider = currentTimeProvider;
     }
 
     /**
@@ -59,7 +65,7 @@ public class QuestionService {
             throw new NotFoundException("Question board does not exist");
         }
 
-        Instant now = Instant.now();
+        Instant now = currentTimeProvider.getCurrentTime();
 
         if (now.isBefore(board.getStartTime().toInstant())
             || board.isClosed()) {
@@ -70,7 +76,7 @@ public class QuestionService {
         question.setIp(userIp);
         question.setQuestionBoard(board);
         question.setSecretCode(UUID.randomUUID());
-        question.setTimestamp(Timestamp.from(Instant.now()));
+        question.setTimestamp(Timestamp.from(currentTimeProvider.getCurrentTime()));
 
         questionRepository.save(question);
 
@@ -129,7 +135,7 @@ public class QuestionService {
         if (question.getAnswered() != null) {
             throw new ConflictException("Question was already marked as answered");
         }
-        question.setAnswered(Timestamp.from(Instant.now()));
+        question.setAnswered(Timestamp.from(currentTimeProvider.getCurrentTime()));
         questionRepository.save(question);
         return question;
     }
