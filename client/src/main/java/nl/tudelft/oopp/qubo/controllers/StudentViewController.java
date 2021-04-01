@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
@@ -151,19 +152,8 @@ public class StudentViewController {
 
     private void startUpProperties() {
         //Hide side menu and sidebar
-        sideBar.managedProperty().bind(sideBar.visibleProperty());
-        sideMenu.managedProperty().bind(sideMenu.visibleProperty());
-        sideBar.setVisible(false);
-        sideMenu.setVisible(false);
-
-        pollVbox.managedProperty().bind(pollVbox.visibleProperty());
-        ansQuVbox.managedProperty().bind(ansQuVbox.visibleProperty());
-
-        sideMenu.prefWidthProperty().bind(content.widthProperty().multiply(0.45));
-        paceVotePane.visibleProperty().bind(sideMenu.visibleProperty().not());
-
-        ansQuVbox.setFillWidth(true);
-        unAnsQuVbox.setFillWidth(true);
+        LayoutProperties.startupProperties(content, sideBar, sideMenu, pollVbox, ansQuVbox, unAnsQuVbox,
+            paceVotePane);
     }
 
     //Temporary refresh button

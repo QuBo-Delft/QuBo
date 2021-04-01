@@ -1,7 +1,5 @@
 package nl.tudelft.oopp.qubo.controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -16,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
@@ -83,14 +82,8 @@ public class ModeratorViewController {
     private UUID modCode;
     private String authorName;
 
-    private static final Gson gson = new GsonBuilder()
-        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
-        .create();
-
     //HashMap of questionId:upvoteId, needed when deleting vote
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
-    //HashMap of questionId:secretCode, needed when editing and deleting questions
-    private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
 
     private Clipboard clipboard = Clipboard.getSystemClipboard();
     private ClipboardContent clipboardContent = new ClipboardContent();
@@ -151,19 +144,8 @@ public class ModeratorViewController {
 
     private void startUpProperties() {
         //Hide side menu and sidebar
-        sideBar.managedProperty().bind(sideBar.visibleProperty());
-        sideMenu.managedProperty().bind(sideMenu.visibleProperty());
-        sideBar.setVisible(false);
-        sideMenu.setVisible(false);
-
-        pollVbox.managedProperty().bind(pollVbox.visibleProperty());
-        ansQuVbox.managedProperty().bind(ansQuVbox.visibleProperty());
-
-        sideMenu.prefWidthProperty().bind(content.widthProperty().multiply(0.45));
-        paceVotePane.visibleProperty().bind(sideMenu.visibleProperty().not());
-
-        ansQuVbox.setFillWidth(true);
-        unAnsQuVbox.setFillWidth(true);
+        LayoutProperties.startupProperties(content, sideBar, sideMenu, pollVbox, ansQuVbox, unAnsQuVbox,
+            paceVotePane);
     }
 
     //Temporary refresh button

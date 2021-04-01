@@ -2,6 +2,7 @@ package nl.tudelft.oopp.qubo.communication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteDetailsDto;
@@ -272,6 +273,25 @@ public class ServerCommunication {
         //Create a request and response object, send the request, and retrieve the response
         String fullUrl = subUrl + "api/board/" + boardId + "/question";
         String requestBody = gson.toJson(questionModel);
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+    public static String addAnswer(UUID questionId, UUID modCode, String text) {
+        //Instantiate a AnswerCreationBindingModel
+        AnswerCreationBindingModel answerModel = new AnswerCreationBindingModel();
+        answerModel.setText(text);
+
+        //Create a request and response object, send the request, and retrieve the response
+        String fullUrl = subUrl + "api/question/" + questionId + "/answer?code=" + modCode;
+        String requestBody = gson.toJson(answerModel);
         HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
             "application/json;charset=UTF-8");
 

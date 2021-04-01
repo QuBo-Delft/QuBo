@@ -79,7 +79,7 @@ public class QuestionRefresh {
      * will be sorted by the time at which they were answered, and unanswered questions will be sorted by
      * the number of upvotes they have received.
      */
-    public static void displayQuestions() {
+    private static void displayQuestions() {
         // To be deleted in final version
         if (thisQuBoId == null) {
             divideQuestions(null);
@@ -160,7 +160,6 @@ public class QuestionRefresh {
             newQu.newUpvoteVbox(upvoteMap);
 
             newQu.displayOptions(secretCodeMap, modCode);
-
 
             //Add the question to the ObservableList
             questionVbox.getChildren().add(newQu);

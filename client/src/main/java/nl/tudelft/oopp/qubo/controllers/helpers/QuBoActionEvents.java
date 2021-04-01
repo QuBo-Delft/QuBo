@@ -1,7 +1,8 @@
-package nl.tudelft.oopp.qubo.controllers.structures;
+package nl.tudelft.oopp.qubo.controllers.helpers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -9,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -111,24 +113,19 @@ public class QuBoActionEvents {
      * Update -> Sends a request to the server to update question content
      * Cancel -> Cancels the action
      *
-     * @param questionContent   Text node of the question content (Needs to be hidden when editing)
+     * @param questionBody   Text node of the question content (Needs to be hidden when editing)
      * @param questionVbox      VBox containing question content (Needed to display the text area in it)
      * @param options           The options menu node (Needs to be disabled when editing)
      * @param questionId        The UUID of the question that is being edited
      * @param code              Secret code of the question
      */
-    public static void editQuestionOption(Text questionContent, VBox questionVbox, MenuButton options,
+    public static void editQuestionOption(Text questionBody, VBox questionVbox, MenuButton options,
                                           UUID questionId, UUID code) {
         //Disable options menu
         options.setDisable(true);
 
         //Create a new TextArea and bind its size
-        TextArea input = new TextArea();
-        input.setWrapText(true);
-        input.prefWidthProperty().bind(questionContent.wrappingWidthProperty());
-        input.minWidthProperty().bind(questionContent.wrappingWidthProperty());
-        input.maxWidthProperty().bind(questionContent.wrappingWidthProperty());
-        input.setPrefRowCount(5);
+        TextArea input = newTextArea(questionBody.wrappingWidthProperty());
 
         //Create the buttons and set their alignments
         Button cancel = new Button("Cancel");
@@ -139,14 +136,14 @@ public class QuBoActionEvents {
 
         //Set action listeners for the buttons
         update.setOnAction(event -> updateQuestion(options, questionId, code, input.getText(),
-            questionContent, questionVbox, input, buttons));
-        cancel.setOnAction(event -> cancelEdit(options, questionVbox, input, buttons, questionContent));
+            questionBody, questionVbox, input, buttons));
+        cancel.setOnAction(event -> cancelEdit(options, questionVbox, input, buttons, questionBody));
 
         //Hide question text and display text area
-        questionContent.setVisible(false);
+        questionBody.setVisible(false);
         questionVbox.getChildren().add(input);
         questionVbox.getChildren().add(buttons);
-        input.setText(questionContent.getText());
+        input.setText(questionBody.getText());
     }
 
     /**
@@ -161,13 +158,13 @@ public class QuBoActionEvents {
      * @param questionId        The UUID of the question that is being edited
      * @param code              Secret code of the question
      * @param text              Content of the text area (Edited question)
-     * @param questionContent   Text node of the question content (Needs to be shown after successful edit)
+     * @param questionBody      Text node of the question content (Needs to be shown after successful edit)
      * @param questionVbox      VBox containing question content (Needed to remove the text area in it)
      * @param input             The Text Area node (Needs to be removed after a successful edit)
      * @param buttons           The HBox containing the buttons (Needs to be removed after a successful edit)
      */
     public static void updateQuestion(MenuButton options, UUID questionId, UUID code, String text,
-                               Text questionContent, VBox questionVbox, TextArea input,
+                               Text questionBody, VBox questionVbox, TextArea input,
                                HBox buttons) {
         //Send a request to the server
         String response = ServerCommunication.editQuestion(questionId, code, text);
@@ -181,8 +178,8 @@ public class QuBoActionEvents {
             questionVbox.getChildren().remove(input);
             questionVbox.getChildren().remove(buttons);
             //Set edited text to question content area and show
-            questionContent.setText(text);
-            questionContent.setVisible(true);
+            questionBody.setText(text);
+            questionBody.setVisible(true);
             //Enable options menu as editing has been completed successfully
             options.setDisable(false);
         }
@@ -303,5 +300,68 @@ public class QuBoActionEvents {
             //If the request was successful
             AlertDialog.display("", "Question has been marked as answered.");
         }
+    }
+
+    public static void replyToQuestionOption(GridPane content, GridPane questionPane, UUID questionId, UUID code,
+                                             MenuButton options, Text questionBody) {
+        //Disable options menu
+        options.setDisable(true);
+
+        TextArea input = newTextArea(questionBody.wrappingWidthProperty());
+        input.setPromptText("Enter your reply...");
+
+        //Create the buttons and set their alignments
+        Button cancel = new Button("Cancel");
+        Button reply = new Button("Reply");
+        HBox buttons = new HBox(cancel, reply);
+        buttons.setAlignment(Pos.CENTER_RIGHT);
+        buttons.setSpacing(15);
+
+        VBox answerBox = new VBox(input, buttons);
+        answerBox.setPadding(new Insets(10,10,10,10));
+
+        reply.setOnAction(event -> replyToQuestion(content, questionPane, answerBox, questionBody,
+            options, questionId, code, input.getText()));
+        cancel.setOnAction(event -> cancelReply(questionPane, answerBox, options));
+
+        GridPane.setColumnSpan(answerBox, GridPane.REMAINING);
+        questionPane.addRow(1, answerBox);
+    }
+
+    public static TextArea newTextArea(ObservableDoubleValue widthBind) {
+        //Create a new TextArea and bind its size
+        TextArea input = new TextArea();
+        input.setWrapText(true);
+        input.prefWidthProperty().bind(widthBind);
+        input.setPrefRowCount(5);
+
+        return input;
+    }
+
+    private static void replyToQuestion(GridPane content, GridPane questionPane, VBox answerBox,
+                                        Text questionBody, MenuButton options,
+                                        UUID questionId, UUID modCode, String text) {
+        String response = ServerCommunication.addAnswer(questionId, modCode, text);
+
+        if (response == null) {
+            //If the request failed
+            AlertDialog.display("Unsuccessful Request", "Failed to reply to question, "
+                + "please try again.");
+        } else {
+            //If the request was successful
+            cancelReply(questionPane, answerBox, options);
+
+            Text answer = new Text(text);
+            BorderPane answerPane = new BorderPane(answer);
+            answerPane.setPadding(new Insets(10,15,10,15));
+            answer.wrappingWidthProperty().bind(questionBody.wrappingWidthProperty().add(40));
+
+            content.addRow(content.getRowCount(), answerPane);
+        }
+    }
+
+    private static void cancelReply(GridPane questionPane, VBox answerBox, MenuButton options) {
+        questionPane.getChildren().remove(answerBox);
+        options.setDisable(false);
     }
 }

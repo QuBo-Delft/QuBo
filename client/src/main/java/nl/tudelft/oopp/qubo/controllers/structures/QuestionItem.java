@@ -16,11 +16,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import nl.tudelft.oopp.qubo.controllers.helpers.QuBoActionEvents;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -86,9 +86,11 @@ public class QuestionItem extends GridPane {
         for (AnswerDetailsDto answerDetails : answers) {
             Text answer = new Text(answerDetails.getText());
             BorderPane answerPane = new BorderPane(answer);
-            answer.wrappingWidthProperty().bind(questionBody.wrappingWidthProperty());
+            answerPane.setPadding(new Insets(10,15,10,15));
+            answer.wrappingWidthProperty().bind(questionBody.wrappingWidthProperty().add(40));
 
             this.addRow((i + 1), answerPane);
+            i++;
         }
     }
 
@@ -113,7 +115,7 @@ public class QuestionItem extends GridPane {
             new ColumnConstraints(50));
 
         //Set paddings
-        gridpane.setPadding(new Insets(6,3,8,3));
+        gridpane.setPadding(new Insets(10,3,15,3));
 
         return gridpane;
     }
@@ -177,16 +179,7 @@ public class QuestionItem extends GridPane {
         options.getItems().add(edit);
 
         if (isMod) {
-            MenuItem reply = new MenuItem("Reply");
-            reply.setOnAction(event -> QuBoActionEvents.editQuestionOption(questionBody, questionVbox,
-                options, questionId, code));
-            options.getItems().add(reply);
-
-            if (quScPane.getId().equals("unAnsQuScPane")) {
-                MenuItem markAsAns = new MenuItem("Mark As Answered");
-                markAsAns.setOnAction(event -> QuBoActionEvents.markAsAnsUnAns(questionId, code));
-                options.getItems().add(markAsAns);
-            }
+            newModOptions(options, code);
         }
 
         //create the delete menu item and set action event
@@ -203,6 +196,19 @@ public class QuestionItem extends GridPane {
         GridPane.setHalignment(options, HPos.RIGHT);
 
         return options;
+    }
+
+    public void newModOptions(MenuButton options, UUID code) {
+        MenuItem reply = new MenuItem("Reply");
+        reply.setOnAction(event -> QuBoActionEvents.replyToQuestionOption(
+            this, questionPane, questionId, code, options, questionBody));
+        options.getItems().add(reply);
+
+        if (quScPane.getId().equals("unAnsQuScPane")) {
+            MenuItem markAsAns = new MenuItem("Mark As Answered");
+            markAsAns.setOnAction(event -> QuBoActionEvents.markAsAnsUnAns(questionId, code));
+            options.getItems().add(markAsAns);
+        }
     }
 
     /**
