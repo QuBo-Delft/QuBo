@@ -123,7 +123,7 @@ public class PollController {
      *
      * @param boardId           The ID of the question board.
      * @param moderatorCode     The moderator code of the board.
-     * @return  The PollDetailsDto object of the poll.
+     * @return The PollDetailsDto object of the poll.
      */
     @RequestMapping(value = "/{boardid}/poll", method = PATCH)
     @ResponseBody
@@ -155,7 +155,6 @@ public class PollController {
         PollDetailsDto pollDto = modelMapper.map(closedPoll, PollDetailsDto.class);
 
         return pollDto;
-
     }
 
 }

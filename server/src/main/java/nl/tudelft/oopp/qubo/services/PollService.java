@@ -89,12 +89,12 @@ public class PollService {
     }
 
     /**
-     * Set the open attribute of the poll of the QuestionBoard to false.
+     * Set the open attribute of the poll to false.
      *
      * @param pollId    The ID of the poll.
-     * @return  The updated poll.
-     * @throws NotFoundException if the board does not exist or the poll does not exist.
-     * @throws ConflictException if the board does not exist or the poll does not exist.
+     * @return The updated poll.
+     * @throws NotFoundException if the board does not exist.
+     * @throws ConflictException if the poll was already closed.
      */
     public Poll closePoll(UUID pollId) {
 
