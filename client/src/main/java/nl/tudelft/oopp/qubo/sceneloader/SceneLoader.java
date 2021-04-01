@@ -81,6 +81,8 @@ public class SceneLoader {
         setController(fxml, loader);
         // Set the title of the stage
         setTitle(fxml, stage);
+        // Set the close method of the stage
+        setCloseMethod(fxml, stage);
     }
 
     /**

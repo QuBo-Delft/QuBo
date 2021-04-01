@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.controllers.JoinQuBoController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,6 +37,7 @@ public class SceneDisplay extends Application {
         Parent root = loader.load();
 
         primaryStage.setScene(new Scene(root));
+        primaryStage.setOnCloseRequest(JoinQuBoController::closeApplication);
         primaryStage.show();
     }
 }
