@@ -11,11 +11,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -98,5 +100,26 @@ public class PollRepositoryTests {
         // Assert
         Poll result = pollRepository.getById(poll.getId());
         assertNull(result);
+    }
+
+    @Test
+    public void deletePollById_withIncorrectId_doesNotDeletePoll() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        questionBoardRepository.save(board);
+
+        Poll poll = new Poll();
+        poll.setText("Test poll");
+        poll.setOpen(false);
+        poll.setQuestionBoard(board);
+        poll.setPollOptions(new HashSet<>(2));
+
+        // Act
+        pollRepository.deletePollById(UUID.randomUUID());
+
+        // Assert
+        Optional<Poll> result = Optional.ofNullable(pollRepository.getById(poll.getId()));
+        assertTrue(result.isEmpty());
     }
 }
