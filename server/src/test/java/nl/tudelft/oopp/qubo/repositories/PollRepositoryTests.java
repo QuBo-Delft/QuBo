@@ -86,6 +86,8 @@ public class PollRepositoryTests {
         // Arrange
         QuestionBoard board = new QuestionBoard();
         board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.from(Instant.now()));
+        board.setTitle("Test board");
         questionBoardRepository.save(board);
 
         Poll poll = new Poll();
@@ -93,6 +95,7 @@ public class PollRepositoryTests {
         poll.setOpen(false);
         poll.setQuestionBoard(board);
         poll.setPollOptions(new HashSet<>(2));
+        pollRepository.save(poll);
 
         // Act
         pollRepository.deletePollById(poll.getId());
@@ -107,6 +110,8 @@ public class PollRepositoryTests {
         // Arrange
         QuestionBoard board = new QuestionBoard();
         board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.from(Instant.now()));
+        board.setTitle("Test board");
         questionBoardRepository.save(board);
 
         Poll poll = new Poll();
@@ -114,12 +119,13 @@ public class PollRepositoryTests {
         poll.setOpen(false);
         poll.setQuestionBoard(board);
         poll.setPollOptions(new HashSet<>(2));
+        pollRepository.save(poll);
 
         // Act
         pollRepository.deletePollById(UUID.randomUUID());
 
         // Assert
         Optional<Poll> result = Optional.ofNullable(pollRepository.getById(poll.getId()));
-        assertTrue(result.isEmpty());
+        assertTrue(result.isPresent());
     }
 }
