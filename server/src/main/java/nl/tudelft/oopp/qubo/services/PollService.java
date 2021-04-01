@@ -110,10 +110,6 @@ public class PollService {
         poll.setOpen(false);
         pollRepository.save(poll);
 
-        // Reset the updated poll to its question board
-        board.setPoll(poll);
-        questionBoardRepository.save(board);
-
         return poll;
     }
 
