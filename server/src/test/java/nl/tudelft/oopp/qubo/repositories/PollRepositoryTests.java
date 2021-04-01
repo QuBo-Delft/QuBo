@@ -127,5 +127,6 @@ public class PollRepositoryTests {
         // Assert
         Optional<Poll> result = Optional.ofNullable(pollRepository.getById(poll.getId()));
         assertTrue(result.isPresent());
+        assertEquals(poll.getId(), result.get().getId());
     }
 }
