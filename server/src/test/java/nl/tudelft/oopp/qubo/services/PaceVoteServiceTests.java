@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@DirtiesContext
 public class PaceVoteServiceTests {
 
     @Autowired
@@ -42,7 +41,7 @@ public class PaceVoteServiceTests {
     private PaceVoteService paceVoteService;
 
     @Test
-    public void paceVoteRegistration_withValidData_worksCorrectly() {
+    public void registerVote_withValidData_worksCorrectly() {
         // Arrange
         QuestionBoard qb = new QuestionBoard();
         qb.setModeratorCode(UUID.randomUUID());
@@ -67,8 +66,14 @@ public class PaceVoteServiceTests {
     }
 
     @Test
-    public void paceVoteRegistration_withNonExistentBoard_throwsNotFoundException() {
+    public void registerVote_withNonExistentBoard_throwsNotFoundException() {
         // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-04-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
         PaceVoteCreationBindingModel creationModel = new PaceVoteCreationBindingModel();
         creationModel.setPaceType(PaceType.JUST_RIGHT);
 
@@ -81,7 +86,7 @@ public class PaceVoteServiceTests {
     }
 
     @Test
-    public void paceVoteRegistration_withNonActiveQuestionBoard_trowsForbiddenException() {
+    public void registerVote_withNonActiveQuestionBoard_throwsForbiddenException() {
         // Arrange
         QuestionBoard qb = new QuestionBoard();
         qb.setModeratorCode(UUID.randomUUID());
@@ -98,11 +103,11 @@ public class PaceVoteServiceTests {
             () -> paceVoteService.registerVote(creationModel, qb.getId())
         );
         // Assert
-        assertEquals(exception.getMessage(), "Question board is not active");
+        assertEquals("Question board is not active", exception.getMessage());
     }
 
     @Test
-    public void getPaceVoteById_withExistentPaceVote_worksCorrectly() {
+    public void getById_withExistentPaceVote_worksCorrectly() {
         // Arrange
         QuestionBoard qb = new QuestionBoard();
         qb.setModeratorCode(UUID.randomUUID());
@@ -121,15 +126,29 @@ public class PaceVoteServiceTests {
         // Act
         PaceVote result = paceVoteService.getById(vote.getId());
         // Assert
-        assertEquals(result.getQuestionBoard().getId(), qb.getId());
-        assertEquals(result.getPaceType().toString(), model.getPaceType().toString());
-        assertEquals(result.getPaceType().toString(), vote.getPaceType().toString());
+        assertEquals(qb.getId(), result.getQuestionBoard().getId());
+        assertEquals(model.getPaceType().toString(), result.getPaceType().toString());
+        assertEquals(vote.getPaceType().toString(), result.getPaceType().toString());
 
     }
 
     @Test
-    public void getPaceVoteById_withNonExistentPaceVote_returnsNull() {
+    public void getById_withNonExistentPaceVote_returnsNull() {
         // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-04-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
+
+        // Add a paceVote to the database
+        ModelMapper modelMapper = new ModelMapper();
+        PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
+        model.setPaceType(PaceType.JUST_RIGHT);
+        PaceVote vote = modelMapper.map(model, PaceVote.class);
+        vote.setQuestionBoard(qb);
+        paceVoteRepository.save(vote);
         // Act
         PaceVote result = paceVoteService.getById(UUID.randomUUID());
         // Assert
@@ -137,7 +156,7 @@ public class PaceVoteServiceTests {
     }
 
     @Test
-    public void deletePaceVoteById_withExistentPaceVote_removesPaceVoteFromRepository() {
+    public void deleteById_withExistentPaceVote_removesPaceVoteFromRepository() {
         // Arrange
         QuestionBoard qb = new QuestionBoard();
         qb.setModeratorCode(UUID.randomUUID());
@@ -155,12 +174,10 @@ public class PaceVoteServiceTests {
         paceVoteRepository.save(vote);
 
         // Act
-        PaceVote toBeDeleted = paceVoteRepository.getById(vote.getId());
-        assertNotNull(toBeDeleted);
-        paceVoteService.deleteVote(toBeDeleted);
+        paceVoteService.deleteVote(vote);
 
         // Assert
-        assertNull(paceVoteRepository.getById(toBeDeleted.getId()));
+        assertNull(paceVoteRepository.getById(vote.getId()));
     }
 
     @Test
@@ -199,14 +216,28 @@ public class PaceVoteServiceTests {
         PaceDetailsDto result = paceVoteService.getAggregatedVotes(qb.getId());
 
         // Assert
-        assertEquals(result.getTooFastVotes(), 4);
-        assertEquals(result.getJustRightVotes(), 6);
-        assertEquals(result.getTooSlowVotes(), 3);
+        assertEquals(4, result.getTooFastVotes());
+        assertEquals(6,result.getJustRightVotes());
+        assertEquals(3, result.getTooSlowVotes());
     }
 
     @Test
     public void getAggregatedVotes_withEmptyDatabase_returnsCorrectAmounts() {
         // Arrange
+        QuestionBoard filledUpBoard = new QuestionBoard();
+        filledUpBoard.setModeratorCode(UUID.randomUUID());
+        filledUpBoard.setStartTime(Timestamp.valueOf("2021-04-01 00:00:00"));
+        filledUpBoard.setTitle("Test board");
+        filledUpBoard.setClosed(false);
+        questionBoardRepository.save(filledUpBoard);
+        ModelMapper modelMapper = new ModelMapper();
+        for (int i = 0; i < 3; i++) {
+            PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
+            model.setPaceType(PaceType.JUST_RIGHT);
+            PaceVote vote = modelMapper.map(model, PaceVote.class);
+            vote.setQuestionBoard(filledUpBoard);
+            paceVoteRepository.save(vote);
+        }
         QuestionBoard qb = new QuestionBoard();
         qb.setModeratorCode(UUID.randomUUID());
         qb.setStartTime(Timestamp.valueOf("2021-04-01 00:00:00"));
@@ -218,14 +249,20 @@ public class PaceVoteServiceTests {
         PaceDetailsDto result = paceVoteService.getAggregatedVotes(qb.getId());
 
         // Assert
-        assertEquals(result.getTooFastVotes(), 0);
-        assertEquals(result.getJustRightVotes(), 0);
-        assertEquals(result.getTooSlowVotes(), 0);
+        assertEquals(0,result.getTooFastVotes());
+        assertEquals(0,result.getJustRightVotes());
+        assertEquals(0,result.getTooSlowVotes());
     }
 
     @Test
     public void getAggregatedVotes_withNonExistentQuestionBoard_throwsNotFoundException() {
         // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-04-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
         // Act
         NotFoundException exception = assertThrows(NotFoundException.class,
             () -> paceVoteService.getAggregatedVotes(UUID.randomUUID())
