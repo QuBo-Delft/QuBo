@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -116,4 +117,46 @@ public class PollController {
 
         return pollDto;
     }
+
+    /**
+     * Patch endpoint to close a poll.
+     *
+     * @param boardId           The ID of the question board.
+     * @param moderatorCode     The moderator code of the board.
+     * @return  The PollDetailsDto object of the poll.
+     */
+    @RequestMapping(value = "/{boardid}/poll", method = PATCH)
+    @ResponseBody
+    public PollDetailsDto closePoll(
+            @PathVariable("boardid") UUID boardId,
+            @RequestParam("code") UUID moderatorCode) {
+        QuestionBoard qb = questionBoardService.getBoardById(boardId);
+
+        // A 404 is thrown if the question board does not exist
+        if (qb == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+
+        // A 403 is thrown if the moderatorCode is invalid for closing a poll
+        if (!moderatorCode.equals(qb.getModeratorCode())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "The provided moderatorCode is not valid " + "for this Question");
+        }
+
+        // Get the poll associated with the question board
+        Poll poll = qb.getPoll();
+
+        // A 404 is thrown if there is no poll associated with the question board
+        if (poll == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no poll in this question board");
+        }
+
+
+        Poll closedPoll = pollService.closePoll(poll.getId(), boardId);
+        PollDetailsDto pollDto = modelMapper.map(closedPoll, PollDetailsDto.class);
+
+        return pollDto;
+
+    }
+
 }
