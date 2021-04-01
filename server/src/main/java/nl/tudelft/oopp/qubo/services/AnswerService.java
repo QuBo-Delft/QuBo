@@ -1,14 +1,13 @@
 package nl.tudelft.oopp.qubo.services;
 
+import java.sql.Timestamp;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationBindingModel;
 import nl.tudelft.oopp.qubo.entities.Answer;
 import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.repositories.AnswerRepository;
+import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
-import java.time.Instant;
 
 /**
  * The Answer service.
@@ -19,15 +18,20 @@ public class AnswerService {
 
     private final ModelMapper modelMapper;
 
+    private final CurrentTimeProvider currentTimeProvider;
+
     /**
      * Creates new instance of AnswerService.
      *
-     * @param answerRepository The answer repository.
-     * @param modelMapper      The model mapper.
+     * @param answerRepository    The answer repository.
+     * @param modelMapper         The model mapper.
+     * @param currentTimeProvider The CurrentTimeProvider.
      */
-    public AnswerService(AnswerRepository answerRepository, ModelMapper modelMapper) {
+    public AnswerService(AnswerRepository answerRepository, ModelMapper modelMapper,
+                         CurrentTimeProvider currentTimeProvider) {
         this.answerRepository = answerRepository;
         this.modelMapper = modelMapper;
+        this.currentTimeProvider = currentTimeProvider;
     }
 
     /**
@@ -41,7 +45,7 @@ public class AnswerService {
     public Answer addAnswerToQuestion(AnswerCreationBindingModel answerModel, Question question) {
         Answer answer = modelMapper.map(answerModel, Answer.class);
         answer.setQuestion(question);
-        answer.setTimestamp(Timestamp.from(Instant.now()));
+        answer.setTimestamp(Timestamp.from(currentTimeProvider.getCurrentTime()));
         answerRepository.save(answer);
         return answer;
     }
