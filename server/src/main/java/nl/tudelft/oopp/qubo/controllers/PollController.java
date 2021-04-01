@@ -151,7 +151,7 @@ public class PollController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no poll in this question board");
         }
 
-        Poll closedPoll = pollService.closePoll(poll.getId(), boardId);
+        Poll closedPoll = pollService.closePoll(poll.getId());
         PollDetailsDto pollDto = modelMapper.map(closedPoll, PollDetailsDto.class);
 
         return pollDto;

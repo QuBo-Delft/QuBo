@@ -92,24 +92,22 @@ public class PollService {
      * Set the open attribute of the poll of the QuestionBoard to false.
      *
      * @param pollId    The ID of the poll.
-     * @param boardId   The ID of the QuestionBoard.
      * @return  The updated poll.
      * @throws NotFoundException if the board does not exist or the poll does not exist.
+     * @throws ConflictException if the board does not exist or the poll does not exist.
      */
-    public Poll closePoll(UUID pollId, UUID boardId) {
-
-        QuestionBoard board = questionBoardRepository.getById(boardId);
-
-        // A 404 is thrown if the question board does not exist
-        if (board == null) {
-            throw new NotFoundException("Question board does not exist");
-        }
+    public Poll closePoll(UUID pollId) {
 
         Poll poll = pollRepository.getById(pollId);
 
         // A 404 is thrown if the poll does not exist
         if (poll == null) {
             throw new NotFoundException("Poll does not exist");
+        }
+
+        // A 409 is thrown if the poll has already been closed
+        if (!poll.isOpen()) {
+            throw new ConflictException("The poll has already been closed");
         }
 
         // Set the poll to closed
