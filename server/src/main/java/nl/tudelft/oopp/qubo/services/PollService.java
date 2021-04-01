@@ -83,6 +83,41 @@ public class PollService {
     }
 
     /**
+     * Set the open attribute of the poll of the QuestionBoard to false.
+     *
+     * @param pollId    The ID of the poll.
+     * @param boardId   The ID of the QuestionBoard.
+     * @return  The updated poll.
+     * @throws NotFoundException if the board does not exist or the poll does not exist.
+     */
+    public Poll closePoll(UUID pollId, UUID boardId) {
+
+        QuestionBoard board = questionBoardRepository.getById(boardId);
+
+        // A 404 is thrown if the question board does not exist
+        if (board == null) {
+            throw new NotFoundException("Question board does not exist");
+        }
+
+        Poll poll = pollRepository.getById(pollId);
+
+        // A 404 is thrown if the poll does not exist
+        if (poll == null) {
+            throw new NotFoundException("Poll does not exist");
+        }
+
+        // Set the poll to closed
+        poll.setOpen(false);
+        pollRepository.save(poll);
+
+        // Reset the updated poll to its question board
+        board.setPoll(poll);
+        questionBoardRepository.save(board);
+
+        return poll;
+    }
+
+    /**
      * Retrieves a Poll through its ID.
      *
      * @param pollId    The ID of the the poll that should be retrieved.
