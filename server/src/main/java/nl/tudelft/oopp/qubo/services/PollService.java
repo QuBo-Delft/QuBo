@@ -11,6 +11,7 @@ import nl.tudelft.oopp.qubo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.qubo.services.exceptions.ConflictException;
 import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
+import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -23,19 +24,24 @@ public class PollService {
 
     private final ModelMapper modelMapper;
 
+    private final CurrentTimeProvider currentTimeProvider;
+
     /**
      * Creates an instance of PollService.
      *
      * @param questionBoardRepository A QuestionBoardRepository.
      * @param pollRepository          A PollRepository.
      * @param modelMapper             The ModelMapper.
+     * @param currentTimeProvider     The CurrentTimeProvider.
      */
     public PollService(
         QuestionBoardRepository questionBoardRepository, PollRepository pollRepository,
-        ModelMapper modelMapper) {
+        ModelMapper modelMapper,
+        CurrentTimeProvider currentTimeProvider) {
         this.questionBoardRepository = questionBoardRepository;
         this.pollRepository = pollRepository;
         this.modelMapper = modelMapper;
+        this.currentTimeProvider = currentTimeProvider;
     }
 
     /**
@@ -60,7 +66,7 @@ public class PollService {
             throw new ConflictException("There is already a poll registered for this question board");
         }
 
-        Instant now = Instant.now();
+        Instant now = currentTimeProvider.getCurrentTime();
 
         //If the question board has not yet been opened or has already been closed, throw a ForbiddenException.
         if (now.isBefore(board.getStartTime().toInstant())
