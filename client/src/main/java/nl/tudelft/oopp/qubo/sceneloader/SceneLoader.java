@@ -78,7 +78,7 @@ public class SceneLoader {
         // Create an FXMLLoader of the input fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/" + fxml + ".fxml"));
         // Check whether the root is valid
-        rootValid(loader, stage, fxml);
+        stage = rootValid(loader, stage, fxml);
         // Set values to the fxml controller if necessary
         setController(fxml, loader);
         // Set the title of the stage
@@ -96,7 +96,7 @@ public class SceneLoader {
      * @param stage     The stage of the scene where the method is called.
      * @param fxml      The fxml sheet to be loaded.
      */
-    private static void rootValid(FXMLLoader loader, Stage stage, String fxml) {
+    private static Stage rootValid(FXMLLoader loader, Stage stage, String fxml) {
         if (fxml.equals("StudentView") || fxml.equals("ModeratorView")) {
             Stage newStage = new Stage();
             Scene newScene = null;
@@ -109,13 +109,15 @@ public class SceneLoader {
             }
             if (newScene == null) {
                 AlertDialog.display("", "Unable to display the requested view");
-                return;
+                return stage;
             }
             // Close current stage and show new stage
             stage.close();
             newStage.setMinHeight(550);
             newStage.setMinWidth(850);
             newStage.show();
+
+            return newStage;
         } else {
             Parent root = null;
             try {
@@ -125,10 +127,12 @@ public class SceneLoader {
             }
             if (root == null) {
                 AlertDialog.display("", "Unable to display the requested view");
-                return;
+                return null;
             }
             stage.setScene(new Scene(root));
             stage.centerOnScreen();
+
+            return stage;
         }
     }
 
@@ -199,20 +203,25 @@ public class SceneLoader {
      */
     public static void setCloseMethod(String fxml, Stage stage) {
         String message;
+
         switch (fxml) {
             case "JoinQuBo":
                 message = "";
                 stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
                 break;
             case ("CreateQuBo"):
-                message = "'Cancel' will return you to the application homepage";
+                message = "\n'Cancel' will return you to the homepage";
                 stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
                 break;
             case ("QuBoCodes"):
+                message = "\nMake sure you have copied the question board codes!";
+                stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
                 break;
             case ("StudentView"):
-                break;
             case ("ModeratorView"):
+                message = "\nYou can return to the homepage by pressing the designated button at the"
+                        + " bottom of the sidebar";
+                stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
                 break;
             default:
                 break;
