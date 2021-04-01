@@ -228,7 +228,7 @@ public class ServerCommunicationTest {
     public void testRetrieveBoardDetailsThroughModCode() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1)
+        httpClientMock.onGet(subUrl + "api/board/moderator?code=" + uuid1)
                 .doReturnStatus(200);
         // Act
         String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
@@ -236,7 +236,7 @@ public class ServerCommunicationTest {
         assertNotNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .get(subUrl + "/api/board/moderator?code=" + uuid1).called();
+                .get(subUrl + "api/board/moderator?code=" + uuid1).called();
     }
 
     // Test if the retrieveBoardDetailsThroughModCode method returns null after being called with an
@@ -245,14 +245,14 @@ public class ServerCommunicationTest {
     public void testRetrieveBoardDetailsThroughInValidModCode() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1)
+        httpClientMock.onGet(subUrl + "api/board/moderator?code=" + uuid1)
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
         String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
         // Assert
         assertNull(responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify().get(subUrl + "/api/board/moderator?code=" + uuid1).called();
+        httpClientMock.verify().get(subUrl + "api/board/moderator?code=" + uuid1).called();
     }
 
     // Test if the retrieveBoardDetailsThroughModCode method returns the successToken after being called
@@ -261,13 +261,13 @@ public class ServerCommunicationTest {
     public void testRetrieveBoardDetailsThroughModCodeGivingCorrectResponseBody() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1).doReturn(successToken);
+        httpClientMock.onGet(subUrl + "api/board/moderator?code=" + uuid1).doReturn(successToken);
         // Act
         String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
         // Assert
         assertEquals(successToken, responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify().get(subUrl + "/api/board/moderator?code=" + uuid1).called();
+        httpClientMock.verify().get(subUrl + "api/board/moderator?code=" + uuid1).called();
     }
 
     // Test if the retrieveBoardDetails method returns a non-null response body after being called
@@ -280,7 +280,7 @@ public class ServerCommunicationTest {
     public void testRetrieveBoardDetailsThroughInvalidBoardIdAndValidModCode() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onGet(subUrl + "/api/board/moderator?code=" + uuid1)
+        httpClientMock.onGet(subUrl + "api/board/moderator?code=" + uuid1)
                 .doReturnStatus(200);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1).doReturnStatus(404);
         // Act
@@ -289,7 +289,7 @@ public class ServerCommunicationTest {
         // Assert
         assertNotNull(responseBody);
         // Verify if the requests were truly made
-        httpClientMock.verify().get(subUrl + "/api/board/moderator?code=" + uuid1).called();
+        httpClientMock.verify().get(subUrl + "api/board/moderator?code=" + uuid1).called();
         httpClientMock.verify().get(subUrl + "api/board/" + uuid1).called();
     }
 
@@ -414,7 +414,7 @@ public class ServerCommunicationTest {
     public void testEditQuestionWithValidCode() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPut(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
+        httpClientMock.onPut(subUrl + "api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturnStatus(200);
         // Act
         String responseBody = ServerCommunication
@@ -424,7 +424,7 @@ public class ServerCommunicationTest {
         assertNotNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .put(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
+                .put(subUrl + "api/question/" + uuid1 + "?code=" + uuid2).called();
     }
 
     // Test if the editQuestion method returns null after being called with an invalid
@@ -434,7 +434,7 @@ public class ServerCommunicationTest {
     public void testEditQuestionWithInvalidCode() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPut(subUrl + "/api/question/" + uuid1 + "?code=" + uuid3)
+        httpClientMock.onPut(subUrl + "api/question/" + uuid1 + "?code=" + uuid3)
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
         String responseBody = ServerCommunication
@@ -444,7 +444,7 @@ public class ServerCommunicationTest {
         assertNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .put(subUrl + "/api/question/" + uuid1 + "?code=" + uuid3).called();
+                .put(subUrl + "api/question/" + uuid1 + "?code=" + uuid3).called();
     }
 
     // Test if the editQuestion method returns the successToken after being called
@@ -454,7 +454,7 @@ public class ServerCommunicationTest {
     public void testEditQuestionGivingCorrectResponseBody() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPut(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
+        httpClientMock.onPut(subUrl + "api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturn(successToken);
         // Act
         String responseBody = ServerCommunication
@@ -464,7 +464,7 @@ public class ServerCommunicationTest {
         assertEquals(successToken, responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .put(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
+                .put(subUrl + "api/question/" + uuid1 + "?code=" + uuid2).called();
     }
 
 
@@ -474,7 +474,7 @@ public class ServerCommunicationTest {
     public void testDeleteQuestionValidRequest() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
+        httpClientMock.onDelete(subUrl + "api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturnStatus(200);
         // Act
         String responseBody = ServerCommunication.deleteQuestion(uuid1, uuid2);
@@ -483,7 +483,7 @@ public class ServerCommunicationTest {
         assertNotNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .delete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
+                .delete(subUrl + "api/question/" + uuid1 + "?code=" + uuid2).called();
     }
 
     // Test if the deleteQuestion method returns null after being called with an invalid
@@ -492,7 +492,7 @@ public class ServerCommunicationTest {
     public void testDeleteQuestionInvalidQuBo() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
+        httpClientMock.onDelete(subUrl + "api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
         String responseBody = ServerCommunication.deleteQuestion(uuid1, uuid2);
@@ -501,7 +501,7 @@ public class ServerCommunicationTest {
         assertNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .delete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
+                .delete(subUrl + "api/question/" + uuid1 + "?code=" + uuid2).called();
     }
 
     // Test if the deleteQuestion method returns the successToken after being called
@@ -511,7 +511,7 @@ public class ServerCommunicationTest {
     public void testDeleteQuestionGivingCorrectResponseBody() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2)
+        httpClientMock.onDelete(subUrl + "api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturn(successToken);
         // Act
         String responseBody = ServerCommunication.deleteQuestion(uuid1, uuid2);
@@ -520,7 +520,7 @@ public class ServerCommunicationTest {
         assertEquals(successToken, responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .delete(subUrl + "/api/question/" + uuid1 + "?code=" + uuid2).called();
+                .delete(subUrl + "api/question/" + uuid1 + "?code=" + uuid2).called();
     }
 
     // Test if the markQuestionAsAnswered method returns a non-null response body after being called
@@ -529,7 +529,7 @@ public class ServerCommunicationTest {
     public void testMarkQuestionAsAnsweredThroughValidRequest() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPatch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2)
+        httpClientMock.onPatch(subUrl + "api/question/" + uuid1 + "/answer?code=" + uuid2)
                 .doReturnStatus(200);
         // Act
         String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
@@ -538,7 +538,7 @@ public class ServerCommunicationTest {
         assertNotNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .patch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2).called();
+                .patch(subUrl + "api/question/" + uuid1 + "/answer?code=" + uuid2).called();
     }
 
     // Test if the markQuestionAsAnswered method returns null after being called with an invalid
@@ -547,7 +547,7 @@ public class ServerCommunicationTest {
     public void testMarkQuestionAsAnsweredThroughInvalidRequest() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPatch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2)
+        httpClientMock.onPatch(subUrl + "api/question/" + uuid1 + "/answer?code=" + uuid2)
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
         String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
@@ -556,7 +556,7 @@ public class ServerCommunicationTest {
         assertNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .patch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2).called();
+                .patch(subUrl + "api/question/" + uuid1 + "/answer?code=" + uuid2).called();
     }
 
     // Test if the markQuestionAsAnswered method returns the successToken after being called
@@ -566,7 +566,7 @@ public class ServerCommunicationTest {
     public void testMarkQuestionAsAnsweredGivingCorrectResponseBody() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPatch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2)
+        httpClientMock.onPatch(subUrl + "api/question/" + uuid1 + "/answer?code=" + uuid2)
                 .doReturn(successToken);
         // Act
         String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
@@ -575,7 +575,7 @@ public class ServerCommunicationTest {
         assertEquals(successToken, responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .patch(subUrl + "/api/question/" + uuid1 + "/answer?code=" + uuid2).called();
+                .patch(subUrl + "api/question/" + uuid1 + "/answer?code=" + uuid2).called();
     }
 
     // Test if the addQuestionVote method returns a non-null response body after being called
@@ -584,7 +584,7 @@ public class ServerCommunicationTest {
     public void testAddQuestionVoteThroughValidRequest() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPost(subUrl + "/api/question/" + uuid1 + "/vote")
+        httpClientMock.onPost(subUrl + "api/question/" + uuid1 + "/vote")
                 .doReturnStatus(200);
         // Act
         String responseBody = ServerCommunication.addQuestionVote(uuid1);
@@ -592,7 +592,7 @@ public class ServerCommunicationTest {
         // Assert
         assertNotNull(responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify().post(subUrl + "/api/question/" + uuid1 + "/vote").called();
+        httpClientMock.verify().post(subUrl + "api/question/" + uuid1 + "/vote").called();
     }
 
     // Test if the addQuestionVote method returns null after being called with an invalid
@@ -601,7 +601,7 @@ public class ServerCommunicationTest {
     public void testAddQuestionVoteThroughInvalidRequest() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPost(subUrl + "/api/question/" + uuid3 + "/vote")
+        httpClientMock.onPost(subUrl + "api/question/" + uuid3 + "/vote")
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
         String responseBody = ServerCommunication.addQuestionVote(uuid3);
@@ -609,7 +609,7 @@ public class ServerCommunicationTest {
         // Assert
         assertNull(responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify().post(subUrl + "/api/question/" + uuid3 + "/vote").called();
+        httpClientMock.verify().post(subUrl + "api/question/" + uuid3 + "/vote").called();
     }
 
     // Test if the addQuestionVote method returns the successToken after being called
@@ -618,7 +618,7 @@ public class ServerCommunicationTest {
     public void testAddQuestionVoteGivingCorrectResponseBody() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPost(subUrl + "/api/question/" + uuid3 + "/vote")
+        httpClientMock.onPost(subUrl + "api/question/" + uuid3 + "/vote")
                 .doReturn(successToken);
         // Act
         String responseBody = ServerCommunication.addQuestionVote(uuid3);
@@ -626,7 +626,7 @@ public class ServerCommunicationTest {
         // Assert
         assertEquals(successToken, responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify().post(subUrl + "/api/question/" + uuid3 + "/vote").called();
+        httpClientMock.verify().post(subUrl + "api/question/" + uuid3 + "/vote").called();
     }
 
     // Test if the deleteQuestionVote method returns a non-null response body after being called
@@ -639,7 +639,7 @@ public class ServerCommunicationTest {
         String qdStr = gson.toJson(qd);
 
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2)
+        httpClientMock.onDelete(subUrl + "api/question/" + uuid1 + "/vote/" + uuid2)
                 .doReturn(qdStr).doReturnStatus(200);
         // Act
         String responseBody = ServerCommunication.deleteQuestionVote(uuid1, uuid2);
@@ -648,7 +648,7 @@ public class ServerCommunicationTest {
         assertEquals(qdStr, responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .delete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2).called();
+                .delete(subUrl + "api/question/" + uuid1 + "/vote/" + uuid2).called();
     }
 
     // Test if the deleteQuestionVote method returns null after being called with an invalid
@@ -657,7 +657,7 @@ public class ServerCommunicationTest {
     public void testDeleteQuestionVoteThroughInvalidRequest() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2)
+        httpClientMock.onDelete(subUrl + "api/question/" + uuid1 + "/vote/" + uuid2)
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
         String responseBody = ServerCommunication.deleteQuestionVote(uuid1, uuid2);
@@ -666,7 +666,7 @@ public class ServerCommunicationTest {
         assertNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .delete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2).called();
+                .delete(subUrl + "api/question/" + uuid1 + "/vote/" + uuid2).called();
     }
 
     // Test if the addQuestionVote method returns null after being called with a valid questionId and
@@ -679,7 +679,7 @@ public class ServerCommunicationTest {
         String qdStrReturned = gson.toJson(qd);
 
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onDelete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2)
+        httpClientMock.onDelete(subUrl + "api/question/" + uuid1 + "/vote/" + uuid2)
                 .doReturn(qdStrReturned);
         // Act
         String responseBody = ServerCommunication.deleteQuestionVote(uuid1, uuid2);
@@ -688,7 +688,7 @@ public class ServerCommunicationTest {
         assertNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .delete(subUrl + "/api/question/" + uuid1 + "/vote/" + uuid2).called();
+                .delete(subUrl + "api/question/" + uuid1 + "/vote/" + uuid2).called();
     }
 
     // Test if the addPaceVote method returns a non-null response body after being called
@@ -699,7 +699,7 @@ public class ServerCommunicationTest {
         PaceType pt = PaceType.TOO_FAST;
 
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/pace")
+        httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/pace")
                 .doReturnStatus(200);
         // Act
         String responseBody = ServerCommunication.addPaceVote(uuid1, pt);
@@ -707,7 +707,7 @@ public class ServerCommunicationTest {
         // Assert
         assertNotNull(responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/pace").called();
+        httpClientMock.verify().post(subUrl + "api/board/" + uuid1 + "/pace").called();
     }
 
     // Test if the addPaceVote method returns null after being called with an invalid
@@ -718,7 +718,7 @@ public class ServerCommunicationTest {
         PaceType pt = PaceType.TOO_FAST;
 
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/pace")
+        httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/pace")
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
         String responseBody = ServerCommunication.addPaceVote(uuid1, pt);
@@ -726,7 +726,7 @@ public class ServerCommunicationTest {
         // Assert
         assertNull(responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/pace").called();
+        httpClientMock.verify().post(subUrl + "api/board/" + uuid1 + "/pace").called();
     }
 
     // Test if the addPaceVote method returns the successToken after being called with a
@@ -737,7 +737,7 @@ public class ServerCommunicationTest {
         PaceType pt = PaceType.TOO_FAST;
 
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/pace")
+        httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/pace")
                 .doReturn(successToken);
         // Act
         String responseBody = ServerCommunication.addPaceVote(uuid1, pt);
@@ -745,7 +745,7 @@ public class ServerCommunicationTest {
         // Assert
         assertEquals(successToken, responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/pace").called();
+        httpClientMock.verify().post(subUrl + "api/board/" + uuid1 + "/pace").called();
     }
 
     // Test if the deletePaceVote method returns a non-null response body after being called
@@ -758,7 +758,7 @@ public class ServerCommunicationTest {
         String pdStringReturned = gson.toJson(pd);
 
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onDelete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2)
+        httpClientMock.onDelete(subUrl + "api/board/" + uuid1 + "/pace/" + uuid2)
                 .doReturn(pdStringReturned).doReturnStatus(200);
         // Act
         String responseBody = ServerCommunication.deletePaceVote(uuid1, uuid2);
@@ -767,7 +767,7 @@ public class ServerCommunicationTest {
         assertNotNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .delete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2).called();
+                .delete(subUrl + "api/board/" + uuid1 + "/pace/" + uuid2).called();
     }
 
     // Test if the deletePaceVote method returns null after being called with an invalid boardId and
@@ -776,7 +776,7 @@ public class ServerCommunicationTest {
     public void testDeletePaceVoteThroughInvalidRequest() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onDelete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2)
+        httpClientMock.onDelete(subUrl + "api/board/" + uuid1 + "/pace/" + uuid2)
                 .doReturnStatus(404);
         // Act
         String responseBody = ServerCommunication.deletePaceVote(uuid1, uuid2);
@@ -785,7 +785,7 @@ public class ServerCommunicationTest {
         assertNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .delete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2).called();
+                .delete(subUrl + "api/board/" + uuid1 + "/pace/" + uuid2).called();
     }
 
     // Test if the deletePaceVote method returns null after being called with a valid boardId
@@ -798,7 +798,7 @@ public class ServerCommunicationTest {
         String pdStringReturned = gson.toJson(pd);
 
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onDelete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2)
+        httpClientMock.onDelete(subUrl + "api/board/" + uuid1 + "/pace/" + uuid2)
                 .doReturn(pdStringReturned).doReturnStatus(200);
         // Act
         String responseBody = ServerCommunication.deletePaceVote(uuid1, uuid2);
@@ -807,7 +807,7 @@ public class ServerCommunicationTest {
         assertNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify()
-                .delete(subUrl + "/api/board/" + uuid1 + "/pace/" + uuid2).called();
+                .delete(subUrl + "api/board/" + uuid1 + "/pace/" + uuid2).called();
     }
 
     // Test if the addPoll method returns a non-null response body after being called
@@ -820,7 +820,7 @@ public class ServerCommunicationTest {
         pollOptions.add("Option B");
 
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2)
+        httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2)
                 .doReturnStatus(200);
         // Act
         String responseBody = ServerCommunication.addPoll(uuid1, uuid2, "Test Poll", pollOptions);
@@ -828,7 +828,7 @@ public class ServerCommunicationTest {
         // Assert
         assertNotNull(responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2).called();
+        httpClientMock.verify().post(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2).called();
     }
 
     // Test if the addPoll method returns null after being called with an invalid boardId and
@@ -842,7 +842,7 @@ public class ServerCommunicationTest {
         pollOptions.add("Option B");
 
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2)
+        httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2)
                 .doReturnStatus(404).doReturn(failureToken);
 
         // Act
@@ -851,7 +851,7 @@ public class ServerCommunicationTest {
         // Assert
         assertNull(responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2).called();
+        httpClientMock.verify().post(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2).called();
     }
 
     // Test if the addPoll method returns the successtoken after being called with a valid boardId and
@@ -864,7 +864,7 @@ public class ServerCommunicationTest {
         pollOptions.add("Option B");
 
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onPost(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2)
+        httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2)
                 .doReturn(successToken);
 
         // Act
@@ -873,6 +873,59 @@ public class ServerCommunicationTest {
         // Assert
         assertEquals(successToken, responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify().post(subUrl + "/api/board/" + uuid1 + "/poll?code=" + uuid2).called();
+        httpClientMock.verify().post(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2).called();
+    }
+
+    // Test if the retrievePollDetails method returns a non-null response body
+    // after being called with a valid board ID, and receiving a response with status code 200.
+    @Test
+    public void testRetrievePollDetails() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/poll").doReturnStatus(200);
+
+        // Act
+        String responseBody = ServerCommunication.retrievePollDetails(uuid1);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1 + "/poll").called();
+    }
+
+    // Test if the retrievePollDetails method returns null after being called with an invalid board ID,
+    // and receiving statusCode 404 and failureToken as the response body.
+    @Test
+    public void testRetrievePollDetailsThroughInvalidBoardId() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/poll")
+                .doReturnStatus(404).doReturn(failureToken);
+
+        // Act
+        String responseBody = ServerCommunication.retrievePollDetails(uuid1);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1 + "/poll").called();
+    }
+
+    // Test if the retrievePollDetails method returns the successToken after being called with a
+    // valid board ID, and receiving a response with status code 200 with the successToken as its body.
+    @Test
+    public void testRetrievePollDetailsGivingCorrectResponseBody() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid2 + "/poll")
+                .doReturn(successToken);
+
+        // Act
+        String responseBody = ServerCommunication.retrievePollDetails(uuid2);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid2 + "/poll").called();
     }
 }
