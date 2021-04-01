@@ -96,7 +96,7 @@ public class JoinQuBoController {
         if (boardCode.equals(questionBoard.getId())) {
             new SceneLoader().loadStudentView(questionBoard, user, stage);
         } else {
-            SceneLoader.loadModeratorView(questionBoard, user, stage);
+            SceneLoader.loadModeratorView(questionBoard, boardCode, user, stage);
         }
     }
 

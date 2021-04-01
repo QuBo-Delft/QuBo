@@ -137,7 +137,8 @@ public class SceneLoader {
      * @param qd  The QuestionBoardDetailsDto object associated with the question board that the moderator
      *      wants to join.
      */
-    public static void loadModeratorView(QuestionBoardDetailsDto qd, String userName, Stage currentStage) {
+    public static void loadModeratorView(QuestionBoardDetailsDto qd, UUID modCode,
+                                         String userName, Stage currentStage) {
         // Create an FXMLLoader of ModeratorView.fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/ModeratorView.fxml"));
 
@@ -148,12 +149,13 @@ public class SceneLoader {
             e.printStackTrace();
         }
 
-        //Get the controller of ModeratorView
+        // Get controller and initialize qb
         ModeratorViewController controller = loader.getController();
-
-        UUID boardId = qd.getId();
-
-        // TODO: need a method to update data in moderatorView
+        loader.setController(controller);
+        controller.setQuBo(qd);
+        controller.setModCode(modCode);
+        controller.setAuthorName(userName);
+        controller.setBoardDetails();
 
         //Check if the root is null
         if (root == null) {

@@ -56,13 +56,13 @@ public class QuestionRefresh {
         displayQuestions();
     }
 
-    public static void modRefresh(QuestionBoardDetailsDto quBo, UUID code, VBox unAnsLV, VBox ansLV,
+    public static void modRefresh(QuestionBoardDetailsDto quBo, UUID code, VBox unAnsVbox, VBox ansVbox,
                                   HashMap<UUID, UUID> upvote, ScrollPane unAnsScrollPane,
                                   ScrollPane ansScrollPane) {
         thisQuBoId = quBo;
 
-        unAnsQuVbox = unAnsLV;
-        ansQuVbox = ansLV;
+        unAnsQuVbox = unAnsVbox;
+        ansQuVbox = ansVbox;
 
         upvoteMap = upvote;
 
