@@ -5,7 +5,7 @@ import javax.validation.Valid;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationDto;
 import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
-import nl.tudelft.oopp.qubo.dtos.pollvote.PollVoteCreationDto;
+import nl.tudelft.oopp.qubo.dtos.pollvote.PollVoteDetailsDto;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
 import nl.tudelft.oopp.qubo.entities.PollVote;
@@ -13,6 +13,7 @@ import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import nl.tudelft.oopp.qubo.services.PollService;
 import nl.tudelft.oopp.qubo.services.PollVoteService;
 import nl.tudelft.oopp.qubo.services.QuestionBoardService;
+import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -213,11 +214,11 @@ public class PollController {
      *
      * @param boardId  The board ID.
      * @param optionId The option ID.
-     * @return The PollVoteCreation DTO.
+     * @return The PollVoteDetails DTO.
      */
     @RequestMapping(value = "/{boardid}/poll/{optionid}/vote", method = POST)
     @ResponseBody
-    public PollVoteCreationDto registerPollVote(
+    public PollVoteDetailsDto registerPollVote(
         @PathVariable("boardid") UUID boardId,
         @PathVariable("optionid") UUID optionId) {
         PollOption option = pollService.getPollOptionById(optionId);
@@ -227,7 +228,48 @@ public class PollController {
         }
 
         PollVote vote = pollVoteService.registerVote(optionId);
-        PollVoteCreationDto dto = modelMapper.map(vote, PollVoteCreationDto.class);
+        PollVoteDetailsDto dto = modelMapper.map(vote, PollVoteDetailsDto.class);
+        return dto;
+    }
+
+    /**
+     * DELETE endpoint for deleting an existing poll vote.
+     * Throw 404 if the poll vote id does not exist, or the the provided board ID does not match
+     * the board ID of the corresponding poll.
+     * Throw 403 if the poll has been closed.
+     *
+     * @param boardId   The board ID.
+     * @param voteId    The poll vote id.
+     * @return The PollVoteDetails DTO.
+     */
+    @RequestMapping(value = "/{boardid}/poll/vote/{voteid}", method = DELETE)
+    @ResponseBody
+    public PollVoteDetailsDto deletePollVote(
+            @PathVariable("boardid") UUID boardId,
+            @PathVariable("voteid") UUID voteId) {
+
+        PollVote pollVote = pollVoteService.getPollVote(voteId);
+
+        // Check if the pollVote exists
+        if (pollVote == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find PollVote");
+        }
+
+        UUID boardIdOfPollVote = pollVote.getPollOption().getPoll().getQuestionBoard().getId();
+        // Check if the provided board ID does not match the board ID of the corresponding poll
+        if (!boardId.equals(boardIdOfPollVote)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The provided board ID does not " +
+                    "match the board ID of the corresponding poll");
+        }
+
+        // Check if the poll has been close
+        if (!pollVote.getPollOption().getPoll().isOpen()) {
+            throw new ForbiddenException("The poll has been closed");
+        }
+
+        PollVoteDetailsDto dto = modelMapper.map(pollVote, PollVoteDetailsDto.class);
+        pollVoteService.deletePollVote(voteId);
+
         return dto;
     }
 }

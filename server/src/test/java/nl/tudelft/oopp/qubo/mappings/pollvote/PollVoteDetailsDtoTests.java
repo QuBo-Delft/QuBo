@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 
-public class PollVoteCreationDtoTests {
+public class PollVoteDetailsDtoTests {
     private ModelMapper mapper;
 
     @BeforeEach
