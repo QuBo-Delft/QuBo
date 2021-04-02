@@ -158,7 +158,6 @@ public class PollService {
 
     /**
      * Retrieve a set of PollOption objects corresponding to the question board's poll.
-     *
      * Throw 404 if the question board does not exist.
      * Throw 404 if there is no poll in this question board.
      * Throw 403 if the poll is open.
