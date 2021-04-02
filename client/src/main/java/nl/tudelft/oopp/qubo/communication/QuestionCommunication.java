@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.qubo.communication;
 
+import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionEditingBindingModel;
 
@@ -34,6 +35,36 @@ public class QuestionCommunication {
         String requestBody = ServerCommunication.gson.toJson(questionModel);
         HttpResponse<String> response = ServerCommunication.post(fullUrl, requestBody, "Content-Type",
                 "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+    /**
+     * Adds an answer to a question.
+     * Communicates with the /api/question/{questionid}/answer?code={code} server endpoint.
+     *
+     * @param questionId    The ID of the question that is being answered.
+     * @param modCode       The moderator code associated with the question board
+     *                      that contains the question.
+     * @param text          The body of the answer to be added.
+     * @return              The AnswerCreationDto associated with the answer in JSON String
+     *                      format if, and only if, the request was successful.
+     */
+    public static String addAnswer(UUID questionId, UUID modCode, String text) {
+        //Instantiate a AnswerCreationBindingModel
+        AnswerCreationBindingModel answerModel = new AnswerCreationBindingModel();
+        answerModel.setText(text);
+
+        //Create a request and response object, send the request, and retrieve the response
+        String fullUrl = ServerCommunication.subUrl + "api/question/" + questionId + "/answer?code=" + modCode;
+        String requestBody = ServerCommunication.gson.toJson(answerModel);
+        HttpResponse<String> response = ServerCommunication.post(fullUrl, requestBody, "Content-Type",
+            "application/json;charset=UTF-8");
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
