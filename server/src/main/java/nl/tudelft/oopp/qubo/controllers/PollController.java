@@ -1,10 +1,12 @@
 package nl.tudelft.oopp.qubo.controllers;
 
+import java.util.Set;
 import java.util.UUID;
 import javax.validation.Valid;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationDto;
 import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.dtos.pollvote.PollVoteDetailsDto;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
@@ -15,6 +17,7 @@ import nl.tudelft.oopp.qubo.services.PollVoteService;
 import nl.tudelft.oopp.qubo.services.QuestionBoardService;
 import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -271,6 +274,30 @@ public class PollController {
         pollVoteService.deletePollVote(voteId);
 
         return dto;
+    }
+
+    /**
+     * Get endpoint for retrieving a collection of PollOptionResults of this question board's poll.
+     * Throw 404 if the question board does not exist.
+     *
+     * @param boardId   The board ID.
+     * @return The collection of poll option results of this question board's poll.
+     */
+    @RequestMapping(value = "/{boardid}/poll/results", method = GET)
+    @ResponseBody
+    public Set<PollOptionResultDto> retrievePollResult(
+            @PathVariable("boardid") UUID boardId) {
+        Set<PollOption> pollOptions = pollService.getPollOptionsByBoardId(boardId);
+
+        // Check if the question board exists
+        if (pollOptions == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This question board does not exist.");
+        }
+
+        Set<PollOptionResultDto> pollOptionResults = modelMapper.map(pollOptions,
+                new TypeToken<Set<PollOptionResultDto>>() {}.getType());
+
+        return pollOptionResults;
     }
 }
 
