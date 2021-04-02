@@ -14,6 +14,29 @@ public class QuestionBoardCommunication {
     //To be added:
     // - createBoardRequest()
     // - closeBoardRequest()
+    /**
+     * The method sends a request to the server to create a question board.
+     *
+     * @param board     The QuestionBoardCreationBindingModel object that contains details of a question board.
+     * @return The QuestionBoardDetailsDto of the created board in JSON String format.
+     */
+    public static String createBoardRequest(QuestionBoardCreationBindingModel board) {
+        String fullUrl = ServerCommunication.subUrl + "board";
+
+        //Convert the QuestionBoardCreationBindingModel to JSON
+        String requestBody = ServerCommunication.gson.toJson(board);
+
+        //Send the post request and retrieve the response from the server
+        HttpResponse<String> res = ServerCommunication.post(fullUrl, requestBody, "Content-Type",
+                "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (res == null || res.statusCode() != 200) {
+            return null;
+        }
+
+        return res.body();
+    }
 
     /**
      * Retrieves the board details of the Question Board associated with the specified moderator code from
