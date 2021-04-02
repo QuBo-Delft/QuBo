@@ -59,7 +59,7 @@ public class MainApp {
      */
     private static void showWorkingEndpoints(QuestionBoardCreationBindingModel model) {
         //Create the Question Board and map the returned data onto a QuestionBoardCreationDto
-        String resBody = ServerCommunication.createBoardRequest(model);
+        String resBody = QuestionBoardCommunication.createBoardRequest(model);
         QuestionBoardCreationDto questionBoard = gson.fromJson(resBody, QuestionBoardCreationDto.class);
 
         UUID boardId = questionBoard.getId();
@@ -137,7 +137,7 @@ public class MainApp {
         //Mark questionTwo as answered
         UUID questionTwoId = questionTwo.getId();
         System.out.println("The fact that questionTwo has been marked as answered is: "
-                + ((ServerCommunication.markQuestionAsAnswered(questionTwoId, moderatorCode)) != null));
+                + ((QuestionCommunication.markQuestionAsAnswered(questionTwoId, moderatorCode)) != null));
 
         //Delete the vote that was just created
         UUID voteId = questionVote.getId();
@@ -183,6 +183,6 @@ public class MainApp {
 
         //Close the question board
         System.out.println("The fact that this question board has been closed is: "
-                + ((ServerCommunication.closeBoardRequest(boardId, moderatorCode)) != null));
+                + ((QuestionBoardCommunication.closeBoardRequest(boardId, moderatorCode)) != null));
     }
 }

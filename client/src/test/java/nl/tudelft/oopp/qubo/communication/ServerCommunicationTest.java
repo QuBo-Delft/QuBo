@@ -47,7 +47,7 @@ public class ServerCommunicationTest {
     // Test if the sendRequest method catches the exception caused by a refused connection.
     @Test
     public void testSendRequest() {
-        assertNull(ServerCommunication.retrieveBoardDetails(uuid1));
+        assertNull(QuestionBoardCommunication.retrieveBoardDetails(uuid1));
     }
 
     // Tests if the createBoardRequest method returns a non-null response body after receiving
@@ -64,7 +64,7 @@ public class ServerCommunicationTest {
         ServerCommunication.setClient(httpClientMock);
 
         // Act
-        String responseBody = ServerCommunication.createBoardRequest(board);
+        String responseBody = QuestionBoardCommunication.createBoardRequest(board);
         
         // Assert
         assertNotNull(responseBody);
@@ -86,7 +86,7 @@ public class ServerCommunicationTest {
                 .doReturnStatus(400).doReturn(failureToken);
 
         // Act
-        String responseBody = ServerCommunication.createBoardRequest(board);
+        String responseBody = QuestionBoardCommunication.createBoardRequest(board);
 
         // Assert
         assertNull(responseBody);
@@ -107,7 +107,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "api/board").doReturn(successToken);
 
         // Act
-        String responseBody = ServerCommunication.createBoardRequest(board);
+        String responseBody = QuestionBoardCommunication.createBoardRequest(board);
 
         // Assert
         assertEquals(successToken, responseBody);
@@ -126,7 +126,7 @@ public class ServerCommunicationTest {
                 .doReturnStatus(200);
 
         // Act
-        String responseBody = ServerCommunication.closeBoardRequest(uuid1, uuid3);
+        String responseBody = QuestionBoardCommunication.closeBoardRequest(uuid1, uuid3);
 
         // Assert
         assertNotNull(responseBody);
@@ -145,7 +145,7 @@ public class ServerCommunicationTest {
                 .doReturnStatus(400).doReturn(failureToken);
 
         // Act
-        String responseBody = ServerCommunication.closeBoardRequest(uuid1, uuid3);
+        String responseBody = QuestionBoardCommunication.closeBoardRequest(uuid1, uuid3);
 
         // Assert
         assertNull(responseBody);
@@ -165,7 +165,7 @@ public class ServerCommunicationTest {
                 .doReturn(successToken);
 
         // Act
-        String responseBody = ServerCommunication.closeBoardRequest(uuid1, uuid3);
+        String responseBody = QuestionBoardCommunication.closeBoardRequest(uuid1, uuid3);
 
         // Assert
         assertEquals(successToken, responseBody);
@@ -182,7 +182,7 @@ public class ServerCommunicationTest {
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1).doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
+        String responseBody = QuestionBoardCommunication.retrieveBoardDetails(uuid1);
         
         // Assert
         assertNotNull(responseBody);
@@ -199,7 +199,7 @@ public class ServerCommunicationTest {
         httpClientMock.onGet(subUrl + "api/board/" + uuid1)
                 .doReturnStatus(400);
         // Act
-        String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
+        String responseBody = QuestionBoardCommunication.retrieveBoardDetails(uuid1);
 
         // Assert
         assertNull(responseBody);
@@ -215,7 +215,7 @@ public class ServerCommunicationTest {
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1).doReturn(successToken);
         // Act
-        String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
+        String responseBody = QuestionBoardCommunication.retrieveBoardDetails(uuid1);
         // Assert
         assertEquals(successToken, responseBody);
         // Verify if the request was truly made
@@ -231,7 +231,7 @@ public class ServerCommunicationTest {
         httpClientMock.onGet(subUrl + "api/board/moderator?code=" + uuid1)
                 .doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
+        String responseBody = QuestionBoardCommunication.retrieveBoardDetailsThroughModCode(uuid1);
         // Assert
         assertNotNull(responseBody);
         // Verify if the request was truly made
@@ -248,7 +248,7 @@ public class ServerCommunicationTest {
         httpClientMock.onGet(subUrl + "api/board/moderator?code=" + uuid1)
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
-        String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
+        String responseBody = QuestionBoardCommunication.retrieveBoardDetailsThroughModCode(uuid1);
         // Assert
         assertNull(responseBody);
         // Verify if the request was truly made
@@ -263,7 +263,7 @@ public class ServerCommunicationTest {
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onGet(subUrl + "api/board/moderator?code=" + uuid1).doReturn(successToken);
         // Act
-        String responseBody = ServerCommunication.retrieveBoardDetailsThroughModCode(uuid1);
+        String responseBody = QuestionBoardCommunication.retrieveBoardDetailsThroughModCode(uuid1);
         // Assert
         assertEquals(successToken, responseBody);
         // Verify if the request was truly made
@@ -284,7 +284,7 @@ public class ServerCommunicationTest {
                 .doReturnStatus(200);
         httpClientMock.onGet(subUrl + "api/board/" + uuid1).doReturnStatus(404);
         // Act
-        String responseBody = ServerCommunication.retrieveBoardDetails(uuid1);
+        String responseBody = QuestionBoardCommunication.retrieveBoardDetails(uuid1);
 
         // Assert
         assertNotNull(responseBody);
@@ -302,7 +302,7 @@ public class ServerCommunicationTest {
         httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/questions")
                 .doReturnStatus(400).doReturn(failureToken);
         // Act
-        String responseBody = ServerCommunication.retrieveQuestions(uuid1);
+        String responseBody = QuestionBoardCommunication.retrieveQuestions(uuid1);
 
         // Assert
         assertNull(responseBody);
@@ -319,7 +319,7 @@ public class ServerCommunicationTest {
         httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/questions")
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
-        String responseBody = ServerCommunication.retrieveQuestions(uuid1);
+        String responseBody = QuestionBoardCommunication.retrieveQuestions(uuid1);
 
         // Assert
         assertNull(responseBody);
@@ -341,7 +341,7 @@ public class ServerCommunicationTest {
         httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/questions")
                 .doReturn(questionsStr);
         // Act
-        String responseBody = ServerCommunication.retrieveQuestions(uuid1);
+        String responseBody = QuestionBoardCommunication.retrieveQuestions(uuid1);
 
         // Assert
         assertEquals(questionsStr, responseBody);
@@ -358,7 +358,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/question")
                 .doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication
+        String responseBody = QuestionCommunication
                 .addQuestion(uuid1, "Why is CO so confusing?", "Koen");
 
         // Assert
@@ -378,7 +378,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/question")
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
-        String responseBody = ServerCommunication
+        String responseBody = QuestionCommunication
                 .addQuestion(uuid1, "Why is CO so confusing?", "Koen");
 
         // Assert
@@ -398,7 +398,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/question")
                 .doReturn(successToken);
         // Act
-        String responseBody = ServerCommunication
+        String responseBody = QuestionCommunication
                 .addQuestion(uuid1, "Why is CO so confusing?", "Koen");
 
         //Assert
@@ -417,7 +417,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPut(subUrl + "api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication
+        String responseBody = QuestionCommunication
                 .editQuestion(uuid1, uuid2, "Why is CO taught so clear");
 
         // Assert
@@ -437,7 +437,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPut(subUrl + "api/question/" + uuid1 + "?code=" + uuid3)
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
-        String responseBody = ServerCommunication
+        String responseBody = QuestionCommunication
                 .editQuestion(uuid1, uuid3, "Why is CO so clear");
 
         // Assert
@@ -457,7 +457,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPut(subUrl + "api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturn(successToken);
         // Act
-        String responseBody = ServerCommunication
+        String responseBody = QuestionCommunication
                 .editQuestion(uuid1, uuid2, "Why is CO so clear");
 
         // Assert
@@ -477,7 +477,7 @@ public class ServerCommunicationTest {
         httpClientMock.onDelete(subUrl + "api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication.deleteQuestion(uuid1, uuid2);
+        String responseBody = QuestionCommunication.deleteQuestion(uuid1, uuid2);
 
         // Assert
         assertNotNull(responseBody);
@@ -495,7 +495,7 @@ public class ServerCommunicationTest {
         httpClientMock.onDelete(subUrl + "api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
-        String responseBody = ServerCommunication.deleteQuestion(uuid1, uuid2);
+        String responseBody = QuestionCommunication.deleteQuestion(uuid1, uuid2);
 
         // Assert
         assertNull(responseBody);
@@ -514,7 +514,7 @@ public class ServerCommunicationTest {
         httpClientMock.onDelete(subUrl + "api/question/" + uuid1 + "?code=" + uuid2)
                 .doReturn(successToken);
         // Act
-        String responseBody = ServerCommunication.deleteQuestion(uuid1, uuid2);
+        String responseBody = QuestionCommunication.deleteQuestion(uuid1, uuid2);
 
         // Assert
         assertEquals(successToken, responseBody);
@@ -532,7 +532,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPatch(subUrl + "api/question/" + uuid1 + "/answer?code=" + uuid2)
                 .doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
+        String responseBody = QuestionCommunication.markQuestionAsAnswered(uuid1, uuid2);
 
         // Assert
         assertNotNull(responseBody);
@@ -550,7 +550,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPatch(subUrl + "api/question/" + uuid1 + "/answer?code=" + uuid2)
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
-        String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
+        String responseBody = QuestionCommunication.markQuestionAsAnswered(uuid1, uuid2);
 
         // Assert
         assertNull(responseBody);
@@ -569,7 +569,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPatch(subUrl + "api/question/" + uuid1 + "/answer?code=" + uuid2)
                 .doReturn(successToken);
         // Act
-        String responseBody = ServerCommunication.markQuestionAsAnswered(uuid1, uuid2);
+        String responseBody = QuestionCommunication.markQuestionAsAnswered(uuid1, uuid2);
 
         // Assert
         assertEquals(successToken, responseBody);
@@ -587,7 +587,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "api/question/" + uuid1 + "/vote")
                 .doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication.addQuestionVote(uuid1);
+        String responseBody = QuestionVoteCommunication.addQuestionVote(uuid1);
 
         // Assert
         assertNotNull(responseBody);
@@ -604,7 +604,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "api/question/" + uuid3 + "/vote")
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
-        String responseBody = ServerCommunication.addQuestionVote(uuid3);
+        String responseBody = QuestionVoteCommunication.addQuestionVote(uuid3);
 
         // Assert
         assertNull(responseBody);
@@ -621,7 +621,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "api/question/" + uuid3 + "/vote")
                 .doReturn(successToken);
         // Act
-        String responseBody = ServerCommunication.addQuestionVote(uuid3);
+        String responseBody = QuestionVoteCommunication.addQuestionVote(uuid3);
 
         // Assert
         assertEquals(successToken, responseBody);
@@ -642,7 +642,7 @@ public class ServerCommunicationTest {
         httpClientMock.onDelete(subUrl + "api/question/" + uuid1 + "/vote/" + uuid2)
                 .doReturn(qdStr).doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication.deleteQuestionVote(uuid1, uuid2);
+        String responseBody = QuestionVoteCommunication.deleteQuestionVote(uuid1, uuid2);
 
         // Assert
         assertEquals(qdStr, responseBody);
@@ -660,7 +660,7 @@ public class ServerCommunicationTest {
         httpClientMock.onDelete(subUrl + "api/question/" + uuid1 + "/vote/" + uuid2)
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
-        String responseBody = ServerCommunication.deleteQuestionVote(uuid1, uuid2);
+        String responseBody = QuestionVoteCommunication.deleteQuestionVote(uuid1, uuid2);
 
         // Assert
         assertNull(responseBody);
@@ -682,7 +682,7 @@ public class ServerCommunicationTest {
         httpClientMock.onDelete(subUrl + "api/question/" + uuid1 + "/vote/" + uuid2)
                 .doReturn(qdStrReturned);
         // Act
-        String responseBody = ServerCommunication.deleteQuestionVote(uuid1, uuid2);
+        String responseBody = QuestionVoteCommunication.deleteQuestionVote(uuid1, uuid2);
 
         // Assert
         assertNull(responseBody);
@@ -702,7 +702,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/pace")
                 .doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication.addPaceVote(uuid1, pt);
+        String responseBody = PaceVoteCommunication.addPaceVote(uuid1, pt);
 
         // Assert
         assertNotNull(responseBody);
@@ -721,7 +721,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/pace")
                 .doReturnStatus(404).doReturn(failureToken);
         // Act
-        String responseBody = ServerCommunication.addPaceVote(uuid1, pt);
+        String responseBody = PaceVoteCommunication.addPaceVote(uuid1, pt);
 
         // Assert
         assertNull(responseBody);
@@ -740,7 +740,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/pace")
                 .doReturn(successToken);
         // Act
-        String responseBody = ServerCommunication.addPaceVote(uuid1, pt);
+        String responseBody = PaceVoteCommunication.addPaceVote(uuid1, pt);
 
         // Assert
         assertEquals(successToken, responseBody);
@@ -761,7 +761,7 @@ public class ServerCommunicationTest {
         httpClientMock.onDelete(subUrl + "api/board/" + uuid1 + "/pace/" + uuid2)
                 .doReturn(pdStringReturned).doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication.deletePaceVote(uuid1, uuid2);
+        String responseBody = PaceVoteCommunication.deletePaceVote(uuid1, uuid2);
 
         // Assert
         assertNotNull(responseBody);
@@ -779,7 +779,7 @@ public class ServerCommunicationTest {
         httpClientMock.onDelete(subUrl + "api/board/" + uuid1 + "/pace/" + uuid2)
                 .doReturnStatus(404);
         // Act
-        String responseBody = ServerCommunication.deletePaceVote(uuid1, uuid2);
+        String responseBody = PaceVoteCommunication.deletePaceVote(uuid1, uuid2);
 
         // Assert
         assertNull(responseBody);
@@ -801,7 +801,7 @@ public class ServerCommunicationTest {
         httpClientMock.onDelete(subUrl + "api/board/" + uuid1 + "/pace/" + uuid2)
                 .doReturn(pdStringReturned).doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication.deletePaceVote(uuid1, uuid2);
+        String responseBody = PaceVoteCommunication.deletePaceVote(uuid1, uuid2);
 
         // Assert
         assertNull(responseBody);
@@ -823,7 +823,7 @@ public class ServerCommunicationTest {
         httpClientMock.onPost(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2)
                 .doReturnStatus(200);
         // Act
-        String responseBody = ServerCommunication.addPoll(uuid1, uuid2, "Test Poll", pollOptions);
+        String responseBody = PollCommunication.addPoll(uuid1, uuid2, "Test Poll", pollOptions);
 
         // Assert
         assertNotNull(responseBody);
@@ -846,7 +846,7 @@ public class ServerCommunicationTest {
                 .doReturnStatus(404).doReturn(failureToken);
 
         // Act
-        String responseBody = ServerCommunication.addPoll(uuid1, uuid2, "Test Poll", pollOptions);
+        String responseBody = PollCommunication.addPoll(uuid1, uuid2, "Test Poll", pollOptions);
 
         // Assert
         assertNull(responseBody);
@@ -868,7 +868,7 @@ public class ServerCommunicationTest {
                 .doReturn(successToken);
 
         // Act
-        String responseBody = ServerCommunication.addPoll(uuid1, uuid2, "Test Poll", pollOptions);
+        String responseBody = PollCommunication.addPoll(uuid1, uuid2, "Test Poll", pollOptions);
 
         // Assert
         assertEquals(successToken, responseBody);
@@ -885,7 +885,7 @@ public class ServerCommunicationTest {
         httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/poll").doReturnStatus(200);
 
         // Act
-        String responseBody = ServerCommunication.retrievePollDetails(uuid1);
+        String responseBody = PollCommunication.retrievePollDetails(uuid1);
 
         // Assert
         assertNotNull(responseBody);
@@ -903,7 +903,7 @@ public class ServerCommunicationTest {
                 .doReturnStatus(404).doReturn(failureToken);
 
         // Act
-        String responseBody = ServerCommunication.retrievePollDetails(uuid1);
+        String responseBody = PollCommunication.retrievePollDetails(uuid1);
 
         // Assert
         assertNull(responseBody);
@@ -921,7 +921,7 @@ public class ServerCommunicationTest {
                 .doReturn(successToken);
 
         // Act
-        String responseBody = ServerCommunication.retrievePollDetails(uuid2);
+        String responseBody = PollCommunication.retrievePollDetails(uuid2);
 
         // Assert
         assertEquals(successToken, responseBody);
@@ -939,7 +939,7 @@ public class ServerCommunicationTest {
                 .doReturnStatus(200);
 
         // Act
-        String responseBody = ServerCommunication.deletePoll(uuid1, uuid2);
+        String responseBody = PollCommunication.deletePoll(uuid1, uuid2);
 
         // Assert
         assertNotNull(responseBody);
@@ -958,7 +958,7 @@ public class ServerCommunicationTest {
                 .doReturnStatus(400).doReturn(failureToken);
 
         // Act
-        String responseBody = ServerCommunication.deletePoll(uuid1, uuid2);
+        String responseBody = PollCommunication.deletePoll(uuid1, uuid2);
 
         // Assert
         assertNull(responseBody);
@@ -977,7 +977,7 @@ public class ServerCommunicationTest {
                 .doReturnStatus(403).doReturn(failureToken);
 
         // Act
-        String responseBody = ServerCommunication.deletePoll(uuid1, uuid2);
+        String responseBody = PollCommunication.deletePoll(uuid1, uuid2);
 
         // Assert
         assertNull(responseBody);
@@ -996,7 +996,7 @@ public class ServerCommunicationTest {
                 .doReturnStatus(404).doReturn(failureToken);
 
         // Act
-        String responseBody = ServerCommunication.deletePoll(uuid1, uuid2);
+        String responseBody = PollCommunication.deletePoll(uuid1, uuid2);
 
         // Assert
         assertNull(responseBody);
@@ -1015,7 +1015,7 @@ public class ServerCommunicationTest {
                 .doReturn(successToken);
 
         // Act
-        String responseBody = ServerCommunication.deletePoll(uuid1, uuid2);
+        String responseBody = PollCommunication.deletePoll(uuid1, uuid2);
 
         // Assert
         assertEquals(successToken, responseBody);
