@@ -108,6 +108,11 @@ public class ModeratorViewController {
         this.authorName = authorName;
     }
 
+    /**
+     * Method that sets the moderator code of the question board.
+     *
+     * @param modCode   Moderator code associated to the question board.
+     */
     public void setModCode(UUID modCode) {
         this.modCode = modCode;
     }
@@ -117,14 +122,6 @@ public class ModeratorViewController {
      * If the board is open, it also displays its start time.
      */
     public void setBoardDetails() {
-        boardTitle.setText(quBo.getTitle());
-        if (quBo.isClosed()) {
-            boardStatusText.setText("Question board is closed, making changes is no longer possible ");
-            boardStatusIcon.setImage(new Image(getClass().getResource(
-                "/images/qubo/status_closed.png").toString()));
-        } else {
-            boardStatusText.setText("board open since " + quBo.getStartTime().toString());
-        }
     }
 
     /**
@@ -148,9 +145,7 @@ public class ModeratorViewController {
             paceVotePane);
     }
 
-    //Temporary refresh button
     public void displayBoardInfo() {
-        refresh();
     }
 
     public void copyStudentCode() {

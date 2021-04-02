@@ -156,9 +156,7 @@ public class StudentViewController {
             paceVotePane);
     }
 
-    //Temporary refresh button
     public void displayBoardInfo() {
-        refresh();
     }
 
     public void copyStudentCode() {

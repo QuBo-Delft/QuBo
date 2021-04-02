@@ -149,16 +149,18 @@ public class QuBoActionEvents {
         //Disable options menu
         options.setDisable(true);
 
-        //Create the buttons and labels, and set their alignments
+        //Create the warning Label
         Label warning = new Label("Error: Question must be more than 8 characters long.");
         warning.setWrapText(true);
         warning.setStyle("-fx-text-inner-color: #ef4f4f");
         warning.setStyle("-fx-font-style: italic");
         warning.setVisible(false);
+
+        //Create the Cancel and Update buttons
         Button cancel = new Button("Cancel");
         Button update = new Button("Update");
 
-        //Add the buttons and label to an HBox and set the way this HBox is displayed on the screen
+        //Add the buttons and label to an HBox, and set the way this HBox is displayed on the screen
         HBox buttons = new HBox(warning, cancel, update);
         warning.prefWidthProperty().bind(questionBody.wrappingWidthProperty()
             .subtract(cancel.widthProperty().add(update.widthProperty()).add(30)));
