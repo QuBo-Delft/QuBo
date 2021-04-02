@@ -23,8 +23,45 @@ public class ServerCommunication {
     //protected static:
     //  - sendRequest()
     //  - post()
-    //  - delete()
     //  - patch()
-    //  - put()
+
+    /**
+     * Retrieves an HTTP response from the server by sending an HTTP delete request.
+     *
+     * @param fullUrl   The URL corresponding to the server endpoint.
+     * @return The HTTP response returned.
+     */
+    private static HttpResponse<String> delete(String fullUrl) {
+        //Set up the request Object
+        HttpRequest request = HttpRequest.newBuilder()
+                .DELETE()
+                .uri(URI.create(fullUrl))
+                .build();
+
+        //Send the request, and retrieve and return the response from the server
+        return sendRequest(request);
+    }
+
+    /**
+     * Retrieves an HTTP response from the server by sending an HTTP put request.
+     *
+     * @param fullUrl       The URL corresponding to the server endpoint.
+     * @param requestBody   The body of the request. This should contain the information that should be sent to
+     *      the server.
+     * @return The HTTP response returned.
+     */
+    private static HttpResponse<String> put(String fullUrl, String requestBody) {
+        //Set up the request Object
+        HttpRequest request = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                .uri(URI.create(fullUrl))
+                .headers("Content-Type", "application/json;charset=UTF-8")
+                .build();
+
+        //Send the request, and retrieve and return the response from the server
+        return sendRequest(request);
+    }
+
+
 }
 
