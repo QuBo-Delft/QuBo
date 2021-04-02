@@ -319,7 +319,7 @@ public class ServerCommunication {
      *
      * @param questionId    The ID of the question that should be deleted.
      * @param code          The moderator code associated with the board or the question's secret code.
-     * @return The QuestionDetailsDto associated with the deleted question in JSON String format if, 
+     * @return The QuestionDetailsDto associated with the deleted question in JSON String format if,
      *          and only if, the question was deleted from the board.
      */
     public static String deleteQuestion(UUID questionId, UUID code) {
@@ -556,21 +556,18 @@ public class ServerCommunication {
     }
 
     /**
-     * Gets aggregated pace votes from board with specified ID and
-     * paceVote with specified ID.
+     * Gets aggregated pace votes from the question board with the provided ID.
      *
      * @param boardId    The ID of the question board from which the pace votes should be counted.
      * @param moderatorCode The ID of the pace vote from which the results should be counted.
-     * @return The aggregated PaceVotes in a PaceVoteDetailsDto in JSON form.
+     * @return The aggregated pace votes in a PaceVoteDetailsDto in JSON format.
      */
     public static String getAggregatedPaceVotes(UUID boardId, UUID moderatorCode) {
         //Set up the URL that will be sent to the delete helper method
         String fullUrl = ServerCommunication.subUrl + "board/" + boardId + "/pace?code=" + moderatorCode;
 
         //Send the request to the server and receive the response
-        HttpRequest request = HttpRequest.newBuilder()
-            .GET()
-            .uri(URI.create(fullUrl))
+        HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(fullUrl))
             .build();
 
         HttpResponse<String> response = ServerCommunication.sendRequest(request);

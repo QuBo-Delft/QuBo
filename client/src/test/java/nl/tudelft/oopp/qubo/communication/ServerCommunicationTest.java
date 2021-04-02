@@ -1025,12 +1025,28 @@ public class ServerCommunicationTest {
     }
 
     @Test
+    public void testGetAggregatedPaceVotesRequest() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
+        httpClientMock.onGet(url).doReturnStatus(200);
+
+        // Act
+        String responseBody = ServerCommunication.getAggregatedPaceVotes(uuid1, uuid2);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(url).called();
+    }
+
+    @Test
     public void testGetAggregatedPaceVotesCorrectRequestBody() {
         // Arrange
-        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onGet(url)
-            .doReturn(successToken);
+        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
+        httpClientMock.onGet(url).doReturn(successToken);
+
         // Act
         String responseBody = ServerCommunication.getAggregatedPaceVotes(uuid1, uuid2);
 
@@ -1043,10 +1059,9 @@ public class ServerCommunicationTest {
     @Test
     public void testGetAggregatedPaceVotesInvalidQuBo() {
         // Arrange
-        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onGet(url)
-            .doReturnStatus(404).doReturn(failureToken);
+        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
+        httpClientMock.onGet(url).doReturnStatus(404).doReturn(failureToken);
 
         // Act
         String responseBody = ServerCommunication.getAggregatedPaceVotes(uuid1, uuid2);
@@ -1054,17 +1069,15 @@ public class ServerCommunicationTest {
         // Assert
         assertNull(responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify()
-            .get(url).called();
+        httpClientMock.verify().get(url).called();
     }
 
     @Test
-    public void testGetAggregatedPaceVotesInvalidVoteId(){
+    public void testGetAggregatedPaceVotesInvalidVoteId() {
         // Arrange
-        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
         ServerCommunication.setClient(httpClientMock);
-        httpClientMock.onGet(url)
-            .doReturnStatus(403).doReturn(failureToken);
+        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
+        httpClientMock.onGet(url).doReturnStatus(403).doReturn(failureToken);
 
         // Act
         String responseBody = ServerCommunication.getAggregatedPaceVotes(uuid1, uuid2);
@@ -1072,15 +1085,6 @@ public class ServerCommunicationTest {
         // Assert
         assertNull(responseBody);
         // Verify if the request was truly made
-        httpClientMock.verify()
-            .get(url).called();
+        httpClientMock.verify().get(url).called();
     }
-
-    //if (questionBoard == null) {
-    //            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
-    //        }
-    //        //Throw 403 if the provided moderator code does not equal that of the question board
-    //        if (!questionBoard.getModeratorCode().equals(moderatorCode)) {
-    //            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid moderator code");
-    //        }
 }
