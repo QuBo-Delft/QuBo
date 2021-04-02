@@ -11,7 +11,64 @@ import java.util.UUID;
  * This class hold methods related to communication for PaceVotes.
  */
 public class PaceVoteCommunication {
-    // To be added:
-    // - addPaceVote()
-    // - deletePaceVote()
+
+    /**
+     * Adds a pace vote to the question board.
+     * Communicates with the /api/board/{boardid}/pace server endpoint.
+     *
+     * @param boardId   The ID of the question board to which a pace vote should be added.
+     * @param paceType  The type of pace vote that should be added.
+     * @return The PaceVoteCreationDto in JSON String format if the vote was added successfully.
+     */
+    public static String addPaceVote(UUID boardId, PaceType paceType) {
+        //Create a PaceVoteCreationBindingModel with the specified pace type
+        PaceVoteCreationBindingModel paceModel = new PaceVoteCreationBindingModel();
+        paceModel.setPaceType(paceType);
+
+        //Set up the variables needed to call the post method
+        String requestBody = gson.toJson(paceModel);
+        String fullUrl = subUrl + "board/" + boardId + "/pace";
+
+        //Request the pace vote creation, and retrieve the response
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+                "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+    /**
+     * Deletes a pace vote with specified ID from the question board.
+     * Communicates with the /api/board/{boardid}/pace/{pacevoteid} server endpoint.
+     *
+     * @param boardId       The question board from which the pace vote should be deleted.
+     * @param paceVoteId    The ID of the pace vote that should be deleted.
+     * @return The PaceVoteDetailsDto associated with the deleted pace vote in JSON String
+     *          format if, and only if, the deletion was successful.
+     */
+    public static String deletePaceVote(UUID boardId, UUID paceVoteId) {
+        //Set up the URL that will be sent to the delete helper method
+        String fullUrl = subUrl + "board/" + boardId + "/pace/" + paceVoteId;
+
+        //Send the request to the server and receive the response
+        HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        //Check if the deleted pace vote had the same ID
+        PaceVoteDetailsDto deletedVote = gson.fromJson(response.body(), PaceVoteDetailsDto.class);
+        if (!deletedVote.getId().equals(paceVoteId)) {
+            return null;
+        }
+
+        return response.body();
+    }
+
 }
