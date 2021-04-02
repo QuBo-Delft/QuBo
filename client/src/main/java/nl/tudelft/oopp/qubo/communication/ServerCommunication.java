@@ -6,6 +6,7 @@ import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
+import nl.tudelft.oopp.qubo.dtos.pollvote.PollVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel;
@@ -546,6 +547,28 @@ public class ServerCommunication {
 
         //Send the request to delete the question from the board and retrieve the response
         HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+    /**
+     * Add vote for Poll-option.
+     *
+     * @param boardId The ID of the question board on which a vote should be added.
+     * @param optionId The ID of the option that should be voted for.
+     * @return The response body if the request was made successfully, null otherwise.
+     */
+    public static String addPollVote(UUID boardId, UUID optionId) {
+        String fullUrl = subUrl + "board/" + boardId + "/poll/" + optionId + "/vote";
+
+        //Send the post request and retrieve the response from the server
+        HttpResponse<String> response = post(fullUrl, "{}", "Content-Type",
+            "application/json;charset=UTF-8");
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
