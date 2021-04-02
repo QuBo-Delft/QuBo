@@ -95,6 +95,35 @@ public class PollService {
     }
 
     /**
+     * Set the open attribute of the poll to false.
+     *
+     * @param pollId    The ID of the poll.
+     * @return The updated poll.
+     * @throws NotFoundException if the board does not exist.
+     * @throws ConflictException if the poll was already closed.
+     */
+    public Poll closePoll(UUID pollId) {
+
+        Poll poll = pollRepository.getById(pollId);
+
+        // A 404 is thrown if the poll does not exist
+        if (poll == null) {
+            throw new NotFoundException("Poll does not exist");
+        }
+
+        // A 409 is thrown if the poll has already been closed
+        if (!poll.isOpen()) {
+            throw new ConflictException("The poll has already been closed");
+        }
+
+        // Set the poll to closed
+        poll.setOpen(false);
+        pollRepository.save(poll);
+
+        return poll;
+    }
+
+    /**
      * Retrieves a Poll through its ID.
      *
      * @param pollId The ID of the the poll that should be retrieved.
