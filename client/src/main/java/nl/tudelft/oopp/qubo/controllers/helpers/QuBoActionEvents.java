@@ -115,7 +115,7 @@ public class QuBoActionEvents {
      * Creates a new TextArea with its width bound to the ObservableDoubleValue passed into the method.
      *
      * @param widthBind ObservableDoubleValue to be bound to the width of the Text Area
-     * @return          A new TextArea with its width bound
+     * @return A new TextArea with its width bound
      */
     public static TextArea newTextArea(ObservableDoubleValue widthBind) {
         //Create a new TextArea and bind its size
