@@ -110,7 +110,7 @@ public class ServerCommunication {
      * @param fullUrl   The URL corresponding to the server endpoint.
      * @return The http response.
      */
-    private static HttpResponse<String> patch(String fullUrl) {
+    protected static HttpResponse<String> patch(String fullUrl) {
         //Set up the request Object
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(fullUrl))

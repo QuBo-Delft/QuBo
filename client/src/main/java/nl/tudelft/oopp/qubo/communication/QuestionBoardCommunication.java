@@ -11,9 +11,7 @@ import java.util.UUID;
  * This class hold methods related to communication for QuestionBoards.
  */
 public class QuestionBoardCommunication {
-    //To be added:
-    // - createBoardRequest()
-    // - closeBoardRequest()
+
     /**
      * The method sends a request to the server to create a question board.
      *
@@ -36,6 +34,29 @@ public class QuestionBoardCommunication {
         }
 
         return res.body();
+    }
+
+    /**
+     * This method aims to close a question board corresponding to a specific boardId and moderatorCode.
+     *
+     * @param boardId           The board id of a question board to be closed.
+     * @param moderatorCode     The moderator code of this question board.
+     * @return The QuestionBoardDetailsDto in JSON String format if, and only if the question board was
+     *          closed successfully.
+     */
+    public static String closeBoardRequest(UUID boardId, UUID moderatorCode) {
+        // Construct the full url for closing a question board
+        String fullUrl = ServerCommunication.subUrl + "board/" + boardId + "/close?code=" + moderatorCode;
+
+        //Send the http patch request and retrieve the response
+        HttpResponse<String> response = ServerCommunication.patch(fullUrl);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
     }
 
     /**
