@@ -6,6 +6,18 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class SideBarControl {
+    /**
+     * This method hides and shows the content of the sideMenu based on the Togglebutton clicked on the
+     * sidebar.
+     *
+     * @param select            The selected ToggleButton
+     * @param deselect          The unselected ToggleButton
+     * @param sideMenu          The VBox containing the content of the sideMenu
+     * @param sideMenuTitle     The title of the sideMenu
+     * @param ansQuVbox         VBox containing the list of answered questions
+     * @param pollVbox          VBox containing the list of polls
+     * @return                  Boolean of whether or not the sideMenu is still showing
+     */
     public static boolean showHideSelected(ToggleButton select, ToggleButton deselect, VBox sideMenu,
                                            Label sideMenuTitle, VBox ansQuVbox, VBox pollVbox) {
         if (sideMenu.isVisible() && deselect.isSelected()) {

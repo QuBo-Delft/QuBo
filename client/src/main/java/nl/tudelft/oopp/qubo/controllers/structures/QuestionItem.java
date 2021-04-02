@@ -39,6 +39,18 @@ public class QuestionItem extends GridPane {
     private ScrollPane quScPane;
     private VBox questionContainer;
 
+    /**
+     * Constructs a new QuestionItem.
+     *
+     * @param questionId        The UUID of the question
+     * @param upvoteNumber      Label displaying the number of upvotes for the question
+     * @param questionBody      Text node of the question content
+     * @param authorName        Author of the question
+     * @param answers           Textual answers to the question
+     * @param answeredTime      TimeStamp of when the question was answered
+     * @param questionContainer VBox containing the list of questions
+     * @param scrollPane        ScrollPane containing the VBox that contains the list of questions
+     */
     public QuestionItem(UUID questionId, int upvoteNumber, String questionBody, String authorName,
                         Set<AnswerDetailsDto> answers, Timestamp answeredTime, VBox questionContainer,
                         ScrollPane scrollPane) {
@@ -85,7 +97,7 @@ public class QuestionItem extends GridPane {
     /**
      * This method adds the answers to a question if there are any.
      */
-    public void addAnswers() {
+    private void addAnswers() {
         int i = 1;
         for (AnswerDetailsDto answerDetails : answers) {
             Text answer = new Text(answerDetails.getText());
@@ -102,10 +114,9 @@ public class QuestionItem extends GridPane {
      * This method constructs a new questionPane to hold the upvote button, upvote number,
      * question body, options menu, and author name.
      *
-     *
-     * @return              A GridPane containing above mentioned information
+     * @return      A GridPane containing above mentioned information
      */
-    public GridPane newQuestionPane() {
+    private GridPane newQuestionPane() {
         GridPane gridpane = new GridPane();
         questionVbox = newQuestionVbox();
 
@@ -130,7 +141,7 @@ public class QuestionItem extends GridPane {
      * @return  Returns a new VBox containing the question body and the
      *          author name to be displayed.
      */
-    public VBox newQuestionVbox() {
+    private VBox newQuestionVbox() {
         //Create a pane for putting the author name
         HBox authorHbox = new HBox(authorName);
         authorHbox.setAlignment(Pos.BOTTOM_RIGHT);
@@ -155,6 +166,13 @@ public class QuestionItem extends GridPane {
         return vbox;
     }
 
+    /**
+     * Method that checks whether the user is the author of the question or a mod, and displays
+     * the suitable options MenuButton and options accordingly.
+     *
+     * @param secretCodeMap HashMap of questionId:secretCode
+     * @param modCode       The moderator code of the board
+     */
     public void displayOptions(HashMap<UUID, UUID> secretCodeMap, UUID modCode) {
         //Determine whether the question was asked by the user
         //If yes create and display the options menu
@@ -172,7 +190,7 @@ public class QuestionItem extends GridPane {
      *
      * @return      Returns a new options menu to be displayed.
      */
-    public MenuButton newOptionsMenu(UUID code, boolean isMod) {
+    private MenuButton newOptionsMenu(UUID code, boolean isMod) {
         MenuButton options = new MenuButton();
 
         //Create the edit menu item and set action event
@@ -183,6 +201,7 @@ public class QuestionItem extends GridPane {
         options.getItems().add(edit);
 
         if (isMod) {
+            //Add mod options
             newModOptions(options, code);
         }
 
@@ -202,7 +221,7 @@ public class QuestionItem extends GridPane {
         return options;
     }
 
-    public void newModOptions(MenuButton options, UUID code) {
+    private void newModOptions(MenuButton options, UUID code) {
         MenuItem reply = new MenuItem("Reply");
         reply.setOnAction(event -> QuBoActionEvents.replyToQuestionOption(
             this, questionPane, questionId, code, options, questionBody));
@@ -217,6 +236,8 @@ public class QuestionItem extends GridPane {
 
     /**
      * Constructs and returns a new upvote box.
+     *
+     * @param upvoteMap HashMap of questionId:upvoteId
      */
     public void newUpvoteVbox(HashMap<UUID, UUID> upvoteMap) {
         //Create the Vbox for placing the upvote button and upvote number

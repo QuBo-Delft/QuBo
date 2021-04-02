@@ -57,6 +57,7 @@ public class SceneLoader {
      * @param stage     The stage of the scene where the method is called.
      * @param userNameI The username to be transferred.
      * @param fxml      The fxml sheet to be loaded.
+     * @param code      The moderator code of the board
      */
     public void viewLoader(QuestionBoardDetailsDto qdI, Stage stage, String userNameI,
                            String fxml, UUID code) {
@@ -125,6 +126,9 @@ public class SceneLoader {
             case "JoinQuBo":
                 stage.setMinWidth(Double.MIN_VALUE);
                 stage.setMinHeight(Double.MIN_VALUE);
+                stage.setScene(newScene);
+                stage.centerOnScreen();
+                break;
             default:
                 stage.setScene(newScene);
                 stage.centerOnScreen();

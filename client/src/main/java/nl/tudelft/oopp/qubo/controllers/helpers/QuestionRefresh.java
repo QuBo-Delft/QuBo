@@ -37,13 +37,24 @@ public class QuestionRefresh {
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         .create();
 
-    public static void studentRefresh(QuestionBoardDetailsDto quBo, VBox unAnsLV, VBox ansLV, HashMap<UUID,
+    /**
+     * This method takes in the information and nodes to be able to refresh the question lists for students.
+     *
+     * @param quBo              QuestionBoardDetailsDto of the board
+     * @param unAnsVbox         VBox containing the list of unanswered questions
+     * @param ansVbox           VBox containing the list of answered questions
+     * @param upvote            HashMap of questionId:upvoteId
+     * @param secret            HashMap of questionId:secretCode
+     * @param unAnsScrollPane   ScrollPane containing the VBox that contains the list of unanswered questions
+     * @param ansScrollPane     ScrollPane containing the VBox that contains the list of answered questions
+     */
+    public static void studentRefresh(QuestionBoardDetailsDto quBo, VBox unAnsVbox, VBox ansVbox, HashMap<UUID,
                                         UUID> upvote, HashMap<UUID, UUID> secret, ScrollPane unAnsScrollPane,
                                         ScrollPane ansScrollPane) {
         thisQuBoId = quBo;
 
-        unAnsQuVbox = unAnsLV;
-        ansQuVbox = ansLV;
+        unAnsQuVbox = unAnsVbox;
+        ansQuVbox = ansVbox;
 
         upvoteMap = upvote;
         secretCodeMap = secret;
@@ -56,6 +67,17 @@ public class QuestionRefresh {
         displayQuestions();
     }
 
+    /**
+     * This method takes in the information and nodes to be able to refresh the question lists for mods.
+     *
+     * @param quBo              QuestionBoardDetailsDto of the board
+     * @param code              Moderator code of the board
+     * @param unAnsVbox         VBox containing the list of unanswered questions
+     * @param ansVbox           VBox containing the list of answered questions
+     * @param upvote            HashMap of questionId:upvoteId
+     * @param unAnsScrollPane   ScrollPane containing the VBox that contains the list of unanswered questions
+     * @param ansScrollPane     ScrollPane containing the VBox that contains the list of answered questions
+     */
     public static void modRefresh(QuestionBoardDetailsDto quBo, UUID code, VBox unAnsVbox, VBox ansVbox,
                                   HashMap<UUID, UUID> upvote, ScrollPane unAnsScrollPane,
                                   ScrollPane ansScrollPane) {
@@ -157,8 +179,8 @@ public class QuestionRefresh {
                 question.getText(), question.getAuthorName(), question.getAnswers(),
                 question.getAnswered(), questionVbox, scrollpane);
 
+            //Display the upvotes and the options menu
             newQu.newUpvoteVbox(upvoteMap);
-
             newQu.displayOptions(secretCodeMap, modCode);
 
             //Add the question to the ObservableList
