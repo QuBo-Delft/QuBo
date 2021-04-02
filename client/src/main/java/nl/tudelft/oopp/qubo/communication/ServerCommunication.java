@@ -578,4 +578,26 @@ public class ServerCommunication {
         return response.body();
     }
 
+    /**
+     * Remove PollVote after it has been registered.
+     *
+     * @param boardId The ID of the board in which this poll is held.
+     * @param voteId  The ID of the vote that is to be deleted.
+     * @return The response body if the request was made successfully, null otherwise.
+     */
+    public static String removePollVote(UUID boardId, UUID voteId) {
+        String fullUrl = subUrl + "board/" + boardId + "/poll/vote/" + voteId;
+
+        //Send the delete request and retrieve the response from the server
+        HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+
+    }
+
 }
