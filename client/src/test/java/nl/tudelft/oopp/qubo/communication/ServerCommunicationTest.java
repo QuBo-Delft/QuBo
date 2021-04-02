@@ -1040,4 +1040,23 @@ public class ServerCommunicationTest {
         httpClientMock.verify()
             .post(fullUrl).called();
     }
+
+    @Test
+    public void testPollVoteRemoval() {
+        // Arrange
+        String fullUrl = subUrl + "api/board/" + uuid1 + "/poll/vote/" + uuid2;
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onDelete(fullUrl)
+            .doReturn(successToken);
+
+        // Act
+        String responseBody = ServerCommunication.removePollVote(uuid1, uuid2);
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+            .delete(fullUrl).called();
+    }
+
+
 }
