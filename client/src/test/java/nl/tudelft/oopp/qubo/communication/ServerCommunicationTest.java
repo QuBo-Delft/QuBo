@@ -1040,6 +1040,7 @@ public class ServerCommunicationTest {
         // Verify if the request was truly made
         httpClientMock.verify().post(fullUrl).called();
     }
+
     @Test
     public void testPollVoteRegistrationResponseBody() {
         // Arrange
