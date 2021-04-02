@@ -1023,4 +1023,21 @@ public class ServerCommunicationTest {
         httpClientMock.verify()
                 .delete(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2).called();
     }
+
+    @Test
+    public void testPollVoteRegistration() {
+        // Arrange
+        String fullUrl = subUrl + "api/board/" + uuid1 + "/poll/" + uuid2 + "/vote";
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onPost(fullUrl)
+            .doReturn(successToken);
+
+        // Act
+        String responseBody = ServerCommunication.addPollVote(uuid1, uuid2);
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+            .post(fullUrl).called();
+    }
 }
