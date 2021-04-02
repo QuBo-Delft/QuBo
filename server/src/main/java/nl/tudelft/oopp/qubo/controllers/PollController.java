@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
@@ -125,6 +126,45 @@ public class PollController {
     }
 
     /**
+     * Patch endpoint to close a poll.
+     *
+     * @param boardId           The ID of the question board.
+     * @param moderatorCode     The moderator code of the board.
+     * @return The PollDetailsDto object of the poll.
+     */
+    @RequestMapping(value = "/{boardid}/poll", method = PATCH)
+    @ResponseBody
+    public PollDetailsDto closePoll(
+            @PathVariable("boardid") UUID boardId,
+            @RequestParam("code") UUID moderatorCode) {
+        QuestionBoard qb = questionBoardService.getBoardById(boardId);
+
+        // A 404 is thrown if the question board does not exist
+        if (qb == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+
+        // A 403 is thrown if the moderatorCode is invalid for closing a poll
+        if (!moderatorCode.equals(qb.getModeratorCode())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "The provided moderatorCode is not valid for this question board");
+        }
+
+        // Get the poll associated with the question board
+        Poll poll = qb.getPoll();
+
+        // A 404 is thrown if there is no poll associated with the question board
+        if (poll == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no poll in this question board");
+        }
+
+        Poll closedPoll = pollService.closePoll(poll.getId());
+        PollDetailsDto pollDto = modelMapper.map(closedPoll, PollDetailsDto.class);
+
+        return pollDto;
+    }
+
+    /**
      * DELETE endpoint for deleting Polls.
      * Throw 404 upon requesting a non-existent poll.
      * Throw 403 when the provided moderator code does not match that of the question board.
@@ -191,3 +231,4 @@ public class PollController {
         return dto;
     }
 }
+

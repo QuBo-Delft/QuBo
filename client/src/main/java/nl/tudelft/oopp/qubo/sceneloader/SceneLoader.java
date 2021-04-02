@@ -4,12 +4,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
+import javafx.stage.WindowEvent;
+import nl.tudelft.oopp.qubo.controllers.JoinQuBoController;
+import nl.tudelft.oopp.qubo.controllers.CreateQuBoController;
 import nl.tudelft.oopp.qubo.controllers.QuBoCodesController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
+import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
+import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -79,11 +83,13 @@ public class SceneLoader {
         // Create an FXMLLoader of the input fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/" + fxml + ".fxml"));
         // Check whether the root is valid
-        rootValid(loader, stage, fxml);
+        stage = rootValid(loader, stage, fxml);
         // Set values to the fxml controller if necessary
         setController(fxml, loader);
         // Set the title of the stage
         setTitle(fxml, stage);
+        // Set the close method of the stage
+        setCloseMethod(fxml, stage);
     }
 
     /**
@@ -95,7 +101,7 @@ public class SceneLoader {
      * @param stage     The stage of the scene where the method is called.
      * @param fxml      The fxml sheet to be loaded.
      */
-    private static void rootValid(FXMLLoader loader, Stage stage, String fxml) {
+    private static Stage rootValid(FXMLLoader loader, Stage stage, String fxml) {
         Scene newScene = null;
 
         // Check if file can be loaded
@@ -122,16 +128,20 @@ public class SceneLoader {
                 // Close current stage and show new stage
                 stage.close();
                 newStage.show();
+
+                return newStage;
                 break;
             case "JoinQuBo":
                 stage.setMinWidth(Double.MIN_VALUE);
                 stage.setMinHeight(Double.MIN_VALUE);
                 stage.setScene(newScene);
                 stage.centerOnScreen();
+                return stage;
                 break;
             default:
                 stage.setScene(newScene);
                 stage.centerOnScreen();
+                return stage;
                 break;
         }
     }
@@ -198,6 +208,48 @@ public class SceneLoader {
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * Sets the correct close method for the scene that is to be displayed.
+     *
+     * @param fxml  The fxml sheet to be loaded.
+     * @param stage The stage of the scene on which the method is called.
+     */
+    public static void setCloseMethod(String fxml, Stage stage) {
+        String message;
+
+        switch (fxml) {
+            case "JoinQuBo":
+                message = "";
+                stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
+                break;
+            case ("CreateQuBo"):
+                message = "\n'Cancel' will return you to the homepage";
+                stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
+                break;
+            case ("QuBoCodes"):
+                message = "\nMake sure you have copied the question board codes!";
+                stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
+                break;
+            case ("StudentView"):
+            case ("ModeratorView"):
+                message = "\nYou can return to the homepage by pressing the designated button at the"
+                        + " bottom of the sidebar";
+                stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
+                break;
+            default:
+                break;
+        }
+    }
+
+    private static void closeMethodHelper(WindowEvent windowEvent, String message) {
+        boolean close = ConfirmationDialog.display("Close Application",
+                "Are you sure you wish to close the application?\n" + message);
+
+        if (!close) {
+            windowEvent.consume();
         }
     }
 }
