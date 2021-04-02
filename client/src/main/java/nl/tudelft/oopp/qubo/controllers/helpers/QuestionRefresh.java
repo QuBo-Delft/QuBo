@@ -164,7 +164,11 @@ public class QuestionRefresh {
         if (questionArray.length == 0) {
             questionVbox.getChildren().clear();
         } else {
-            Sorting.sortOnUpvotes(questionArray);
+            if (questionVbox.getId().equals("unAnsQuVbox")) {
+                Sorting.sortOnUpvotes(questionArray);
+            } else {
+                Sorting.sortOnTimeAnswered(questionArray);
+            }
             mapQuestions(questionVbox, questionArray, scrollpane);
         }
     }

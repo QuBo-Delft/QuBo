@@ -1,12 +1,9 @@
 package nl.tudelft.oopp.qubo.sceneloader;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import nl.tudelft.oopp.qubo.controllers.JoinQuBoController;
-import nl.tudelft.oopp.qubo.controllers.CreateQuBoController;
 import nl.tudelft.oopp.qubo.controllers.QuBoCodesController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;

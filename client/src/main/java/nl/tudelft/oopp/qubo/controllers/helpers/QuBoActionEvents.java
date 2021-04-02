@@ -237,7 +237,7 @@ public class QuBoActionEvents {
      * @param questionVbox      VBox containing question content (Needed to remove the text area in it)
      * @param input             The Text Area node (Needs to be removed after a successful edit)
      * @param buttons           The HBox containing the buttons (Needs to be removed after a successful edit)
-     * @param questionBody   Text node of the question content (Needs to be shown after successful edit)
+     * @param questionBody      Text node of the question content (Needs to be shown after successful edit)
      */
     public static void cancelEdit(MenuButton options, VBox questionVbox, TextArea input,
                            HBox buttons, Text questionBody) {
