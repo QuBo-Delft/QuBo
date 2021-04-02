@@ -296,7 +296,7 @@ public class ServerCommunication {
      *                      format if, and only if, the request was successful.
      */
     public static String addAnswer(UUID questionId, UUID modCode, String text) {
-        //Instantiate a AnswerCreationBindingModel
+        //Instantiate an AnswerCreationBindingModel
         AnswerCreationBindingModel answerModel = new AnswerCreationBindingModel();
         answerModel.setText(text);
 
