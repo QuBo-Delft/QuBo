@@ -149,7 +149,7 @@ public class QuBoActionEvents {
         //Disable options menu
         options.setDisable(true);
 
-        //Create the buttons and set their alignments
+        //Create the buttons and labels, and set their alignments
         Label warning = new Label("Error: Question must be more than 8 characters long.");
         warning.setWrapText(true);
         warning.setStyle("-fx-text-inner-color: #ef4f4f");
