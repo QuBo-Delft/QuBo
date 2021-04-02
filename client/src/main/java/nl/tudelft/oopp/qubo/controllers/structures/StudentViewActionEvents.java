@@ -14,6 +14,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
+import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
 import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
@@ -60,7 +62,7 @@ public class StudentViewActionEvents {
      */
     public static void toggleUpvoteTrue(UUID questionId, HashMap<UUID, UUID> upvoteMap,
                                         ToggleButton upvoteTriangle, Label upvoteNumber) {
-        String response = ServerCommunication.addQuestionVote(questionId);
+        String response = QuestionVoteCommunication.addQuestionVote(questionId);
 
         if (response == null) {
             AlertDialog.display("", "Upvote failed.");
@@ -87,7 +89,7 @@ public class StudentViewActionEvents {
      */
     public static void toggleUpvoteFalse(UUID questionId, HashMap<UUID, UUID> upvoteMap,
                                          ToggleButton upvoteTriangle, Label upvoteNumber) {
-        String response = ServerCommunication.deleteQuestionVote(questionId, upvoteMap.get(questionId));
+        String response = QuestionVoteCommunication.deleteQuestionVote(questionId, upvoteMap.get(questionId));
 
         if (response == null) {
             AlertDialog.display("", "Canceling upvote failed.");
@@ -171,7 +173,7 @@ public class StudentViewActionEvents {
                                Text questionContent, VBox questionVbox, TextArea input,
                                HBox buttons) {
         //Send a request to the server
-        String response = ServerCommunication.editQuestion(questionId, code, text);
+        String response = QuestionCommunication.editQuestion(questionId, code, text);
 
         if (response == null) {
             //If request failed
@@ -267,7 +269,7 @@ public class StudentViewActionEvents {
      */
     public static void deleteQuestion(GridPane content, UUID questionId, UUID code) {
         //Send a request to the server
-        String response = ServerCommunication.deleteQuestion(questionId, code);
+        String response = QuestionCommunication.deleteQuestion(questionId, code);
 
         if (response == null) {
             //If the request failed

@@ -19,6 +19,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
+import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
+import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
 import nl.tudelft.oopp.qubo.controllers.structures.Question;
 import nl.tudelft.oopp.qubo.controllers.structures.QuestionListCell;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
@@ -180,7 +183,7 @@ public class StudentViewController {
 
         //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
         //not null.
-        String jsonQuestions = ServerCommunication.retrieveQuestions(quBo.getId());
+        String jsonQuestions = QuestionBoardCommunication.retrieveQuestions(quBo.getId());
 
         if (jsonQuestions == null) {
             divideQuestions(null);
@@ -294,7 +297,7 @@ public class StudentViewController {
         }
 
         String author = authorName == null ? "" : authorName;
-        String responseBody = ServerCommunication.addQuestion(quBo.getId(), questionText, author);
+        String responseBody = QuestionCommunication.addQuestion(quBo.getId(), questionText, author);
         if (responseBody == null) {
             AlertDialog.display("Unsuccessful Request",
                 "Failed to post your question, please try again.");
@@ -319,7 +322,7 @@ public class StudentViewController {
      * @param questionId    UUID of the question that was just asked.
      */
     public void autoUpvote(UUID questionId) {
-        String response = ServerCommunication.addQuestionVote(questionId);
+        String response = QuestionVoteCommunication.addQuestionVote(questionId);
         if (response == null) {
             //When the request fails, display alert
             AlertDialog.display("", "Automatic upvote failed.");

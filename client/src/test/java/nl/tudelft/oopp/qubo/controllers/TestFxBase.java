@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
 import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
@@ -92,7 +93,7 @@ public abstract class TestFxBase {
         FXMLLoader loadedFxml = fxmlLoader(fxmlSheet);
         Parent root = loadedFxml.load();
 
-        String resBody = ServerCommunication.retrieveBoardDetails(boardId);
+        String resBody = QuestionBoardCommunication.retrieveBoardDetails(boardId);
 
         QuestionBoardDetailsDto qd = gson.fromJson(resBody, QuestionBoardDetailsDto.class);
 
@@ -143,7 +144,7 @@ public abstract class TestFxBase {
         QuestionBoardCreationBindingModel board = new QuestionBoardCreationBindingModel("QuBo", startTime);
 
         // Send the request and retrieve the string body of QuestionBoardCreationDto
-        String resBody = ServerCommunication.createBoardRequest(board);
+        String resBody = QuestionBoardCommunication.createBoardRequest(board);
 
         // Convert the response body to QuestionBoardCreationDto
         return gson.fromJson(resBody, QuestionBoardCreationDto.class);
