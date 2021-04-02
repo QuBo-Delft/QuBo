@@ -147,7 +147,7 @@ public class PollController {
         // A 403 is thrown if the moderatorCode is invalid for closing a poll
         if (!moderatorCode.equals(qb.getModeratorCode())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "The provided moderatorCode is not valid for this Question");
+                    "The provided moderatorCode is not valid for this question board");
         }
 
         // Get the poll associated with the question board
