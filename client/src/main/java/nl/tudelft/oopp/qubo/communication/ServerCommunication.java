@@ -17,6 +17,7 @@ public class ServerCommunication {
     protected static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         .create();
+
     /**
      * Set the value of the client of ServerCommunication.
      *
@@ -45,10 +46,6 @@ public class ServerCommunication {
 
         return response;
     }
-
-    //protected static:
-
-    //  - patch()
 
     /**
      * Retrieves an http response from the server by sending an http post request.
@@ -105,6 +102,24 @@ public class ServerCommunication {
 
         //Send the request, and retrieve and return the response from the server
         return sendRequest(request);
+    }
+
+    /**
+     * Retrieves an HTTP response from the server by sending an HTTP patch request.
+     *
+     * @param fullUrl   The URL corresponding to the server endpoint.
+     * @return The http response.
+     */
+    private static HttpResponse<String> patch(String fullUrl) {
+        //Set up the request Object
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(fullUrl))
+                .method("PATCH", HttpRequest.BodyPublishers.ofString("{}"))
+                .header("Content-Type", "application/json")
+                .build();
+
+        //Send the request, and return the http response
+        return  sendRequest(request);
     }
 
 }
