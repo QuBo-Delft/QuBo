@@ -237,7 +237,7 @@ public class PollController {
 
     /**
      * DELETE endpoint for deleting an existing poll vote.
-     * Throw 404 if the poll vote id does not exist, or the the provided board ID does not match
+     * Throw 404 if the poll vote does not exist, or the provided board ID does not match
      * the board ID of the corresponding poll.
      * Throw 403 if the poll has been closed.
      *
@@ -266,7 +266,7 @@ public class PollController {
                     + "match the board ID of its corresponding poll");
         }
 
-        // Check if the poll has been close
+        // Check if the poll has been closed
         if (!poll.isOpen()) {
             throw new ForbiddenException("The poll has been closed");
         }

@@ -28,11 +28,10 @@ public class PollOptionResultDtoTests {
     }
 
     @Test
-    public void mapFromQuestionToQuestionDetailsDto() {
+    public void mapFromPollOptionToPollOptionResultDto() {
         // Arrange
         PollOption p = new PollOption();
-        UUID id1 = UUID.randomUUID();
-        p.setId(id1);
+        p.setId(UUID.randomUUID());
         p.setText("Option Text");
 
         PollVote vote = new PollVote();
@@ -60,7 +59,7 @@ public class PollOptionResultDtoTests {
         PollOptionResultDto dto = mapper.map(p, PollOptionResultDto.class);
 
         // Assert
-        assertEquals(id1, dto.getId());
+        assertEquals(p.getId(), dto.getId());
         assertEquals(p.getText(), dto.getText());
         assertEquals(dto.getVotes(), votes.size());
     }
