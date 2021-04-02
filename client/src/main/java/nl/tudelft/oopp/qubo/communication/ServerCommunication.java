@@ -17,9 +17,18 @@ public class ServerCommunication {
     protected static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         .create();
+    /**
+     * Set the value of the client of ServerCommunication.
+     *
+     * @param client    The HttpClient object to set.
+     */
+    public static void setClient(HttpClient client) {
+        ServerCommunication.client = client;
+    }
+
     // To be added methods
     //public static:
-    //  -  setClient()
+
     //protected static:
     //  - sendRequest()
     //  - post()
