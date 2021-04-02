@@ -30,11 +30,11 @@ public class PollCommunication {
         pollModel.setPollOptions(pollOptions);
 
         //Set up the variables needed to call the post method
-        String requestBody = gson.toJson(pollModel);
-        String fullUrl = subUrl + "board/" + boardId + "/poll?code=" + moderatorCode;
+        String requestBody = ServerCommunication.gson.toJson(pollModel);
+        String fullUrl = ServerCommunication.subUrl + "board/" + boardId + "/poll?code=" + moderatorCode;
 
         //Request the poll creation, and retrieve the response
-        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+        HttpResponse<String> response = ServerCommunication.post(fullUrl, requestBody, "Content-Type",
                 "application/json;charset=UTF-8");
 
         //If the request was unsuccessful, return null
@@ -56,8 +56,8 @@ public class PollCommunication {
     public static String retrievePollDetails(UUID boardId) {
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(subUrl + "board/" + boardId + "/poll")).build();
-        HttpResponse<String> response = sendRequest(request);
+                .uri(URI.create(ServerCommunication.subUrl + "board/" + boardId + "/poll")).build();
+        HttpResponse<String> response = ServerCommunication.sendRequest(request);
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
@@ -79,10 +79,10 @@ public class PollCommunication {
      */
     public static String deletePoll(UUID boardId, UUID moderatorCode) {
         //Set up the variables required by the delete helper method
-        String fullUrl = subUrl + "board/" + boardId + "/poll?code=" + moderatorCode;
+        String fullUrl = ServerCommunication.subUrl + "board/" + boardId + "/poll?code=" + moderatorCode;
 
         //Send the request to delete the question from the board and retrieve the response
-        HttpResponse<String> response = delete(fullUrl);
+        HttpResponse<String> response = ServerCommunication.delete(fullUrl);
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {

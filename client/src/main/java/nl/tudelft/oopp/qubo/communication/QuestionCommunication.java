@@ -30,9 +30,9 @@ public class QuestionCommunication {
         questionModel.setAuthorName(author);
 
         //Create a request and response object, send the request, and retrieve the response
-        String fullUrl = subUrl + "board/" + boardId + "/question";
-        String requestBody = gson.toJson(questionModel);
-        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+        String fullUrl = ServerCommunication.subUrl + "board/" + boardId + "/question";
+        String requestBody = ServerCommunication.gson.toJson(questionModel);
+        HttpResponse<String> response = ServerCommunication.post(fullUrl, requestBody, "Content-Type",
                 "application/json;charset=UTF-8");
 
         //If the request was unsuccessful, return null
@@ -56,14 +56,14 @@ public class QuestionCommunication {
      */
     public static String editQuestion(UUID questionId, UUID code, String text) {
         //Set up the parameters required by the put helper method
-        String fullUrl = subUrl + "question/" + questionId + "?code=" + code;
+        String fullUrl = ServerCommunication.subUrl + "question/" + questionId + "?code=" + code;
 
         QuestionEditingBindingModel editedQuestion = new QuestionEditingBindingModel();
         editedQuestion.setText(text);
-        String requestBody = gson.toJson(editedQuestion);
+        String requestBody = ServerCommunication.gson.toJson(editedQuestion);
 
         //Send the put request to edit the question and retrieve the response
-        HttpResponse<String> response = put(fullUrl, requestBody);
+        HttpResponse<String> response = ServerCommunication.put(fullUrl, requestBody);
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
@@ -84,10 +84,10 @@ public class QuestionCommunication {
      */
     public static String deleteQuestion(UUID questionId, UUID code) {
         //Set up the variables required by the delete helper method
-        String fullUrl = subUrl + "question/" + questionId + "?code=" + code;
+        String fullUrl = ServerCommunication.subUrl + "question/" + questionId + "?code=" + code;
 
         //Send the request to delete the question from the board and retrieve the response
-        HttpResponse<String> response = delete(fullUrl);
+        HttpResponse<String> response = ServerCommunication.delete(fullUrl);
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
@@ -96,6 +96,5 @@ public class QuestionCommunication {
 
         return response.body();
     }
-
 
 }

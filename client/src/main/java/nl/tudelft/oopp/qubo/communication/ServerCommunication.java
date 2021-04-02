@@ -31,7 +31,7 @@ public class ServerCommunication {
      * @param fullUrl   The URL corresponding to the server endpoint.
      * @return The HTTP response returned.
      */
-    private static HttpResponse<String> delete(String fullUrl) {
+    public static HttpResponse<String> delete(String fullUrl) {
         //Set up the request Object
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -50,7 +50,7 @@ public class ServerCommunication {
      *      the server.
      * @return The HTTP response returned.
      */
-    private static HttpResponse<String> put(String fullUrl, String requestBody) {
+    public static HttpResponse<String> put(String fullUrl, String requestBody) {
         //Set up the request Object
         HttpRequest request = HttpRequest.newBuilder()
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -62,6 +62,4 @@ public class ServerCommunication {
         return sendRequest(request);
     }
 
-
 }
-

@@ -26,11 +26,11 @@ public class PaceVoteCommunication {
         paceModel.setPaceType(paceType);
 
         //Set up the variables needed to call the post method
-        String requestBody = gson.toJson(paceModel);
-        String fullUrl = subUrl + "board/" + boardId + "/pace";
+        String requestBody = ServerCommunication.gson.toJson(paceModel);
+        String fullUrl = ServerCommunication.subUrl + "board/" + boardId + "/pace";
 
         //Request the pace vote creation, and retrieve the response
-        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+        HttpResponse<String> response = ServerCommunication.post(fullUrl, requestBody, "Content-Type",
                 "application/json;charset=UTF-8");
 
         //If the request was unsuccessful, return null
@@ -52,10 +52,10 @@ public class PaceVoteCommunication {
      */
     public static String deletePaceVote(UUID boardId, UUID paceVoteId) {
         //Set up the URL that will be sent to the delete helper method
-        String fullUrl = subUrl + "board/" + boardId + "/pace/" + paceVoteId;
+        String fullUrl = ServerCommunication.subUrl + "board/" + boardId + "/pace/" + paceVoteId;
 
         //Send the request to the server and receive the response
-        HttpResponse<String> response = delete(fullUrl);
+        HttpResponse<String> response = ServerCommunication.delete(fullUrl);
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
@@ -63,7 +63,8 @@ public class PaceVoteCommunication {
         }
 
         //Check if the deleted pace vote had the same ID
-        PaceVoteDetailsDto deletedVote = gson.fromJson(response.body(), PaceVoteDetailsDto.class);
+        PaceVoteDetailsDto deletedVote = ServerCommunication.gson
+                .fromJson(response.body(), PaceVoteDetailsDto.class);
         if (!deletedVote.getId().equals(paceVoteId)) {
             return null;
         }

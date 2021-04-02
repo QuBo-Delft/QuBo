@@ -27,8 +27,9 @@ public class QuestionBoardCommunication {
     public static String retrieveBoardDetailsThroughModCode(UUID moderatorCode) {
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(subUrl + "board/moderator?code=" + moderatorCode)).build();
-        HttpResponse<String> response = sendRequest(request);
+                .uri(URI.create(ServerCommunication.subUrl + "board/moderator?code=" + moderatorCode))
+                .build();
+        HttpResponse<String> response = ServerCommunication.sendRequest(request);
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
@@ -50,8 +51,9 @@ public class QuestionBoardCommunication {
     public static String retrieveBoardDetails(UUID boardID) {
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(subUrl + "board/" + boardID)).build();
-        HttpResponse<String> response = sendRequest(request);
+                .uri(URI.create(ServerCommunication.subUrl + "board/" + boardID))
+                .build();
+        HttpResponse<String> response = ServerCommunication.sendRequest(request);
 
         //Check if the response object is null in which case null is returned
         if (response == null) {
@@ -79,9 +81,9 @@ public class QuestionBoardCommunication {
     public static String retrieveQuestions(UUID boardId) {
         //Send the request to retrieve the questions of the question board, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(subUrl + "board/" + boardId + "/questions"))
+                .uri(URI.create(ServerCommunication.subUrl + "board/" + boardId + "/questions"))
                 .build();
-        HttpResponse<String> response = sendRequest(request);
+        HttpResponse<String> response = ServerCommunication.sendRequest(request);
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
@@ -90,6 +92,5 @@ public class QuestionBoardCommunication {
 
         return response.body();
     }
-
 
 }
