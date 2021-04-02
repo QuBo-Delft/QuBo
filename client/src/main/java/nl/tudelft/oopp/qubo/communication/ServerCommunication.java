@@ -32,7 +32,7 @@ public class ServerCommunication {
      * @param request       The http request to be sent to be server.
      * @return The http response returned.
      */
-    private static HttpResponse<String> sendRequest(HttpRequest request) {
+    protected static HttpResponse<String> sendRequest(HttpRequest request) {
         //Instantiate a response object
         HttpResponse<String> response = null;
 
@@ -46,14 +46,29 @@ public class ServerCommunication {
         return response;
     }
 
-
-    // To be added methods
-    //public static:
-
     //protected static:
-    //  - sendRequest()
-    //  - post()
+
     //  - patch()
+
+    /**
+     * Retrieves an http response from the server by sending an http post request.
+     *
+     * @param fullUrl         The full url of the request.
+     * @param requestBody     The request body of JSON form.
+     * @param headers         The http headers of the request.
+     * @return The http response returned.
+     */
+    protected static HttpResponse<String> post(String fullUrl, String requestBody, String... headers) {
+        //Set up the request Object
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .uri(URI.create(fullUrl))
+                .headers(headers)
+                .build();
+
+        //Send the request, and retrieve and return the response from the server
+        return sendRequest(request);
+    }
 
     /**
      * Retrieves an HTTP response from the server by sending an HTTP delete request.
