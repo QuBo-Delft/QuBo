@@ -6,11 +6,13 @@ import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
+import nl.tudelft.oopp.qubo.repositories.PollOptionRepository;
 import nl.tudelft.oopp.qubo.repositories.PollRepository;
 import nl.tudelft.oopp.qubo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.qubo.services.exceptions.ConflictException;
 import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
+import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -20,21 +22,31 @@ public class PollService {
     private final QuestionBoardRepository questionBoardRepository;
 
     private final PollRepository pollRepository;
+    private final PollOptionRepository pollOptionRepository;
 
     private final ModelMapper modelMapper;
+
+    private final CurrentTimeProvider currentTimeProvider;
 
     /**
      * Creates an instance of PollService.
      *
+     * @param currentTimeProvider     The CurrentTimeProvider.
      * @param questionBoardRepository A QuestionBoardRepository.
      * @param pollRepository          A PollRepository.
+     * @param pollOptionRepository    A PollOptionRepository.
      * @param modelMapper             The ModelMapper.
      */
     public PollService(
-        QuestionBoardRepository questionBoardRepository, PollRepository pollRepository,
+        QuestionBoardRepository questionBoardRepository,
+        PollRepository pollRepository,
+        PollOptionRepository pollOptionRepository,
+        CurrentTimeProvider currentTimeProvider,
         ModelMapper modelMapper) {
         this.questionBoardRepository = questionBoardRepository;
         this.pollRepository = pollRepository;
+        this.pollOptionRepository = pollOptionRepository;
+        this.currentTimeProvider = currentTimeProvider;
         this.modelMapper = modelMapper;
     }
 
@@ -60,7 +72,7 @@ public class PollService {
             throw new ConflictException("There is already a poll registered for this question board");
         }
 
-        Instant now = Instant.now();
+        Instant now = currentTimeProvider.getCurrentTime();
 
         //If the question board has not yet been opened or has already been closed, throw a ForbiddenException.
         if (now.isBefore(board.getStartTime().toInstant())
@@ -80,5 +92,34 @@ public class PollService {
         pollRepository.save(poll);
 
         return poll;
+    }
+
+    /**
+     * Retrieves a Poll through its ID.
+     *
+     * @param pollId The ID of the the poll that should be retrieved.
+     * @return The Poll associated with the ID.
+     */
+    public Poll getPollById(UUID pollId) {
+        return pollRepository.getById(pollId);
+    }
+
+    /**
+     * Retrieves a PollOption through its ID.
+     *
+     * @param pollOptionId The ID of the poll option that should be retrieved.
+     * @return The PollOption associated with the ID.
+     */
+    public PollOption getPollOptionById(UUID pollOptionId) {
+        return pollOptionRepository.getById(pollOptionId);
+    }
+
+    /**
+     * Deletes a poll from the database.
+     *
+     * @param pollId The ID of the poll that is to be deleted.
+     */
+    public void deletePoll(UUID pollId) {
+        pollRepository.deletePollById(pollId);
     }
 }

@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.controllers.QuBoCodesController;
-import nl.tudelft.oopp.qubo.controllers.QuBoDetailsController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
@@ -28,7 +27,7 @@ public class SceneLoader {
     private String userName;
 
     /**
-     * This method aims to load the all scenes that do not require input details.
+     * This method aims to load all scenes that do not require input details.
      *
      * @param stage The stage of the scene where the method is called.
      * @param fxml  The fxml sheet to be loaded.
