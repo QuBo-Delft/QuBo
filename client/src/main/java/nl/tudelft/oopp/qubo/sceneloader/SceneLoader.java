@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.controllers.QuBoCodesController;
+import nl.tudelft.oopp.qubo.controllers.QuBoDetailsController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
@@ -22,9 +23,9 @@ public class SceneLoader {
     /**
      * These variables get set when a method that uses them is called.
      */
-    static QuestionBoardDetailsDto qd;
-    static QuestionBoardCreationDto qc;
-    static String userName;
+    private QuestionBoardDetailsDto qd;
+    private QuestionBoardCreationDto qc;
+    private String userName;
 
     /**
      * This method aims to load the all scenes that do not require input details.
@@ -32,7 +33,7 @@ public class SceneLoader {
      * @param stage The stage of the scene where the method is called.
      * @param fxml  The fxml sheet to be loaded.
      */
-    public static void defaultLoader(Stage stage, String fxml) {
+    public void defaultLoader(Stage stage, String fxml) {
         // Start preparing the new scene
         startLoading(stage, fxml);
     }
@@ -43,24 +44,39 @@ public class SceneLoader {
      * @param qcI   The QuestionBoardCreationDto object to be transferred.
      * @param stage The stage of the scene where the method is called.
      */
-    public static void loadQuBoCodes(QuestionBoardCreationDto qcI, Stage stage) {
+    public void loadQuBoCodes(QuestionBoardCreationDto qcI, Stage stage) {
         qc = qcI;
         // Start preparing the new scene
         startLoading(stage, "QuBoCodes");
     }
 
     /**
-     * This method aims to load the page that displays either the student view or the moderator view.
+     * This method aims to load the student view and instantiates necessary values, based on the input,
+     * that have to be passed on to the scene's controller.
      *
-     * @param qdI       The QuestionBoardDetailsDto object to be transferred.
-     * @param stage     The stage of the scene where the method is called.
+     * @param qdI       The QuestionBoardDetails object that is to be transferred.
+     * @param stage     The currently displayed stage.
      * @param userNameI The username to be transferred.
      * @param fxml      The fxml sheet to be loaded.
      */
-    public void viewLoader(QuestionBoardDetailsDto qdI, Stage stage, String userNameI, String fxml) {
+    public void studentLoader(QuestionBoardDetailsDto qdI, Stage stage, String userNameI, String fxml) {
         qd = qdI;
         userName = userNameI;
-        // Start preparing the new scene
+        startLoading(stage, fxml);
+    }
+
+    /**
+     * This method aims to load the moderator view and instantiates necessary values, based on the input,
+     * that have to be passed on to the scene's controller.
+     *
+     * @param qcI       The QuestionBoardCreation object that is to be transferred.
+     * @param stage     The currently displayed stage.
+     * @param userNameI The username to be transferred.
+     * @param fxml      The fxml sheet to be loaded.
+     */
+    public void moderatorLoader(QuestionBoardCreationDto qcI, Stage stage, String userNameI, String fxml) {
+        qc = qcI;
+        userName = userNameI;
         startLoading(stage, fxml);
     }
 
@@ -70,7 +86,7 @@ public class SceneLoader {
      * @param stage The stage of the scene where the method is called.
      * @param fxml  The fxml sheet to be loaded.
      */
-    private static void startLoading(Stage stage, String fxml) {
+    private void startLoading(Stage stage, String fxml) {
         // Create an FXMLLoader of the input fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/" + fxml + ".fxml"));
         // Check whether the root is valid
@@ -90,7 +106,7 @@ public class SceneLoader {
      * @param stage     The stage of the scene where the method is called.
      * @param fxml      The fxml sheet to be loaded.
      */
-    private static void rootValid(FXMLLoader loader, Stage stage, String fxml) {
+    private void rootValid(FXMLLoader loader, Stage stage, String fxml) {
         if (fxml.equals("StudentView") || fxml.equals("ModeratorView")) {
             Stage newStage = new Stage();
             Scene newScene = null;
@@ -123,6 +139,9 @@ public class SceneLoader {
             }
             stage.setScene(new Scene(root));
             stage.centerOnScreen();
+            if (fxml.equals("QuBoDetails")) {
+                stage.show();
+            }
         }
     }
 
@@ -132,7 +151,7 @@ public class SceneLoader {
      * @param fxml      The fxml sheet to be loaded.
      * @param loader    The loader that is used to locate and read the fxml sheet.
      */
-    private static void setController(String fxml, FXMLLoader loader) {
+    private void setController(String fxml, FXMLLoader loader) {
         switch (fxml) {
             case ("QuBoCodes"):
                 QuBoCodesController controllerC = loader.getController();
@@ -152,6 +171,17 @@ public class SceneLoader {
                 controllerS.setBoardDetails();
                 // TODO: need a method to update data in studentView
                 break;
+            case ("QuBoDetails"):
+                QuBoDetailsController controllerD = loader.getController();
+                loader.setController(controllerD);
+                if (qd == null) {
+                    controllerD.setQc(qc);
+                    controllerD.setModerator();
+                } else {
+                    controllerD.setQd(qd);
+                    controllerD.setStudent();
+                }
+                break;
             default:
                 break;
         }
@@ -163,19 +193,22 @@ public class SceneLoader {
      * @param fxml  The fxml sheet to be loaded.
      * @param stage The stage of the scene where the method is called.
      */
-    private static void setTitle(String fxml, Stage stage) {
+    private void setTitle(String fxml, Stage stage) {
         switch (fxml) {
             case ("StudentView"):
                 stage.setTitle(qd.getTitle());
                 break;
             case ("ModeratorView"):
-                stage.setTitle(qd.getTitle() + " - Moderator");
+                stage.setTitle(qc.getTitle() + " - Moderator");
                 break;
             case ("QuBoCodes"):
                 stage.setTitle("Created Question Board");
                 break;
             case ("CreateQuBo"):
                 stage.setTitle("Create Question Board");
+                break;
+            case ("QuBoDetails"):
+                stage.setTitle("Details");
                 break;
             default:
                 stage.setTitle("QuBo");

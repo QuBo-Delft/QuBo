@@ -154,7 +154,7 @@ public class CreateQuBoController {
      * When the user clicks the "cancel" button this method loads the home screen scene.
      */
     public void cancelBtnClicked() {
-        SceneLoader.defaultLoader((Stage) cancelBtn.getScene().getWindow(),
+        new SceneLoader().defaultLoader((Stage) cancelBtn.getScene().getWindow(),
             "JoinQuBo");
     }
 
@@ -185,7 +185,7 @@ public class CreateQuBoController {
         // Load the page that displays student code and moderator code
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
 
-        SceneLoader.loadQuBoCodes(questionBoardDto, stage);
+        new SceneLoader().loadQuBoCodes(questionBoardDto, stage);
     }
 
     /**

@@ -9,6 +9,7 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -19,7 +20,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.control.ToggleGroup?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="550" minWidth="850" prefHeight="550.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.qubo.controllers.StudentViewController">
    <top>
@@ -50,7 +50,17 @@
                </Label>
                <Label fx:id="boardStatusText" maxWidth="1.7976931348623157E308" text="open" />
          </VBox>
-         <Button fx:id="boardInfo" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="40.0" prefWidth="40.0" text="Button" />
+         <Button fx:id="boardInfo" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="40.0" prefWidth="40.0" text="Button">
+            <tooltip>
+               <Tooltip text="Right-click to copy student code" />
+            </tooltip>
+            <contextMenu>
+               <ContextMenu>
+                 <items>
+                   <MenuItem fx:id="studentCodeItemBtn" mnemonicParsing="false" onAction="#copyStudentCode" text="Copy Student Code" />
+                 </items>
+               </ContextMenu>
+            </contextMenu></Button>
          <Pane maxHeight="40.0" maxWidth="150.0" minHeight="40.0" minWidth="40.0" prefHeight="40.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
          <Button fx:id="helpDoc" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#displayHelpDoc" prefHeight="40.0" prefWidth="40.0" text="Help" />
          <ToggleButton fx:id="hamburger" alignment="CENTER_RIGHT" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#showHideSideBar" prefHeight="40.0" prefWidth="40.0" text="sideBar" HBox.hgrow="NEVER" />
@@ -91,7 +101,7 @@
                              <Insets />
                           </VBox.margin>
                        </RadioButton>
-                                <RadioButton mnemonicParsing="false" text="Too slow" toggleGroup="$pace"/>
+                                <RadioButton mnemonicParsing="false" text="Too slow" toggleGroup="$pace" />
                     <padding>
                        <Insets left="15.0" right="15.0" top="15.0" />
                     </padding>

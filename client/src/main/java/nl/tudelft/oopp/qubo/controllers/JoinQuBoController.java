@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.communication.ServerCommunication;
+import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 
@@ -50,7 +51,7 @@ public class JoinQuBoController {
         Stage currentStage = (Stage)((Node) event.getSource()).getScene().getWindow();
 
         //Load the create question board page
-        SceneLoader.defaultLoader(currentStage, "CreateQuBo");
+        new SceneLoader().defaultLoader(currentStage, "CreateQuBo");
     }
 
     /**
@@ -87,16 +88,19 @@ public class JoinQuBoController {
             errorMessageLabel.setVisible(true);
             return;
         }
-
-        QuestionBoardDetailsDto questionBoard = gson.fromJson(resBody, QuestionBoardDetailsDto.class);
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
 
-        //Load the student view if the code entered by the user was the board ID of the question board.
-        //Load the moderator view if this is not the case.
+        QuestionBoardDetailsDto questionBoard = gson.fromJson(resBody, QuestionBoardDetailsDto.class);
+        /*
+            If the entered code is equal to the code of the question board, a student code has been entered and
+            therefore the student view has to be loaded. If this is not the case, it is a moderator code that
+            has been entered and therefore the moderator view has to be loaded.
+         */
         if (boardCode.equals(questionBoard.getId())) {
-            new SceneLoader().viewLoader(questionBoard, stage, user, "StudentView");
+            new SceneLoader().studentLoader(questionBoard, stage, user, "StudentView");
         } else {
-            new SceneLoader().viewLoader(questionBoard, stage, user, "ModeratorView");
+            QuestionBoardCreationDto questionBoardMod = gson.fromJson(resBody, QuestionBoardCreationDto.class);
+            new SceneLoader().moderatorLoader(questionBoardMod, stage, user, "ModeratorView");
         }
     }
 

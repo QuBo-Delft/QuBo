@@ -5,6 +5,9 @@ import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
@@ -36,6 +39,15 @@ import nl.tudelft.oopp.qubo.utilities.sorting.Sorting;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
 
 import javafx.scene.image.ImageView;
+
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,10 +85,14 @@ public class StudentViewController {
     @FXML
     private MenuItem studentCodeItem;
     @FXML
+    private MenuItem studentCodeItemBtn;
+    @FXML
     private Label boardStatusText;
 
     //Records if the side menu was open before hiding
     private boolean sideMenuOpen;
+    // Stage to be shown when the QuBo details button is clicked
+    Stage popUp = new Stage();
 
     @FXML
     private ListView<Question> unAnsQuListView;
@@ -125,11 +141,61 @@ public class StudentViewController {
     public void setBoardDetails() {
         boardTitle.setText(quBo.getTitle());
         if (quBo.isClosed()) {
-            boardStatusText.setText("Question board is closed, making changes is no longer possible ");
             boardStatusIcon.setImage(new Image(getClass().getResource("/icons/status_closed.png").toString()));
+            boardStatusText.setText("Question board is closed, making changes is no longer possible");
         } else {
-            boardStatusText.setText("board open since " + quBo.getStartTime().toString());
+            boardStatusIcon.setImage(new Image(getClass().getResource("/icons/status_open.png").toString()));
+            boardStatusText.setText(timeHandler());
         }
+    }
+
+    private String timeHandler() {
+        ZonedDateTime dateTime = quBo.getStartTime().toInstant().atZone(ZoneId.systemDefault());
+        ZonedDateTime today = Instant.now().atZone(ZoneId.systemDefault());
+        ZonedDateTime relativeYesterday =
+            Instant.now().minus(1, ChronoUnit.DAYS).atZone(ZoneId.systemDefault()).withHour(0);
+        ZonedDateTime relativeTomorrow =
+            Instant.now().plus(1, ChronoUnit.DAYS).atZone(ZoneId.systemDefault())
+                .withHour(23).withMinute(59);
+
+        String displayDate;
+        DateTimeFormatter formatterT =
+            DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault());
+        DateTimeFormatter formatterW =
+            DateTimeFormatter.ofPattern("eeee HH:mm").withZone(ZoneId.systemDefault());
+        DateTimeFormatter formatterD =
+            DateTimeFormatter.ofPattern("dd-MM HH:mm").withZone(ZoneId.systemDefault());
+
+        if (dateTime.isBefore(today)) {
+            if (dateTime.isAfter(relativeYesterday) || dateTime.equals(relativeYesterday)) {
+                if (today.getDayOfYear() == dateTime.getDayOfYear()) {
+                    displayDate = "Question board is open since today at " + formatterT.format(dateTime);
+                } else {
+                    displayDate = "Question board is open since yesterday at " + formatterT.format(dateTime);
+                }
+            } else {
+                if (ChronoUnit.DAYS.between(dateTime,today) < 7) {
+                    displayDate = "Question is board open since " + formatterW.format(dateTime).toLowerCase();
+                } else {
+                    displayDate = "Question is board open since " + formatterD.format(dateTime);
+                }
+            }
+        } else {
+            if (dateTime.isBefore(relativeTomorrow) || dateTime.equals(relativeTomorrow)) {
+                if (today.getDayOfYear() == dateTime.getDayOfYear()) {
+                    displayDate = "Question board opens today at " + formatterT.format(dateTime);
+                } else {
+                    displayDate = "Question board opens tomorrow at " + formatterT.format(dateTime);
+                }
+            } else {
+                if (ChronoUnit.DAYS.between(today, dateTime) < 7) {
+                    displayDate = "Question board opens " + formatterW.format(dateTime).toLowerCase();
+                } else {
+                    displayDate = "Question board opens " + formatterD.format(dateTime);
+                }
+            }
+        }
+        return displayDate;
     }
 
     /**
@@ -266,9 +332,21 @@ public class StudentViewController {
             -> new QuestionListCell(questionListView, secretCodeMap, upvoteMap));
     }
 
-    //Temporary refresh button
+    /**
+     * Shows or hides the details pane based on whether it is already showing or not. To do so it passes
+     * the required arguments to the SceneLoader class which actually builds the scene.
+     */
     public void displayBoardInfo() {
+        //Temporary refresh button
         displayQuestions();
+
+        if (popUp.isShowing()) {
+            popUp.close();
+        } else {
+            if (popUp != null) {
+                new SceneLoader().studentLoader(quBo, popUp, "", "QuBoDetails");
+            }
+        }
     }
 
     public void copyStudentCode() {
@@ -411,7 +489,7 @@ public class StudentViewController {
         boolean backHome = ConfirmationDialog.display("Leave Question Board?",
             "You will have to use your code to join again.");
         if (backHome) {
-            SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
+            new SceneLoader().defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
     }
 }
