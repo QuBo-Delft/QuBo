@@ -14,7 +14,82 @@ public class QuestionBoardCommunication {
     //To be added:
     // - createBoardRequest()
     // - closeBoardRequest()
-    // - retrieveBoardDetailsThroughModCode()
-    // - retrieveBoardDetails()
-    // - retrieveQuestions()
+
+    /**
+     * Retrieves the board details of the Question Board associated with the specified moderator code from
+     *      the server.
+     * Communicates with the /api/board/moderator?code={moderatorCode} server endpoint.
+     *
+     * @param moderatorCode     The code belonging to the Question Board whose details should be retrieved.
+     * @return The QuestionBoardDetailsDto in JSON String format containing the details of the Question Board
+     *         or null if this does not exist.
+     */
+    public static String retrieveBoardDetailsThroughModCode(UUID moderatorCode) {
+        //Create a request and response object, send the request, and retrieve the response
+        HttpRequest request = HttpRequest.newBuilder().GET()
+                .uri(URI.create(subUrl + "board/moderator?code=" + moderatorCode)).build();
+        HttpResponse<String> response = sendRequest(request);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        //Convert the JSON response to a UUID and return this
+        return response.body();
+    }
+
+    /**
+     * Retrieves the details of the Question Board with specified board ID from the server.
+     * Communicates with the /api/board/{boardID} server endpoint.
+     *
+     * @param boardID   The ID of the Question Board whose details should be retrieved.
+     * @return The QuestionBoardDetailsDto in JSON String format containing the details of the Question
+     *         Board or null if this does not exist.
+     */
+    public static String retrieveBoardDetails(UUID boardID) {
+        //Create a request and response object, send the request, and retrieve the response
+        HttpRequest request = HttpRequest.newBuilder().GET()
+                .uri(URI.create(subUrl + "board/" + boardID)).build();
+        HttpResponse<String> response = sendRequest(request);
+
+        //Check if the response object is null in which case null is returned
+        if (response == null) {
+            return null;
+        }
+        //Check if it is a moderator code instead of a board ID and retrieve the details of the
+        //corresponding Question Board. Return null if the code does not exist or if the response
+        //did not have status code 200.
+        if (response.statusCode() == 404) {
+            return retrieveBoardDetailsThroughModCode(boardID);
+        } else if (response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+    /**
+     * Retrieves the question list of the specified board.
+     * Communicates with the /api/board/{boardid}/questions server endpoint.
+     *
+     * @param boardId   The ID of the Question Board whose question list should be retrieved.
+     * @return An array of QuestionDetailsDtos in JSON String format.
+     */
+    public static String retrieveQuestions(UUID boardId) {
+        //Send the request to retrieve the questions of the question board, and retrieve the response
+        HttpRequest request = HttpRequest.newBuilder().GET()
+                .uri(URI.create(subUrl + "board/" + boardId + "/questions"))
+                .build();
+        HttpResponse<String> response = sendRequest(request);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+
 }
