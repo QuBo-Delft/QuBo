@@ -77,7 +77,6 @@ public class PaceVoteServiceTests {
         assertEquals(creationModel.getPaceType().toString(), voteInDatabase.getPaceType().toString());
         assertEquals(qb.getId(), voteInDatabase.getQuestionBoard().getId());
         assertEquals(result.getPaceType().toString(), voteInDatabase.getPaceType().toString());
-
     }
 
     @Test
@@ -89,6 +88,7 @@ public class PaceVoteServiceTests {
         qb.setTitle("Test board");
         qb.setClosed(false);
         questionBoardRepository.save(qb);
+
         PaceVoteCreationBindingModel creationModel = new PaceVoteCreationBindingModel();
         creationModel.setPaceType(PaceType.JUST_RIGHT);
 
@@ -96,6 +96,7 @@ public class PaceVoteServiceTests {
         NotFoundException exception = assertThrows(NotFoundException.class,
             () -> paceVoteService.registerVote(creationModel, UUID.randomUUID())
         );
+
         // Assert
         assertEquals("Question board does not exist", exception.getMessage());
     }
@@ -117,6 +118,7 @@ public class PaceVoteServiceTests {
         ForbiddenException exception = assertThrows(ForbiddenException.class,
             () -> paceVoteService.registerVote(creationModel, qb.getId())
         );
+
         // Assert
         assertEquals("Question board is not active", exception.getMessage());
     }
@@ -138,6 +140,7 @@ public class PaceVoteServiceTests {
         ForbiddenException exception = assertThrows(ForbiddenException.class,
             () -> paceVoteService.registerVote(creationModel, qb.getId())
         );
+
         // Assert
         assertEquals("Question board is not active", exception.getMessage());
     }
@@ -161,11 +164,11 @@ public class PaceVoteServiceTests {
 
         // Act
         PaceVote result = paceVoteService.getById(vote.getId());
+
         // Assert
         assertEquals(qb.getId(), result.getQuestionBoard().getId());
         assertEquals(model.getPaceType().toString(), result.getPaceType().toString());
         assertEquals(vote.getPaceType().toString(), result.getPaceType().toString());
-
     }
 
     @Test
@@ -234,6 +237,7 @@ public class PaceVoteServiceTests {
             vote.setQuestionBoard(qb);
             paceVoteRepository.save(vote);
         }
+
         for (int i = 0; i < 6; i++) {
             PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
             model.setPaceType(PaceType.JUST_RIGHT);
@@ -241,6 +245,7 @@ public class PaceVoteServiceTests {
             vote.setQuestionBoard(qb);
             paceVoteRepository.save(vote);
         }
+
         for (int i = 0; i < 3; i++) {
             PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
             model.setPaceType(PaceType.TOO_SLOW);
@@ -254,7 +259,7 @@ public class PaceVoteServiceTests {
 
         // Assert
         assertEquals(4, result.getTooFastVotes());
-        assertEquals(6,result.getJustRightVotes());
+        assertEquals(6, result.getJustRightVotes());
         assertEquals(3, result.getTooSlowVotes());
     }
 
@@ -268,6 +273,7 @@ public class PaceVoteServiceTests {
         filledUpBoard.setClosed(false);
         questionBoardRepository.save(filledUpBoard);
         ModelMapper modelMapper = new ModelMapper();
+
         for (int i = 0; i < 3; i++) {
             PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
             model.setPaceType(PaceType.JUST_RIGHT);
@@ -275,6 +281,7 @@ public class PaceVoteServiceTests {
             vote.setQuestionBoard(filledUpBoard);
             paceVoteRepository.save(vote);
         }
+
         QuestionBoard qb = new QuestionBoard();
         qb.setModeratorCode(UUID.randomUUID());
         qb.setStartTime(Timestamp.valueOf("2021-04-01 00:00:00"));
@@ -286,9 +293,9 @@ public class PaceVoteServiceTests {
         PaceDetailsDto result = paceVoteService.getAggregatedVotes(qb.getId());
 
         // Assert
-        assertEquals(0,result.getTooFastVotes());
-        assertEquals(0,result.getJustRightVotes());
-        assertEquals(0,result.getTooSlowVotes());
+        assertEquals(0, result.getTooFastVotes());
+        assertEquals(0, result.getJustRightVotes());
+        assertEquals(0, result.getTooSlowVotes());
     }
 
     @Test
@@ -307,6 +314,5 @@ public class PaceVoteServiceTests {
         // Assert
         assertEquals("Question board does not exist", exception.getMessage());
     }
-
 
 }
