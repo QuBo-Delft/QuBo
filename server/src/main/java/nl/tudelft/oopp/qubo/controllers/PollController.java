@@ -258,15 +258,16 @@ public class PollController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find PollVote");
         }
 
-        UUID boardIdOfPollVote = pollVote.getPollOption().getPoll().getQuestionBoard().getId();
+        Poll poll = pollVote.getPollOption().getPoll();
+        UUID boardIdOfPollVote = poll.getQuestionBoard().getId();
         // Check if the provided board ID does not match the board ID of the corresponding poll
         if (!boardId.equals(boardIdOfPollVote)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The provided board ID does not " +
-                    "match the board ID of the corresponding poll");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The provided board ID does not "
+                    + "match the board ID of its corresponding poll");
         }
 
         // Check if the poll has been close
-        if (!pollVote.getPollOption().getPoll().isOpen()) {
+        if (!poll.isOpen()) {
             throw new ForbiddenException("The poll has been closed");
         }
 
@@ -277,7 +278,7 @@ public class PollController {
     }
 
     /**
-     * Get endpoint for retrieving a collection of PollOptionResults of this question board's poll.
+     * GET endpoint for retrieving a collection of PollOptionResults of this question board's poll.
      * Throw 404 if the question board does not exist.
      *
      * @param boardId   The board ID.
