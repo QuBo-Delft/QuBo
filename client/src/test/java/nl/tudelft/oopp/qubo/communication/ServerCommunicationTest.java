@@ -1041,22 +1041,6 @@ public class ServerCommunicationTest {
     }
 
     @Test
-    public void testGetAggregatedPaceVotesCorrectRequestBody() {
-        // Arrange
-        ServerCommunication.setClient(httpClientMock);
-        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
-        httpClientMock.onGet(url).doReturn(successToken);
-
-        // Act
-        String responseBody = ServerCommunication.getAggregatedPaceVotes(uuid1, uuid2);
-
-        // Assert
-        assertEquals(successToken, responseBody);
-        // Verify if the request was truly made
-        httpClientMock.verify().get(url).called();
-    }
-
-    @Test
     public void testGetAggregatedPaceVotesInvalidQuBo() {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
@@ -1087,4 +1071,21 @@ public class ServerCommunicationTest {
         // Verify if the request was truly made
         httpClientMock.verify().get(url).called();
     }
+    
+    @Test
+    public void testGetAggregatedPaceVotesCorrectRequestBody() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
+        httpClientMock.onGet(url).doReturn(successToken);
+
+        // Act
+        String responseBody = ServerCommunication.getAggregatedPaceVotes(uuid1, uuid2);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(url).called();
+    }
+
 }
