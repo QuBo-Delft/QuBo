@@ -7,12 +7,14 @@ import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.pollvote.PollVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteCreationDto;
 
+import java.net.http.HttpResponse;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.HashSet;
@@ -172,10 +174,16 @@ public class MainApp {
 
         // Use details about poll to vote on an option
         String boardDetailString = ServerCommunication.retrievePollDetails(boardId);
-        PollDetailsDto dto = gson.fromJson(boardDetailString, PollDetailsDto.class);
-        UUID optionId = ((PollOptionDetailsDto) dto.getOptions().toArray()[0]).getOptionId();
+        PollDetailsDto pollDetailsDto = gson.fromJson(boardDetailString, PollDetailsDto.class);
+        UUID optionId = ((PollOptionDetailsDto) pollDetailsDto.getOptions().toArray()[0]).getOptionId();
+        String responseToAddingPollVote = ServerCommunication.addPollVote(boardId, optionId);
         System.out.println("The poll vote you just made is:\n"
-            + ServerCommunication.addPollVote(boardId, optionId));
+            + responseToAddingPollVote);
+        // Use details about poll vote made to remove this vote
+        PollVoteCreationDto pollVoteCreationDto = gson
+            .fromJson(responseToAddingPollVote, PollVoteCreationDto.class);
+        ServerCommunication.removePollVote(boardId, pollVoteCreationDto.getId());
+        System.out.println("The poll vote was just successfully removed.");
 
         //Retrieve the poll details of the poll that was just added
         System.out.println("The current poll's details are:\n"
