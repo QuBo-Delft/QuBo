@@ -279,7 +279,7 @@ public class PollController {
 
     /**
      * GET endpoint for retrieving a collection of PollOptionResults of this question board's poll.
-     * Throw 404 if the question board does not exist.
+     * Throw 404 if the poll result does not exist.
      *
      * @param boardId   The board ID.
      * @return The collection of poll option results of this question board's poll.
@@ -292,7 +292,7 @@ public class PollController {
 
         // Check if the question board exists
         if (pollOptions == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This question board does not exist.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The poll result does not exist.");
         }
 
         Set<PollOptionResultDto> pollOptionResults = modelMapper.map(pollOptions,
