@@ -1039,4 +1039,48 @@ public class ServerCommunicationTest {
         // Verify if the request was truly made
         httpClientMock.verify().get(url).called();
     }
+
+    @Test
+    public void testGetAggregatedPaceVotesInvalidQuBo() {
+        // Arrange
+        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(url)
+            .doReturnStatus(404).doReturn(failureToken);
+
+        // Act
+        String responseBody = ServerCommunication.getAggregatedPaceVotes(uuid1, uuid2);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+            .get(url).called();
+    }
+
+    @Test
+    public void testGetAggregatedPaceVotesInvalidVoteId(){
+        // Arrange
+        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(url)
+            .doReturnStatus(403).doReturn(failureToken);
+
+        // Act
+        String responseBody = ServerCommunication.getAggregatedPaceVotes(uuid1, uuid2);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify()
+            .get(url).called();
+    }
+
+    //if (questionBoard == null) {
+    //            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+    //        }
+    //        //Throw 403 if the provided moderator code does not equal that of the question board
+    //        if (!questionBoard.getModeratorCode().equals(moderatorCode)) {
+    //            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid moderator code");
+    //        }
 }
