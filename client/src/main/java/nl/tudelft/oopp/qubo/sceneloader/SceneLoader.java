@@ -112,7 +112,7 @@ public class SceneLoader {
         }
         if (newScene == null) {
             AlertDialog.display("", "Unable to display the requested view");
-            return;
+            return stage;
         }
 
         switch (fxml) {
@@ -130,20 +130,17 @@ public class SceneLoader {
                 newStage.show();
 
                 return newStage;
-                break;
             case "JoinQuBo":
                 stage.setMinWidth(Double.MIN_VALUE);
                 stage.setMinHeight(Double.MIN_VALUE);
-                stage.setScene(newScene);
-                stage.centerOnScreen();
-                return stage;
                 break;
             default:
-                stage.setScene(newScene);
-                stage.centerOnScreen();
-                return stage;
                 break;
         }
+
+        stage.setScene(newScene);
+        stage.centerOnScreen();
+        return stage;
     }
 
     /**
