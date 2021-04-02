@@ -567,7 +567,7 @@ public class ServerCommunication {
         String fullUrl = subUrl + "board/" + boardId + "/poll/" + optionId + "/vote";
 
         //Send the post request and retrieve the response from the server
-        HttpResponse<String> response = post(fullUrl, "{}", "Content-Type",
+        HttpResponse<String> response = post(fullUrl, "", "Content-Type",
             "application/json;charset=UTF-8");
 
         //If the request was unsuccessful, return null
