@@ -11,8 +11,6 @@ import java.util.UUID;
  * This class hold methods related to communication for Questions.
  */
 public class QuestionCommunication {
-    // To be added:
-    // - markQuestionAsAnswered()
 
     /**
      * Adds a question with specified text and author to the board.
@@ -127,5 +125,31 @@ public class QuestionCommunication {
 
         return response.body();
     }
+
+    /**
+     * Mark the question from the board as answered.
+     *
+     * @param questionId    The ID of the question to be marked as answered.
+     * @param code          The moderator code that is associated with the board
+     *                      the question is part of, or the question's secret code.
+     * @return The QuestionDetailsDto of the answered question in JSON String format
+     *          if and only if the question has been marked as answered successfully.
+     */
+    public static String markQuestionAsAnswered(UUID questionId, UUID code) {
+        //Set up the variables required by the patch helper method
+        String fullUrl = ServerCommunication.subUrl + "question/" + questionId + "/answer?code=" + code;
+
+        //Send the request to mark the question as answered and retrieve the response
+        HttpResponse<String> response = ServerCommunication.patch(fullUrl);
+
+        //Check if the request was successful
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        //The question has been marked as answered
+        return response.body();
+    }
+
 
 }
