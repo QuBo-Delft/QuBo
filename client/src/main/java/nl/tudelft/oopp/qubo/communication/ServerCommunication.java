@@ -555,4 +555,32 @@ public class ServerCommunication {
         return response.body();
     }
 
+    /**
+     * Gets aggregated pace votes from board with specified ID and
+     * paceVote with specified ID.
+     *
+     * @param boardId    The ID of the question board from which the pace votes should be counted.
+     * @param moderatorCode The ID of the pace vote from which the results should be counted.
+     * @return The aggregated PaceVotes in a PaceVoteDetailsDto in JSON form.
+     */
+    public static String getAggregatedPaceVotes(UUID boardId, UUID moderatorCode) {
+        //Set up the URL that will be sent to the delete helper method
+        String fullUrl = ServerCommunication.subUrl + "board/" + boardId + "/pace?code=" + moderatorCode;
+
+        //Send the request to the server and receive the response
+        HttpRequest request = HttpRequest.newBuilder()
+            .GET()
+            .uri(URI.create(fullUrl))
+            .build();
+
+        HttpResponse<String> response = ServerCommunication.sendRequest(request);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
 }
