@@ -157,6 +157,8 @@ public class QuBoActionEvents {
         warning.setVisible(false);
         Button cancel = new Button("Cancel");
         Button update = new Button("Update");
+
+        //Add the buttons and label to an HBox and set the way this HBox is displayed on the screen
         HBox buttons = new HBox(warning, cancel, update);
         warning.prefWidthProperty().bind(questionBody.wrappingWidthProperty()
             .subtract(cancel.widthProperty().add(update.widthProperty()).add(30)));
