@@ -137,7 +137,7 @@ public class ModeratorViewController {
         refresh();
     }
 
-    private void refresh() {
+    public void refresh() {
         QuestionRefresh.modRefresh(quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
     }
@@ -202,7 +202,7 @@ public class ModeratorViewController {
         boolean backHome = ConfirmationDialog.display("Leave Question Board?",
             "You will have to use your code to join again.");
         if (backHome) {
-            SceneLoader.backToHome((Stage) leaveQuBo.getScene().getWindow());
+            SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
     }
 }

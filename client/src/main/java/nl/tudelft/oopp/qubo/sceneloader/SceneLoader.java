@@ -25,6 +25,7 @@ public class SceneLoader {
     private static QuestionBoardDetailsDto qd;
     private static QuestionBoardCreationDto qc;
     private static String userName;
+    private static UUID modCode;
 
     /**
      * This method aims to load all scenes that do not require input details.
@@ -57,9 +58,12 @@ public class SceneLoader {
      * @param userNameI The username to be transferred.
      * @param fxml      The fxml sheet to be loaded.
      */
-    public void viewLoader(QuestionBoardDetailsDto qdI, Stage stage, String userNameI, String fxml) {
+    public void viewLoader(QuestionBoardDetailsDto qdI, Stage stage, String userNameI,
+                           String fxml, UUID code) {
         qd = qdI;
         userName = userNameI;
+        modCode = code;
+
         // Start preparing the new scene
         startLoading(stage, fxml);
     }
@@ -91,38 +95,40 @@ public class SceneLoader {
      * @param fxml      The fxml sheet to be loaded.
      */
     private static void rootValid(FXMLLoader loader, Stage stage, String fxml) {
-        if (fxml.equals("StudentView") || fxml.equals("ModeratorView")) {
-            Stage newStage = new Stage();
-            Scene newScene = null;
-            // Check if file can be loaded
-            try {
-                newScene = new Scene(loader.load());
+        Scene newScene = null;
+
+        // Check if file can be loaded
+        try {
+            newScene = new Scene(loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (newScene == null) {
+            AlertDialog.display("", "Unable to display the requested view");
+            return;
+        }
+
+        switch (fxml) {
+            case "StudentView":
+            case "ModeratorView":
+                // Create new stage and set new scene
+                Stage newStage = new Stage();
                 newStage.setScene(newScene);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (newScene == null) {
-                AlertDialog.display("", "Unable to display the requested view");
-                return;
-            }
-            // Close current stage and show new stage
-            stage.close();
-            newStage.setMinHeight(550);
-            newStage.setMinWidth(850);
-            newStage.show();
-        } else {
-            Parent root = null;
-            try {
-                root = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (root == null) {
-                AlertDialog.display("", "Unable to display the requested view");
-                return;
-            }
-            stage.setScene(new Scene(root));
-            stage.centerOnScreen();
+
+                // Set minimal resize resolution
+                newStage.setMinHeight(550);
+                newStage.setMinWidth(850);
+                // Close current stage and show new stage
+                stage.close();
+                newStage.show();
+                break;
+            case "JoinQuBo":
+                stage.setMinWidth(Double.MIN_VALUE);
+                stage.setMinHeight(Double.MIN_VALUE);
+            default:
+                stage.setScene(newScene);
+                stage.centerOnScreen();
+                break;
         }
     }
 
@@ -139,13 +145,15 @@ public class SceneLoader {
                 controllerC.displayCodes(qc);
                 break;
             case ("ModeratorView"):
+                // Get controller and initialize qb
                 ModeratorViewController controllerM = loader.getController();
-                loader.setController(controller);
+                loader.setController(controllerM);
                 controllerM.setQuBo(qd);
                 controllerM.setModCode(modCode);
                 controllerM.setAuthorName(userName);
                 controllerM.setBoardDetails();
-                // TODO: need a method to update data in moderatorView
+
+                controllerM.refresh();
                 break;
             case ("StudentView"):
                 // Get controller and initialize qb
@@ -154,9 +162,10 @@ public class SceneLoader {
                 controllerS.setQuBo(qd);
                 controllerS.setAuthorName(userName);
                 controllerS.setBoardDetails();
+
+                controllerS.refresh();
                 break;
             default:
-                break;
         }
     }
 
@@ -180,10 +189,10 @@ public class SceneLoader {
             case ("CreateQuBo"):
                 stage.setTitle("Create Question Board");
                 break;
-            default:
+            case ("JoinQuBo"):
                 stage.setTitle("QuBo");
-                stage.setMinWidth(Double.MIN_VALUE);
-                stage.setMinHeight(Double.MIN_VALUE);
+                break;
+            default:
                 break;
         }
     }

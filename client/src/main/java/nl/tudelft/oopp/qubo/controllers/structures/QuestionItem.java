@@ -75,6 +75,10 @@ public class QuestionItem extends GridPane {
             addAnswers();
         }
 
+        this.getStyleClass().add("qPane");
+        questionBody.getStyleClass().add("qContent");
+        upvoteNumber.getStyleClass().add("qVotes");
+
         this.setGridLinesVisible(true);
     }
 
@@ -115,7 +119,7 @@ public class QuestionItem extends GridPane {
             new ColumnConstraints(50));
 
         //Set paddings
-        gridpane.setPadding(new Insets(10,3,15,3));
+        gridpane.setPadding(new Insets(10,3,5,3));
 
         return gridpane;
     }

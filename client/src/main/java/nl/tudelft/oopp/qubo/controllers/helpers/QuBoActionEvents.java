@@ -13,6 +13,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.communication.ServerCommunication;
@@ -128,15 +129,23 @@ public class QuBoActionEvents {
         TextArea input = newTextArea(questionBody.wrappingWidthProperty());
 
         //Create the buttons and set their alignments
+        Label warning = new Label("Error: Question must be more than 8 characters long.");
+        warning.setWrapText(true);
+        warning.setStyle("-fx-text-inner-color: #ef4f4f");
+        warning.setStyle("-fx-font-style: italic");
+        warning.setVisible(false);
         Button cancel = new Button("Cancel");
         Button update = new Button("Update");
-        HBox buttons = new HBox(cancel, update);
+        HBox buttons = new HBox(warning, cancel, update);
+        warning.prefWidthProperty().bind(questionBody.wrappingWidthProperty()
+            .subtract(cancel.widthProperty().add(update.widthProperty()).add(30)));
+        HBox.setHgrow(warning, Priority.ALWAYS);
         buttons.setAlignment(Pos.CENTER_RIGHT);
         buttons.setSpacing(15);
 
         //Set action listeners for the buttons
         update.setOnAction(event -> updateQuestion(options, questionId, code, input.getText(),
-            questionBody, questionVbox, input, buttons));
+            questionBody, questionVbox, input, buttons, warning));
         cancel.setOnAction(event -> cancelEdit(options, questionVbox, input, buttons, questionBody));
 
         //Hide question text and display text area
@@ -165,7 +174,14 @@ public class QuBoActionEvents {
      */
     public static void updateQuestion(MenuButton options, UUID questionId, UUID code, String text,
                                Text questionBody, VBox questionVbox, TextArea input,
-                               HBox buttons) {
+                               HBox buttons, Label warning) {
+        if (text.length() <= 8) {
+            warning.setVisible(true);
+            return;
+        } else {
+            warning.setVisible(false);
+        }
+
         //Send a request to the server
         String response = ServerCommunication.editQuestion(questionId, code, text);
 
@@ -333,6 +349,8 @@ public class QuBoActionEvents {
         TextArea input = new TextArea();
         input.setWrapText(true);
         input.prefWidthProperty().bind(widthBind);
+        input.minWidthProperty().bind(widthBind);
+        input.maxWidthProperty().bind(widthBind);
         input.setPrefRowCount(5);
 
         return input;

@@ -145,7 +145,7 @@ public class StudentViewController {
         refresh();
     }
 
-    private void refresh() {
+    public void refresh() {
         QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
             sideMenuPane);
     }

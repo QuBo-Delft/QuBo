@@ -284,6 +284,17 @@ public class ServerCommunication {
         return response.body();
     }
 
+    /**
+     * Adds an answer to a question.
+     * Communicates with the /api/question/{questionid}/answer?code={code} server endpoint.
+     *
+     * @param questionId    The ID of the question that is being answered.
+     * @param modCode       The moderator code associated with the question board
+     *                      that contains the question.
+     * @param text          The body of the answer to be added.
+     * @return              The AnswerCreationDto associated with the answer in JSON String
+     *                      format if, and only if, the request was successful.
+     */
     public static String addAnswer(UUID questionId, UUID modCode, String text) {
         //Instantiate a AnswerCreationBindingModel
         AnswerCreationBindingModel answerModel = new AnswerCreationBindingModel();

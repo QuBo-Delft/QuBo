@@ -76,7 +76,7 @@ public class QuestionController {
      * @param answerModel   The answer model.
      * @param questionId    The question id.
      * @param moderatorCode The moderator code.
-     * @return The answer details dto.
+     * @return The answer creation dto.
      */
     @RequestMapping(value = "{questionid}/answer", method = POST, consumes = "application/json")
     @ResponseBody
