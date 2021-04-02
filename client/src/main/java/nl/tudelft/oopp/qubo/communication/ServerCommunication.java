@@ -26,6 +26,27 @@ public class ServerCommunication {
         ServerCommunication.client = client;
     }
 
+    /**
+     * Retrieves an http response from the server by sending an http request.
+     *
+     * @param request       The http request to be sent to be server.
+     * @return The http response returned.
+     */
+    private static HttpResponse<String> sendRequest(HttpRequest request) {
+        //Instantiate a response object
+        HttpResponse<String> response = null;
+
+        //Send the request to the server and retrieve the response
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+
     // To be added methods
     //public static:
 
