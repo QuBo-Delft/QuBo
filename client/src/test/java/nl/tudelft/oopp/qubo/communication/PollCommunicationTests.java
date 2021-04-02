@@ -10,7 +10,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class PollCommunicationTests {
     private final String successToken = "{token: success}";
@@ -18,10 +20,6 @@ public class PollCommunicationTests {
 
     private final UUID uuid1 = UUID.randomUUID();
     private final UUID uuid2 = UUID.randomUUID();
-
-    private static final Gson gson = new GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
-            .create();
 
     private static final String subUrl = "http://localhost:8080/";
 
