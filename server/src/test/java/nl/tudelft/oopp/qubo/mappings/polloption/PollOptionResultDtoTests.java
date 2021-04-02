@@ -35,13 +35,11 @@ public class PollOptionResultDtoTests {
         p.setText("Option Text");
 
         PollVote vote = new PollVote();
-        UUID id2 = UUID.randomUUID();
-        vote.setId(id2);
+        vote.setId(UUID.randomUUID());
         vote.setPollOption(p);
 
         PollVote vote2 = new PollVote();
-        UUID id3 = UUID.randomUUID();
-        vote2.setId(id3);
+        vote2.setId(UUID.randomUUID());
         vote2.setPollOption(p);
 
         Set<PollVote> votes = new HashSet<>();
