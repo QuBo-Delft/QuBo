@@ -6,6 +6,7 @@ import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
+import nl.tudelft.oopp.qubo.repositories.PollOptionRepository;
 import nl.tudelft.oopp.qubo.repositories.PollRepository;
 import nl.tudelft.oopp.qubo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.qubo.services.exceptions.ConflictException;
@@ -21,6 +22,7 @@ public class PollService {
     private final QuestionBoardRepository questionBoardRepository;
 
     private final PollRepository pollRepository;
+    private final PollOptionRepository pollOptionRepository;
 
     private final ModelMapper modelMapper;
 
@@ -29,19 +31,23 @@ public class PollService {
     /**
      * Creates an instance of PollService.
      *
+     * @param currentTimeProvider     The CurrentTimeProvider.
      * @param questionBoardRepository A QuestionBoardRepository.
      * @param pollRepository          A PollRepository.
+     * @param pollOptionRepository    A PollOptionRepository.
      * @param modelMapper             The ModelMapper.
-     * @param currentTimeProvider     The CurrentTimeProvider.
      */
     public PollService(
-        QuestionBoardRepository questionBoardRepository, PollRepository pollRepository,
-        ModelMapper modelMapper,
-        CurrentTimeProvider currentTimeProvider) {
+        QuestionBoardRepository questionBoardRepository,
+        PollRepository pollRepository,
+        PollOptionRepository pollOptionRepository,
+        CurrentTimeProvider currentTimeProvider,
+        ModelMapper modelMapper) {
         this.questionBoardRepository = questionBoardRepository;
         this.pollRepository = pollRepository;
-        this.modelMapper = modelMapper;
+        this.pollOptionRepository = pollOptionRepository;
         this.currentTimeProvider = currentTimeProvider;
+        this.modelMapper = modelMapper;
     }
 
     /**
@@ -120,10 +126,29 @@ public class PollService {
     /**
      * Retrieves a Poll through its ID.
      *
-     * @param pollId    The ID of the the poll that should be retrieved.
+     * @param pollId The ID of the the poll that should be retrieved.
      * @return The Poll associated with the ID.
      */
     public Poll getPollById(UUID pollId) {
         return pollRepository.getById(pollId);
+    }
+
+    /**
+     * Retrieves a PollOption through its ID.
+     *
+     * @param pollOptionId The ID of the poll option that should be retrieved.
+     * @return The PollOption associated with the ID.
+     */
+    public PollOption getPollOptionById(UUID pollOptionId) {
+        return pollOptionRepository.getById(pollOptionId);
+    }
+
+    /**
+     * Deletes a poll from the database.
+     *
+     * @param pollId The ID of the poll that is to be deleted.
+     */
+    public void deletePoll(UUID pollId) {
+        pollRepository.deletePollById(pollId);
     }
 }
