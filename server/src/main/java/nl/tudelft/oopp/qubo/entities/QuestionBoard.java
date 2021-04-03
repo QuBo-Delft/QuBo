@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.qubo.entities;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -139,5 +140,26 @@ public class QuestionBoard {
 
     public void setPoll(Poll poll) {
         this.poll = poll;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        QuestionBoard that = (QuestionBoard) o;
+        return closed == that.closed
+            && Objects.equals(id, that.id)
+            && Objects.equals(moderatorCode, that.moderatorCode)
+            && Objects.equals(title, that.title)
+            && Objects.equals(startTime, that.startTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, moderatorCode, title, startTime, closed);
     }
 }
