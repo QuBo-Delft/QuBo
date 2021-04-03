@@ -157,4 +157,40 @@ public class QuestionVoteServiceTests {
         // Assert
         assertNull(actual);
     }
+
+    @Test
+    public void deleteVote_withValidVote_removesVote() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.from(Instant.now()));
+        board.setTitle("Test board");
+        questionBoardRepository.save(board);
+
+        Question question = new Question();
+        question.setAuthorName("Author");
+        question.setText("Test question");
+        question.setSecretCode(UUID.randomUUID());
+        question.setTimestamp(Timestamp.from(Instant.now()));
+        question.setQuestionBoard(board);
+        questionRepository.save(question);
+
+        QuestionVote vote = new QuestionVote();
+        vote.setQuestion(question);
+        questionVoteRepository.save(vote);
+
+        QuestionVote vote2 = new QuestionVote();
+        vote2.setQuestion(question);
+        questionVoteRepository.save(vote2);
+
+        // Act
+        questionVoteService.deleteVote(vote);
+
+        // Assert
+        QuestionVote inDb = questionVoteRepository.getQuestionVoteById(vote.getId());
+        assertNull(inDb);
+        QuestionVote vote2InDb = questionVoteRepository.getQuestionVoteById(vote2.getId());
+        assertNotNull(vote2InDb);
+        assertEquals(vote2, vote2InDb);
+    }
 }
