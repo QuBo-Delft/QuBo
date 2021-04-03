@@ -244,4 +244,165 @@ public class PollCommunicationTests {
         httpClientMock.verify()
                 .delete(subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2).called();
     }
+
+    @Test
+    public void testPollVoteRegistrationResponse() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String fullUrl = subUrl + "api/board/" + uuid1 + "/poll/" + uuid2 + "/vote";
+        httpClientMock.onPost(fullUrl)
+            .doReturnStatus(200);
+
+        // Act
+        String responseBody = PollCommunication.addPollVote(uuid1, uuid2);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(fullUrl).called();
+    }
+
+    @Test
+    public void testPollVoteRegistrationInvalidQuBo() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String fullUrl = subUrl + "api/board/" + uuid1 + "/poll/" + uuid2 + "/vote";
+        httpClientMock.onPost(fullUrl).doReturnStatus(404).doReturn(failureToken);
+
+        // Act
+        String responseBody = PollCommunication.addPollVote(uuid1, uuid2);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(fullUrl).called();
+    }
+
+    @Test
+    public void testPollVoteRegistrationResponseBody() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String fullUrl = subUrl + "api/board/" + uuid1 + "/poll/" + uuid2 + "/vote";
+        httpClientMock.onPost(fullUrl).doReturn(successToken);
+
+        // Act
+        String responseBody = PollCommunication.addPollVote(uuid1, uuid2);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().post(fullUrl).called();
+    }
+
+    @Test
+    public void testPollVoteRemovalResponse() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String fullUrl = subUrl + "api/board/" + uuid1 + "/poll/vote/" + uuid2;
+        httpClientMock.onDelete(fullUrl).doReturnStatus(200);
+
+        // Act
+        String responseBody = PollCommunication.removePollVote(uuid1, uuid2);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().delete(fullUrl).called();
+    }
+
+    @Test
+    public void testPollVoteRemovalInvalidQuBo() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String fullUrl = subUrl + "api/board/" + uuid1 + "/poll/vote/" + uuid2;
+        httpClientMock.onPost(fullUrl).doReturnStatus(404).doReturn(failureToken);
+
+        // Act
+        String responseBody = PollCommunication.removePollVote(uuid1, uuid2);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().delete(fullUrl).called();
+    }
+
+    @Test
+    public void testPollVoteRemovalResponseBody() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String fullUrl = subUrl + "api/board/" + uuid1 + "/poll/vote/" + uuid2;
+        httpClientMock.onDelete(fullUrl).doReturn(successToken);
+
+        // Act
+        String responseBody = PollCommunication.removePollVote(uuid1, uuid2);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().delete(fullUrl).called();
+    }
+
+    @Test
+    public void testGetAggregatedPaceVotesRequest() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
+        httpClientMock.onGet(url).doReturnStatus(200);
+
+        // Act
+        String responseBody = PaceVoteCommunication.getAggregatedPaceVotes(uuid1, uuid2);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(url).called();
+    }
+
+    @Test
+    public void testGetAggregatedPaceVotesInvalidQuBo() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
+        httpClientMock.onGet(url).doReturnStatus(404).doReturn(failureToken);
+
+        // Act
+        String responseBody = PaceVoteCommunication.getAggregatedPaceVotes(uuid1, uuid2);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(url).called();
+    }
+
+    @Test
+    public void testGetAggregatedPaceVotesInvalidVoteId() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
+        httpClientMock.onGet(url).doReturnStatus(403).doReturn(failureToken);
+
+        // Act
+        String responseBody = PaceVoteCommunication.getAggregatedPaceVotes(uuid1, uuid2);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(url).called();
+    }
+
+    @Test
+    public void testGetAggregatedPaceVotesCorrectRequestBody() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String url = subUrl + "api/board/" + uuid1 + "/pace?code=" + uuid2;
+        httpClientMock.onGet(url).doReturn(successToken);
+
+        // Act
+        String responseBody = PaceVoteCommunication.getAggregatedPaceVotes(uuid1, uuid2);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(url).called();
+    }
 }
