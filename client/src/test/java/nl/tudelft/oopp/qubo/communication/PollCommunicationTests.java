@@ -1,7 +1,5 @@
 package nl.tudelft.oopp.qubo.communication;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.pgssoft.httpclient.HttpClientMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

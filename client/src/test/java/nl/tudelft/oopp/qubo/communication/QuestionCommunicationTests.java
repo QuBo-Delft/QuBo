@@ -1,7 +1,5 @@
 package nl.tudelft.oopp.qubo.communication;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.pgssoft.httpclient.HttpClientMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,10 +17,6 @@ public class QuestionCommunicationTests {
     private final UUID uuid1 = UUID.randomUUID();
     private final UUID uuid2 = UUID.randomUUID();
     private final UUID uuid3 = UUID.randomUUID();
-
-    private static final Gson gson = new GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
-            .create();
 
     private static final String subUrl = "http://localhost:8080/";
 
