@@ -60,8 +60,8 @@ public class QuestionVote {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        QuestionVote that = (QuestionVote) o;
-        return Objects.equals(id, that.id);
+        QuestionVote vote = (QuestionVote) o;
+        return Objects.equals(id, vote.id);
     }
 
     @Override
