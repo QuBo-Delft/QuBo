@@ -69,6 +69,30 @@ public class PollCommunication {
     }
 
     /**
+     * Retrieves the results of the poll from the question board associated with the specified ID.
+     * Communicates with the/api/board/{boardid}/poll/results server endpoint.
+     *
+     * @param boardId       The ID of the question board whose poll results should be retrieved.
+     * @return A set of PollOptionResultDtos of the poll JSON String format if it existed,
+     *      null otherwise.
+     */
+    public static String retrievePollResults(UUID boardId) {
+        //Set up the request object to retrieve the poll results, send the request, and retrieve the response
+        HttpRequest request = HttpRequest.newBuilder().GET()
+                .uri(URI.create(ServerCommunication.subUrl + "board/" + boardId + "/poll/results"))
+                .build();
+        HttpResponse<String> response = ServerCommunication.sendRequest(request);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+
+    /**
      * Deletes the poll from the board.
      * Communicates with the /api/board/{boardid}/poll?code={moderatorcode} server endpoint.
      *
