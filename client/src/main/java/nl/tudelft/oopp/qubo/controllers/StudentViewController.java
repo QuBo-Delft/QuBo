@@ -16,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
+import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
@@ -49,9 +51,13 @@ public class StudentViewController {
     @FXML
     private Label boardTitle;
     @FXML
+    private Label sideMenuTitle;
+    @FXML
     private ImageView boardStatusIcon;
     @FXML
     private MenuItem studentCodeItem;
+    @FXML
+    private ScrollPane sideMenuPane;
     @FXML
     private Label boardStatusText;
 
@@ -68,20 +74,17 @@ public class StudentViewController {
     private VBox sideBar;
     @FXML
     private VBox sideMenu;
+    @FXML
+    private VBox ansQuVbox;
+    @FXML
+    private VBox pollVbox;
+
     //Buttons
     @FXML
     private ToggleButton ansQuestions;
     @FXML
     private ToggleButton polls;
-    //Containers
-    @FXML
-    private Label sideMenuTitle;
-    @FXML
-    private VBox ansQuVbox;
-    @FXML
-    private VBox pollVbox;
-    @FXML
-    private ScrollPane sideMenuPane;
+
 
     //Records if the side menu was open before hiding
     private boolean sideMenuOpen;
@@ -182,7 +185,7 @@ public class StudentViewController {
         }
 
         String author = authorName == null ? "" : authorName;
-        String responseBody = ServerCommunication.addQuestion(quBo.getId(), questionText, author);
+        String responseBody = QuestionCommunication.addQuestion(quBo.getId(), questionText, author);
         if (responseBody == null) {
             AlertDialog.display("Unsuccessful Request",
                 "Failed to post your question, please try again.");
@@ -207,7 +210,7 @@ public class StudentViewController {
      * @param questionId    UUID of the question that was just asked.
      */
     public void autoUpvote(UUID questionId) {
-        String response = ServerCommunication.addQuestionVote(questionId);
+        String response = QuestionVoteCommunication.addQuestionVote(questionId);
         if (response == null) {
             //When the request fails, display alert
             AlertDialog.display("", "Automatic upvote failed.");

@@ -2,6 +2,11 @@ package nl.tudelft.oopp.qubo;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nl.tudelft.oopp.qubo.communication.PaceVoteCommunication;
+import nl.tudelft.oopp.qubo.communication.PollCommunication;
+import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
+import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
+import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
 import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationDto;
@@ -57,7 +62,7 @@ public class MainApp {
      */
     private static void showWorkingEndpoints(QuestionBoardCreationBindingModel model) {
         //Create the Question Board and map the returned data onto a QuestionBoardCreationDto
-        String resBody = ServerCommunication.createBoardRequest(model);
+        String resBody = QuestionBoardCommunication.createBoardRequest(model);
         QuestionBoardCreationDto questionBoard = gson.fromJson(resBody, QuestionBoardCreationDto.class);
 
         UUID boardId = questionBoard.getId();
@@ -70,18 +75,18 @@ public class MainApp {
         //Print the JSON representation of the DTO returned by retrieveBoardDetails called using the ID of
         //questionBoard
         System.out.println("Retrieved the Question Board details\n  through the Board ID:"
-            + gson.toJson(ServerCommunication.retrieveBoardDetails(boardId)));
+            + gson.toJson(QuestionBoardCommunication.retrieveBoardDetails(boardId)));
 
         //Print the JSON representation of the DTO returned by retrieveBoardDetails called using the moderator
         //code of questionBoard
         System.out.println("Retrieved the Question Board details\n  through the Moderator Code using "
             + "retrieveBoardDetails:"
-            + gson.toJson(ServerCommunication.retrieveBoardDetails(moderatorCode)));
+            + gson.toJson(QuestionBoardCommunication.retrieveBoardDetails(moderatorCode)));
 
         //Print the JSON representation of the dto returned by retrieveBoardDetailsThroughModCode called using
         //the moderator code of questionBoard
         System.out.println("Retrieved the Question Board details\n  through the moderator code:"
-            + gson.toJson(ServerCommunication
+            + gson.toJson(QuestionBoardCommunication
                 .retrieveBoardDetailsThroughModCode(moderatorCode)));
 
         //Print the JSON representation of the dto returned by the addQuestion method called using the
@@ -89,7 +94,7 @@ public class MainApp {
         String questionText = "Has this question been added successfully?";
 
         //QuestionCreationDto questionCodes = ServerCommunication.addQuestion(boardId, questionText, "author");
-        QuestionCreationDto questionCodes = gson.fromJson(ServerCommunication.addQuestion(boardId,
+        QuestionCreationDto questionCodes = gson.fromJson(QuestionCommunication.addQuestion(boardId,
                 questionText, "author"), QuestionCreationDto.class);
 
         System.out.println("Added a question to the Question Board\n    "
@@ -99,23 +104,23 @@ public class MainApp {
         //edited successfully.
         UUID questionId = questionCodes.getId();
         UUID secretCode = questionCodes.getSecretCode();
-        System.out.println("The question has been edited: " + ((ServerCommunication
+        System.out.println("The question has been edited: " + ((QuestionCommunication
             .editQuestion(questionId, secretCode, "What is life?")) != null));
 
         //Edit the question through the moderator code, and print true if it was edited successfully.
         System.out.println("The question has been edited through the moderator code: "
-            + (((ServerCommunication
+            + (((QuestionCommunication
                 .editQuestion(questionId, moderatorCode, "Is the universe infinitely large?"))) != null));
 
         //Add another question
-        QuestionCreationDto questionTwo = gson.fromJson(ServerCommunication
+        QuestionCreationDto questionTwo = gson.fromJson(QuestionCommunication
                 .addQuestion(boardId, questionText, "author"), QuestionCreationDto.class);
 
         System.out.println("Added a question to the Question Board\n    "
             + gson.toJson(questionTwo));
 
         //Retrieve the questions associated with the question board and log them to the console
-        QuestionDetailsDto[] questionList = gson.fromJson(ServerCommunication
+        QuestionDetailsDto[] questionList = gson.fromJson(QuestionBoardCommunication
                 .retrieveQuestions(boardId), QuestionDetailsDto[].class);
 
 
@@ -127,7 +132,7 @@ public class MainApp {
         }
 
         //Add a vote to questionCodes
-        QuestionVoteCreationDto questionVote = gson.fromJson(ServerCommunication
+        QuestionVoteCreationDto questionVote = gson.fromJson(QuestionVoteCommunication
                 .addQuestionVote(questionId), QuestionVoteCreationDto.class);
 
         System.out.println("A vote has been added to the question\n    " + gson.toJson(questionVote));
@@ -135,33 +140,33 @@ public class MainApp {
         //Mark questionTwo as answered
         UUID questionTwoId = questionTwo.getId();
         System.out.println("The fact that questionTwo has been marked as answered is: "
-                + ((ServerCommunication.markQuestionAsAnswered(questionTwoId, moderatorCode)) != null));
+                + ((QuestionCommunication.markQuestionAsAnswered(questionTwoId, moderatorCode)) != null));
 
         //Delete the vote that was just created
         UUID voteId = questionVote.getId();
-        System.out.println("The vote has been deleted: " + ((ServerCommunication
+        System.out.println("The vote has been deleted: " + ((QuestionVoteCommunication
             .deleteQuestionVote(questionId, voteId)) != null));
 
         //Delete questionCodes from the question board and print true if the question was deleted successfully
-        System.out.println("The question has been deleted: " + ((ServerCommunication
+        System.out.println("The question has been deleted: " + ((QuestionCommunication
             .deleteQuestion(questionId, secretCode)) != null));
 
         //Delete questionTwo through the moderator code of the QuestionBoard and print true if the question was
         //deleted successfully
-        System.out.println("The question has been deleted: " + ((ServerCommunication
+        System.out.println("The question has been deleted: " + ((QuestionCommunication
             .deleteQuestion(questionTwoId, moderatorCode)) != null));
 
         //Add a pace vote to the question board
         PaceType paceType = PaceType.JUST_RIGHT;
         //PaceVoteCreationDto paceVote = ServerCommunication.addPaceVote(boardId, paceType);
-        PaceVoteCreationDto paceVote = gson.fromJson(ServerCommunication
+        PaceVoteCreationDto paceVote = gson.fromJson(PaceVoteCommunication
                 .addPaceVote(boardId, paceType), PaceVoteCreationDto.class);
 
         System.out.println("The pace vote has been added\n " + gson.toJson(paceVote));
 
         //Delete a pace vote from the question board
         UUID paceVoteId = paceVote.getId();
-        System.out.println("The pace vote has been deleted: " + ((ServerCommunication
+        System.out.println("The pace vote has been deleted: " + ((PaceVoteCommunication
             .deletePaceVote(boardId, paceVoteId)) != null));
 
         //Add a poll to the question board
@@ -169,32 +174,32 @@ public class MainApp {
         pollOptions.add("Option A");
         pollOptions.add("Option B");
         System.out.println("This poll has been added: "
-                + (ServerCommunication.addPoll(boardId, moderatorCode, "Test Poll", pollOptions)));
+                + (PollCommunication.addPoll(boardId, moderatorCode, "Test Poll", pollOptions)));
 
         // Add a poll vote to an option of the poll that was just created
-        String pollDetails = ServerCommunication.retrievePollDetails(boardId);
+        String pollDetails = PollCommunication.retrievePollDetails(boardId);
         PollDetailsDto pollDetailsDto = gson.fromJson(pollDetails, PollDetailsDto.class);
         UUID optionId = ((PollOptionDetailsDto) pollDetailsDto.getOptions().toArray()[0]).getOptionId();
 
-        String responseToAddingPollVote = ServerCommunication.addPollVote(boardId, optionId);
+        String responseToAddingPollVote = PollCommunication.addPollVote(boardId, optionId);
         System.out.println("The poll vote you just made is:\n"
             + responseToAddingPollVote);
         // Remove the poll vote that was just made
         PollDetailsDto pollVoteDetailsDto = gson
             .fromJson(responseToAddingPollVote, PollDetailsDto.class);
-        String pollVote = ServerCommunication.removePollVote(boardId, pollVoteDetailsDto.getId());
+        String pollVote = PollCommunication.removePollVote(boardId, pollVoteDetailsDto.getId());
         System.out.println("The poll vote was just successfully removed:" + (pollVote != null));
 
         //Retrieve the poll details of the poll that was just added
         System.out.println("The current poll's details are:\n"
-                + (ServerCommunication.retrievePollDetails(boardId)));
+                + (PollCommunication.retrievePollDetails(boardId)));
 
         //Delete the poll that was added
-        System.out.println("This poll has been deleted: " + ServerCommunication
+        System.out.println("This poll has been deleted: " + PollCommunication
                 .deletePoll(boardId, moderatorCode));
 
         //Close the question board
         System.out.println("The fact that this question board has been closed is: "
-                + ((ServerCommunication.closeBoardRequest(boardId, moderatorCode)) != null));
+                + ((QuestionBoardCommunication.closeBoardRequest(boardId, moderatorCode)) != null));
     }
 }

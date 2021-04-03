@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
 import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.controllers.structures.QuestionItem;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
@@ -111,7 +112,7 @@ public class QuestionRefresh {
 
         //Retrieve the questions and convert them to an array of QuestionDetailsDtos if the response is
         //not null.
-        String jsonQuestions = ServerCommunication.retrieveQuestions(thisQuBoId.getId());
+        String jsonQuestions = QuestionBoardCommunication.retrieveQuestions(thisQuBoId.getId());
 
         if (jsonQuestions == null) {
             divideQuestions(null);
