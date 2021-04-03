@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.qubo.entities;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -79,5 +80,23 @@ public class Answer {
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Answer answer = (Answer) o;
+        return Objects.equals(id, answer.id) && Objects.equals(text, answer.text) &&
+            Objects.equals(timestamp, answer.timestamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, text, timestamp);
     }
 }
