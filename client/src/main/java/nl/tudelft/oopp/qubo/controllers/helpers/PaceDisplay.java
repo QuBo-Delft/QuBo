@@ -2,9 +2,11 @@ package nl.tudelft.oopp.qubo.controllers.helpers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Bounds;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import nl.tudelft.oopp.qubo.communication.PaceVoteCommunication;
 import nl.tudelft.oopp.qubo.dtos.pace.PaceDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
@@ -20,6 +22,11 @@ public class PaceDisplay {
 
     /**
      * This method displays the pace of the lecture as perceived by students.
+     *
+     * @param quBo          The details of the question board whose pace should be displayed.
+     * @param modCode       The moderator code of the question board.
+     * @param paceBar       The stack pane used to display the pace bar.
+     * @param paceCursor    The image view used to display the current pace of the lecture.
      */
     public static void displayPace(QuestionBoardDetailsDto quBo, UUID modCode,
                             StackPane paceBar, ImageView paceCursor) {
@@ -46,16 +53,8 @@ public class PaceDisplay {
         //Calculate the pace bar modifier
         double paceBarModifier = calculatePace(pace);
 
-        //Get the local bounds of the pace bar and its cursor relative to the pace bar and its parent
-        Bounds paceBarBounds = paceBar.getBoundsInLocal();
-        Bounds paceCursorBounds = paceCursor.getBoundsInParent();
-
-        //Move the pace bar cursor to the appropriate height
-        double paceBarHeight = paceBarBounds.getHeight();
-        double imageSize = paceCursorBounds.getMaxY() - paceCursorBounds.getMinY();
-        double adjustTranslation = imageSize / 2 + paceCursorBounds.getMinY();
-
-        paceCursor.setTranslateY(paceBarModifier * paceBarHeight - adjustTranslation);
+        //Move the pace bar cursor
+        movePaceCursor(paceBar, paceCursor, paceBarModifier);
     }
 
     /**
@@ -87,5 +86,32 @@ public class PaceDisplay {
 
         //Return a double between 0 and 1
         return aggregatedPaceVotes - 1;
+    }
+
+    /**
+     * This method calculates the new position of the pace cursor and moves the cursor to this position.
+     *
+     * @param paceBar           The stack pane used to display the pace bar.
+     * @param paceCursor        The image view used to display the current pace of the lecture.
+     * @param paceBarModifier   The modifier used to calculate the new position of the pace cursor.
+     */
+    private static void movePaceCursor(StackPane paceBar, ImageView paceCursor, double paceBarModifier) {
+        //Get the local bounds of the pace bar and its cursor relative to the pace bar and its parent
+        Bounds paceBarBounds = paceBar.getBoundsInParent();
+        Bounds paceCursorBounds = paceCursor.getBoundsInParent();
+
+        //Calculate the new position of the pace cursor
+        double paceBarHeight = paceBarBounds.getHeight();
+        double imageSize = paceCursorBounds.getMaxY() - paceCursorBounds.getMinY();
+        double adjustTranslation = imageSize / 2 + paceCursorBounds.getMinY();
+
+        double newPosition = paceBarModifier * paceBarHeight - adjustTranslation;
+
+        //Set up a Transition to move the cursor visibly
+        TranslateTransition translate = new TranslateTransition(Duration.seconds(0.5));
+        translate.setFromY(paceCursorBounds.getMinY());
+        translate.setToY(newPosition);
+
+        translate.play();
     }
 }
