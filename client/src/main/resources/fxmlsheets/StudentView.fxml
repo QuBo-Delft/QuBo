@@ -44,15 +44,27 @@
    <center>
       <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
-                 <ListView fx:id="unAnsQuListView" prefHeight="360.0" prefWidth="800.0" styleClass="qList">
-                 <padding>
-                    <Insets left="30.0" right="20.0" top="20.0" />
-                 </padding>
-              </ListView>
-                  <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0" spacing="10.0" styleClass="sidePane">
+            <ScrollPane fx:id="unAnsQuScPane" HBox.hgrow="ALWAYS" styleClass="qList">
+               <content>
+                  <VBox fx:id="unAnsQuVbox" spacing="15.0" />
+               </content>
+               <padding>
+                  <Insets left="30.0" right="15.0" top="20.0" />
+               </padding>
+            </ScrollPane>
+                  <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0" spacing="15.0" styleClass="sidePane">
                      <padding>
-                        <Insets left="20.0" right="20.0" top="15.0" />
+                        <Insets left="20.0" right="20.0" top="20.0" />
                      </padding>
+                  <Label fx:id="sideMenuTitle" text="Title" />
+                  <ScrollPane fx:id="sideMenuPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                     <content>
+                        <VBox>
+                              <VBox fx:id="ansQuVbox" VBox.vgrow="ALWAYS" />
+                              <VBox fx:id="pollVbox" VBox.vgrow="ALWAYS" />
+                        </VBox>
+                     </content>
+                  </ScrollPane>
                   </VBox>
             </HBox>
          <BorderPane fx:id="paceVotePane" maxHeight="200.0" maxWidth="172.0" minHeight="160.0" minWidth="140.0" prefHeight="200.0" prefWidth="172.0" StackPane.alignment="BOTTOM_RIGHT">

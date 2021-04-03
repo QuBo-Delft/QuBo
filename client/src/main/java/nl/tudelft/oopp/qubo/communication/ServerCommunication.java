@@ -2,6 +2,7 @@ package nl.tudelft.oopp.qubo.communication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteDetailsDto;
@@ -284,6 +285,36 @@ public class ServerCommunication {
     }
 
     /**
+     * Adds an answer to a question.
+     * Communicates with the /api/question/{questionid}/answer?code={code} server endpoint.
+     *
+     * @param questionId    The ID of the question that is being answered.
+     * @param modCode       The moderator code associated with the question board
+     *                      that contains the question.
+     * @param text          The body of the answer to be added.
+     * @return              The AnswerCreationDto associated with the answer in JSON String
+     *                      format if, and only if, the request was successful.
+     */
+    public static String addAnswer(UUID questionId, UUID modCode, String text) {
+        //Instantiate an AnswerCreationBindingModel
+        AnswerCreationBindingModel answerModel = new AnswerCreationBindingModel();
+        answerModel.setText(text);
+
+        //Create a request and response object, send the request, and retrieve the response
+        String fullUrl = subUrl + "api/question/" + questionId + "/answer?code=" + modCode;
+        String requestBody = gson.toJson(answerModel);
+        HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+    /**
      * Edits the text of a question
      * Communicates with the /api/question/{questionid}?code={code} server endpoint.
      *
@@ -342,7 +373,7 @@ public class ServerCommunication {
      *
      * @param questionId    The ID of the question to be marked as answered.
      * @param code          The moderator code that is associated with the board
-     *                      the question is part of, or the question's secret code.
+     *                      the question is part of.
      * @return The QuestionDetailsDto of the answered question in JSON String format
      *          if and only if the question has been marked as answered successfully.
      */
