@@ -560,7 +560,7 @@ public class ServerCommunication {
      *
      * @param boardId    The ID of the question board from which the pace votes should be counted.
      * @param moderatorCode The ID of the pace vote from which the results should be counted.
-     * @return The aggregated pace votes in a PaceVoteDetailsDto in JSON format.
+     * @return The aggregated pace votes in a PaceDetailsDto in JSON format.
      */
     public static String getAggregatedPaceVotes(UUID boardId, UUID moderatorCode) {
         //Set up the URL that will be sent to the delete helper method
