@@ -168,26 +168,4 @@ public class Question {
         this.ip = ip;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Question question = (Question) o;
-        return Objects.equals(id, question.id)
-            && Objects.equals(text, question.text)
-            && Objects.equals(authorName, question.authorName)
-            && Objects.equals(secretCode, question.secretCode)
-            && Objects.equals(timestamp, question.timestamp)
-            && Objects.equals(answered, question.answered)
-            && Objects.equals(ip, question.ip);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, text, authorName, secretCode, timestamp, answered, ip);
-    }
 }
