@@ -165,15 +165,12 @@ public class QuestionBoardServiceTests {
         qb.setClosed(false);
         questionBoardRepository.save(qb);
 
-        HashSet<Question> questionSet = new HashSet<>();
-
         Question q1 = new Question();
         q1.setAuthorName("Author");
         q1.setText("Test question1");
         q1.setSecretCode(UUID.randomUUID());
         q1.setTimestamp(Timestamp.from(currentInstant.plus(1, ChronoUnit.HOURS)));
         q1.setQuestionBoard(qb);
-        questionSet.add(q1);
 
         Question q2 = new Question();
         q2.setAuthorName("Author");
@@ -181,6 +178,9 @@ public class QuestionBoardServiceTests {
         q2.setSecretCode(UUID.randomUUID());
         q2.setTimestamp(Timestamp.from(currentInstant.plus(1, ChronoUnit.HOURS)));
         q2.setQuestionBoard(qb);
+
+        HashSet<Question> questionSet = new HashSet<>();
+        questionSet.add(q1);
         questionSet.add(q2);
 
         questionRepository.saveAll(questionSet);
@@ -225,8 +225,6 @@ public class QuestionBoardServiceTests {
         qb.setClosed(false);
         questionBoardRepository.save(qb);
 
-        Set<Question> questionSet = new HashSet<>();
-
         Question q1 = new Question();
         q1.setAuthorName("Author");
         q1.setText("Test question1");
@@ -240,6 +238,9 @@ public class QuestionBoardServiceTests {
         q2.setSecretCode(UUID.randomUUID());
         q2.setTimestamp(Timestamp.from(currentInstant.plus(1, ChronoUnit.HOURS)));
         q2.setQuestionBoard(qb);
+
+        Set<Question> questionSet = new HashSet<>();
+        questionSet.add(q1);
         questionSet.add(q2);
 
         questionRepository.saveAll(questionSet);
