@@ -107,14 +107,29 @@ public class PollOptionRepositoryTests {
         PollOption option = new PollOption();
         option.setText("Option A");
         option.setPoll(poll);
+        pollOptionRepository.save(option);
 
         PollOption option2 = new PollOption();
         option2.setText("Option B");
         option2.setPoll(poll);
+        pollOptionRepository.save(option2);
+
+        QuestionBoard board2 = new QuestionBoard();
+        board2.setModeratorCode(UUID.randomUUID());
+        board2.setStartTime(Timestamp.from(Instant.now()));
+        board2.setTitle("Test board 2");
+        questionBoardRepository.save(board2);
+
+        Poll poll2 = new Poll();
+        poll2.setText("Test poll 2");
+        poll2.setOpen(true);
+        poll2.setQuestionBoard(board2);
+        pollRepository.save(poll2);
 
         PollOption option3 = new PollOption();
         option3.setText("Option C");
-        option3.setPoll(poll);
+        option3.setPoll(poll2);
+        pollOptionRepository.save(option3);
 
         // Act
         Set<PollOption> pollOptions = pollOptionRepository.getPollOptionsByPoll(poll);
@@ -144,10 +159,12 @@ public class PollOptionRepositoryTests {
         PollOption option = new PollOption();
         option.setText("Option A");
         option.setPoll(poll);
+        pollOptionRepository.save(option);
 
         PollOption option2 = new PollOption();
         option2.setText("Option B");
         option2.setPoll(poll);
+        pollOptionRepository.save(option2);
 
         QuestionBoard board2 = new QuestionBoard();
         board2.setModeratorCode(UUID.randomUUID());
