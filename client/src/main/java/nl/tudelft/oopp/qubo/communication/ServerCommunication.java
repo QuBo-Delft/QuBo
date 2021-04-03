@@ -66,10 +66,10 @@ public class ServerCommunication {
     private static HttpResponse<String> post(String fullUrl, String requestBody, String... headers) {
         //Set up the request Object
         HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .uri(URI.create(fullUrl))
-                .headers(headers)
-                .build();
+            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+            .uri(URI.create(fullUrl))
+            .headers(headers)
+            .build();
 
         //Send the request, and retrieve and return the response from the server
         return sendRequest(request);
@@ -101,10 +101,10 @@ public class ServerCommunication {
     private static HttpResponse<String> patch(String fullUrl) {
         //Set up the request Object
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(fullUrl))
-                .method("PATCH", HttpRequest.BodyPublishers.ofString("{}"))
-                .header("Content-Type", "application/json")
-                .build();
+            .uri(URI.create(fullUrl))
+            .method("PATCH", HttpRequest.BodyPublishers.ofString("{}"))
+            .header("Content-Type", "application/json")
+            .build();
 
         //Send the request, and return the http response
         return  sendRequest(request);
@@ -144,7 +144,7 @@ public class ServerCommunication {
 
         //Send the post request and retrieve the response from the server
         HttpResponse<String> res = post(fullUrl, requestBody, "Content-Type",
-                                        "application/json;charset=UTF-8");
+            "application/json;charset=UTF-8");
 
         //If the request was unsuccessful, return null
         if (res == null || res.statusCode() != 200) {
@@ -189,7 +189,7 @@ public class ServerCommunication {
     public static String retrieveBoardDetailsThroughModCode(UUID moderatorCode) {
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(subUrl + "board/moderator?code=" + moderatorCode)).build();
+            .uri(URI.create(subUrl + "board/moderator?code=" + moderatorCode)).build();
         HttpResponse<String> response = sendRequest(request);
 
         //If the request was unsuccessful, return null
@@ -212,7 +212,7 @@ public class ServerCommunication {
     public static String retrieveBoardDetails(UUID boardID) {
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(subUrl + "board/" + boardID)).build();
+            .uri(URI.create(subUrl + "board/" + boardID)).build();
         HttpResponse<String> response = sendRequest(request);
 
         //Check if the response object is null in which case null is returned
@@ -319,7 +319,7 @@ public class ServerCommunication {
      *
      * @param questionId    The ID of the question that should be deleted.
      * @param code          The moderator code associated with the board or the question's secret code.
-     * @return The QuestionDetailsDto associated with the deleted question in JSON String format if,
+     * @return The QuestionDetailsDto associated with the deleted question in JSON String format if, 
      *          and only if, the question was deleted from the board.
      */
     public static String deleteQuestion(UUID questionId, UUID code) {
@@ -498,7 +498,7 @@ public class ServerCommunication {
 
         //Request the poll creation, and retrieve the response
         HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
-                "application/json;charset=UTF-8");
+            "application/json;charset=UTF-8");
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
@@ -519,7 +519,7 @@ public class ServerCommunication {
     public static String retrievePollDetails(UUID boardId) {
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(subUrl + "board/" + boardId + "/poll")).build();
+            .uri(URI.create(subUrl + "board/" + boardId + "/poll")).build();
         HttpResponse<String> response = sendRequest(request);
 
         //If the request was unsuccessful, return null
@@ -545,6 +545,49 @@ public class ServerCommunication {
         String fullUrl = subUrl + "board/" + boardId + "/poll?code=" + moderatorCode;
 
         //Send the request to delete the question from the board and retrieve the response
+        HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+    /**
+     * Add vote for Poll-option.
+     *
+     * @param boardId   The ID of the question board on which a vote should be added.
+     * @param optionId  The ID of the option that should be voted for.
+     * @return The PollVoteDetailsDto in JSON format if the request was made successfully, null otherwise.
+     */
+    public static String addPollVote(UUID boardId, UUID optionId) {
+        String fullUrl = subUrl + "board/" + boardId + "/poll/" + optionId + "/vote";
+
+        //Send the post request and retrieve the response from the server
+        HttpResponse<String> response = post(fullUrl, "", "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+    /**
+     * Delete the poll vote associated with the provided ID.
+     *
+     * @param boardId The ID of the board in which the poll associated with the poll vote is located.
+     * @param voteId  The ID of the vote that is to be deleted.
+     * @return The PollVoteDetailsDto in JSON format if the request was made successfully, null otherwise.
+     */
+    public static String removePollVote(UUID boardId, UUID voteId) {
+        String fullUrl = subUrl + "board/" + boardId + "/poll/vote/" + voteId;
+
+        //Send the delete request and retrieve the response from the server
         HttpResponse<String> response = delete(fullUrl);
 
         //If the request was unsuccessful, return null
