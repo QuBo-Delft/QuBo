@@ -9,10 +9,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
 import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
+import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 
 import java.util.UUID;
 
@@ -95,9 +97,9 @@ public class JoinQuBoController {
         //Load the student view if the code entered by the user was the board ID of the question board.
         //Load the moderator view if this is not the case.
         if (boardCode.equals(questionBoard.getId())) {
-            new SceneLoader().viewLoader(questionBoard, stage, user, "StudentView");
+            new SceneLoader().viewLoader(questionBoard, stage, user, "StudentView", null);
         } else {
-            new SceneLoader().viewLoader(questionBoard, stage, user, "ModeratorView");
+            new SceneLoader().viewLoader(questionBoard, stage, user, "ModeratorView", boardCode);
         }
     }
 

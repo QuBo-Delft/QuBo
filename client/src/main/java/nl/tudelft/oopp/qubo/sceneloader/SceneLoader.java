@@ -1,15 +1,16 @@
 package nl.tudelft.oopp.qubo.sceneloader;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
+import javafx.stage.WindowEvent;
 import nl.tudelft.oopp.qubo.controllers.QuBoCodesController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
+import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
+import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -25,6 +26,7 @@ public class SceneLoader {
     private static QuestionBoardDetailsDto qd;
     private static QuestionBoardCreationDto qc;
     private static String userName;
+    private static UUID modCode;
 
     /**
      * This method aims to load all scenes that do not require input details.
@@ -56,10 +58,14 @@ public class SceneLoader {
      * @param stage     The stage of the scene where the method is called.
      * @param userNameI The username to be transferred.
      * @param fxml      The fxml sheet to be loaded.
+     * @param code      The moderator code of the board
      */
-    public void viewLoader(QuestionBoardDetailsDto qdI, Stage stage, String userNameI, String fxml) {
+    public void viewLoader(QuestionBoardDetailsDto qdI, Stage stage, String userNameI,
+                           String fxml, UUID code) {
         qd = qdI;
         userName = userNameI;
+        modCode = code;
+
         // Start preparing the new scene
         startLoading(stage, fxml);
     }
@@ -74,11 +80,13 @@ public class SceneLoader {
         // Create an FXMLLoader of the input fxml
         FXMLLoader loader = new FXMLLoader(SceneLoader.class.getResource("/fxmlsheets/" + fxml + ".fxml"));
         // Check whether the root is valid
-        rootValid(loader, stage, fxml);
+        stage = rootValid(loader, stage, fxml);
         // Set values to the fxml controller if necessary
         setController(fxml, loader);
         // Set the title of the stage
         setTitle(fxml, stage);
+        // Set the close method of the stage
+        setCloseMethod(fxml, stage);
     }
 
     /**
@@ -90,40 +98,46 @@ public class SceneLoader {
      * @param stage     The stage of the scene where the method is called.
      * @param fxml      The fxml sheet to be loaded.
      */
-    private static void rootValid(FXMLLoader loader, Stage stage, String fxml) {
-        if (fxml.equals("StudentView") || fxml.equals("ModeratorView")) {
-            Stage newStage = new Stage();
-            Scene newScene = null;
-            // Check if file can be loaded
-            try {
-                newScene = new Scene(loader.load());
-                newStage.setScene(newScene);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (newScene == null) {
-                AlertDialog.display("", "Unable to display the requested view");
-                return;
-            }
-            // Close current stage and show new stage
-            stage.close();
-            newStage.setMinHeight(550);
-            newStage.setMinWidth(850);
-            newStage.show();
-        } else {
-            Parent root = null;
-            try {
-                root = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (root == null) {
-                AlertDialog.display("", "Unable to display the requested view");
-                return;
-            }
-            stage.setScene(new Scene(root));
-            stage.centerOnScreen();
+    private static Stage rootValid(FXMLLoader loader, Stage stage, String fxml) {
+        Scene newScene = null;
+
+        // Check if file can be loaded
+        try {
+            newScene = new Scene(loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        if (newScene == null) {
+            AlertDialog.display("", "Unable to display the requested view");
+            return stage;
+        }
+
+        switch (fxml) {
+            case "StudentView":
+            case "ModeratorView":
+                // Create new stage and set new scene
+                Stage newStage = new Stage();
+                newStage.setScene(newScene);
+
+                // Set minimal resize resolution
+                newStage.setMinHeight(550);
+                newStage.setMinWidth(850);
+                // Close current stage and show new stage
+                stage.close();
+                newStage.show();
+
+                return newStage;
+            case "JoinQuBo":
+                stage.setMinWidth(Double.MIN_VALUE);
+                stage.setMinHeight(Double.MIN_VALUE);
+                break;
+            default:
+                break;
+        }
+
+        stage.setScene(newScene);
+        stage.centerOnScreen();
+        return stage;
     }
 
     /**
@@ -139,9 +153,15 @@ public class SceneLoader {
                 controllerC.displayCodes(qc);
                 break;
             case ("ModeratorView"):
+                // Get controller and initialize qb
                 ModeratorViewController controllerM = loader.getController();
-                UUID boardId = qd.getId();
-                // TODO: need a method to update data in moderatorView
+                loader.setController(controllerM);
+                controllerM.setQuBo(qd);
+                controllerM.setModCode(modCode);
+                controllerM.setAuthorName(userName);
+                controllerM.setBoardDetails();
+
+                controllerM.refresh();
                 break;
             case ("StudentView"):
                 // Get controller and initialize qb
@@ -150,10 +170,10 @@ public class SceneLoader {
                 controllerS.setQuBo(qd);
                 controllerS.setAuthorName(userName);
                 controllerS.setBoardDetails();
-                // TODO: need a method to update data in studentView
+
+                controllerS.refresh();
                 break;
             default:
-                break;
         }
     }
 
@@ -177,11 +197,53 @@ public class SceneLoader {
             case ("CreateQuBo"):
                 stage.setTitle("Create Question Board");
                 break;
-            default:
+            case ("JoinQuBo"):
                 stage.setTitle("QuBo");
-                stage.setMinWidth(Double.MIN_VALUE);
-                stage.setMinHeight(Double.MIN_VALUE);
                 break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Sets the correct close method for the scene that is to be displayed.
+     *
+     * @param fxml  The fxml sheet to be loaded.
+     * @param stage The stage of the scene on which the method is called.
+     */
+    public static void setCloseMethod(String fxml, Stage stage) {
+        String message;
+
+        switch (fxml) {
+            case "JoinQuBo":
+                message = "";
+                stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
+                break;
+            case ("CreateQuBo"):
+                message = "\n'Cancel' will return you to the homepage";
+                stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
+                break;
+            case ("QuBoCodes"):
+                message = "\nMake sure you have copied the question board codes!";
+                stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
+                break;
+            case ("StudentView"):
+            case ("ModeratorView"):
+                message = "\nYou can return to the homepage by pressing the designated button at the"
+                        + " bottom of the sidebar";
+                stage.setOnCloseRequest(e -> closeMethodHelper(e, message));
+                break;
+            default:
+                break;
+        }
+    }
+
+    private static void closeMethodHelper(WindowEvent windowEvent, String message) {
+        boolean close = ConfirmationDialog.display("Close Application",
+                "Are you sure you wish to close the application?\n" + message);
+
+        if (!close) {
+            windowEvent.consume();
         }
     }
 }

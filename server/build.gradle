@@ -22,6 +22,8 @@ dependencies {
 
 	implementation 'org.modelmapper:modelmapper:2.3.9'
 
+	implementation 'com.github.vladimir-bukhtoyarov:bucket4j-core:6.2.0'
+
 	// Local test database (in-memory)
 	implementation 'com.h2database:h2'
 	developmentOnly 'org.hibernate:hibernate-entitymanager'
