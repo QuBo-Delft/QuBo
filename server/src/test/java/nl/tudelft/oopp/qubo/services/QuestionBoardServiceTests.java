@@ -202,9 +202,9 @@ public class QuestionBoardServiceTests {
         qb.setStartTime(currentStamp);
         qb.setTitle("Test board");
         qb.setClosed(false);
-
-        Set<Question> questionSet = new HashSet<>();
-        questionRepository.saveAll(questionSet);
+        HashSet<Question> emptyQuestionSet = new HashSet<>();
+        qb.setQuestions(emptyQuestionSet);
+        questionBoardRepository.save(qb);
 
         // Act
         Set<Question> result = questionBoardService.getQuestionsByBoardId(qb.getId());
