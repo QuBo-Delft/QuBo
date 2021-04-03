@@ -117,4 +117,47 @@ public class PollCommunication {
         return response.body();
     }
 
+    /**
+     * Add vote for Poll-option.
+     *
+     * @param boardId   The ID of the question board on which a vote should be added.
+     * @param optionId  The ID of the option that should be voted for.
+     * @return The PollVoteDetailsDto in JSON format if the request was made successfully, null otherwise.
+     */
+    public static String addPollVote(UUID boardId, UUID optionId) {
+        String fullUrl = ServerCommunication.subUrl + "board/" + boardId + "/poll/" + optionId + "/vote";
+
+        //Send the post request and retrieve the response from the server
+        HttpResponse<String> response = ServerCommunication.post(fullUrl, "", "Content-Type",
+            "application/json;charset=UTF-8");
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+    /**
+     * Delete the poll vote associated with the provided ID.
+     *
+     * @param boardId The ID of the board in which the poll associated with the poll vote is located.
+     * @param voteId  The ID of the vote that is to be deleted.
+     * @return The PollVoteDetailsDto in JSON format if the request was made successfully, null otherwise.
+     */
+    public static String removePollVote(UUID boardId, UUID voteId) {
+        String fullUrl = ServerCommunication.subUrl + "board/" + boardId + "/poll/vote/" + voteId;
+
+        //Send the delete request and retrieve the response from the server
+        HttpResponse<String> response = ServerCommunication.delete(fullUrl);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
 }
