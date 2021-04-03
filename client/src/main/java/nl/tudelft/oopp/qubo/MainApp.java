@@ -176,6 +176,7 @@ public class MainApp {
         String pollDetails = ServerCommunication.retrievePollDetails(boardId);
         PollDetailsDto pollDetailsDto = gson.fromJson(pollDetails, PollDetailsDto.class);
         UUID optionId = ((PollOptionDetailsDto) pollDetailsDto.getOptions().toArray()[0]).getOptionId();
+
         String responseToAddingPollVote = ServerCommunication.addPollVote(boardId, optionId);
         System.out.println("The poll vote you just made is:\n"
             + responseToAddingPollVote);
