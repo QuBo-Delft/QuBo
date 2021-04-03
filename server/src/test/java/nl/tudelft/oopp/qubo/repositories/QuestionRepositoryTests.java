@@ -7,7 +7,6 @@ import java.util.UUID;
 import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -48,7 +47,7 @@ public class QuestionRepositoryTests {
 
         // Assert
         assertNotNull(result);
-        assertEquals(question.getId(), result.getId());
+        assertEquals(question, result);
         assertEquals(question.getQuestionBoard().getId(), result.getQuestionBoard().getId());
     }
 
@@ -145,9 +144,7 @@ public class QuestionRepositoryTests {
 
         // Assert
         assertNotNull(result);
-        assertTrue(result.contains(question1));
-        assertTrue(result.contains(question2));
-        assertFalse(result.contains(question3));
+        assertEquals(Set.of(question1, question2), result);
     }
 
     @Test
