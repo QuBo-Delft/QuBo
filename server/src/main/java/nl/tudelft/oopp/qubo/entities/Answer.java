@@ -91,8 +91,9 @@ public class Answer {
             return false;
         }
         Answer answer = (Answer) o;
-        return Objects.equals(id, answer.id) && Objects.equals(text, answer.text) &&
-            Objects.equals(timestamp, answer.timestamp);
+        return Objects.equals(id, answer.id)
+            && Objects.equals(text, answer.text)
+            && Objects.equals(timestamp, answer.timestamp);
     }
 
     @Override
