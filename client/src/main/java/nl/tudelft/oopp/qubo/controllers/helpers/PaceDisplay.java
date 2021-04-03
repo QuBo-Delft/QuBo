@@ -108,10 +108,12 @@ public class PaceDisplay {
         double newPosition = paceBarModifier * paceBarHeight - adjustTranslation;
 
         //Set up a Transition to move the cursor visibly
-        TranslateTransition translate = new TranslateTransition(Duration.seconds(0.5));
-        translate.setFromY(paceCursorBounds.getMinY());
+        TranslateTransition translate = new TranslateTransition(Duration.seconds(0.5), paceCursor);
+        translate.setFromY(paceCursor.getY());
+        System.out.println(paceCursorBounds.getMinY());
         translate.setToY(newPosition);
 
+        //Move the cursor
         translate.play();
     }
 }

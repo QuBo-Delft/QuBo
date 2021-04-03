@@ -155,6 +155,7 @@ public class ModeratorViewController {
         //Hide side menu and sidebar
         LayoutProperties.startupProperties(content, sideBar, sideMenu, pollVbox, ansQuVbox, unAnsQuVbox,
             paceVotePane);
+        LayoutProperties.modStartUpProperties(paceBar, paceCursor);
     }
 
     public void displayBoardInfo() {
