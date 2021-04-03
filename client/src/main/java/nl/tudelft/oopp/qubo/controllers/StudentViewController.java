@@ -19,18 +19,21 @@ import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
+import nl.tudelft.oopp.qubo.controllers.helpers.PollRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
+import nl.tudelft.oopp.qubo.controllers.structures.PollResult;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
-import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
 
 import javafx.scene.image.ImageView;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -104,6 +107,7 @@ public class StudentViewController {
     private ClipboardContent clipboardContent = new ClipboardContent();
 
     private QuestionBoardDetailsDto quBo;
+    private ArrayList<PollResult> answeredPolls;
 
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
@@ -148,9 +152,13 @@ public class StudentViewController {
         refresh();
     }
 
+    /**
+     * This method refreshes the question and poll lists.
+     */
     public void refresh() {
         QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
             sideMenuPane);
+        PollRefresh.studentRefresh(quBo, pollVbox, sideMenuPane, answeredPolls);
     }
 
     private void startUpProperties() {
