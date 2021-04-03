@@ -2,10 +2,10 @@ package nl.tudelft.oopp.qubo.dtos.pollvote;
 
 import java.util.UUID;
 
-public class PollVoteCreationDto {
+public class PollVoteDetailsDto {
     private UUID id;
 
-    public PollVoteCreationDto() {
+    public PollVoteDetailsDto() {
     }
 
     public UUID getId() {
