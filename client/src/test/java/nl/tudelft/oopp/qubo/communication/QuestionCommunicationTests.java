@@ -305,7 +305,7 @@ public class QuestionCommunicationTests {
         // Arrange
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "api/question/" + uuid1 + "/answer?code=" + uuid2)
-            .doReturnStatus(404).doReturn(failureToken);
+            .doReturnStatus(403).doReturn(failureToken);
 
         // Act
         String responseBody = QuestionCommunication.addAnswer(uuid1, uuid2,
