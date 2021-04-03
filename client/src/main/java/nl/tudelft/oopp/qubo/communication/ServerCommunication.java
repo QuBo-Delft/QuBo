@@ -301,7 +301,7 @@ public class ServerCommunication {
         answerModel.setText(text);
 
         //Create a request and response object, send the request, and retrieve the response
-        String fullUrl = subUrl + "api/question/" + questionId + "/answer?code=" + modCode;
+        String fullUrl = subUrl + "question/" + questionId + "/answer?code=" + modCode;
         String requestBody = gson.toJson(answerModel);
         HttpResponse<String> response = post(fullUrl, requestBody, "Content-Type",
             "application/json;charset=UTF-8");

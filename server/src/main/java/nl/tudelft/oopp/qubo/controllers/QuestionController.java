@@ -243,4 +243,23 @@ public class QuestionController {
         QuestionDetailsDto dto = modelMapper.map(markedQuestion, QuestionDetailsDto.class);
         return dto;
     }
+
+    //POST /api/question/{questionid}/ban?code={moderatorcode}
+    @RequestMapping(value = "{questionid}/ban", method = POST)
+    @ResponseBody
+    public String banUserByIp(
+        @PathVariable("questionid") UUID questionId,
+        @RequestParam("code") UUID moderatorCode) {
+        Question question = questionService.getQuestionById(questionId);
+        if (question == null) {
+            // Requested question does not exist
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question does not exist");
+
+        }
+        // Check if the moderatorCode is valid for the question board the question is in
+        if (!moderatorCode.equals(question.getQuestionBoard().getModeratorCode())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided moderatorCode is not valid "
+                + "for this Question");
+        }
+    }
 }
