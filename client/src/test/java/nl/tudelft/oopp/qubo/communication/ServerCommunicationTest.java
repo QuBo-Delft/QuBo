@@ -1034,8 +1034,8 @@ public class ServerCommunicationTest {
 
         // Act
         String responseBody = ServerCommunication.addPollVote(uuid1, uuid2);
-        // Assert
 
+        // Assert
         assertNotNull(responseBody);
         // Verify if the request was truly made
         httpClientMock.verify().post(fullUrl).called();
@@ -1082,6 +1082,7 @@ public class ServerCommunicationTest {
 
         // Act
         String responseBody = ServerCommunication.removePollVote(uuid1, uuid2);
+
         // Assert
         assertNotNull(responseBody);
         // Verify if the request was truly made
@@ -1113,10 +1114,10 @@ public class ServerCommunicationTest {
 
         // Act
         String responseBody = ServerCommunication.removePollVote(uuid1, uuid2);
+
         // Assert
         assertEquals(successToken, responseBody);
         // Verify if the request was truly made
         httpClientMock.verify().delete(fullUrl).called();
     }
-
 }
