@@ -73,11 +73,9 @@ public class AnswerServiceTests {
         Optional<Answer> inDbOptional = answerRepository.findById(result.getId());
         assertTrue(inDbOptional.isPresent());
         Answer inDb = inDbOptional.get();
-        assertEquals(inDb.getId(), result.getId());
-        assertEquals(inDb.getText(), result.getText());
+        assertEquals(inDb, result);
         assertEquals(model.getText(), result.getText());
         assertEquals(question.getId(), result.getQuestion().getId());
-        assertEquals(inDb.getTimestamp(), result.getTimestamp());
         assertEquals(testTime, result.getTimestamp());
     }
 }
