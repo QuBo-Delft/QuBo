@@ -1,23 +1,19 @@
 package nl.tudelft.oopp.qubo.repositories;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.UUID;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -50,9 +46,7 @@ public class PollRepositoryTests {
 
         // Assert
         assertNotNull(result);
-        assertEquals(poll.getId(), result.getId());
-        assertEquals(poll.getText(), result.getText());
-        assertEquals(poll.isOpen(), result.isOpen());
+        assertEquals(poll, result);
         assertEquals(poll.getQuestionBoard().getId(), result.getQuestionBoard().getId());
         assertEquals(poll, questionBoardRepository.getById(board.getId()).getPoll());
     }
@@ -125,8 +119,8 @@ public class PollRepositoryTests {
         pollRepository.deletePollById(UUID.randomUUID());
 
         // Assert
-        Optional<Poll> result = Optional.ofNullable(pollRepository.getById(poll.getId()));
-        assertTrue(result.isPresent());
-        assertEquals(poll.getId(), result.get().getId());
+        Poll result = pollRepository.getById(poll.getId());
+        assertNotNull(result);
+        assertEquals(poll, result);
     }
 }
