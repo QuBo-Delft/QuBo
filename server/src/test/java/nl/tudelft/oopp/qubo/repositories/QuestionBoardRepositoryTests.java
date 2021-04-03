@@ -3,7 +3,6 @@ package nl.tudelft.oopp.qubo.repositories;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,7 +41,7 @@ public class QuestionBoardRepositoryTests {
 
         // Assert
         assertNotNull(result);
-        assertEquals(board.getId(), result.getId());
+        assertEquals(board, result);
     }
 
     @Test
@@ -81,7 +80,7 @@ public class QuestionBoardRepositoryTests {
 
         // Assert
         assertNotNull(result);
-        assertEquals(board.getId(), result.getId());
+        assertEquals(board, result);
     }
 
     @Test
@@ -120,7 +119,7 @@ public class QuestionBoardRepositoryTests {
 
         // Assert
         assertNotNull(result);
-        assertTrue(result.containsAll(Set.of(board, board2)));
+        assertEquals(List.of(board, board2), result);
     }
 
     @Test
