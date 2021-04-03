@@ -150,12 +150,12 @@ public class QuestionBoard {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        QuestionBoard that = (QuestionBoard) o;
-        return closed == that.closed
-            && Objects.equals(id, that.id)
-            && Objects.equals(moderatorCode, that.moderatorCode)
-            && Objects.equals(title, that.title)
-            && Objects.equals(startTime, that.startTime);
+        QuestionBoard board = (QuestionBoard) o;
+        return closed == board.closed
+            && Objects.equals(id, board.id)
+            && Objects.equals(moderatorCode, board.moderatorCode)
+            && Objects.equals(title, board.title)
+            && Objects.equals(startTime, board.startTime);
     }
 
     @Override
