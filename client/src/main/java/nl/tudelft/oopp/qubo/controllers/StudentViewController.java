@@ -3,13 +3,9 @@ package nl.tudelft.oopp.qubo.controllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
@@ -21,29 +17,20 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
-import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
+import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
+import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
-import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
 
 import javafx.scene.image.ImageView;
 
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -141,68 +128,12 @@ public class StudentViewController {
     }
 
     /**
-     * This method is called by the SceneLoader and sets the title text and board open or closed icon.
-     * If the board is open, it also displays its start time.
+     * This method is called by the SceneLoader and takes the QuestionBoardDetailsDto, board status icon,
+     * text and title. With these parameters it calls the setBoardDetails method in the QuBoInformation class
+     * which actually sets their values.
      */
     public void setBoardDetails() {
-        boardTitle.setText(quBo.getTitle());
-        if (quBo.isClosed()) {
-            boardStatusText.setText("Question board is closed, making changes is no longer possible ");
-            boardStatusIcon.setImage(new Image(getClass().getResource(
-                "/images/qubo/status_closed.png").toString()));
-        } else {
-            boardStatusIcon.setImage(new Image(getClass().getResource("/icons/status_open.png").toString()));
-            boardStatusText.setText(timeHandler());
-        }
-    }
-
-    private String timeHandler() {
-        ZonedDateTime dateTime = quBo.getStartTime().toInstant().atZone(ZoneId.systemDefault());
-        ZonedDateTime today = Instant.now().atZone(ZoneId.systemDefault());
-        ZonedDateTime relativeYesterday =
-            Instant.now().minus(1, ChronoUnit.DAYS).atZone(ZoneId.systemDefault()).withHour(0);
-        ZonedDateTime relativeTomorrow =
-            Instant.now().plus(1, ChronoUnit.DAYS).atZone(ZoneId.systemDefault())
-                .withHour(23).withMinute(59);
-
-        String displayDate;
-        DateTimeFormatter formatterT =
-            DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault());
-        DateTimeFormatter formatterW =
-            DateTimeFormatter.ofPattern("eeee HH:mm").withZone(ZoneId.systemDefault());
-        DateTimeFormatter formatterD =
-            DateTimeFormatter.ofPattern("dd-MM HH:mm").withZone(ZoneId.systemDefault());
-
-        if (dateTime.isBefore(today)) {
-            if (dateTime.isAfter(relativeYesterday) || dateTime.equals(relativeYesterday)) {
-                if (today.getDayOfYear() == dateTime.getDayOfYear()) {
-                    displayDate = "Question board is open since today at " + formatterT.format(dateTime);
-                } else {
-                    displayDate = "Question board is open since yesterday at " + formatterT.format(dateTime);
-                }
-            } else {
-                if (ChronoUnit.DAYS.between(dateTime,today) < 7) {
-                    displayDate = "Question is board open since " + formatterW.format(dateTime).toLowerCase();
-                } else {
-                    displayDate = "Question is board open since " + formatterD.format(dateTime);
-                }
-            }
-        } else {
-            if (dateTime.isBefore(relativeTomorrow) || dateTime.equals(relativeTomorrow)) {
-                if (today.getDayOfYear() == dateTime.getDayOfYear()) {
-                    displayDate = "Question board opens today at " + formatterT.format(dateTime);
-                } else {
-                    displayDate = "Question board opens tomorrow at " + formatterT.format(dateTime);
-                }
-            } else {
-                if (ChronoUnit.DAYS.between(today, dateTime) < 7) {
-                    displayDate = "Question board opens " + formatterW.format(dateTime).toLowerCase();
-                } else {
-                    displayDate = "Question board opens " + formatterD.format(dateTime);
-                }
-            }
-        }
-        return displayDate;
+        new QuBoInformation().setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
     }
 
     /**
@@ -226,12 +157,16 @@ public class StudentViewController {
             paceVotePane);
     }
 
+    /**
+     * Called by the display question board details button. It either displays the question board details pane,
+     * or hides it when it is already open and showing.
+     */
     public void displayBoardInfo() {
         if (popUp.isShowing()) {
             popUp.close();
         } else {
             if (popUp != null) {
-                new SceneLoader().studentLoader(quBo, popUp, "", "QuBoDetails");
+                new SceneLoader().viewLoader(quBo, popUp, "", "QuBoDetails", null);
             }
         }
     }

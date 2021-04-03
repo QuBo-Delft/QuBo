@@ -11,9 +11,9 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
-import nl.tudelft.oopp.qubo.communication.ServerCommunication;
-import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
+
+import java.util.UUID;
 
 /**
  * This class is a controller for the QuBoDetails.fxml
@@ -52,8 +52,8 @@ public class QuBoDetailsController {
     @FXML
     private RowConstraints modRow2;
 
+    private UUID modCode;
     private QuestionBoardDetailsDto qd;
-    private QuestionBoardCreationDto qc;
 
     private Clipboard clipboard = Clipboard.getSystemClipboard();
     private ClipboardContent clipboardContent = new ClipboardContent();
@@ -63,50 +63,30 @@ public class QuBoDetailsController {
         .create();
 
     /**
-     * Sets the QuestionBoardDetailsDto to be used.
+     * Sets only the fields that are supposed to be shown when details are requested
+     * through a student view or shows all when requested through a moderator view.
+     * It also sets the moderator code and QuestionBoardDetailsDto so they can be used for copying.
      *
-     * @param qd The QuestionBoardDetailsDto.
+     * @param qd        The QuestionBoardDetailsDto.
+     * @param modCode   The moderator code of the question board.
      */
-    public void setQd(QuestionBoardDetailsDto qd) {
-        this.qd = qd;
-    }
-
-    /**
-     * Sets the QuestionBoardCreationDto to be used.
-     *
-     * @param qc The QuestionBoardCreationDto.
-     */
-    public void setQc(QuestionBoardCreationDto qc) {
-        this.qc = qc;
-    }
-
-    /**
-     * Sets only the fields that are supposed to be shown when the details are requested
-     * through the student view and hides moderator related fields.
-     */
-    public void setStudent() {
+    public void setDetails(QuestionBoardDetailsDto qd, UUID modCode) {
         title.setText(qd.getTitle());
         closedStatus.setText(Boolean.toString(qd.isClosed()));
         studentCode.setText(qd.getId().toString());
         startTime.setText(qd.getStartTime().toString());
-        copyModeratorCode.visibleProperty().bindBidirectional(moderatorCode.visibleProperty());
-        copyModeratorCode.visibleProperty().bindBidirectional(moderatorCodeLabel.visibleProperty());
-        copyModeratorCode.setVisible(false);
-        modRow1.setMaxHeight(0);
-        modRow2.setMaxHeight(0);
-    }
 
-    /**
-     * Sets all fields of the details pane by creation a QuestionBoardDetailsDto to retrieve closed status.
-     */
-    public void setModerator() {
-        title.setText(qc.getTitle());
-        String resBody = ServerCommunication.retrieveBoardDetails(qd.getId());
-        QuestionBoardDetailsDto qdMod = gson.fromJson(resBody, QuestionBoardDetailsDto.class);
-        closedStatus.setText(Boolean.toString(qd.isClosed()));
-        studentCode.setText(qc.getId().toString());
-        moderatorCode.setText(qc.getModeratorCode().toString());
-        startTime.setText(qc.getStartTime().toString());
+        if (modCode == null) {
+            copyModeratorCode.visibleProperty().bindBidirectional(moderatorCode.visibleProperty());
+            copyModeratorCode.visibleProperty().bindBidirectional(moderatorCodeLabel.visibleProperty());
+            copyModeratorCode.setVisible(false);
+            modRow1.setMaxHeight(0);
+            modRow2.setMaxHeight(0);
+        } else {
+            moderatorCode.setText(modCode.toString());
+        }
+        this.qd = qd;
+        this.modCode = modCode;
     }
 
     /**
@@ -120,22 +100,18 @@ public class QuBoDetailsController {
     }
 
     /**
-     * Copies the moderator code when either the code itself or the button is pressed.
+     * Copies the moderator code when the copy moderator code button is pressed.
      */
     public void copyModeratorCodeHandler() {
-        clipboardContent.putString(qc.getModeratorCode().toString());
+        clipboardContent.putString(modCode.toString());
         clipboard.setContent(clipboardContent);
     }
 
     /**
-     * Copies the student code when either the code itself or the button is pressed.
+     * Copies the student code when the copy student code button is pressed.
      */
     public void copyStudentCodeHandler() {
-        if (qc == null) {
-            clipboardContent.putString(qd.getId().toString());
-        } else {
-            clipboardContent.putString(qc.getId().toString());
-        }
+        clipboardContent.putString(qd.getId().toString());
         clipboard.setContent(clipboardContent);
     }
 }

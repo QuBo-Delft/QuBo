@@ -1,0 +1,54 @@
+.root {
+    -fx-background-color: #EBE7DB;
+}
+
+.title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #584643;
+    -fx-font-size: 22;
+    -fx-font-family: "Arial"
+}
+
+.label {
+    -fx-text-fill: #403333;
+    -fx-font-size: 14;
+    -fx-font-family: "Arial";
+}
+
+.copyBtn {
+    -fx-background-color: #736d69;
+    -fx-text-fill: #fffdfd;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian, #b0afaf , 4, 0, 0, 1);
+}
+
+.copyBtn:hover {
+    -fx-background-color: #ddd5cf;
+    -fx-effect: dropshadow( three-pass-box, #736d69, 3, 0, 0, 3);
+    -fx-font-weight: bold;
+    -fx-text-fill: #584643;
+}
+
+.copyBtn:armed {
+    -fx-background-color: #c8bbb1;
+    -fx-effect: innershadow( gaussian, rgba( 0, 0, 0, 0.5 ), 3, 0, 0, 0 );
+}
+
+.closeBtn {
+    -fx-background-color: #ddd5cf;
+    -fx-text-fill: #736d69;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian, #b0afaf , 4, 0, 0, 1);
+}
+
+.closeBtn:hover {
+    -fx-background-color: #f08080;
+    -fx-effect: dropshadow( three-pass-box, #b0afaf, 3, 0, 0, 3);
+    -fx-font-weight: bold;
+    -fx-text-fill: #fffdfd;
+}
+
+.closeBtn:armed {
+    -fx-background-color: #eb5252;
+    -fx-effect: innershadow( gaussian, rgba( 0, 0, 0, 0.5 ), 3, 0, 0, 0 );
+}
