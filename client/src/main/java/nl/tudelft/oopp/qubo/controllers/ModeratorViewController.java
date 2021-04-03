@@ -4,12 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
@@ -19,7 +16,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import nl.tudelft.oopp.qubo.communication.PaceVoteCommunication;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
@@ -150,8 +146,12 @@ public class ModeratorViewController {
     private void initialize() {
         startUpProperties();
         //Display the questions
+        refresh();
     }
 
+    /**
+     * This method refreshes the questions and pace bar.
+     */
     public void refresh() {
         QuestionRefresh.modRefresh(quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
@@ -235,7 +235,16 @@ public class ModeratorViewController {
         //Calculate the pace bar modifier
         double paceBarModifier = calculatePace(pace);
 
-        //TODO: Move the bar
+        //Get the local bounds of the pace bar and its cursor relative to the pace bar and its parent
+        Bounds paceBarBounds = paceBar.getBoundsInLocal();
+        Bounds paceCursorBounds = paceCursor.getBoundsInParent();
+
+        //Move the pace bar cursor to the appropriate height
+        double paceBarHeight = paceBarBounds.getHeight();
+        double imageSize = paceCursorBounds.getMaxY() - paceCursorBounds.getMinY();
+        double adjustTranslation = imageSize / 2 + paceCursorBounds.getMinY();
+
+        paceCursor.setTranslateY(paceBarModifier * paceBarHeight - adjustTranslation);
     }
 
     /**
@@ -248,6 +257,11 @@ public class ModeratorViewController {
      */
     private static double calculatePace(PaceDetailsDto pace) {
         int numberOfVotes = pace.getTooSlowVotes() + pace.getJustRightVotes() + pace.getTooSlowVotes();
+
+        //If there are no pace votes, set the pace to "Just Right"
+        if (numberOfVotes == 0) {
+            return 0.5;
+        }
 
         //Set too slow votes equal to 2
         double tooSlow = pace.getTooSlowVotes() * 2;

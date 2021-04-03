@@ -46,7 +46,10 @@
             <HBox prefHeight="100.0" prefWidth="200.0">
             <StackPane fx:id="paceBar" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" HBox.hgrow="NEVER">
                <children>
-                  <ImageView fx:id="paceCursor" fitHeight="38.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icons/status_open.png" />
+                     </image></ImageView>
                </children>
             </StackPane>
                 <ScrollPane fx:id="unAnsQuScPane" HBox.hgrow="ALWAYS">
