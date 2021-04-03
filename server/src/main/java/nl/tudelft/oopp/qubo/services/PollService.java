@@ -1,8 +1,10 @@
 package nl.tudelft.oopp.qubo.services;
 
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
@@ -14,7 +16,10 @@ import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @Service
@@ -150,5 +155,42 @@ public class PollService {
      */
     public void deletePoll(UUID pollId) {
         pollRepository.deletePollById(pollId);
+    }
+
+
+    /**
+     * Retrieve a set of PollOption objects corresponding to the question board's poll.
+     * Throw 404 if the question board does not exist.
+     * Throw 404 if there is no poll in this question board.
+     * Throw 403 if the poll is open.
+     *
+     * @param boardId   The board ID.
+     * @return A set of PollOption objects.
+     */
+    public Set<PollOptionResultDto> getPollResults(UUID boardId) {
+        QuestionBoard board = questionBoardRepository.getById(boardId);
+
+        // Check if the question board exists
+        if (board == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The question board does not exist.");
+        }
+
+        Poll poll = board.getPoll();
+        // Check if the poll exists
+        if (poll == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no poll in this question board.");
+        }
+
+        // Check if the poll is open
+        if (poll.isOpen()) {
+            throw new ForbiddenException("The poll is open.");
+        }
+
+        Set<PollOption> pollOptions = pollOptionRepository.getPollOptionsByPoll(poll);
+
+        Set<PollOptionResultDto> pollOptionResults = modelMapper.map(pollOptions,
+                new TypeToken<Set<PollOptionResultDto>>() {}.getType());
+
+        return pollOptionResults;
     }
 }

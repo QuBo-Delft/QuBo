@@ -13,6 +13,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
 import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
@@ -170,7 +171,7 @@ public class CreateQuBoController {
             titleStr, startTimeStamp);
 
         // Send the request and retrieve the string body of QuestionBoardCreationDto
-        String resBody = ServerCommunication.createBoardRequest(board);
+        String resBody = QuestionBoardCommunication.createBoardRequest(board);
 
         // Alert the user if the creation of the question board has failed
         if (resBody == null) {

@@ -4,13 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pgssoft.httpclient.HttpClientMock;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-public class ServerCommunicationTest {
-
+public class ServerCommunicationTests {
+    
     private final String successToken = "{token: success}";
     private final String failureToken = "{token: failure}";
 
@@ -34,9 +31,5 @@ public class ServerCommunicationTest {
         httpClientMock = new HttpClientMock();
     }
 
-    // Test if the sendRequest method catches the exception caused by a refused connection.
-    @Test
-    public void testSendRequest() {
-        assertNull(QuestionBoardCommunication.retrieveBoardDetails(uuid1));
-    }
+
 }
