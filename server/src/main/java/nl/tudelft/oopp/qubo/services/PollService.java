@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
@@ -15,6 +16,7 @@ import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -165,7 +167,7 @@ public class PollService {
      * @param boardId   The board ID.
      * @return A set of PollOption objects.
      */
-    public Set<PollOption> getPollOptionsByBoardId(UUID boardId) {
+    public Set<PollOptionResultDto> getPollResults(UUID boardId) {
         QuestionBoard board = questionBoardRepository.getById(boardId);
 
         // Check if the question board exists
@@ -181,9 +183,14 @@ public class PollService {
 
         // Check if the poll is open
         if (poll.isOpen()) {
-            throw new ForbiddenException("The poll is open");
+            throw new ForbiddenException("The poll is open.");
         }
 
-        return pollOptionRepository.getPollOptionsByPoll(poll);
+        Set<PollOption> pollOptions = pollOptionRepository.getPollOptionsByPoll(poll);
+
+        Set<PollOptionResultDto> pollOptionResults = modelMapper.map(pollOptions,
+                new TypeToken<Set<PollOptionResultDto>>() {}.getType());
+
+        return pollOptionResults;
     }
 }

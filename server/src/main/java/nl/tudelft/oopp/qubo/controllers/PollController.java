@@ -17,7 +17,6 @@ import nl.tudelft.oopp.qubo.services.PollVoteService;
 import nl.tudelft.oopp.qubo.services.QuestionBoardService;
 import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -288,15 +287,12 @@ public class PollController {
     @ResponseBody
     public Set<PollOptionResultDto> retrievePollResult(
             @PathVariable("boardid") UUID boardId) {
-        Set<PollOption> pollOptions = pollService.getPollOptionsByBoardId(boardId);
+        Set<PollOptionResultDto> pollOptionResults = pollService.getPollResults(boardId);
 
-        // Check if the question board exists
-        if (pollOptions == null) {
+        // Check if the poll result exists
+        if (pollOptionResults == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The poll result does not exist.");
         }
-
-        Set<PollOptionResultDto> pollOptionResults = modelMapper.map(pollOptions,
-                new TypeToken<Set<PollOptionResultDto>>() {}.getType());
 
         return pollOptionResults;
     }

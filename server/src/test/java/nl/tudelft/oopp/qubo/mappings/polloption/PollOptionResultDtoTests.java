@@ -48,17 +48,12 @@ public class PollOptionResultDtoTests {
 
         p.setVotes(votes);
 
-        Poll poll = new Poll();
-        Set<PollOption> options = new HashSet<>();
-        options.add(p);
-        poll.setPollOptions(options);
-
         // Act
         PollOptionResultDto dto = mapper.map(p, PollOptionResultDto.class);
 
         // Assert
         assertEquals(p.getId(), dto.getId());
         assertEquals(p.getText(), dto.getText());
-        assertEquals(dto.getVotes(), votes.size());
+        assertEquals(votes.size(), dto.getVotes());
     }
 }
