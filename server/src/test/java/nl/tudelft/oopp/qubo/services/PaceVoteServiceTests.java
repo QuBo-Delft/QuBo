@@ -1,5 +1,7 @@
 package nl.tudelft.oopp.qubo.services;
 
+import java.sql.Timestamp;
+import java.util.UUID;
 import nl.tudelft.oopp.qubo.dtos.pace.PaceDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
@@ -7,10 +9,13 @@ import nl.tudelft.oopp.qubo.entities.PaceVote;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import nl.tudelft.oopp.qubo.repositories.PaceVoteRepository;
 import nl.tudelft.oopp.qubo.repositories.QuestionBoardRepository;
-import nl.tudelft.oopp.qubo.repositories.QuestionRepository;
 import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,23 +23,12 @@ import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import javax.management.timer.TimerMBean;
-import java.sql.Timestamp;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@ActiveProfiles("mockCurrentTimeProvider")
+@ActiveProfiles({"test", "mockCurrentTimeProvider"})
 public class PaceVoteServiceTests {
 
     @Autowired
