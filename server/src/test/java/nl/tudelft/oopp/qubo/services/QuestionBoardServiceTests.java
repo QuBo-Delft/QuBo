@@ -5,6 +5,7 @@ import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import nl.tudelft.oopp.qubo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.qubo.repositories.QuestionRepository;
+import nl.tudelft.oopp.qubo.services.exceptions.ConflictException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -25,14 +25,13 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@ActiveProfiles("mockCurrentTimeProvider")
+@ActiveProfiles({"test", "mockCurrentTimeProvider"})
 public class QuestionBoardServiceTests {
 
     @Autowired
@@ -48,9 +47,7 @@ public class QuestionBoardServiceTests {
     private CurrentTimeProvider mockCurrentTimeProvider;
 
     private final Timestamp currentStamp = Timestamp.valueOf("2021-04-01 00:00:00");
-    private final Instant pastInstant = currentStamp.toInstant().minus(1,ChronoUnit.DAYS);
     private final Instant currentInstant = currentStamp.toInstant();
-    private final Instant futureInstant = currentStamp.toInstant().plus(1,ChronoUnit.DAYS);
 
     @BeforeEach
     public void setup() {
@@ -76,7 +73,6 @@ public class QuestionBoardServiceTests {
         assertEquals(inDb.getModeratorCode(), result.getModeratorCode());
         assertEquals(inDb.getTitle(), result.getTitle());
         assertEquals(inDb.getStartTime(), result.getStartTime());
-
     }
 
     // getBoardById tests
@@ -131,7 +127,7 @@ public class QuestionBoardServiceTests {
         questionBoardRepository.save(qb);
 
         // Act
-        QuestionBoard result = questionBoardService.getBoardByModeratorCode(qb.getId());
+        QuestionBoard result = questionBoardService.getBoardByModeratorCode(qb.getModeratorCode());
 
         // Assert
         QuestionBoard inDb = questionBoardRepository.getById(qb.getId());
@@ -169,7 +165,7 @@ public class QuestionBoardServiceTests {
         qb.setClosed(false);
         questionBoardRepository.save(qb);
 
-        HashSet<Question> questionSet = new HashSet<Question>();
+        HashSet<Question> questionSet = new HashSet<>();
 
         Question q1 = new Question();
         q1.setAuthorName("Author");
@@ -177,10 +173,17 @@ public class QuestionBoardServiceTests {
         q1.setSecretCode(UUID.randomUUID());
         q1.setTimestamp(Timestamp.from(currentInstant.plus(1, ChronoUnit.HOURS)));
         q1.setQuestionBoard(qb);
-        q1.setAnswers(null);
-        q1.setVotes(null);
         questionSet.add(q1);
-        questionRepository.save(q1);
+
+        Question q2 = new Question();
+        q2.setAuthorName("Author");
+        q2.setText("Test question1");
+        q2.setSecretCode(UUID.randomUUID());
+        q2.setTimestamp(Timestamp.from(currentInstant.plus(1, ChronoUnit.HOURS)));
+        q2.setQuestionBoard(qb);
+        questionSet.add(q2);
+
+        questionRepository.saveAll(questionSet);
 
         // Act
         Set<Question> result = questionBoardService.getQuestionsByBoardId(qb.getId());
@@ -200,10 +203,8 @@ public class QuestionBoardServiceTests {
         qb.setTitle("Test board");
         qb.setClosed(false);
 
-        Set<Question> questionSet = new HashSet<Question>();
+        Set<Question> questionSet = new HashSet<>();
         questionRepository.saveAll(questionSet);
-        qb.setQuestions(questionSet);
-        questionBoardRepository.save(qb);
 
         // Act
         Set<Question> result = questionBoardService.getQuestionsByBoardId(qb.getId());
@@ -212,7 +213,6 @@ public class QuestionBoardServiceTests {
         assertEquals(qb.getQuestions(), result);
         Set<Question> inDb = questionRepository.getQuestionByQuestionBoard(qb);
         assertEquals(inDb, result);
-
     }
 
     @Test
@@ -225,7 +225,7 @@ public class QuestionBoardServiceTests {
         qb.setClosed(false);
         questionBoardRepository.save(qb);
 
-        Set<Question> questionSet = new HashSet<Question>();
+        Set<Question> questionSet = new HashSet<>();
 
         Question q1 = new Question();
         q1.setAuthorName("Author");
@@ -296,19 +296,24 @@ public class QuestionBoardServiceTests {
             () -> questionBoardService.closeBoard(UUID.randomUUID()));
 
         // Assert
-        assertEquals("This QuestionBoard does not exist", exception.getMessage());
+        assertEquals("Question board does not exist", exception.getMessage());
     }
 
     @Test
     public void closeBoard_withClosedQuBo_throwsConflictException() {
         // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(currentStamp);
+        qb.setTitle("Test board");
+        qb.setClosed(true);
+        questionBoardRepository.save(qb);
 
         // Act
+        ConflictException exception = assertThrows(ConflictException.class,
+            () -> questionBoardService.closeBoard(qb.getId()));
 
         // Assert
-
+        assertEquals("This QuestionBoard is already closed", exception.getMessage());
     }
-
-
-
 }
