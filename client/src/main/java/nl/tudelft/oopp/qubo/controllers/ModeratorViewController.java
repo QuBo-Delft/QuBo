@@ -3,6 +3,9 @@ package nl.tudelft.oopp.qubo.controllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
@@ -16,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import nl.tudelft.oopp.qubo.communication.PaceVoteCommunication;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
@@ -40,6 +44,12 @@ public class ModeratorViewController {
     private StackPane content;
     @FXML
     private BorderPane paceVotePane;
+
+    //Nodes used to display the pace
+    @FXML
+    private StackPane paceBar;
+    @FXML
+    private ImageView paceCursor;
 
     @FXML
     private Button leaveQuBo;
@@ -140,12 +150,14 @@ public class ModeratorViewController {
     private void initialize() {
         startUpProperties();
         //Display the questions
-        refresh();
     }
 
     public void refresh() {
         QuestionRefresh.modRefresh(quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
+
+        //Refresh the pace
+        displayPace();
     }
 
     private void startUpProperties() {
@@ -199,17 +211,37 @@ public class ModeratorViewController {
     /**
      * This method displays the pace of the lecture as perceived by students.
      */
-    private void displayPace() {
-        String jsonPace = PaceVoteCommunication.getAggregatedPaceVotes(quBo.getId(), modCode);
-        PaceDetailsDto pace = gson.fromJson(jsonPace, PaceDetailsDto.class);
+    public void displayPace() {
+        //If the question board has not yet been initialised, return
+        if (quBo == null) {
+            return;
+        }
 
+        //Retrieve the pace details from the server
+        String jsonPace = PaceVoteCommunication.getAggregatedPaceVotes(quBo.getId(), modCode);
+        PaceDetailsDto pace;
+
+        //If the jsonPace was not null, use the server's pace results
+        //If the jsonPace was null, set the just right votes to 1 to center the pace cursor
+        if (jsonPace != null) {
+            pace = gson.fromJson(jsonPace, PaceDetailsDto.class);
+        } else {
+            pace = new PaceDetailsDto();
+            pace.setJustRightVotes(1);
+            pace.setTooFastVotes(0);
+            pace.setTooSlowVotes(0);
+        }
+
+        //Calculate the pace bar modifier
         double paceBarModifier = calculatePace(pace);
 
         //TODO: Move the bar
     }
 
     /**
-     * This method calculates the average pace.
+     * This method calculates the average pace. As JavaFX uses a coordinate system with the origin at the
+     * top left of the screen, this method assigns a higher value to the tooSlowVotes and a lower value to
+     * the tooFastVotes. This ensures that the double returned will transform the cursor appropriately.
      *
      * @param pace  The PaceDetailsDto containing integers of the number of votes per pace type.
      * @return A double between 0 and 1.
@@ -217,12 +249,12 @@ public class ModeratorViewController {
     private static double calculatePace(PaceDetailsDto pace) {
         int numberOfVotes = pace.getTooSlowVotes() + pace.getJustRightVotes() + pace.getTooSlowVotes();
 
-        //Set too slow votes equal to 1
-        double tooSlow = pace.getTooSlowVotes();
+        //Set too slow votes equal to 2
+        double tooSlow = pace.getTooSlowVotes() * 2;
         //Set just right votes equal to 1.5
         double justRight = pace.getJustRightVotes() * 1.5;
-        //Set too fast votes equal to 2
-        double tooFast = pace.getTooFastVotes() * 2;
+        //Set too fast votes equal to 1
+        double tooFast = pace.getTooFastVotes();
 
         //Calculate the average pace by adding all votes (with relative weights) and dividing it by the total
         //number of votes
