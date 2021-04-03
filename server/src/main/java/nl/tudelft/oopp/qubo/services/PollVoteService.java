@@ -43,4 +43,23 @@ public class PollVoteService {
         pollVoteRepository.save(vote);
         return vote;
     }
+
+    /**
+     * Get the poll vote corresponding to the voteId passed to the method.
+     *
+     * @param voteId    The ID of the PollVote.
+     * @return The PollVote that is associated with the vote ID passed to the method.
+     */
+    public PollVote getPollVote(UUID voteId) {
+        return pollVoteRepository.getById(voteId);
+    }
+
+    /**
+     * Delete the poll vote corresponding to the voteId passed to the method.
+     *
+     * @param voteId    The ID of the PollVote.
+     */
+    public void deletePollVote(UUID voteId) {
+        pollVoteRepository.deletePollVoteById(voteId);
+    }
 }

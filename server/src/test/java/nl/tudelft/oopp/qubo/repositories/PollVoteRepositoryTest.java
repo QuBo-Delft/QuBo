@@ -100,4 +100,35 @@ public class PollVoteRepositoryTest {
         // Assert
         assertNull(result);
     }
+
+    @Test
+    public void deletePollVoteById_withValidId_deletesPollVote() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.from(Instant.now()));
+        board.setTitle("Test board");
+        questionBoardRepository.save(board);
+
+        Poll poll = new Poll();
+        poll.setText("Test poll");
+        poll.setOpen(true);
+        poll.setQuestionBoard(board);
+        pollRepository.save(poll);
+
+        PollOption option = new PollOption();
+        option.setText("Option A");
+        option.setPoll(poll);
+        pollOptionRepository.save(option);
+
+        PollVote vote = new PollVote();
+        vote.setPollOption(option);
+        pollVoteRepository.save(vote);
+
+        // Act
+        pollVoteRepository.deletePollVoteById(vote.getId());
+
+        // Assert
+        assertNull(pollVoteRepository.getById(vote.getId()));
+    }
 }
