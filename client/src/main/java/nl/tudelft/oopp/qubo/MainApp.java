@@ -7,7 +7,6 @@ import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
-import nl.tudelft.oopp.qubo.dtos.pollvote.PollVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel;
@@ -181,9 +180,9 @@ public class MainApp {
         System.out.println("The poll vote you just made is:\n"
             + responseToAddingPollVote);
         // Remove the poll vote that was just made
-        PollVoteCreationDto pollVoteCreationDto = gson
-            .fromJson(responseToAddingPollVote, PollVoteCreationDto.class);
-        String pollVote = ServerCommunication.removePollVote(boardId, pollVoteCreationDto.getId());
+        PollDetailsDto pollVoteDetailsDto = gson
+            .fromJson(responseToAddingPollVote, PollDetailsDto.class);
+        String pollVote = ServerCommunication.removePollVote(boardId, pollVoteDetailsDto.getId());
         System.out.println("The poll vote was just successfully removed:" + (pollVote != null));
 
         //Retrieve the poll details of the poll that was just added
