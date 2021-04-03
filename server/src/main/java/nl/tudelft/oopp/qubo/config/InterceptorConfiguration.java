@@ -23,6 +23,11 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry
             .addInterceptor(rateLimitingHandlerInterceptor)
-            .addPathPatterns("/api/**");
+            .addPathPatterns("/api/**")
+            .excludePathPatterns(
+                "/api/board/*",
+                "/api/board/*/questions",
+                "/api/board/*/pace",
+                "/api/board/*/poll");
     }
 }
