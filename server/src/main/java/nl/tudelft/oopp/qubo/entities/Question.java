@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.qubo.entities;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -166,4 +167,5 @@ public class Question {
     public void setIp(String ip) {
         this.ip = ip;
     }
+
 }

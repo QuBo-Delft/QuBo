@@ -25,7 +25,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@ActiveProfiles("mockCurrentTimeProvider")
+@ActiveProfiles({"test", "mockCurrentTimeProvider"})
 public class AnswerServiceTests {
     @Autowired
     private AnswerRepository answerRepository;
