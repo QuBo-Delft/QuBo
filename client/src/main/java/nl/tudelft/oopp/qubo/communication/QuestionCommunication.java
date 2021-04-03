@@ -59,7 +59,7 @@ public class QuestionCommunication {
         answerModel.setText(text);
 
         //Create a request and response object, send the request, and retrieve the response
-        String fullUrl = ServerCommunication.subUrl + "api/question/" + questionId + "/answer?code=" + modCode;
+        String fullUrl = ServerCommunication.subUrl + "question/" + questionId + "/answer?code=" + modCode;
         String requestBody = ServerCommunication.gson.toJson(answerModel);
         HttpResponse<String> response = ServerCommunication.post(fullUrl, requestBody, "Content-Type",
             "application/json;charset=UTF-8");
