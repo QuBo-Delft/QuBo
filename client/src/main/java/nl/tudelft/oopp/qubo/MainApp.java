@@ -180,7 +180,7 @@ public class MainApp {
         String responseToAddingPollVote = ServerCommunication.addPollVote(boardId, optionId);
         System.out.println("The poll vote you just made is:\n"
             + responseToAddingPollVote);
-        // Remove the vote that was just made
+        // Remove the poll vote that was just made
         PollVoteCreationDto pollVoteCreationDto = gson
             .fromJson(responseToAddingPollVote, PollVoteCreationDto.class);
         String pollVote = ServerCommunication.removePollVote(boardId, pollVoteCreationDto.getId());

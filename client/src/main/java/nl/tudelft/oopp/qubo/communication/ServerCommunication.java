@@ -559,8 +559,8 @@ public class ServerCommunication {
     /**
      * Add vote for Poll-option.
      *
-     * @param boardId The ID of the question board on which a vote should be added.
-     * @param optionId The ID of the option that should be voted for.
+     * @param boardId   The ID of the question board on which a vote should be added.
+     * @param optionId  The ID of the option that should be voted for.
      * @return The PollVoteDetailsDto in JSON format if the request was made successfully, null otherwise.
      */
     public static String addPollVote(UUID boardId, UUID optionId) {
@@ -579,7 +579,7 @@ public class ServerCommunication {
     }
 
     /**
-     * Remove PollVote after it has been registered.
+     * Delete the poll vote associated with the provided ID.
      *
      * @param boardId The ID of the board in which the poll associated with the poll vote is located.
      * @param voteId  The ID of the vote that is to be deleted.
