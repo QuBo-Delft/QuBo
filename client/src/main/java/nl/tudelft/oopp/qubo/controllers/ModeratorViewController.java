@@ -1,5 +1,7 @@
 package nl.tudelft.oopp.qubo.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -14,18 +16,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.communication.PaceVoteCommunication;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
+import nl.tudelft.oopp.qubo.dtos.pace.PaceDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 
 import javafx.scene.image.ImageView;
 import java.util.HashMap;
 import java.util.UUID;
-
-import nl.tudelft.oopp.qubo.dtos.pace.PaceDetailsDto;
 
 public class ModeratorViewController {
     @FXML
@@ -83,6 +85,11 @@ public class ModeratorViewController {
 
     private UUID modCode;
     private String authorName;
+
+    //Used for converting JSON responses to their appropriate DTOs.
+    private static final Gson gson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+            .create();
 
     //HashMap of questionId:upvoteId, needed when deleting vote
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
@@ -189,9 +196,12 @@ public class ModeratorViewController {
         return SideBarControl.showHideSelected(select, deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox);
     }
 
-    private static void displayPace() {
-        //TODO: Call endpoint to retrieve the pace details and convert it to a PaceDetailsDto
-        PaceDetailsDto pace = new PaceDetailsDto();
+    /**
+     * This method displays the pace of the lecture as perceived by students.
+     */
+    private void displayPace() {
+        String jsonPace = PaceVoteCommunication.getAggregatedPaceVotes(quBo.getId(), modCode);
+        PaceDetailsDto pace = gson.fromJson(jsonPace, PaceDetailsDto.class);
 
         double paceBarModifier = calculatePace(pace);
 
