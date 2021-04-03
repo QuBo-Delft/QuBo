@@ -6,7 +6,6 @@ import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.pollvote.PollVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionEditingBindingModel;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel;
@@ -590,6 +589,31 @@ public class ServerCommunication {
 
         //Send the delete request and retrieve the response from the server
         HttpResponse<String> response = delete(fullUrl);
+
+        //If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
+    /**
+     * Gets aggregated pace votes from the question board with the provided ID.
+     *
+     * @param boardId    The ID of the question board from which the pace votes should be counted.
+     * @param moderatorCode The ID of the pace vote from which the results should be counted.
+     * @return The aggregated pace votes in a PaceDetailsDto in JSON format.
+     */
+    public static String getAggregatedPaceVotes(UUID boardId, UUID moderatorCode) {
+        //Set up the URL that will be sent to the delete helper method
+        String fullUrl = ServerCommunication.subUrl + "board/" + boardId + "/pace?code=" + moderatorCode;
+
+        //Send the request to the server and receive the response
+        HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(fullUrl))
+            .build();
+
+        HttpResponse<String> response = ServerCommunication.sendRequest(request);
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
