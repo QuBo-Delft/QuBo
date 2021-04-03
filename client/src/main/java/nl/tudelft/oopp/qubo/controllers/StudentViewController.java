@@ -16,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
+import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
@@ -49,9 +51,13 @@ public class StudentViewController {
     @FXML
     private Label boardTitle;
     @FXML
+    private Label sideMenuTitle;
+    @FXML
     private ImageView boardStatusIcon;
     @FXML
     private MenuItem studentCodeItem;
+    @FXML
+    private ScrollPane sideMenuPane;
     @FXML
     private Label boardStatusText;
 
@@ -68,21 +74,17 @@ public class StudentViewController {
     private VBox sideBar;
     @FXML
     private VBox sideMenu;
+    @FXML
+    private VBox ansQuVbox;
+    @FXML
+    private VBox pollVbox;
+
     //Buttons
     @FXML
     private ToggleButton ansQuestions;
     @FXML
     private ToggleButton polls;
-    @FXML
-    private Button leaveQuBo;
-    @FXML
-    private Label boardTitle;
-    @FXML
-    private ImageView boardStatusIcon;
-    @FXML
-    private MenuItem studentCodeItem;
-    @FXML
-    private Label boardStatusText;
+
 
     //Records if the side menu was open before hiding
     private boolean sideMenuOpen;

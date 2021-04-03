@@ -345,7 +345,7 @@ public class QuBoActionEvents {
      * @param code          The moderator code of the board
      */
     public static void markAsAnsUnAns(UUID questionId, UUID code) {
-        String response = ServerCommunication.markQuestionAsAnswered(questionId, code);
+        String response = QuestionCommunication.markQuestionAsAnswered(questionId, code);
 
         if (response == null) {
             //If the request failed
@@ -416,7 +416,7 @@ public class QuBoActionEvents {
     private static void replyToQuestion(GridPane content, GridPane questionPane, VBox answerBox,
                                         Text questionBody, MenuButton options,
                                         UUID questionId, UUID modCode, String text) {
-        String response = ServerCommunication.addAnswer(questionId, modCode, text);
+        String response = QuestionCommunication.addAnswer(questionId, modCode, text);
 
         if (response == null) {
             //If the request failed

@@ -177,17 +177,17 @@ public class MainApp {
                 + (PollCommunication.addPoll(boardId, moderatorCode, "Test Poll", pollOptions)));
 
         // Add a poll vote to an option of the poll that was just created
-        String pollDetails = ServerCommunication.retrievePollDetails(boardId);
+        String pollDetails = PollCommunication.retrievePollDetails(boardId);
         PollDetailsDto pollDetailsDto = gson.fromJson(pollDetails, PollDetailsDto.class);
         UUID optionId = ((PollOptionDetailsDto) pollDetailsDto.getOptions().toArray()[0]).getOptionId();
 
-        String responseToAddingPollVote = ServerCommunication.addPollVote(boardId, optionId);
+        String responseToAddingPollVote = PollCommunication.addPollVote(boardId, optionId);
         System.out.println("The poll vote you just made is:\n"
             + responseToAddingPollVote);
         // Remove the poll vote that was just made
         PollDetailsDto pollVoteDetailsDto = gson
             .fromJson(responseToAddingPollVote, PollDetailsDto.class);
-        String pollVote = ServerCommunication.removePollVote(boardId, pollVoteDetailsDto.getId());
+        String pollVote = PollCommunication.removePollVote(boardId, pollVoteDetailsDto.getId());
         System.out.println("The poll vote was just successfully removed:" + (pollVote != null));
 
         //Retrieve the poll details of the poll that was just added

@@ -37,6 +37,6 @@ public class ServerCommunicationTest {
     // Test if the sendRequest method catches the exception caused by a refused connection.
     @Test
     public void testSendRequest() {
-        assertNull(ServerCommunication.retrieveBoardDetails(uuid1));
+        assertNull(QuestionBoardCommunication.retrieveBoardDetails(uuid1));
     }
 }
