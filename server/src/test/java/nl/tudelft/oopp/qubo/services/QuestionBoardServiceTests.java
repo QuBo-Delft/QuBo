@@ -174,7 +174,7 @@ public class QuestionBoardServiceTests {
 
         Question q2 = new Question();
         q2.setAuthorName("Author");
-        q2.setText("Test question1");
+        q2.setText("Test question2");
         q2.setSecretCode(UUID.randomUUID());
         q2.setTimestamp(Timestamp.from(currentInstant.plus(1, ChronoUnit.HOURS)));
         q2.setQuestionBoard(qb);
@@ -182,14 +182,15 @@ public class QuestionBoardServiceTests {
         HashSet<Question> questionSet = new HashSet<>();
         questionSet.add(q1);
         questionSet.add(q2);
-
+        qb.setQuestions(questionSet);
         questionRepository.saveAll(questionSet);
+        questionBoardRepository.save(qb);
 
         // Act
         Set<Question> result = questionBoardService.getQuestionsByBoardId(qb.getId());
 
         // Assert
-        assertEquals(result, questionSet);
+        assertEquals(result, qb.getQuestions());
         Set<Question> inDb = questionRepository.getQuestionByQuestionBoard(qb);
         assertEquals(inDb, result);
     }
