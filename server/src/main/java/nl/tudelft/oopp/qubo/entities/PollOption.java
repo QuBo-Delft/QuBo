@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.qubo.entities;
 
+import java.util.Objects;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
@@ -39,8 +40,8 @@ public class PollOption {
     /**
      * Create a new PollOption instance.
      *
-     * @param poll      The poll that this poll option is related to.
-     * @param text      The text of the poll option.
+     * @param poll The poll that this poll option is related to.
+     * @param text The text of the poll option.
      */
     public PollOption(Poll poll, String text) {
         this.poll = poll;
@@ -80,5 +81,22 @@ public class PollOption {
 
     public void setVotes(Set<PollVote> votes) {
         this.votes = votes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PollOption option = (PollOption) o;
+        return Objects.equals(id, option.id) && Objects.equals(text, option.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, text);
     }
 }
