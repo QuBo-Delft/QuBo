@@ -9,7 +9,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ServerCommunicationTest {
+public class ServerCommunicationTests {
 
     private final String successToken = "{token: success}";
     private final String failureToken = "{token: failure}";
