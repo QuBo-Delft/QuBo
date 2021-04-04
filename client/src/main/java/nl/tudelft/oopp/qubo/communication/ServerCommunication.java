@@ -57,7 +57,24 @@ public class ServerCommunication {
     }
 
     /**
-     * Retrieves an http response from the server by sending an http post request.
+     * Retrieves an http response from the server by sending an http post request without
+     * headers and the request body.
+     *
+     * @param fullUrl   The url for the POST request.
+     * @return The http response returned.
+     */
+    protected static HttpResponse<String> post(String fullUrl) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(""))
+                .uri(URI.create(fullUrl))
+                .build();
+
+        return sendRequest(request);
+    }
+
+    /**
+     * Retrieves an http response from the server by sending an http post request with
+     * headers and the request body.
      *
      * @param fullUrl     The full url of the request.
      * @param requestBody The request body of JSON form.
