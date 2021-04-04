@@ -1,6 +1,8 @@
 package nl.tudelft.oopp.qubo.controllers.helpers;
 
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -34,6 +36,23 @@ public class LayoutProperties {
         //Make the children in the ScrollPane fill the width of said ScrollPane
         ansQuVbox.setFillWidth(true);
         unAnsQuVbox.setFillWidth(true);
+    }
+
+    /**
+     * This method is run through the initialise method in ModeratorView.
+     *
+     * @param paceBar       The StackPane used to display the pace of the lecture
+     * @param paceCursor    The ImageView used to display the current pace of the lecture
+     */
+    public static void modStartUpProperties(StackPane paceBar, ImageView paceCursor) {
+        //Obtain the coordinates of the pace bar and pace cursor
+        Bounds paceBarBounds = paceBar.getBoundsInParent();
+        Bounds paceCursorBounds = paceCursor.getBoundsInParent();
+
+        double imageSize = paceCursorBounds.getMaxY() - paceCursorBounds.getMinY();
+
+        //Place the pace cursor at the middle of the pace bar
+        paceCursor.setTranslateY(0.5 * paceBarBounds.getHeight() - imageSize / 2);
     }
 
     /**

@@ -35,7 +35,17 @@
                </Label>
                <Label fx:id="boardStatusText" maxWidth="1.7976931348623157E308" styleClass="openText" text="open" />
          </VBox>
-         <Button fx:id="boardInfo" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="50.0" prefWidth="50.0" text="B" />
+         <Button fx:id="boardInfo" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="50.0" prefWidth="50.0" text="B">
+            <tooltip>
+               <Tooltip text="Right-click to copy student code" />
+            </tooltip>
+            <contextMenu>
+               <ContextMenu>
+                 <items>
+                   <MenuItem fx:id="studentCodeItemBtn" mnemonicParsing="false" onAction="#copyStudentCode" text="Copy Student Code" />
+                 </items>
+               </ContextMenu>
+            </contextMenu></Button>
          <Pane maxHeight="40.0" maxWidth="150.0" minHeight="40.0" minWidth="40.0" prefHeight="40.0" prefWidth="80.0" styleClass="upperBar" HBox.hgrow="ALWAYS" />
          <Button fx:id="helpDoc" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#displayHelpDoc" prefHeight="50.0" prefWidth="50.0" styleClass="helpBtn" text="H" />
          <ToggleButton fx:id="hamburger" alignment="CENTER_RIGHT" maxHeight="54.0" maxWidth="51.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#showHideSideBar" prefHeight="54.0" prefWidth="50.0" styleClass="sideBarBtn" HBox.hgrow="NEVER" />
@@ -88,7 +98,7 @@
                              <Insets />
                           </VBox.margin>
                        </RadioButton>
-                                <RadioButton mnemonicParsing="false" styleClass="pacingBtn2" text="Too slow" toggleGroup="$pace" />
+                                <RadioButton mnemonicParsing="false" text="Too slow" toggleGroup="$pace" styleClass="pacingBtn2" />
                     <padding>
                        <Insets left="15.0" right="15.0" top="15.0" />
                     </padding>
