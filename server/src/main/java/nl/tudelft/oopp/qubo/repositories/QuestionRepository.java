@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository("QuestionRepository")
 public interface QuestionRepository extends JpaRepository<Question, QuestionBoard> {
     /**
-     * Gets question by question board.
+     * Get all questions in a question board.
      *
      * @param boardId The board id.
      * @return The question by question board.
@@ -22,7 +22,7 @@ public interface QuestionRepository extends JpaRepository<Question, QuestionBoar
     Set<Question> getQuestionByQuestionBoard(QuestionBoard boardId);
 
     /**
-     * Gets question by id.
+     * Get question by id.
      *
      * @param questionId The question id.
      * @return The question by id.

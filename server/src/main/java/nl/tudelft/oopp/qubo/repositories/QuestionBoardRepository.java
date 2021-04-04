@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository("QuestionBoardRepository")
 public interface QuestionBoardRepository extends JpaRepository<QuestionBoard, UUID> {
     /**
-     * Gets by id.
+     * Get question board by id.
      *
      * @param id The id.
      * @return The by id.
@@ -20,7 +20,7 @@ public interface QuestionBoardRepository extends JpaRepository<QuestionBoard, UU
     QuestionBoard getById(UUID id);
 
     /**
-     * Gets by moderator code.
+     * Get question board by moderator code.
      *
      * @param code The code.
      * @return The by moderator code.

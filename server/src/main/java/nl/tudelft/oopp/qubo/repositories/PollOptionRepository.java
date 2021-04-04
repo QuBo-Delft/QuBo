@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository("PollOptionRepository")
 public interface PollOptionRepository extends JpaRepository<PollOption, UUID> {
     /**
-     * Gets poll options by poll.
+     * Get all poll options in a poll.
      *
      * @param poll The poll.
      * @return The poll options by poll.
@@ -21,7 +21,7 @@ public interface PollOptionRepository extends JpaRepository<PollOption, UUID> {
     Set<PollOption> getPollOptionsByPoll(Poll poll);
 
     /**
-     * Gets by id.
+     * Get poll option by id.
      *
      * @param pollOptionId The poll option id.
      * @return The by id.

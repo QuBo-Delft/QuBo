@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository("PollRepository")
 public interface PollRepository extends JpaRepository<Poll, UUID> {
     /**
-     * Gets by id.
+     * Get poll by id.
      *
      * @param pollId The poll id.
      * @return The by id.

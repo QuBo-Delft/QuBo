@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository("PaceVoteRepository")
 public interface PaceVoteRepository extends JpaRepository<PaceVote, UUID> {
     /**
-     * Gets by id.
+     * Get pace vote by id.
      *
      * @param paceVoteId The pace vote id.
      * @return The by id.
@@ -30,7 +30,7 @@ public interface PaceVoteRepository extends JpaRepository<PaceVote, UUID> {
     void deletePaceVoteById(UUID id);
 
     /**
-     * Count by question board and pace type int.
+     * Get the number of pace votes of a specific type in the given board.
      *
      * @param board    The board.
      * @param paceType The pace type.

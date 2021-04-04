@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository("BanRepository")
 public interface BanRepository extends JpaRepository<Ban, UUID> {
     /**
-     * Gets by id.
+     * Get ban by id.
      *
      * @param banId The ban id.
      * @return The by id.

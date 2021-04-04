@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface QuestionVoteRepository extends JpaRepository<QuestionVote, UUID> {
 
     /**
-     * Gets question vote by id.
+     * Get question vote by id.
      *
      * @param questionVoteId The question vote id.
      * @return The question vote by id.
