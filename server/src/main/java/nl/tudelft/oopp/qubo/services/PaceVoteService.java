@@ -15,6 +15,9 @@ import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Pace vote service.
+ */
 @Service
 public class PaceVoteService {
     private final PaceVoteRepository paceVoteRepository;

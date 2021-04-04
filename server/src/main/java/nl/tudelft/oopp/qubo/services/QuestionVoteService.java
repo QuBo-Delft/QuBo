@@ -9,6 +9,9 @@ import nl.tudelft.oopp.qubo.repositories.QuestionVoteRepository;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Question vote service.
+ */
 @Service
 public class QuestionVoteService {
     private final QuestionVoteRepository questionVoteRepository;

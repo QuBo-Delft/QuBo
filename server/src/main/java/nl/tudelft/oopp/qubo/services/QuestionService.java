@@ -17,6 +17,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 
+/**
+ * The Question service.
+ */
 @Service
 public class QuestionService {
     private final QuestionBoardRepository questionBoardRepository;
@@ -145,6 +148,7 @@ public class QuestionService {
      * either the secret code of a question, or the moderator code of its board.
      *
      * @param question The question.
+     * @param code     The code.
      * @return Whether the user can modify the question if they provide the given code.
      */
     public boolean canModifyQuestion(Question question, UUID code) {

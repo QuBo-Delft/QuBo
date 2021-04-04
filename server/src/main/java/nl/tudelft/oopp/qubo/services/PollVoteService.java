@@ -9,11 +9,20 @@ import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Poll vote service.
+ */
 @Service
 public class PollVoteService {
     private final PollVoteRepository pollVoteRepository;
     private final PollOptionRepository pollOptionRepository;
 
+    /**
+     * Instantiates a new Poll vote service.
+     *
+     * @param pollVoteRepository   The poll vote repository.
+     * @param pollOptionRepository The poll option repository.
+     */
     public PollVoteService(PollVoteRepository pollVoteRepository,
                            PollOptionRepository pollOptionRepository) {
         this.pollVoteRepository = pollVoteRepository;
@@ -25,7 +34,7 @@ public class PollVoteService {
      *
      * @param optionId The id of the QuestionBoard.
      * @return The PollVote object that was just registered.
-     * @throws NotFoundException if the option ID provided does not exist.
+     * @throws NotFoundException  if the option ID provided does not exist.
      * @throws ForbiddenException if the poll is closed.
      */
     public PollVote registerVote(UUID optionId) {
@@ -47,7 +56,7 @@ public class PollVoteService {
     /**
      * Get the poll vote corresponding to the voteId passed to the method.
      *
-     * @param voteId    The ID of the PollVote.
+     * @param voteId The ID of the PollVote.
      * @return The PollVote that is associated with the vote ID passed to the method.
      */
     public PollVote getPollVote(UUID voteId) {
@@ -57,7 +66,7 @@ public class PollVoteService {
     /**
      * Delete the poll vote corresponding to the voteId passed to the method.
      *
-     * @param voteId    The ID of the PollVote.
+     * @param voteId The ID of the PollVote.
      */
     public void deletePollVote(UUID voteId) {
         pollVoteRepository.deletePollVoteById(voteId);
