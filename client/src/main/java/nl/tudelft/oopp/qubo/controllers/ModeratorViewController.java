@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
@@ -15,13 +14,17 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
+import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
+import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
+import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 
 import javafx.scene.image.ImageView;
+
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -36,6 +39,12 @@ public class ModeratorViewController {
     private StackPane content;
     @FXML
     private BorderPane paceVotePane;
+
+    //Nodes used to display the pace
+    @FXML
+    private StackPane paceBar;
+    @FXML
+    private ImageView paceCursor;
 
     @FXML
     private Button leaveQuBo;
@@ -78,6 +87,8 @@ public class ModeratorViewController {
 
     //Records if the side menu was open before hiding
     private boolean sideMenuOpen;
+    // Stage to be shown when the QuBo details button is clicked
+    Stage popUp = new Stage();
 
     private UUID modCode;
     private String authorName;
@@ -118,10 +129,12 @@ public class ModeratorViewController {
     }
 
     /**
-     * This method is called by the SceneLoader and sets the title text and board open or closed icon.
-     * If the board is open, it also displays its start time.
+     * This method is called by the SceneLoader and takes the QuestionBoardDetailsDto, board status icon,
+     * text and title. With these parameters it calls the setBoardDetails method in the QuBoInformation class
+     * which actually sets their values.
      */
     public void setBoardDetails() {
+        new QuBoInformation().setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
     }
 
     /**
@@ -130,22 +143,40 @@ public class ModeratorViewController {
     @FXML
     private void initialize() {
         startUpProperties();
-        //Display the questions
+        //Display the questions and pace
         refresh();
     }
 
+    /**
+     * This method refreshes the questions and pace bar.
+     */
     public void refresh() {
         QuestionRefresh.modRefresh(quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
+
+        //Refresh the pace
+        PaceDisplay.displayPace(quBo, modCode, paceBar, paceCursor);
     }
 
     private void startUpProperties() {
         //Hide side menu and sidebar
         LayoutProperties.startupProperties(content, sideBar, sideMenu, pollVbox, ansQuVbox, unAnsQuVbox,
             paceVotePane);
+        LayoutProperties.modStartUpProperties(paceBar, paceCursor);
     }
 
+    /**
+     * Called by the display question board details button. It either displays the question board details pane,
+     * or hides it when it is already open and showing.
+     */
     public void displayBoardInfo() {
+        if (popUp.isShowing()) {
+            popUp.close();
+        } else {
+            if (popUp != null) {
+                new SceneLoader().viewLoader(quBo, popUp, "", "QuBoDetails", modCode);
+            }
+        }
     }
 
     public void copyStudentCode() {

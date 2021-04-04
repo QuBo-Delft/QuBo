@@ -87,11 +87,11 @@ public class QuestionItem extends GridPane {
             addAnswers();
         }
 
+        //Add StyleClasses
         this.getStyleClass().add("qPane");
         questionBody.getStyleClass().add("qContent");
         upvoteNumber.getStyleClass().add("qVotes");
-
-        this.setGridLinesVisible(true);
+        upvoteTriangle.getStyleClass().add("upvoteBtn");
     }
 
     /**
@@ -240,6 +240,9 @@ public class QuestionItem extends GridPane {
      * @param upvoteMap HashMap of questionId:upvoteId
      */
     public void newUpvoteVbox(HashMap<UUID, UUID> upvoteMap) {
+        upvoteTriangle.setPrefWidth(25);
+        upvoteTriangle.setPrefHeight(25);
+
         //Create the Vbox for placing the upvote button and upvote number
         VBox upvote = new VBox(upvoteTriangle, upvoteNumber);
         upvote.setSpacing(8);

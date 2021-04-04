@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.qubo.dtos.polloption;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class PollOptionResultDto {
@@ -35,5 +36,23 @@ public class PollOptionResultDto {
 
     public void setVotes(int votes) {
         this.votes = votes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PollOptionResultDto that = (PollOptionResultDto) o;
+        return votes == that.votes && Objects.equals(id, that.id)
+            && Objects.equals(text, that.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, text, votes);
     }
 }

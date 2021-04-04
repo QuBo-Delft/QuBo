@@ -150,6 +150,77 @@ public class PollCommunicationTests {
         httpClientMock.verify().get(subUrl + "api/board/" + uuid2 + "/poll").called();
     }
 
+    // Test if the retrievePollResults method returns a non-null response body
+    // after being called with a valid board ID, and receiving a response with status code 200.
+    @Test
+    public void testRetrievePollResults() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/poll/results").doReturnStatus(200);
+
+        // Act
+        String responseBody = PollCommunication.retrievePollResults(uuid1);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1 + "/poll/results").called();
+    }
+
+    // Test if the retrievePollResults method returns null after being called with an invalid board ID,
+    // and receiving statusCode 404 and failureToken as the response body.
+    @Test
+    public void testRetrievePollResultsThroughInvalidBoardId() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/poll/results")
+                .doReturnStatus(404).doReturn(failureToken);
+
+        // Act
+        String responseBody = PollCommunication.retrievePollResults(uuid1);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1 + "/poll/results").called();
+    }
+
+    // Test if the retrievePollResults method returns null after being called when the poll was still open,
+    // and receiving statusCode 403 and failureToken as the response body.
+    @Test
+    public void testRetrievePollResultsWithOpenPoll() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/poll/results")
+                .doReturnStatus(403).doReturn(failureToken);
+
+        // Act
+        String responseBody = PollCommunication.retrievePollResults(uuid1);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1 + "/poll/results").called();
+    }
+
+    // Test if the retrievePollResults method returns the successToken after being called with a
+    // valid board ID, and receiving a response with status code 200 with the successToken as its body.
+    @Test
+    public void testRetrievePollResultsGivingCorrectResponseBody() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        httpClientMock.onGet(subUrl + "api/board/" + uuid1 + "/poll/results")
+                .doReturn(successToken);
+
+        // Act
+        String responseBody = PollCommunication.retrievePollResults(uuid1);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().get(subUrl + "api/board/" + uuid1 + "/poll/results").called();
+    }
+
     // Test if the deletePoll method returns a non-null response body after being called
     // with a valid question board ID and moderator code and receiving a response with status code 200.
     @Test

@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
@@ -18,19 +17,20 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
-import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
+import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
+import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
-import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
 
 import javafx.scene.image.ImageView;
+
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -56,6 +56,8 @@ public class StudentViewController {
     private ImageView boardStatusIcon;
     @FXML
     private MenuItem studentCodeItem;
+    @FXML
+    private MenuItem studentCodeItemBtn;
     @FXML
     private ScrollPane sideMenuPane;
     @FXML
@@ -88,6 +90,8 @@ public class StudentViewController {
 
     //Records if the side menu was open before hiding
     private boolean sideMenuOpen;
+    // Stage to be shown when the QuBo details button is clicked
+    Stage popUp = new Stage();
 
     private String authorName;
 
@@ -124,18 +128,12 @@ public class StudentViewController {
     }
 
     /**
-     * This method is called by the SceneLoader and sets the title text and board open or closed icon.
-     * If the board is open, it also displays its start time.
+     * This method is called by the SceneLoader and takes the QuestionBoardDetailsDto, board status icon,
+     * text and title. With these parameters it calls the setBoardDetails method in the QuBoInformation class
+     * which actually sets their values.
      */
     public void setBoardDetails() {
-        boardTitle.setText(quBo.getTitle());
-        if (quBo.isClosed()) {
-            boardStatusText.setText("Question board is closed, making changes is no longer possible ");
-            boardStatusIcon.setImage(new Image(getClass().getResource(
-                "/images/qubo/status_closed.png").toString()));
-        } else {
-            boardStatusText.setText("board open since " + quBo.getStartTime().toString());
-        }
+        new QuBoInformation().setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
     }
 
     /**
@@ -159,7 +157,18 @@ public class StudentViewController {
             paceVotePane);
     }
 
+    /**
+     * Called by the display question board details button. It either displays the question board details pane,
+     * or hides it when it is already open and showing.
+     */
     public void displayBoardInfo() {
+        if (popUp.isShowing()) {
+            popUp.close();
+        } else {
+            if (popUp != null) {
+                new SceneLoader().viewLoader(quBo, popUp, "", "QuBoDetails", null);
+            }
+        }
     }
 
     public void copyStudentCode() {
