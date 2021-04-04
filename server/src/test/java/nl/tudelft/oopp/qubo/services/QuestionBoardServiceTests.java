@@ -125,8 +125,6 @@ public class QuestionBoardServiceTests {
 
         // Assert
         assertEquals(qb, result);
-        QuestionBoard inDb = questionBoardRepository.getById(qb.getId());
-        assertEquals(inDb, result);
     }
 
     @Test
