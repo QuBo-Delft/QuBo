@@ -253,14 +253,13 @@ public class QuestionController {
      *
      * @param questionId    The ID of the question where the ban request originated from.
      * @param moderatorCode The moderator code of the board this question is in.
-     * @return              True iff the ban is successful.
      * @throws ResponseStatusException 404 if the question was not found in database.
      * @throws ResponseStatusException 403 if the provided moderatorCode is not authorized
      *                                 to ban this user IP from the question board.
      */
     @RequestMapping(value = "{questionid}/ban", method = POST)
     @ResponseBody
-    public boolean banUserByIp(
+    public void banUserByIp(
         @PathVariable("questionid") UUID questionId,
         @RequestParam("code") UUID moderatorCode) {
         Question question = questionService.getQuestionById(questionId);
@@ -275,6 +274,6 @@ public class QuestionController {
                 + "for this Question");
         }
 
-        return banService.banIp(questionId);
+        banService.banIp(questionId);
     }
 }

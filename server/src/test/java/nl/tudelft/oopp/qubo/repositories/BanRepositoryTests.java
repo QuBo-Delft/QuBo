@@ -10,11 +10,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -112,5 +114,82 @@ public class BanRepositoryTests {
         Ban result = banRepository.getById(ban.getId());
         assertNotNull(result);
         assertEquals(ban, result);
+    }
+
+    @Test
+    public void getByQuestionBoardValidId() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.from(Instant.now()));
+        board.setTitle("Test board");
+        questionBoardRepository.save(board);
+
+        Ban ban = new Ban();
+        ban.setQuestionBoard(board);
+        ban.setIp("192.168.0.1");
+        banRepository.save(ban);
+
+        // Act
+        Set<Ban> result = banRepository.getBanByQuestionBoard(board);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(Set.of(ban), result);
+    }
+
+    @Test
+    public void getByQuestionBoardNonExistentId() {
+        // Arrange
+        QuestionBoard board1 = new QuestionBoard();
+        board1.setModeratorCode(UUID.randomUUID());
+        board1.setStartTime(Timestamp.from(Instant.now()));
+        board1.setTitle("Test board1");
+        questionBoardRepository.save(board1);
+
+        QuestionBoard board2 = new QuestionBoard();
+        board2.setModeratorCode(UUID.randomUUID());
+        board2.setStartTime(Timestamp.from(Instant.now()));
+        board2.setTitle("Test board2");
+        questionBoardRepository.save(board2);
+
+        Ban ban = new Ban();
+        ban.setQuestionBoard(board1);
+        ban.setIp("192.168.0.1");
+        banRepository.save(ban);
+
+        // Act
+        Set<Ban> result = banRepository.getBanByQuestionBoard(board2);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void getByQuestionBoardSetOfBans() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.from(Instant.now()));
+        board.setTitle("Test board1");
+        questionBoardRepository.save(board);
+
+        Ban ban1 = new Ban();
+        ban1.setQuestionBoard(board);
+        ban1.setIp("192.168.0.1");
+        banRepository.save(ban1);
+
+        Ban ban2 = new Ban();
+        ban2.setQuestionBoard(board);
+        ban2.setIp("192.168.2.1");
+        banRepository.save(ban2);
+
+        // Act
+        Set<Ban> result = banRepository.getBanByQuestionBoard(board);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(Set.of(ban1, ban2), result);
     }
 }
