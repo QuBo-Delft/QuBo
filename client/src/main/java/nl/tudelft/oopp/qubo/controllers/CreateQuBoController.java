@@ -209,7 +209,7 @@ public class CreateQuBoController {
      * This method checks whether the title TextField is empty and if it is,
      * displays an error accordingly.
      *
-     * @param titleStr the title String to be checked.
+     * @param titleStr The title String to be checked.
      * @return returns true if empty.
      */
     public boolean titleIsEmpty(String titleStr) {
