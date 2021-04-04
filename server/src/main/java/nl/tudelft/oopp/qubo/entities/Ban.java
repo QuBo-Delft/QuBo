@@ -120,7 +120,7 @@ public class Ban {
             return false;
         }
         Ban ban = (Ban) o;
-        return id.equals(ban.id) && ip.equals(ban.ip);
+        return id.equals(ban.id) && questionBoard.equals(ban.questionBoard) && ip.equals(ban.ip);
     }
 
     /**
