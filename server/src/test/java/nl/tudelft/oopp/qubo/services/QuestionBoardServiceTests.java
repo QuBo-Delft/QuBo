@@ -139,6 +139,7 @@ public class QuestionBoardServiceTests {
 
         // Act
         QuestionBoard result = questionBoardService.getBoardByModeratorCode(UUID.randomUUID());
+
         // Assert
         assertNull(result);
     }
