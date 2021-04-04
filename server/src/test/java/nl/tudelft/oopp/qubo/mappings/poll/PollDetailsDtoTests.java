@@ -1,21 +1,19 @@
 package nl.tudelft.oopp.qubo.mappings.poll;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 
 public class PollDetailsDtoTests {
     private ModelMapper mapper;
@@ -64,12 +62,12 @@ public class PollDetailsDtoTests {
 
         assertNotEquals(optionDtos[0], optionDtos[1]);
         assertTrue((optionDtos[0].getOptionId() == option.getId()
-                && optionDtos[0].getOptionText().equals(option.getText()))
-                || (optionDtos[0].getOptionId() == option2.getId()
-                && optionDtos[0].getOptionText().equals(option2.getText())));
+            && optionDtos[0].getOptionText().equals(option.getText()))
+            || (optionDtos[0].getOptionId() == option2.getId()
+            && optionDtos[0].getOptionText().equals(option2.getText())));
         assertTrue((optionDtos[1].getOptionId() == option.getId()
-                && optionDtos[1].getOptionText().equals(option.getText()))
-                || (optionDtos[1].getOptionId() == option2.getId()
-                && optionDtos[1].getOptionText().equals(option2.getText())));
+            && optionDtos[1].getOptionText().equals(option.getText()))
+            || (optionDtos[1].getOptionId() == option2.getId()
+            && optionDtos[1].getOptionText().equals(option2.getText())));
     }
 }

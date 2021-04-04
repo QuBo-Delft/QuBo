@@ -1,5 +1,8 @@
 package nl.tudelft.oopp.qubo.config.custommappings;
 
+import java.util.HashSet;
+import java.util.Set;
+import javax.annotation.PostConstruct;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
@@ -9,15 +12,19 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.util.HashSet;
-import java.util.Set;
-
+/**
+ * The Poll creation binding model to poll converter.
+ */
 @Component
 public class PollCreationBindingModelToPollConverter {
 
     private final ModelMapper mapper;
 
+    /**
+     * Instantiates a new Poll creation binding model to poll converter.
+     *
+     * @param modelMapper The model mapper.
+     */
     public PollCreationBindingModelToPollConverter(ModelMapper modelMapper) {
         this.mapper = modelMapper;
     }

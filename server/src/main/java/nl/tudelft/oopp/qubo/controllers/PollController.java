@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
@@ -65,9 +65,11 @@ public class PollController {
     /**
      * POST endpoint to create a Poll.
      *
-     * @param pollModel The binding model passed by the client containing information to be used
-     *                  in creating a new Poll.
-     * @return the question board
+     * @param boardId       The board id.
+     * @param moderatorCode The moderator code.
+     * @param pollModel     The binding model passed by the client containing information to be used
+     *                      in creating a new Poll.
+     * @return The question board.
      */
     @RequestMapping(value = "/{boardid}/poll", method = POST, consumes = "application/json")
     @ResponseBody
@@ -131,15 +133,15 @@ public class PollController {
     /**
      * Patch endpoint to close a poll.
      *
-     * @param boardId           The ID of the question board.
-     * @param moderatorCode     The moderator code of the board.
+     * @param boardId       The ID of the question board.
+     * @param moderatorCode The moderator code of the board.
      * @return The PollDetailsDto object of the poll.
      */
     @RequestMapping(value = "/{boardid}/poll", method = PATCH)
     @ResponseBody
     public PollDetailsDto closePoll(
-            @PathVariable("boardid") UUID boardId,
-            @RequestParam("code") UUID moderatorCode) {
+        @PathVariable("boardid") UUID boardId,
+        @RequestParam("code") UUID moderatorCode) {
         QuestionBoard qb = questionBoardService.getBoardById(boardId);
 
         // A 404 is thrown if the question board does not exist
@@ -150,7 +152,7 @@ public class PollController {
         // A 403 is thrown if the moderatorCode is invalid for closing a poll
         if (!moderatorCode.equals(qb.getModeratorCode())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "The provided moderatorCode is not valid for this question board");
+                "The provided moderatorCode is not valid for this question board");
         }
 
         // Get the poll associated with the question board
@@ -240,15 +242,15 @@ public class PollController {
      * the board ID of the corresponding poll.
      * Throw 403 if the poll has been closed.
      *
-     * @param boardId   The board ID.
-     * @param voteId    The poll vote id.
+     * @param boardId The board ID.
+     * @param voteId  The poll vote id.
      * @return The PollVoteDetails DTO.
      */
     @RequestMapping(value = "/{boardid}/poll/vote/{voteid}", method = DELETE)
     @ResponseBody
     public PollVoteDetailsDto deletePollVote(
-            @PathVariable("boardid") UUID boardId,
-            @PathVariable("voteid") UUID voteId) {
+        @PathVariable("boardid") UUID boardId,
+        @PathVariable("voteid") UUID voteId) {
 
         PollVote pollVote = pollVoteService.getPollVote(voteId);
 
@@ -262,7 +264,7 @@ public class PollController {
         // Check if the provided board ID does not match the board ID of the corresponding poll
         if (!boardId.equals(boardIdOfPollVote)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The provided board ID does not "
-                    + "match the board ID of its corresponding poll");
+                + "match the board ID of its corresponding poll");
         }
 
         // Check if the poll has been closed
@@ -280,13 +282,13 @@ public class PollController {
      * GET endpoint for retrieving a collection of PollOptionResults of this question board's poll.
      * Throw 404 if the poll result does not exist.
      *
-     * @param boardId   The board ID.
+     * @param boardId The board ID.
      * @return The collection of poll option results of this question board's poll.
      */
     @RequestMapping(value = "/{boardid}/poll/results", method = GET)
     @ResponseBody
     public Set<PollOptionResultDto> retrievePollResult(
-            @PathVariable("boardid") UUID boardId) {
+        @PathVariable("boardid") UUID boardId) {
         Set<PollOptionResultDto> pollOptionResults = pollService.getPollResults(boardId);
 
         // Check if the poll result exists

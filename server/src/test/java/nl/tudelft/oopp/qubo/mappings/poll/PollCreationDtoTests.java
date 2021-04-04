@@ -1,16 +1,14 @@
 package nl.tudelft.oopp.qubo.mappings.poll;
 
+import java.util.HashSet;
+import java.util.UUID;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationDto;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
-
-import java.util.HashSet;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PollCreationDtoTests {
     private ModelMapper mapper;

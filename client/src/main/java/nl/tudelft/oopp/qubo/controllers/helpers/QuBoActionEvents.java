@@ -2,6 +2,8 @@ package nl.tudelft.oopp.qubo.controllers.helpers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.util.HashMap;
+import java.util.UUID;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,13 +20,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
-import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 
-import java.util.HashMap;
-import java.util.UUID;
-
+/**
+ * The application action events.
+ */
 public class QuBoActionEvents {
     private static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
@@ -35,10 +36,10 @@ public class QuBoActionEvents {
      * When the ToggleButton is activated: Sends a request to the server to add a vote.
      * When the ToggleButton is deactivated: Sends a request to the server to remove the vote.
      *
-     * @param questionId        UUID of the question that the user decides to upvote.
-     * @param upvoteMap         HashMap of questionId:upvoteId
-     * @param upvoteTriangle    The ToggleButton which the user clicks to add a vote.
-     * @param upvoteNumber      Label displaying the number of upvotes for the question
+     * @param questionId     UUID of the question that the user decides to upvote.
+     * @param upvoteMap      HashMap of questionId:upvoteId
+     * @param upvoteTriangle The ToggleButton which the user clicks to add a vote.
+     * @param upvoteNumber   Label displaying the number of upvotes for the question
      */
     public static void upvoteQuestion(UUID questionId, HashMap<UUID, UUID> upvoteMap,
                                       ToggleButton upvoteTriangle, Label upvoteNumber) {
@@ -61,10 +62,10 @@ public class QuBoActionEvents {
      * Sends a request to add a vote to the server, and executes different behaviour depending
      * on the received response.
      *
-     * @param questionId        The UUID of the question that has been upvoted.
-     * @param upvoteMap         HashMap of questionId:upvoteId
-     * @param upvoteTriangle    The upvote ToggleButton (Needs to be deselected if request fails).
-     * @param upvoteNumber      Label displaying the number of upvotes for the question
+     * @param questionId     The UUID of the question that has been upvoted.
+     * @param upvoteMap      HashMap of questionId:upvoteId
+     * @param upvoteTriangle The upvote ToggleButton (Needs to be deselected if request fails).
+     * @param upvoteNumber   Label displaying the number of upvotes for the question
      */
     public static void toggleUpvoteTrue(UUID questionId, HashMap<UUID, UUID> upvoteMap,
                                         ToggleButton upvoteTriangle, Label upvoteNumber) {
@@ -90,10 +91,10 @@ public class QuBoActionEvents {
      * Sends a request to delete a vote from the server, and executes different behaviour depending
      * on the received response.
      *
-     * @param questionId        The UUID of the question that the upvote needs to be removed from.
-     * @param upvoteMap         HashMap of questionId:upvoteId
-     * @param upvoteTriangle    The upvote ToggleButton (Needs to be reselected if request fails).
-     * @param upvoteNumber      Label displaying the number of upvotes for the question
+     * @param questionId     The UUID of the question that the upvote needs to be removed from.
+     * @param upvoteMap      HashMap of questionId:upvoteId
+     * @param upvoteTriangle The upvote ToggleButton (Needs to be reselected if request fails).
+     * @param upvoteNumber   Label displaying the number of upvotes for the question
      */
     public static void toggleUpvoteFalse(UUID questionId, HashMap<UUID, UUID> upvoteMap,
                                          ToggleButton upvoteTriangle, Label upvoteNumber) {
@@ -140,11 +141,11 @@ public class QuBoActionEvents {
      * Update -> Sends a request to the server to update question content
      * Cancel -> Cancels the action
      *
-     * @param questionBody      Text node of the question content (Needs to be hidden when editing)
-     * @param questionVbox      VBox containing question content (Needed to display the text area in it)
-     * @param options           The options menu node (Needs to be disabled when editing)
-     * @param questionId        The UUID of the question that is being edited
-     * @param code              Secret code of the question
+     * @param questionBody Text node of the question content (Needs to be hidden when editing)
+     * @param questionVbox VBox containing question content (Needed to display the text area in it)
+     * @param options      The options menu node (Needs to be disabled when editing)
+     * @param questionId   The UUID of the question that is being edited
+     * @param code         Secret code of the question
      */
     public static void editQuestionOption(Text questionBody, VBox questionVbox, MenuButton options,
                                           UUID questionId, UUID code) {
@@ -193,20 +194,20 @@ public class QuBoActionEvents {
      * the question content locally as well.
      * If the request fails -> Displays an alert and prevents the user from losing the edited question.
      *
-     * @param options           The options menu node (Needs to be disabled when editing)
-     * @param questionId        The UUID of the question that is being edited
-     * @param code              Secret code of the question
-     * @param text              Content of the text area (Edited question)
-     * @param questionBody      Text node of the question content (Needs to be shown after successful edit)
-     * @param questionVbox      VBox containing question content (Needed to remove the text area in it)
-     * @param input             The Text Area node (Needs to be removed after a successful edit)
-     * @param buttons           The HBox containing the buttons (Needs to be removed after a successful edit)
-     * @param warning           Label containing warning that the cotnent inside of the TextArea might be
-     *                          less than 8 characters
+     * @param options      The options menu node (Needs to be disabled when editing)
+     * @param questionId   The UUID of the question that is being edited
+     * @param code         Secret code of the question
+     * @param text         Content of the text area (Edited question)
+     * @param questionBody Text node of the question content (Needs to be shown after successful edit)
+     * @param questionVbox VBox containing question content (Needed to remove the text area in it)
+     * @param input        The Text Area node (Needs to be removed after a successful edit)
+     * @param buttons      The HBox containing the buttons (Needs to be removed after a successful edit)
+     * @param warning      Label containing warning that the content inside of the TextArea might be
+     *                     less than 8 characters
      */
     public static void updateQuestion(MenuButton options, UUID questionId, UUID code, String text,
-                               Text questionBody, VBox questionVbox, TextArea input,
-                               HBox buttons, Label warning) {
+                                      Text questionBody, VBox questionVbox, TextArea input,
+                                      HBox buttons, Label warning) {
         if (text.length() <= 8) {
             warning.setVisible(true);
             return;
@@ -237,14 +238,14 @@ public class QuBoActionEvents {
      * This method runs when the Cancel button (created in editQuestion) is clicked.
      * Removes all the nodes that were added when editing the question and displays original question.
      *
-     * @param options           The options menu node (Needs to be disabled when editing)
-     * @param questionVbox      VBox containing question content (Needed to remove the text area in it)
-     * @param input             The Text Area node (Needs to be removed after a successful edit)
-     * @param buttons           The HBox containing the buttons (Needs to be removed after a successful edit)
-     * @param questionBody      Text node of the question content (Needs to be shown after successful edit)
+     * @param options      The options menu node (Needs to be disabled when editing)
+     * @param questionVbox VBox containing question content (Needed to remove the text area in it)
+     * @param input        The Text Area node (Needs to be removed after a successful edit)
+     * @param buttons      The HBox containing the buttons (Needs to be removed after a successful edit)
+     * @param questionBody Text node of the question content (Needs to be shown after successful edit)
      */
     public static void cancelEdit(MenuButton options, VBox questionVbox, TextArea input,
-                           HBox buttons, Text questionBody) {
+                                  HBox buttons, Text questionBody) {
         options.setDisable(false);
         questionVbox.getChildren().remove(input);
         questionVbox.getChildren().remove(buttons);
@@ -273,11 +274,11 @@ public class QuBoActionEvents {
 
         //Create new label
         Label confirmation = new Label("Are you sure you want to delete this question?");
-        confirmation.setPadding(new Insets(0,5,0,0));
+        confirmation.setPadding(new Insets(0, 5, 0, 0));
         confirmation.setWrapText(true);
         //Set width bounds to the dialogue so it doesn't overflow the question box
         double widthBind = questionContainer.getPadding().getLeft()
-            +  questionContainer.getPadding().getRight() + 200;
+            + questionContainer.getPadding().getRight() + 200;
         confirmation.prefWidthProperty().bind(questionContainer.widthProperty().subtract(widthBind));
 
         //Create buttons
@@ -286,7 +287,7 @@ public class QuBoActionEvents {
         HBox dialogue = new HBox(confirmation, yes, cancel);
 
         //Set layouts
-        dialogue.setPadding(new Insets(5,10,5,10));
+        dialogue.setPadding(new Insets(5, 10, 5, 10));
         dialogue.setSpacing(15);
         dialogue.setAlignment(Pos.CENTER);
 
@@ -306,9 +307,9 @@ public class QuBoActionEvents {
      * If the request is successful -> Displays an alert.
      * If the request fails -> Displays successful removal label and icon.
      *
-     * @param content       GridPane of the cell (Needs to be hidden after deletion)
-     * @param questionId    The UUID of the question that is being edited
-     * @param code          Secret code of the question
+     * @param content    GridPane of the cell (Needs to be hidden after deletion)
+     * @param questionId The UUID of the question that is being edited
+     * @param code       Secret code of the question
      */
     public static void deleteQuestion(GridPane content, UUID questionId, UUID code) {
         //Send a request to the server
@@ -329,9 +330,9 @@ public class QuBoActionEvents {
      * This method runs when the Cancel button (created in deleteQuestion) is clicked.
      * Removes the confirmation dialogue and enables the options menu.
      *
-     * @param options   The options menu node (Needs to be enabled)
-     * @param gridPane  GridPane of the cell (Needed to remove row of confirmation dialogue)
-     * @param dialogue  The confirmation dialogue (Needs to be removed)
+     * @param options  The options menu node (Needs to be enabled)
+     * @param gridPane GridPane of the cell (Needed to remove row of confirmation dialogue)
+     * @param dialogue The confirmation dialogue (Needs to be removed)
      */
     public static void cancelDeletion(MenuButton options, GridPane gridPane, HBox dialogue) {
         gridPane.getChildren().remove(dialogue);
@@ -341,8 +342,8 @@ public class QuBoActionEvents {
     /**
      * This method runs when the user selects Mark As Answered from the options Menu.
      *
-     * @param questionId    The UUID of the question that is being marked as answered
-     * @param code          The moderator code of the board
+     * @param questionId The UUID of the question that is being marked as answered
+     * @param code       The moderator code of the board
      */
     public static void markAsAnsUnAns(UUID questionId, UUID code) {
         String response = QuestionCommunication.markQuestionAsAnswered(questionId, code);
@@ -360,13 +361,13 @@ public class QuBoActionEvents {
     /**
      * This method runs when the user selects Reply from the options Menu.
      *
-     * @param content       GridPane of the cell (Needed to get the row count and display the new reply
-     *                      after all other replies)
-     * @param questionPane  GridPane of the question (Needed to add a row for the reply Pane)
-     * @param questionId    The UUID of the question that is being replied to
-     * @param code          The moderator code of the board
-     * @param options       The options menu node (Needs to be disabled when replying)
-     * @param questionBody  Text node of the question content (Needed to bind the width of the answer to)
+     * @param content      GridPane of the cell (Needed to get the row count and display the new reply
+     *                     after all other replies)
+     * @param questionPane GridPane of the question (Needed to add a row for the reply Pane)
+     * @param questionId   The UUID of the question that is being replied to
+     * @param code         The moderator code of the board
+     * @param options      The options menu node (Needs to be disabled when replying)
+     * @param questionBody Text node of the question content (Needed to bind the width of the answer to)
      */
     public static void replyToQuestionOption(GridPane content, GridPane questionPane,
                                              UUID questionId, UUID code, MenuButton options,
@@ -388,7 +389,7 @@ public class QuBoActionEvents {
 
         //Create a VBox to arrange the TextArea and buttons
         VBox answerBox = new VBox(input, buttons);
-        answerBox.setPadding(new Insets(10,10,10,10));
+        answerBox.setPadding(new Insets(10, 10, 10, 10));
 
         //Set actions events for the buttons
         reply.setOnAction(event -> replyToQuestion(content, questionPane, answerBox, questionBody,
@@ -403,15 +404,15 @@ public class QuBoActionEvents {
     /**
      * This method runs when the Reply button (created in replyToQuestionOption) is clicked.
      *
-     * @param content       GridPane of the cell (Needed to get the row count and display the new reply
-     *                      after all other replies)
-     * @param questionPane  GridPane of the question (Needed to add a row for the reply Pane)
-     * @param answerBox     VBox containing the TextArea and buttons for the reply interface
-     * @param questionBody  Text node of the question content (Needed to bind the width of the answer to)
-     * @param options       The options menu node (Needs to be enabled after successful reply)
-     * @param questionId    The UUID of the question that is being replied to
-     * @param modCode       The moderator code of the board
-     * @param text          Text body of the reply
+     * @param content      GridPane of the cell (Needed to get the row count and display the new reply
+     *                     after all other replies)
+     * @param questionPane GridPane of the question (Needed to add a row for the reply Pane)
+     * @param answerBox    VBox containing the TextArea and buttons for the reply interface
+     * @param questionBody Text node of the question content (Needed to bind the width of the answer to)
+     * @param options      The options menu node (Needs to be enabled after successful reply)
+     * @param questionId   The UUID of the question that is being replied to
+     * @param modCode      The moderator code of the board
+     * @param text         Text body of the reply
      */
     private static void replyToQuestion(GridPane content, GridPane questionPane, VBox answerBox,
                                         Text questionBody, MenuButton options,
@@ -429,7 +430,7 @@ public class QuBoActionEvents {
             //Create Text node to contain the reply
             Text answer = new Text(text);
             BorderPane answerPane = new BorderPane(answer);
-            answerPane.setPadding(new Insets(10,15,10,15));
+            answerPane.setPadding(new Insets(10, 15, 10, 15));
             answer.wrappingWidthProperty().bind(questionBody.wrappingWidthProperty().add(40));
 
             //Add answer to the VBox containing the questions (and answers)
@@ -440,9 +441,9 @@ public class QuBoActionEvents {
     /**
      * This method runs when the Cancel button (created in replyToQuestionOption) is clicked.
      *
-     * @param questionPane  GridPane of the question (Needed to remove answerBox from)
-     * @param answerBox     VBox containing the TextArea and buttons for the reply interface
-     * @param options       The options menu node (Needs to be enabled after successful reply)
+     * @param questionPane GridPane of the question (Needed to remove answerBox from)
+     * @param answerBox    VBox containing the TextArea and buttons for the reply interface
+     * @param options      The options menu node (Needs to be enabled after successful reply)
      */
     private static void cancelReply(GridPane questionPane, VBox answerBox, MenuButton options) {
         questionPane.getChildren().remove(answerBox);

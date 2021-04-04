@@ -1,14 +1,12 @@
 package nl.tudelft.oopp.qubo.mappings.questionvote;
 
+import java.util.UUID;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.entities.QuestionVote;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
-
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QuestionVoteDetailsDtoTests {
     private ModelMapper mapper;

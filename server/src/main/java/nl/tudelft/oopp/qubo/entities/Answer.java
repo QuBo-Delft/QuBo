@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
+/**
+ * The Answer entity.
+ */
 @Entity
 @Table(name = "answers")
 public class Answer {
@@ -47,37 +50,80 @@ public class Answer {
         this.timestamp = timestamp;
     }
 
+    /**
+     * Instantiates a new Answer.
+     */
     public Answer() {
     }
 
+    /**
+     * Gets id.
+     *
+     * @return The id.
+     */
     public UUID getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id The id.
+     */
     public void setId(UUID id) {
         this.id = id;
     }
 
+    /**
+     * Gets timestamp.
+     *
+     * @return The timestamp.
+     */
     public Timestamp getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * Sets timestamp.
+     *
+     * @param timestamp The timestamp.
+     */
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 
+    /**
+     * Gets text.
+     *
+     * @return The text.
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     * Sets text.
+     *
+     * @param text The text.
+     */
     public void setText(String text) {
         this.text = text;
     }
 
+    /**
+     * Gets question.
+     *
+     * @return The question.
+     */
     public Question getQuestion() {
         return question;
     }
 
+    /**
+     * Sets question.
+     *
+     * @param question The question.
+     */
     public void setQuestion(Question question) {
         this.question = question;
     }
