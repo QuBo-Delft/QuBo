@@ -9,9 +9,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Objects;
 import java.util.UUID;
 
-@Entity(name = "Ban")
+/**
+ * The type Ban.
+ */
+@Entity
 @Table(name = "ban")
 public class Ban {
     @Id
@@ -20,7 +24,7 @@ public class Ban {
         name = "UUID",
         strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "id", updatable = false)
+    @Column(name = "id")
     private UUID id;
 
     @ManyToOne
@@ -101,12 +105,31 @@ public class Ban {
         this.ip = ip;
     }
 
+    /**
+     * Equals method for the Ban objects.
+     *
+     * @param o The Ban object.
+     * @return True or false depending on the equality of the objects.
+     */
     @Override
-    public String toString() {
-        return "Ban{"
-            + "id=" + id
-            + ", questionBoard=" + questionBoard
-            + ", ip='" + ip + '\''
-            + '}';
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Ban ban = (Ban) o;
+        return id.equals(ban.id) && ip.equals(ban.ip);
+    }
+
+    /**
+     * Generates a hash for the Ban object.
+     *
+     * @return The hashCode of the Ban object.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, ip);
     }
 }
