@@ -17,7 +17,7 @@ public class PollVoteDetailsDto {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;

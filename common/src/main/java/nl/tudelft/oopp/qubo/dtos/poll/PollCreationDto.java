@@ -17,7 +17,7 @@ public class PollCreationDto {
     /**
      * Gets poll id.
      *
-     * @return the poll id
+     * @return The poll id.
      */
     public UUID getPollId() {
         return this.pollId;

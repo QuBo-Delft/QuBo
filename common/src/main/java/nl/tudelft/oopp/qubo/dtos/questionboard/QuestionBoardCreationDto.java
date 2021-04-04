@@ -24,7 +24,7 @@ public class QuestionBoardCreationDto {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -42,7 +42,7 @@ public class QuestionBoardCreationDto {
     /**
      * Gets moderator code.
      *
-     * @return the moderator code
+     * @return The moderator code.
      */
     public UUID getModeratorCode() {
         return moderatorCode;
@@ -60,7 +60,7 @@ public class QuestionBoardCreationDto {
     /**
      * Gets title.
      *
-     * @return the title
+     * @return The title.
      */
     public String getTitle() {
         return title;
@@ -78,7 +78,7 @@ public class QuestionBoardCreationDto {
     /**
      * Gets start time.
      *
-     * @return the start time
+     * @return The start time.
      */
     public Timestamp getStartTime() {
         return startTime;

@@ -21,7 +21,7 @@ public class PollCreationBindingModel {
     /**
      * Gets text.
      *
-     * @return the text
+     * @return The text.
      */
     public String getText() {
         return text;
@@ -39,7 +39,7 @@ public class PollCreationBindingModel {
     /**
      * Gets poll options.
      *
-     * @return the poll options
+     * @return The poll options.
      */
     public Set<String> getPollOptions() {
         return pollOptions;

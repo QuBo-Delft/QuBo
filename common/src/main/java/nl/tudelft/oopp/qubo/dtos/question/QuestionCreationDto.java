@@ -19,7 +19,7 @@ public class QuestionCreationDto {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -37,7 +37,7 @@ public class QuestionCreationDto {
     /**
      * Gets secret code.
      *
-     * @return the secret code
+     * @return The secret code.
      */
     public UUID getSecretCode() {
         return secretCode;

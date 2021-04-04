@@ -22,7 +22,7 @@ public class AnswerDetailsDto {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -40,7 +40,7 @@ public class AnswerDetailsDto {
     /**
      * Gets timestamp.
      *
-     * @return the timestamp
+     * @return The timestamp.
      */
     public Timestamp getTimestamp() {
         return timestamp;
@@ -58,7 +58,7 @@ public class AnswerDetailsDto {
     /**
      * Gets text.
      *
-     * @return the text
+     * @return The text.
      */
     public String getText() {
         return text;

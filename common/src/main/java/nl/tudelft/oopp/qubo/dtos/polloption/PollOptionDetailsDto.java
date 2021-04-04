@@ -19,7 +19,7 @@ public class PollOptionDetailsDto {
     /**
      * Gets option id.
      *
-     * @return the option id
+     * @return The option id.
      */
     public UUID getOptionId() {
         return optionId;
@@ -37,7 +37,7 @@ public class PollOptionDetailsDto {
     /**
      * Gets option text.
      *
-     * @return the option text
+     * @return The option text.
      */
     public String getOptionText() {
         return optionText;

@@ -154,7 +154,7 @@ public abstract class TestFxBase {
      * Creates an open question board and returns it's details.
      * Primarily used for easy generation, as this method is not strictly necessary.
      *
-     * @return the question board creation dto
+     * @return The question board creation dto.
      */
     public static QuestionBoardCreationDto createOpenQuBo() {
         Timestamp startTimeNow = Timestamp.valueOf(LocalDateTime.now());
@@ -165,7 +165,7 @@ public abstract class TestFxBase {
      * Create a closed question board and returns it's details.
      * Primarily used for easy generation, as this method is not strictly necessary.
      *
-     * @return the question board creation dto
+     * @return The question board creation dto.
      */
     public static QuestionBoardCreationDto createClosedQuBo() {
         Timestamp startTimeTomorrow = Timestamp.valueOf(LocalDateTime.now().plusDays(1));

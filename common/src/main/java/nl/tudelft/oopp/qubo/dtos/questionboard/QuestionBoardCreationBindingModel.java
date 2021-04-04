@@ -35,7 +35,7 @@ public class QuestionBoardCreationBindingModel {
     /**
      * Gets title.
      *
-     * @return the title
+     * @return The title.
      */
     public String getTitle() {
         return title;
@@ -53,7 +53,7 @@ public class QuestionBoardCreationBindingModel {
     /**
      * Gets start time.
      *
-     * @return the start time
+     * @return The start time.
      */
     public Timestamp getStartTime() {
         return startTime;

@@ -26,7 +26,7 @@ public class PollDetailsDto {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -44,7 +44,7 @@ public class PollDetailsDto {
     /**
      * Gets text.
      *
-     * @return the text
+     * @return The text.
      */
     public String getText() {
         return text;
@@ -62,7 +62,7 @@ public class PollDetailsDto {
     /**
      * Is open boolean.
      *
-     * @return the boolean
+     * @return The boolean.
      */
     public boolean isOpen() {
         return open;
@@ -80,7 +80,7 @@ public class PollDetailsDto {
     /**
      * Gets options.
      *
-     * @return the options
+     * @return The options.
      */
     public Set<PollOptionDetailsDto> getOptions() {
         return options;

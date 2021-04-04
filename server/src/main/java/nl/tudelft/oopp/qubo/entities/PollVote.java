@@ -48,7 +48,7 @@ public class PollVote {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -66,7 +66,7 @@ public class PollVote {
     /**
      * Gets poll option.
      *
-     * @return the poll option
+     * @return The poll option.
      */
     public PollOption getPollOption() {
         return pollOption;

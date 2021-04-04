@@ -24,7 +24,7 @@ public class QuestionBoardDetailsDto {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -42,7 +42,7 @@ public class QuestionBoardDetailsDto {
     /**
      * Gets title.
      *
-     * @return the title
+     * @return The title.
      */
     public String getTitle() {
         return title;
@@ -60,7 +60,7 @@ public class QuestionBoardDetailsDto {
     /**
      * Gets start time.
      *
-     * @return the start time
+     * @return The start time.
      */
     public Timestamp getStartTime() {
         return startTime;
@@ -78,7 +78,7 @@ public class QuestionBoardDetailsDto {
     /**
      * Is closed boolean.
      *
-     * @return the boolean
+     * @return The boolean.
      */
     public boolean isClosed() {
         return closed;

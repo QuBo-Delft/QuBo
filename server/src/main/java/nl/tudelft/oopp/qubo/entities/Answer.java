@@ -59,7 +59,7 @@ public class Answer {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -77,7 +77,7 @@ public class Answer {
     /**
      * Gets timestamp.
      *
-     * @return the timestamp
+     * @return The timestamp.
      */
     public Timestamp getTimestamp() {
         return timestamp;
@@ -95,7 +95,7 @@ public class Answer {
     /**
      * Gets text.
      *
-     * @return the text
+     * @return The text.
      */
     public String getText() {
         return text;
@@ -113,7 +113,7 @@ public class Answer {
     /**
      * Gets question.
      *
-     * @return the question
+     * @return The question.
      */
     public Question getQuestion() {
         return question;

@@ -17,7 +17,7 @@ public interface PaceVoteRepository extends JpaRepository<PaceVote, UUID> {
      * Gets by id.
      *
      * @param paceVoteId the pace vote id
-     * @return the by id
+     * @return The by id.
      */
     PaceVote getById(UUID paceVoteId);
 
@@ -34,7 +34,7 @@ public interface PaceVoteRepository extends JpaRepository<PaceVote, UUID> {
      *
      * @param board    The board.
      * @param paceType The pace type.
-     * @return the int
+     * @return The int.
      */
     int countByQuestionBoardAndPaceType(QuestionBoard board, PaceType paceType);
 }

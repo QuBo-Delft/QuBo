@@ -95,7 +95,7 @@ public class Question {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -113,7 +113,7 @@ public class Question {
     /**
      * Gets question board.
      *
-     * @return the question board
+     * @return The question board.
      */
     public QuestionBoard getQuestionBoard() {
         return questionBoard;
@@ -131,7 +131,7 @@ public class Question {
     /**
      * Gets secret code.
      *
-     * @return the secret code
+     * @return The secret code.
      */
     public UUID getSecretCode() {
         return secretCode;
@@ -149,7 +149,7 @@ public class Question {
     /**
      * Gets timestamp.
      *
-     * @return the timestamp
+     * @return The timestamp.
      */
     public Timestamp getTimestamp() {
         return timestamp;
@@ -167,7 +167,7 @@ public class Question {
     /**
      * Gets text.
      *
-     * @return the text
+     * @return The text.
      */
     public String getText() {
         return text;
@@ -185,7 +185,7 @@ public class Question {
     /**
      * Gets author name.
      *
-     * @return the author name
+     * @return The author name.
      */
     public String getAuthorName() {
         return authorName;
@@ -203,7 +203,7 @@ public class Question {
     /**
      * Gets votes.
      *
-     * @return the votes
+     * @return The votes.
      */
     public Set<QuestionVote> getVotes() {
         return votes;
@@ -221,7 +221,7 @@ public class Question {
     /**
      * Gets answers.
      *
-     * @return the answers
+     * @return The answers.
      */
     public Set<Answer> getAnswers() {
         return answers;
@@ -239,7 +239,7 @@ public class Question {
     /**
      * Gets answered.
      *
-     * @return the answered
+     * @return The answered.
      */
     public Timestamp getAnswered() {
         return answered;
@@ -257,7 +257,7 @@ public class Question {
     /**
      * Gets ip.
      *
-     * @return the ip
+     * @return The ip.
      */
     public String getIp() {
         return ip;

@@ -16,7 +16,7 @@ public interface PollOptionRepository extends JpaRepository<PollOption, UUID> {
      * Gets poll options by poll.
      *
      * @param poll the poll
-     * @return the poll options by poll
+     * @return The poll options by poll.
      */
     Set<PollOption> getPollOptionsByPoll(Poll poll);
 
@@ -24,7 +24,7 @@ public interface PollOptionRepository extends JpaRepository<PollOption, UUID> {
      * Gets by id.
      *
      * @param pollOptionId the poll option id
-     * @return the by id
+     * @return The by id.
      */
     PollOption getById(UUID pollOptionId);
 }

@@ -32,7 +32,7 @@ public class PaceDetailsDto {
     /**
      * Gets just right votes.
      *
-     * @return the just right votes
+     * @return The just right votes.
      */
     public int getJustRightVotes() {
         return justRightVotes;
@@ -50,7 +50,7 @@ public class PaceDetailsDto {
     /**
      * Gets too fast votes.
      *
-     * @return the too fast votes
+     * @return The too fast votes.
      */
     public int getTooFastVotes() {
         return tooFastVotes;
@@ -68,7 +68,7 @@ public class PaceDetailsDto {
     /**
      * Gets too slow votes.
      *
-     * @return the too slow votes
+     * @return The too slow votes.
      */
     public int getTooSlowVotes() {
         return tooSlowVotes;

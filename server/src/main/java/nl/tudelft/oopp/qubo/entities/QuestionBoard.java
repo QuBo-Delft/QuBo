@@ -88,7 +88,7 @@ public class QuestionBoard {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -106,7 +106,7 @@ public class QuestionBoard {
     /**
      * Gets moderator code.
      *
-     * @return the moderator code
+     * @return The moderator code.
      */
     public UUID getModeratorCode() {
         return moderatorCode;
@@ -124,7 +124,7 @@ public class QuestionBoard {
     /**
      * Gets title.
      *
-     * @return the title
+     * @return The title.
      */
     public String getTitle() {
         return title;
@@ -142,7 +142,7 @@ public class QuestionBoard {
     /**
      * Gets start time.
      *
-     * @return the start time
+     * @return The start time.
      */
     public Timestamp getStartTime() {
         return startTime;
@@ -160,7 +160,7 @@ public class QuestionBoard {
     /**
      * Is closed boolean.
      *
-     * @return the boolean
+     * @return The boolean.
      */
     public boolean isClosed() {
         return closed;
@@ -178,7 +178,7 @@ public class QuestionBoard {
     /**
      * Gets questions.
      *
-     * @return the questions
+     * @return The questions.
      */
     public Set<Question> getQuestions() {
         return questions;
@@ -196,7 +196,7 @@ public class QuestionBoard {
     /**
      * Gets pace votes.
      *
-     * @return the pace votes
+     * @return The pace votes.
      */
     public Set<PaceVote> getPaceVotes() {
         return paceVotes;
@@ -214,7 +214,7 @@ public class QuestionBoard {
     /**
      * Gets poll.
      *
-     * @return the poll
+     * @return The poll.
      */
     public Poll getPoll() {
         return poll;
@@ -232,7 +232,7 @@ public class QuestionBoard {
     /**
      * Gets bans.
      *
-     * @return the bans
+     * @return The bans.
      */
     public Set<Ban> getBans() {
         return bans;

@@ -65,7 +65,7 @@ public class Poll {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -83,7 +83,7 @@ public class Poll {
     /**
      * Gets text.
      *
-     * @return the text
+     * @return The text.
      */
     public String getText() {
         return text;
@@ -101,7 +101,7 @@ public class Poll {
     /**
      * Is open boolean.
      *
-     * @return the boolean
+     * @return The boolean.
      */
     public boolean isOpen() {
         return open;
@@ -119,7 +119,7 @@ public class Poll {
     /**
      * Gets question board.
      *
-     * @return the question board
+     * @return The question board.
      */
     public QuestionBoard getQuestionBoard() {
         return questionBoard;
@@ -137,7 +137,7 @@ public class Poll {
     /**
      * Gets poll options.
      *
-     * @return the poll options
+     * @return The poll options.
      */
     public Set<PollOption> getPollOptions() {
         return pollOptions;

@@ -15,7 +15,7 @@ public interface PollVoteRepository extends JpaRepository<PollVote, UUID> {
      * Gets by id.
      *
      * @param pollVoteId the poll vote id
-     * @return the by id
+     * @return The by id.
      */
     PollVote getById(UUID pollVoteId);
 

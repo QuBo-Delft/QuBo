@@ -19,7 +19,7 @@ public class PaceVoteDetailsDto {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -37,7 +37,7 @@ public class PaceVoteDetailsDto {
     /**
      * Gets pace type.
      *
-     * @return the pace type
+     * @return The pace type.
      */
     public PaceType getPaceType() {
         return type;

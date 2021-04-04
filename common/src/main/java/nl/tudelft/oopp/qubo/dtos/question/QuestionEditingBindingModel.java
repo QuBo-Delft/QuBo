@@ -21,7 +21,7 @@ public class QuestionEditingBindingModel {
     /**
      * Gets text.
      *
-     * @return the text
+     * @return The text.
      */
     public String getText() {
         return text;

@@ -32,7 +32,7 @@ public class QuestionDetailsDto {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -50,7 +50,7 @@ public class QuestionDetailsDto {
     /**
      * Gets timestamp.
      *
-     * @return the timestamp
+     * @return The timestamp.
      */
     public Timestamp getTimestamp() {
         return timestamp;
@@ -68,7 +68,7 @@ public class QuestionDetailsDto {
     /**
      * Gets text.
      *
-     * @return the text
+     * @return The text.
      */
     public String getText() {
         return text;
@@ -86,7 +86,7 @@ public class QuestionDetailsDto {
     /**
      * Gets answers.
      *
-     * @return the answers
+     * @return The answers.
      */
     public Set<AnswerDetailsDto> getAnswers() {
         return answers;
@@ -104,7 +104,7 @@ public class QuestionDetailsDto {
     /**
      * Gets author name.
      *
-     * @return the author name
+     * @return The author name.
      */
     public String getAuthorName() {
         return authorName;
@@ -122,7 +122,7 @@ public class QuestionDetailsDto {
     /**
      * Gets answered.
      *
-     * @return the answered
+     * @return The answered.
      */
     public Timestamp getAnswered() {
         return answered;
@@ -140,7 +140,7 @@ public class QuestionDetailsDto {
     /**
      * Gets upvotes.
      *
-     * @return the upvotes
+     * @return The upvotes.
      */
     public int getUpvotes() {
         return upvotes;

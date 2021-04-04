@@ -62,7 +62,7 @@ public class QuestionBoardController {
      *
      * @param qb The binding model passed by the client containing information to be used
      *           in creating a new QuestionBoard on the backend.
-     * @return the question board
+     * @return The question board.
      */
     @RequestMapping(method = POST, consumes = "application/json")
     @ResponseBody

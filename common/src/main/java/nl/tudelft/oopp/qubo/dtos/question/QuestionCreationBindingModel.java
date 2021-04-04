@@ -25,7 +25,7 @@ public class QuestionCreationBindingModel {
     /**
      * Gets text.
      *
-     * @return the text
+     * @return The text.
      */
     public String getText() {
         return text;
@@ -43,7 +43,7 @@ public class QuestionCreationBindingModel {
     /**
      * Gets author name.
      *
-     * @return the author name
+     * @return The author name.
      */
     public String getAuthorName() {
         return authorName;

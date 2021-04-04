@@ -69,7 +69,7 @@ public class PollController {
      * @param moderatorCode The moderator code.
      * @param pollModel     The binding model passed by the client containing information to be used
      *                      in creating a new Poll.
-     * @return the question board
+     * @return The question board.
      */
     @RequestMapping(value = "/{boardid}/poll", method = POST, consumes = "application/json")
     @ResponseBody

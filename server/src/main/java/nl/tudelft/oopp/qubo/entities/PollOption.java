@@ -61,7 +61,7 @@ public class PollOption {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -79,7 +79,7 @@ public class PollOption {
     /**
      * Gets poll.
      *
-     * @return the poll
+     * @return The poll.
      */
     public Poll getPoll() {
         return poll;
@@ -97,7 +97,7 @@ public class PollOption {
     /**
      * Gets text.
      *
-     * @return the text
+     * @return The text.
      */
     public String getText() {
         return text;
@@ -115,7 +115,7 @@ public class PollOption {
     /**
      * Gets votes.
      *
-     * @return the votes
+     * @return The votes.
      */
     public Set<PollVote> getVotes() {
         return votes;

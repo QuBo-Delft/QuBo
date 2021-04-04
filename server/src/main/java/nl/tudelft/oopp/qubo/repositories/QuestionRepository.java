@@ -17,7 +17,7 @@ public interface QuestionRepository extends JpaRepository<Question, QuestionBoar
      * Gets question by question board.
      *
      * @param boardId the board id
-     * @return the question by question board
+     * @return The question by question board.
      */
     Set<Question> getQuestionByQuestionBoard(QuestionBoard boardId);
 
@@ -25,7 +25,7 @@ public interface QuestionRepository extends JpaRepository<Question, QuestionBoar
      * Gets question by id.
      *
      * @param questionId the question id
-     * @return the question by id
+     * @return The question by id.
      */
     Question getQuestionById(UUID questionId);
 

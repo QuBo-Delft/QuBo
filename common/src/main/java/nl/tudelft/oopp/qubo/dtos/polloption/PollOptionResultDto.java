@@ -23,7 +23,7 @@ public class PollOptionResultDto {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -41,7 +41,7 @@ public class PollOptionResultDto {
     /**
      * Gets text.
      *
-     * @return the text
+     * @return The text.
      */
     public String getText() {
         return text;
@@ -59,7 +59,7 @@ public class PollOptionResultDto {
     /**
      * Gets votes.
      *
-     * @return the votes
+     * @return The votes.
      */
     public int getVotes() {
         return votes;

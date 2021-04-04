@@ -19,7 +19,7 @@ public class PaceVoteCreationBindingModel {
     /**
      * Gets pace type.
      *
-     * @return the pace type
+     * @return The pace type.
      */
     public PaceType getPaceType() {
         return paceType;

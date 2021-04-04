@@ -48,7 +48,7 @@ public class QuestionVote {
     /**
      * Gets id.
      *
-     * @return the id
+     * @return The id.
      */
     public UUID getId() {
         return id;
@@ -66,7 +66,7 @@ public class QuestionVote {
     /**
      * Gets question.
      *
-     * @return the question
+     * @return The question.
      */
     public Question getQuestion() {
         return question;
