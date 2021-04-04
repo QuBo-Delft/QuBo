@@ -1,7 +1,13 @@
 package nl.tudelft.oopp.qubo.repositories;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.UUID;
 import nl.tudelft.oopp.qubo.entities.Ban;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

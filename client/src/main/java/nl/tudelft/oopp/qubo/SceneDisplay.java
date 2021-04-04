@@ -1,22 +1,20 @@
 package nl.tudelft.oopp.qubo;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import nl.tudelft.oopp.qubo.controllers.JoinQuBoController;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 
 import java.io.IOException;
-import java.net.URL;
 
+/**
+ * The Scene display which loads and displays the initial stage of the application.
+ */
 public class SceneDisplay extends Application {
 
     /**
      * The entry point of application.
      *
-     * @param args  The input arguments.
+     * @param args The input arguments.
      */
     public static void main(String[] args) {
         launch(args);

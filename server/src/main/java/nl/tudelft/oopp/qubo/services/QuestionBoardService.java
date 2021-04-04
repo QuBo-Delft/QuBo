@@ -13,6 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 
+/**
+ * The Question board service.
+ */
 @Service
 public class QuestionBoardService {
     private final QuestionBoardRepository questionBoardRepository;

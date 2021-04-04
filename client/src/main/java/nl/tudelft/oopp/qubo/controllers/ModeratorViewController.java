@@ -17,7 +17,6 @@ import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
-import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
@@ -28,6 +27,9 @@ import javafx.scene.image.ImageView;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * The Moderator view controller.
+ */
 public class ModeratorViewController {
     @FXML
     private HBox topBar;
@@ -85,15 +87,22 @@ public class ModeratorViewController {
     @FXML
     private ScrollPane sideMenuPane;
 
-    //Records if the side menu was open before hiding
+    /**
+    * Records if the side menu was open before hiding.
+    */
     private boolean sideMenuOpen;
-    // Stage to be shown when the QuBo details button is clicked
+
+    /**
+     * Stage to be shown when the QuBo details button is clicked.
+     */
     Stage popUp = new Stage();
 
     private UUID modCode;
     private String authorName;
 
-    //HashMap of questionId:upvoteId, needed when deleting vote
+    /**
+    * HashMap of questionId:upvoteId, needed when deleting vote.
+    */
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
 
     private Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -104,7 +113,7 @@ public class ModeratorViewController {
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
      *
-     * @param quBo  The QuestionBoardDetailsDto of the question board that the student joined.
+     * @param quBo The QuestionBoardDetailsDto of the question board that the student joined.
      */
     public void setQuBo(QuestionBoardDetailsDto quBo) {
         this.quBo = quBo;
@@ -113,7 +122,7 @@ public class ModeratorViewController {
     /**
      * Method that sets the username of the application user.
      *
-     * @param authorName    The name of the student that joined the question board.
+     * @param authorName The name of the student that joined the question board.
      */
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
@@ -122,7 +131,7 @@ public class ModeratorViewController {
     /**
      * Method that sets the moderator code of the question board.
      *
-     * @param modCode   Moderator code associated to the question board.
+     * @param modCode Moderator code associated to the question board.
      */
     public void setModCode(UUID modCode) {
         this.modCode = modCode;
@@ -179,11 +188,17 @@ public class ModeratorViewController {
         }
     }
 
+    /**
+     * Copy student code.
+     */
     public void copyStudentCode() {
         clipboardContent.putString(quBo.getId().toString());
         clipboard.setContent(clipboardContent);
     }
 
+    /**
+     * Display help doc.
+     */
     public void displayHelpDoc() {
     }
 
@@ -214,6 +229,13 @@ public class ModeratorViewController {
         sideMenuOpen = sidebarLogic(polls, ansQuestions);
     }
 
+    /**
+     * Sidebar logic.
+     *
+     * @param select   The select button.
+     * @param deselect The deselect button.
+     * @return result
+     */
     public boolean sidebarLogic(ToggleButton select, ToggleButton deselect) {
         return SideBarControl.showHideSelected(select, deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox);
     }

@@ -1,12 +1,11 @@
 package nl.tudelft.oopp.qubo.communication;
 
-import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
-
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Set;
 import java.util.UUID;
+import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
 
 /**
  * This class hold methods related to communication for Polls.
@@ -35,7 +34,7 @@ public class PollCommunication {
 
         //Request the poll creation, and retrieve the response
         HttpResponse<String> response = ServerCommunication.post(fullUrl, requestBody, "Content-Type",
-                "application/json;charset=UTF-8");
+            "application/json;charset=UTF-8");
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
@@ -49,14 +48,14 @@ public class PollCommunication {
      * Retrieves the details of the poll associated with the question board whose ID was provided.
      * Communicates with the /api/board/{boardid}/poll server endpoint.
      *
-     * @param boardId   The ID of the question board whose poll's details should be retrieved.
+     * @param boardId The ID of the question board whose poll's details should be retrieved.
      * @return The PollDetailsDto associated with the poll in JSON String format if there was a poll associated
-     *      with the question board whose ID was provided, null otherwise.
+     *         with the question board whose ID was provided, null otherwise.
      */
     public static String retrievePollDetails(UUID boardId) {
         //Create a request and response object, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(ServerCommunication.subUrl + "board/" + boardId + "/poll")).build();
+            .uri(URI.create(ServerCommunication.subUrl + "board/" + boardId + "/poll")).build();
         HttpResponse<String> response = ServerCommunication.sendRequest(request);
 
         //If the request was unsuccessful, return null
@@ -72,15 +71,14 @@ public class PollCommunication {
      * Retrieves the results of the poll from the question board associated with the specified ID.
      * Communicates with the/api/board/{boardid}/poll/results server endpoint.
      *
-     * @param boardId       The ID of the question board whose poll results should be retrieved.
-     * @return A set of PollOptionResultDtos of the poll JSON String format if it existed,
-     *      null otherwise.
+     * @param boardId The ID of the question board whose poll results should be retrieved.
+     * @return A set of PollOptionResultDtos of the poll JSON String format if it existed,      null otherwise.
      */
     public static String retrievePollResults(UUID boardId) {
         //Set up the request object to retrieve the poll results, send the request, and retrieve the response
         HttpRequest request = HttpRequest.newBuilder().GET()
-                .uri(URI.create(ServerCommunication.subUrl + "board/" + boardId + "/poll/results"))
-                .build();
+            .uri(URI.create(ServerCommunication.subUrl + "board/" + boardId + "/poll/results"))
+            .build();
         HttpResponse<String> response = ServerCommunication.sendRequest(request);
 
         //If the request was unsuccessful, return null
@@ -99,7 +97,7 @@ public class PollCommunication {
      * @param boardId       The ID of the question board whose poll should be deleted.
      * @param moderatorCode The moderator code associated with the question board.
      * @return The PollDetailsDto of the poll that was deleted in JSON String format if it existed,
-     *      null otherwise.
+     *         null otherwise.
      */
     public static String deletePoll(UUID boardId, UUID moderatorCode) {
         //Set up the variables required by the delete helper method
@@ -119,8 +117,8 @@ public class PollCommunication {
     /**
      * Add vote for Poll-option.
      *
-     * @param boardId   The ID of the question board on which a vote should be added.
-     * @param optionId  The ID of the option that should be voted for.
+     * @param boardId  The ID of the question board on which a vote should be added.
+     * @param optionId The ID of the option that should be voted for.
      * @return The PollVoteDetailsDto in JSON format if the request was made successfully, null otherwise.
      */
     public static String addPollVote(UUID boardId, UUID optionId) {

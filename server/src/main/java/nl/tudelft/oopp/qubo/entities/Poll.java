@@ -1,8 +1,8 @@
 package nl.tudelft.oopp.qubo.entities;
 
 import java.util.Objects;
-import org.hibernate.annotations.GenericGenerator;
-
+import java.util.Set;
+import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,10 +12,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Set;
-import java.util.UUID;
-
+/**
+ * The Poll entity.
+ */
 @Entity
 @Table(name = "polls")
 public class Poll {
@@ -55,45 +56,98 @@ public class Poll {
         this.open = true;
     }
 
+    /**
+     * Instantiates a new Poll.
+     */
     public Poll() {
     }
 
+    /**
+     * Gets id.
+     *
+     * @return The id.
+     */
     public UUID getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id The id.
+     */
     public void setId(UUID id) {
         this.id = id;
     }
 
+    /**
+     * Gets text.
+     *
+     * @return The text.
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     * Sets text.
+     *
+     * @param text The text.
+     */
     public void setText(String text) {
         this.text = text;
     }
 
+    /**
+     * Gets the open boolean.
+     *
+     * @return The open boolean.
+     */
     public boolean isOpen() {
         return open;
     }
 
+    /**
+     * Sets the open boolean.
+     *
+     * @param open The open boolean.
+     */
     public void setOpen(boolean open) {
         this.open = open;
     }
 
+    /**
+     * Gets question board.
+     *
+     * @return The question board.
+     */
     public QuestionBoard getQuestionBoard() {
         return questionBoard;
     }
 
+    /**
+     * Sets question board.
+     *
+     * @param questionBoard The question board.
+     */
     public void setQuestionBoard(QuestionBoard questionBoard) {
         this.questionBoard = questionBoard;
     }
 
+    /**
+     * Gets poll options.
+     *
+     * @return The poll options.
+     */
     public Set<PollOption> getPollOptions() {
         return pollOptions;
     }
 
+    /**
+     * Sets poll options.
+     *
+     * @param pollOptions The poll options.
+     */
     public void setPollOptions(Set<PollOption> pollOptions) {
         this.pollOptions = pollOptions;
     }

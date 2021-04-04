@@ -1,17 +1,16 @@
 package nl.tudelft.oopp.qubo.mappings.polloption;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import nl.tudelft.oopp.qubo.config.custommappings.PollOptionToPollOptionResultDtoConverter;
-import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
-import nl.tudelft.oopp.qubo.entities.Poll;
-import nl.tudelft.oopp.qubo.entities.PollOption;
-import nl.tudelft.oopp.qubo.entities.PollVote;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import nl.tudelft.oopp.qubo.config.custommappings.PollOptionToPollOptionResultDtoConverter;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
+import nl.tudelft.oopp.qubo.entities.PollOption;
+import nl.tudelft.oopp.qubo.entities.PollVote;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 
 public class PollOptionResultDtoTests {
     private ModelMapper mapper;

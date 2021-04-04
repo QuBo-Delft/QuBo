@@ -1,10 +1,9 @@
 package nl.tudelft.oopp.qubo.mappings.questionboard;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.sql.Timestamp;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;

@@ -5,11 +5,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * The Interceptor configuration.
+ */
 @Configuration
 public class InterceptorConfiguration implements WebMvcConfigurer {
 
     private final RateLimitingHandlerInterceptor rateLimitingHandlerInterceptor;
 
+    /**
+     * Instantiates a new Interceptor configuration.
+     *
+     * @param rateLimitingHandlerInterceptor The rate limiting handler interceptor.
+     */
     public InterceptorConfiguration(RateLimitingHandlerInterceptor rateLimitingHandlerInterceptor) {
         this.rateLimitingHandlerInterceptor = rateLimitingHandlerInterceptor;
     }

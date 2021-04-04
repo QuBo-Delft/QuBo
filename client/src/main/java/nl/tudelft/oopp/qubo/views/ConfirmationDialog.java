@@ -13,6 +13,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+/**
+ * The Confirmation dialog.
+ */
 public class ConfirmationDialog {
 
     private static boolean answer;
@@ -21,8 +24,8 @@ public class ConfirmationDialog {
      * This method creates a dialog window with a question and a brief description.
      * Users can click on the "Yes" and "No" buttons in this dialog window to answer said question.
      *
-     * @param titleParam     The title of this dialog.
-     * @param messageParam   The message to be displayed.
+     * @param titleParam   The title of this dialog.
+     * @param messageParam The message to be displayed.
      * @return True if and only if the user clicked "Yes".
      */
     public static boolean display(String titleParam, String messageParam) {
