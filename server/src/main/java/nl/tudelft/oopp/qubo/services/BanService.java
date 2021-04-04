@@ -32,7 +32,7 @@ public class BanService {
      * Checks if the IP has already been banned from the question board,
      * if not, add the question board and banned IP to the repository.
      *
-     * @param questionId    The ID of the question where the ban request originated from.
+     * @param questionId    The ID of the question where the ban request originated.
      * @throws ConflictException if the IP of the question is null.
      * @throws ConflictException if the IP has already been banned from the question board
      *                           the question was in.
