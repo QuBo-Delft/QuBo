@@ -13,6 +13,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
+import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
@@ -37,6 +39,12 @@ public class ModeratorViewController {
     private StackPane content;
     @FXML
     private BorderPane paceVotePane;
+
+    //Nodes used to display the pace
+    @FXML
+    private StackPane paceBar;
+    @FXML
+    private ImageView paceCursor;
 
     @FXML
     private Button leaveQuBo;
@@ -135,19 +143,26 @@ public class ModeratorViewController {
     @FXML
     private void initialize() {
         startUpProperties();
-        //Display the questions
+        //Display the questions and pace
         refresh();
     }
 
+    /**
+     * This method refreshes the questions and pace bar.
+     */
     public void refresh() {
         QuestionRefresh.modRefresh(quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
+
+        //Refresh the pace
+        PaceDisplay.displayPace(quBo, modCode, paceBar, paceCursor);
     }
 
     private void startUpProperties() {
         //Hide side menu and sidebar
         LayoutProperties.startupProperties(content, sideBar, sideMenu, pollVbox, ansQuVbox, unAnsQuVbox,
             paceVotePane);
+        LayoutProperties.modStartUpProperties(paceBar, paceCursor);
     }
 
     /**
