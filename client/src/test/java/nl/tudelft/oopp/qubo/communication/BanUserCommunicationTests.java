@@ -15,10 +15,6 @@ public class BanUserCommunicationTests {
     private final UUID uuid2 = UUID.randomUUID();
     private final UUID uuid3 = UUID.randomUUID();
 
-    private static final Gson gson = new GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
-            .create();
-
     private static final String subUrl = "http://localhost:8080/api/";
 
     private HttpClientMock httpClientMock;
@@ -39,6 +35,7 @@ public class BanUserCommunicationTests {
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "question/" + uuid1 + "/ban?code=" + uuid2)
                 .doReturnStatus(200);
+
         // Act
         boolean isBanned = BanUserCommunication.banUser(uuid1, uuid2);
 
@@ -56,6 +53,7 @@ public class BanUserCommunicationTests {
         ServerCommunication.setClient(httpClientMock);
         httpClientMock.onPost(subUrl + "question/" + uuid1 + "/ban?code=" + uuid3)
                 .doReturnStatus(404);
+
         // Act
         boolean isBanned = BanUserCommunication.banUser(uuid1, uuid3);
 
