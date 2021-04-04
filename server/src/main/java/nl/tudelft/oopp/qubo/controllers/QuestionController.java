@@ -11,6 +11,7 @@ import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import nl.tudelft.oopp.qubo.entities.QuestionVote;
 import nl.tudelft.oopp.qubo.services.AnswerService;
+import nl.tudelft.oopp.qubo.services.BanService;
 import nl.tudelft.oopp.qubo.services.QuestionService;
 import nl.tudelft.oopp.qubo.services.QuestionVoteService;
 import org.modelmapper.ModelMapper;
@@ -44,6 +45,7 @@ public class QuestionController {
     private final QuestionService questionService;
     private final QuestionVoteService questionVoteService;
     private final AnswerService answerService;
+    private final BanService banService;
 
     private final ModelMapper modelMapper;
 
@@ -59,10 +61,12 @@ public class QuestionController {
         QuestionService questionService,
         QuestionVoteService questionVoteService,
         AnswerService answerService,
+        BanService banService,
         ModelMapper modelMapper) {
         this.questionService = questionService;
         this.questionVoteService = questionVoteService;
         this.answerService = answerService;
+        this.banService = banService;
         this.modelMapper = modelMapper;
     }
 
@@ -244,10 +248,19 @@ public class QuestionController {
         return dto;
     }
 
-    //POST /api/question/{questionid}/ban?code={moderatorcode}
+    /**
+     * POST endpoint for banning user IPs.
+     *
+     * @param questionId    The ID of the question where the ban request originated from.
+     * @param moderatorCode The moderator code of the board this question is in.
+     * @return              True iff the ban is successful.
+     * @throws ResponseStatusException 404 if the question was not found in database.
+     * @throws ResponseStatusException 403 if the provided moderatorCode is not authorized
+     *                                 to ban this user IP from the question board.
+     */
     @RequestMapping(value = "{questionid}/ban", method = POST)
     @ResponseBody
-    public String banUserByIp(
+    public boolean banUserByIp(
         @PathVariable("questionid") UUID questionId,
         @RequestParam("code") UUID moderatorCode) {
         Question question = questionService.getQuestionById(questionId);
@@ -261,5 +274,7 @@ public class QuestionController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided moderatorCode is not valid "
                 + "for this Question");
         }
+
+        return banService.banIp(questionId);
     }
 }
