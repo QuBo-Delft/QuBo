@@ -1,8 +1,8 @@
 package nl.tudelft.oopp.qubo.entities;
 
 import java.util.Objects;
-import org.hibernate.annotations.GenericGenerator;
-
+import java.util.Set;
+import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,9 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import java.util.Set;
-import java.util.UUID;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * The Poll entity.

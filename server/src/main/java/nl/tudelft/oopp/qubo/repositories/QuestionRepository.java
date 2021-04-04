@@ -2,10 +2,8 @@ package nl.tudelft.oopp.qubo.repositories;
 
 import java.util.Set;
 import java.util.UUID;
-
 import javax.transaction.Transactional;
 import nl.tudelft.oopp.qubo.entities.Question;
-
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

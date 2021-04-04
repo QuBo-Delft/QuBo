@@ -1,7 +1,6 @@
 package nl.tudelft.oopp.qubo.services;
 
 import java.util.UUID;
-
 import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionVote;
 import nl.tudelft.oopp.qubo.repositories.QuestionRepository;

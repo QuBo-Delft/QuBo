@@ -1,12 +1,11 @@
 package nl.tudelft.oopp.qubo.config.custommappings;
 
+import javax.annotation.PostConstruct;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.entities.PollOption;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 /**
  * The Poll option to poll option result dto converter.
