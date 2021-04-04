@@ -55,7 +55,7 @@ public class BanService {
 
     /**
      * This method checks whether the IP to be banned already exists in the set of banned IPs of the
-     * question board.
+     * requested question board.
      *
      * @param questionBoard Question board containing the question where the ban request came from.
      * @param ip            IP of the question to be banned.
