@@ -99,18 +99,18 @@ public class Poll {
     }
 
     /**
-     * Is open boolean.
+     * Gets the open boolean.
      *
-     * @return The boolean.
+     * @return The open boolean.
      */
     public boolean isOpen() {
         return open;
     }
 
     /**
-     * Sets open.
+     * Sets the open boolean.
      *
-     * @param open The open.
+     * @param open The open boolean.
      */
     public void setOpen(boolean open) {
         this.open = open;

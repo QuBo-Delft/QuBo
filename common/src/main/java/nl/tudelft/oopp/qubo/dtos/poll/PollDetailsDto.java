@@ -60,18 +60,18 @@ public class PollDetailsDto {
     }
 
     /**
-     * Is open boolean.
+     * Gets the open boolean.
      *
-     * @return The boolean.
+     * @return The the open boolean.
      */
     public boolean isOpen() {
         return open;
     }
 
     /**
-     * Sets open.
+     * Sets the open boolean.
      *
-     * @param open The open.
+     * @param open The the open boolean.
      */
     public void setOpen(boolean open) {
         this.open = open;
