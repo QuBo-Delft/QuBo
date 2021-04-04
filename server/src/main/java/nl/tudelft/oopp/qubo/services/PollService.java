@@ -104,7 +104,7 @@ public class PollService {
      *
      * @param pollId    The ID of the poll.
      * @return The updated poll.
-     * @throws NotFoundException if the board does not exist.
+     * @throws NotFoundException if the poll does not exist.
      * @throws ConflictException if the poll was already closed.
      */
     public Poll closePoll(UUID pollId) {
