@@ -28,7 +28,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@ActiveProfiles("mockCurrentTimeProvider")
+@ActiveProfiles({"test", "mockCurrentTimeProvider"})
 public class QuestionServiceTests {
     @Autowired
     private QuestionRepository questionRepository;
@@ -67,13 +67,12 @@ public class QuestionServiceTests {
         // Assert
         assertNotNull(result);
         Question inDb = questionRepository.getQuestionById(result.getId());
-        assertEquals(inDb.getText(), result.getText());
-        assertEquals(inDb.getId(), result.getId());
         assertEquals(model.getText(), inDb.getText());
         assertEquals(model.getAuthorName(), inDb.getAuthorName());
         assertEquals(testTime, inDb.getTimestamp());
         assertEquals(testIp, inDb.getIp());
         assertEquals(board.getId(), inDb.getQuestionBoard().getId());
+        assertEquals(inDb, result);
     }
 
     @Test
@@ -180,8 +179,7 @@ public class QuestionServiceTests {
 
         // Assert
         assertNotNull(actual);
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getText(), actual.getText());
+        assertEquals(expected, actual);
         assertEquals(board.getId(), actual.getQuestionBoard().getId());
     }
 
@@ -357,7 +355,7 @@ public class QuestionServiceTests {
         assertEquals(testTime, marked.getAnswered());
 
         Question inDb = questionRepository.getQuestionById(question.getId());
-        assertEquals(testTime, inDb.getAnswered());
+        assertEquals(inDb, marked);
     }
 
     @Test

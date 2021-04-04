@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.qubo.entities;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -61,5 +62,22 @@ public class PaceVote {
 
     public void setPaceType(PaceType paceType) {
         this.paceType = paceType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PaceVote paceVote = (PaceVote) o;
+        return Objects.equals(id, paceVote.id) && paceType == paceVote.paceType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, paceType);
     }
 }
