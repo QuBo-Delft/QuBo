@@ -194,6 +194,12 @@ public class MainApp {
         System.out.println("The current poll's details are:\n"
                 + (PollCommunication.retrievePollDetails(boardId)));
 
+        //TODO: Close the poll
+
+        //Retrieve the results of the poll that was just closed
+        System.out.println("These are the results of the closed poll: " + PollCommunication
+                .retrievePollResults(boardId));
+
         //Delete the poll that was added
         System.out.println("This poll has been deleted: " + PollCommunication
                 .deletePoll(boardId, moderatorCode));
