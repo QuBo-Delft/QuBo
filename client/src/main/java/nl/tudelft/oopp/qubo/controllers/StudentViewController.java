@@ -92,7 +92,7 @@ public class StudentViewController {
 
 
     /**
-    * Records if the side menu was open before hiding
+    * Records if the side menu was open before hiding.
     */
     private boolean sideMenuOpen;
 
@@ -108,12 +108,12 @@ public class StudentViewController {
             .create();
 
     /**
-    * HashMap of questionId:upvoteId, needed when deleting vote
+    * HashMap of questionId:upvoteId, needed when deleting vote.
     */
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
 
     /**
-    * HashMap of questionId:secretCode, needed when editing and deleting questions
+    * HashMap of questionId:secretCode, needed when editing and deleting questions.
     */
     private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
 

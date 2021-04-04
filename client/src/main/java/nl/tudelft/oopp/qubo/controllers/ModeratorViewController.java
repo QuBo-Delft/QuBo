@@ -88,7 +88,7 @@ public class ModeratorViewController {
     private ScrollPane sideMenuPane;
 
     /**
-    * Records if the side menu was open before hiding
+    * Records if the side menu was open before hiding.
     */
     private boolean sideMenuOpen;
 
@@ -101,7 +101,7 @@ public class ModeratorViewController {
     private String authorName;
 
     /**
-    * HashMap of questionId:upvoteId, needed when deleting vote
+    * HashMap of questionId:upvoteId, needed when deleting vote.
     */
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
 
