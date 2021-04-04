@@ -51,6 +51,9 @@ public class QuestionBoard {
     @OneToOne(mappedBy = "questionBoard")
     private Poll poll;
 
+    @OneToMany(mappedBy = "questionBoard")
+    private Set<Ban> bans;
+
     /**
      * Create a new QuestionBoard instance.
      *
@@ -140,6 +143,14 @@ public class QuestionBoard {
 
     public void setPoll(Poll poll) {
         this.poll = poll;
+    }
+
+    public Set<Ban> getBans() {
+        return bans;
+    }
+
+    public void setBans(Set<Ban> bans) {
+        this.bans = bans;
     }
 
     @Override
