@@ -10,12 +10,32 @@ import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Question repository.
+ */
 @Repository("QuestionRepository")
 public interface QuestionRepository extends JpaRepository<Question, QuestionBoard> {
+    /**
+     * Gets question by question board.
+     *
+     * @param boardId the board id
+     * @return the question by question board
+     */
     Set<Question> getQuestionByQuestionBoard(QuestionBoard boardId);
 
+    /**
+     * Gets question by id.
+     *
+     * @param questionId the question id
+     * @return the question by id
+     */
     Question getQuestionById(UUID questionId);
 
+    /**
+     * Delete question by id.
+     *
+     * @param id The id.
+     */
     @Transactional
     void deleteQuestionById(UUID id);
 }

@@ -8,12 +8,33 @@ import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Pace vote repository.
+ */
 @Repository("PaceVoteRepository")
 public interface PaceVoteRepository extends JpaRepository<PaceVote, UUID> {
+    /**
+     * Gets by id.
+     *
+     * @param paceVoteId the pace vote id
+     * @return the by id
+     */
     PaceVote getById(UUID paceVoteId);
 
+    /**
+     * Delete pace vote by id.
+     *
+     * @param id The id.
+     */
     @Transactional
     void deletePaceVoteById(UUID id);
 
+    /**
+     * Count by question board and pace type int.
+     *
+     * @param board    The board.
+     * @param paceType The pace type.
+     * @return the int
+     */
     int countByQuestionBoardAndPaceType(QuestionBoard board, PaceType paceType);
 }
