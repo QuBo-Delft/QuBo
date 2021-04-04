@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * An utility class for sorting.
+ */
 public class Sorting {
 
     /**

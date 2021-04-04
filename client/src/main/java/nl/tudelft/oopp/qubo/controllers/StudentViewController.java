@@ -34,6 +34,9 @@ import javafx.scene.image.ImageView;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * The Student view controller.
+ */
 public class StudentViewController {
     @FXML
     private HBox topBar;
@@ -90,7 +93,9 @@ public class StudentViewController {
 
     //Records if the side menu was open before hiding
     private boolean sideMenuOpen;
-    // Stage to be shown when the QuBo details button is clicked
+    /**
+     * Stage to be shown when the QuBo details button is clicked.
+     */
     Stage popUp = new Stage();
 
     private String authorName;
@@ -112,7 +117,7 @@ public class StudentViewController {
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
      *
-     * @param quBo  The QuestionBoardDetailsDto of the question board that the student joined.
+     * @param quBo The QuestionBoardDetailsDto of the question board that the student joined.
      */
     public void setQuBo(QuestionBoardDetailsDto quBo) {
         this.quBo = quBo;
@@ -121,7 +126,7 @@ public class StudentViewController {
     /**
      * Method that sets the username of the application user.
      *
-     * @param authorName    The name of the student that joined the question board.
+     * @param authorName The name of the student that joined the question board.
      */
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
@@ -146,6 +151,9 @@ public class StudentViewController {
         refresh();
     }
 
+    /**
+     * Refresh.
+     */
     public void refresh() {
         QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
             sideMenuPane);
@@ -171,17 +179,23 @@ public class StudentViewController {
         }
     }
 
+    /**
+     * Copy student code.
+     */
     public void copyStudentCode() {
         clipboardContent.putString(quBo.getId().toString());
         clipboard.setContent(clipboardContent);
     }
 
+    /**
+     * Display help doc.
+     */
     public void displayHelpDoc() {
     }
 
     /**
-     *  Add the questions that the user entered to the question board, add the returned question ID
-     *  to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
+     * Add the questions that the user entered to the question board, add the returned question ID
+     * to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
      */
     public void addQuestion() {
         // Display a dialog to extract the user's question text,
@@ -216,7 +230,7 @@ public class StudentViewController {
     /**
      * This method auto-upvotes the question that the user has just asked.
      *
-     * @param questionId    UUID of the question that was just asked.
+     * @param questionId UUID of the question that was just asked.
      */
     public void autoUpvote(UUID questionId) {
         String response = QuestionVoteCommunication.addQuestionVote(questionId);
@@ -257,6 +271,13 @@ public class StudentViewController {
         sideMenuOpen = sidebarLogic(polls, ansQuestions);
     }
 
+    /**
+     * Sidebar logic.
+     *
+     * @param select   The select button.
+     * @param deselect The deselect button.
+     * @return result
+     */
     public boolean sidebarLogic(ToggleButton select, ToggleButton deselect) {
         return SideBarControl.showHideSelected(select, deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox);
     }

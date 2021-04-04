@@ -9,12 +9,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * The Scene display.
+ */
 public class SceneDisplay extends Application {
 
     /**
      * The entry point of application.
      *
-     * @param args  The input arguments.
+     * @param args The input arguments.
      */
     public static void main(String[] args) {
         launch(args);
