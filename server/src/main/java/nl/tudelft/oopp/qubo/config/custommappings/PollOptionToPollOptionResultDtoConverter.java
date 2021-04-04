@@ -8,13 +8,17 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * The Poll option to poll option result dto converter.
+ */
 @Component
 public class PollOptionToPollOptionResultDtoConverter {
     private final ModelMapper mapper;
 
     /**
      * Initialise PollOptionToPollOptionResultDtoConverter.
-     * @param modelMapper   The modelMapper object.
+     *
+     * @param modelMapper The modelMapper object.
      */
     public PollOptionToPollOptionResultDtoConverter(ModelMapper modelMapper) {
         this.mapper = modelMapper;

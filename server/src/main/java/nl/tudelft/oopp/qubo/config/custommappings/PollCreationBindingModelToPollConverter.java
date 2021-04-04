@@ -13,11 +13,19 @@ import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * The Poll creation binding model to poll converter.
+ */
 @Component
 public class PollCreationBindingModelToPollConverter {
 
     private final ModelMapper mapper;
 
+    /**
+     * Instantiates a new Poll creation binding model to poll converter.
+     *
+     * @param modelMapper The model mapper.
+     */
     public PollCreationBindingModelToPollConverter(ModelMapper modelMapper) {
         this.mapper = modelMapper;
     }

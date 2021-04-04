@@ -11,6 +11,9 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
+/**
+ * The H2 config.
+ */
 @Configuration
 @EnableJpaRepositories("nl.tudelft.oopp.qubo.repositories")
 @PropertySource("classpath:application-dev.properties")
@@ -22,6 +25,8 @@ public class H2Config {
 
     /**
      * Set up the connection to the database.
+     *
+     * @return the data source
      */
     @Bean
     public DataSource dataSource() {
