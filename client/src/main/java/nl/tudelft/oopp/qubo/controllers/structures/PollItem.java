@@ -14,7 +14,9 @@ import javafx.scene.text.Text;
 
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 
+import java.util.HashMap;
 import java.util.Set;
+import java.util.UUID;
 
 public class PollItem extends GridPane {
     private GridPane pollPane;
@@ -25,6 +27,7 @@ public class PollItem extends GridPane {
 
     private ScrollPane pollScPane;
     private VBox pollContainer;
+    private HashMap<RadioMenuItem, UUID> optionIDs;
 
     /**
      * Constructs a new PollItem.
@@ -82,6 +85,8 @@ public class PollItem extends GridPane {
             RadioMenuItem optionButton = new RadioMenuItem(option.getOptionText());
             optionButton.setToggleGroup(optionGroup);
             optionsMenu.getItems().add(optionButton);
+
+            optionIDs.put(optionButton, option.getOptionId());
         }
 
         //Add the menu to a MenuBar
@@ -118,6 +123,15 @@ public class PollItem extends GridPane {
         gridpane.setPadding(new Insets(10,3,5,3));
 
         return gridpane;
+    }
+
+    /**
+     * Returns the ID of the option associated with the radio button.
+     *
+     * @return The ID of the option associated with the radio button.
+     */
+    public UUID findOptionId(RadioMenuItem button) {
+        return optionIDs.get(button);
     }
 
 }
