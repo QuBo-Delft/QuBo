@@ -1,5 +1,8 @@
 package nl.tudelft.oopp.qubo.dtos.pace;
 
+/**
+ * The Pace details DTO.
+ */
 public class PaceDetailsDto {
     private int justRightVotes;
 
@@ -7,6 +10,9 @@ public class PaceDetailsDto {
 
     private int tooSlowVotes;
 
+    /**
+     * Instantiates a new Pace details DTO.
+     */
     public PaceDetailsDto() {
     }
 
@@ -23,26 +29,56 @@ public class PaceDetailsDto {
         this.tooSlowVotes = tooSlowVotes;
     }
 
+    /**
+     * Gets just right votes.
+     *
+     * @return the just right votes
+     */
     public int getJustRightVotes() {
         return justRightVotes;
     }
 
+    /**
+     * Sets just right votes.
+     *
+     * @param justRightVotes The just right votes.
+     */
     public void setJustRightVotes(int justRightVotes) {
         this.justRightVotes = justRightVotes;
     }
 
+    /**
+     * Gets too fast votes.
+     *
+     * @return the too fast votes
+     */
     public int getTooFastVotes() {
         return tooFastVotes;
     }
 
+    /**
+     * Sets too fast votes.
+     *
+     * @param tooFastVotes The too fast votes.
+     */
     public void setTooFastVotes(int tooFastVotes) {
         this.tooFastVotes = tooFastVotes;
     }
 
+    /**
+     * Gets too slow votes.
+     *
+     * @return the too slow votes
+     */
     public int getTooSlowVotes() {
         return tooSlowVotes;
     }
 
+    /**
+     * Sets too slow votes.
+     *
+     * @param tooSlowVotes The too slow votes.
+     */
     public void setTooSlowVotes(int tooSlowVotes) {
         this.tooSlowVotes = tooSlowVotes;
     }
