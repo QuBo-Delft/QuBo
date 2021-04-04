@@ -1,0 +1,30 @@
+.exportBtn {
+    -fx-background-radius: 0;
+    -fx-background-color: #736d69;
+
+    -fx-background-image: url(../icons/btn_export.png);
+    -fx-background-size: 27px 27px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.exportBtn:hover {
+    -fx-background-color: #3c3837;
+    -fx-background-size: 30px 30px;
+}
+
+.closeBoardBtn {
+    -fx-background-radius: 0;
+    -fx-background-color: #736d69;
+
+    -fx-background-image: url(../icons/btn_closeBoard.png);
+    -fx-background-size: 27px 27px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.closeBoardBtn:hover {
+    -fx-background-color: #3c3837;
+    -fx-background-size: 30px 30px;
+}
+
