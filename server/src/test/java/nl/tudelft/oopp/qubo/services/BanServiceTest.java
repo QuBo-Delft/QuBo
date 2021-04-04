@@ -60,8 +60,11 @@ public class BanServiceTest {
         // Act
         banService.banIp(question.getId());
 
-        // Assert
-        assertFalse(banRepository.getBanByQuestionBoard(board).isEmpty());
+        Set<Ban> banSet = banRepository.getBanByQuestionBoard(board);
+        assertEquals(1, banSet.size());
+        Ban ban = banSet.iterator().next();
+        assertEquals(question.getIp(), ban.getIp());
+        assertEquals(board.getId(), ban.getQuestionBoard().getId());
     }
 
     @Test
