@@ -87,8 +87,11 @@ public class ModeratorViewController {
     @FXML
     private ScrollPane sideMenuPane;
 
-    //Records if the side menu was open before hiding
+    /**
+    * Records if the side menu was open before hiding
+    */
     private boolean sideMenuOpen;
+
     /**
      * Stage to be shown when the QuBo details button is clicked.
      */
@@ -97,7 +100,9 @@ public class ModeratorViewController {
     private UUID modCode;
     private String authorName;
 
-    //HashMap of questionId:upvoteId, needed when deleting vote
+    /**
+    * HashMap of questionId:upvoteId, needed when deleting vote
+    */
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
 
     private Clipboard clipboard = Clipboard.getSystemClipboard();
