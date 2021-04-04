@@ -65,10 +65,12 @@ public class PollServiceTests {
     private final Timestamp currentStamp = Timestamp.from(currentInstant);
     private final Timestamp futureStamp = Timestamp.from(futureInstant);
 
+    /**
+     * In all tests the time is an hour past the currentStamp,
+     * and 23 hours before the futureStamp.
+     */
     @BeforeEach
     public void setup() {
-        // In all tests the time is an hour past the currentStamp,
-        // and 23 hours before the futureStamp.
         Mockito.when(mockCurrentTimeProvider.getCurrentTime())
             .thenReturn(currentInstant.plus(1, ChronoUnit.HOURS));
     }
