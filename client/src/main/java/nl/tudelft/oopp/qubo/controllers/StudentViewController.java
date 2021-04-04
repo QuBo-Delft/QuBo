@@ -21,6 +21,7 @@ import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
+import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
@@ -174,6 +175,22 @@ public class StudentViewController {
     public void copyStudentCode() {
         clipboardContent.putString(quBo.getId().toString());
         clipboard.setContent(clipboardContent);
+    }
+
+    public void paceVoteSlow() {
+        paceVoteHandler(PaceType.TOO_SLOW);
+    }
+
+    public void paceVoteOkay() {
+        paceVoteHandler(PaceType.JUST_RIGHT);
+    }
+
+    public void paceVoteFas() {
+        paceVoteHandler(PaceType.TOO_FAST);
+    }
+
+    private void paceVoteHandler(PaceType paceType) {
+
     }
 
     public void displayHelpDoc() {
