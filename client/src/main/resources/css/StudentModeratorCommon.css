@@ -33,6 +33,7 @@
 .sideBarBtn:hover {
     -fx-background-color: #8d4e00;
     -fx-background-size: 30px 30px;
+    -fx-cursor: hand;
 }
 
 .helpBtn {
@@ -53,6 +54,7 @@
 .exitBtn:hover {
     -fx-background-color: #3c3837;
     -fx-background-size: 30px 30px;
+    -fx-cursor: hand;
 }
 
 .pollBtn {
@@ -68,6 +70,7 @@
 .pollBtn:hover {
     -fx-background-color: #3c3837;
     -fx-background-size: 30px 30px;
+    -fx-cursor: hand;
 }
 
 .answeredBtn {
@@ -83,6 +86,7 @@
 .answeredBtn:hover {
     -fx-background-color: #3c3837;
     -fx-background-size: 30px 30px;
+    -fx-cursor: hand;
 }
 
 .upperBar {

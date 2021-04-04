@@ -11,6 +11,7 @@
 .exportBtn:hover {
     -fx-background-color: #3c3837;
     -fx-background-size: 30px 30px;
+    -fx-cursor: hand;
 }
 
 .closeBoardBtn {
@@ -26,5 +27,6 @@
 .closeBoardBtn:hover {
     -fx-background-color: #3c3837;
     -fx-background-size: 30px 30px;
+    -fx-cursor: hand;
 }
 
