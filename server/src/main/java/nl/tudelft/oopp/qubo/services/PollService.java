@@ -190,7 +190,8 @@ public class PollService {
         Set<PollOption> pollOptions = pollOptionRepository.getPollOptionsByPoll(poll);
 
         Set<PollOptionResultDto> pollOptionResults = modelMapper.map(pollOptions,
-                new TypeToken<Set<PollOptionResultDto>>() {}.getType());
+            new TypeToken<Set<PollOptionResultDto>>() {
+            }.getType());
 
         return pollOptionResults;
     }
