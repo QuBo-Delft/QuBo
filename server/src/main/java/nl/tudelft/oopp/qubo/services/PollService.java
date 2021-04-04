@@ -104,7 +104,7 @@ public class PollService {
      *
      * @param pollId    The ID of the poll.
      * @return The updated poll.
-     * @throws NotFoundException if the board does not exist.
+     * @throws NotFoundException if the poll does not exist.
      * @throws ConflictException if the poll was already closed.
      */
     public Poll closePoll(UUID pollId) {
@@ -160,25 +160,25 @@ public class PollService {
 
     /**
      * Retrieve a set of PollOption objects corresponding to the question board's poll.
-     * Throw 404 if the question board does not exist.
-     * Throw 404 if there is no poll in this question board.
-     * Throw 403 if the poll is open.
      *
      * @param boardId   The board ID.
      * @return A set of PollOption objects.
+     * @throws NotFoundException if the board does not exist or if there is no poll open
+     *      in this question board.
+     * @throws ForbiddenException if the poll is still open.
      */
     public Set<PollOptionResultDto> getPollResults(UUID boardId) {
         QuestionBoard board = questionBoardRepository.getById(boardId);
 
         // Check if the question board exists
         if (board == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The question board does not exist.");
+            throw new NotFoundException("The question board does not exist.");
         }
 
         Poll poll = board.getPoll();
         // Check if the poll exists
         if (poll == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no poll in this question board.");
+            throw new NotFoundException("There is no poll in this question board.");
         }
 
         // Check if the poll is open
