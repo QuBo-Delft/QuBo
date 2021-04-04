@@ -66,13 +66,10 @@ public class QuestionBoardServiceTests {
         QuestionBoard result = questionBoardService.saveBoard(qbModel);
 
         // Assert
-        assertEquals(result.getTitle(), qbModel.getTitle());
-        assertEquals(result.getStartTime(), qbModel.getStartTime());
+        assertEquals(qbModel.getTitle(), result.getTitle());
+        assertEquals(qbModel.getStartTime(), result.getStartTime());
         QuestionBoard inDb = questionBoardRepository.getById(result.getId());
-        assertEquals(inDb.getId(), result.getId());
-        assertEquals(inDb.getModeratorCode(), result.getModeratorCode());
-        assertEquals(inDb.getTitle(), result.getTitle());
-        assertEquals(inDb.getStartTime(), result.getStartTime());
+        assertEquals(inDb, result);
     }
 
     // getBoardById tests
@@ -90,22 +87,17 @@ public class QuestionBoardServiceTests {
         QuestionBoard result = questionBoardService.getBoardById(qb.getId());
 
         // Assert
-        assertEquals(qb.getId(), result.getId());
-        assertEquals(qb.getModeratorCode(), result.getModeratorCode());
-        assertEquals(qb.getTitle(), result.getTitle());
-        assertEquals(qb.getStartTime(), result.getStartTime());
+        assertEquals(qb, result);
     }
 
     @Test
     public void getBoardById_withNonExistentQuBo_returnsNull() {
         // Arrange
-        UUID uuid2 = UUID.fromString("967716da-a6f1-412f-804a-9020ec6064f5");
         QuestionBoard qb = new QuestionBoard();
         qb.setModeratorCode(UUID.randomUUID());
         qb.setStartTime(currentStamp);
         qb.setTitle("Test board");
         qb.setClosed(false);
-        qb.setId(uuid2);
         questionBoardRepository.save(qb);
 
         // Act
@@ -130,11 +122,9 @@ public class QuestionBoardServiceTests {
         QuestionBoard result = questionBoardService.getBoardByModeratorCode(qb.getModeratorCode());
 
         // Assert
+        assertEquals(qb, result);
         QuestionBoard inDb = questionBoardRepository.getById(qb.getId());
-        assertEquals(inDb.getId(), result.getId());
-        assertEquals(inDb.getModeratorCode(), result.getModeratorCode());
-        assertEquals(inDb.getTitle(), result.getTitle());
-        assertEquals(inDb.getStartTime(), result.getStartTime());
+        assertEquals(inDb, result);
     }
 
     @Test
@@ -149,7 +139,6 @@ public class QuestionBoardServiceTests {
 
         // Act
         QuestionBoard result = questionBoardService.getBoardByModeratorCode(UUID.randomUUID());
-
         // Assert
         assertNull(result);
     }
@@ -184,15 +173,12 @@ public class QuestionBoardServiceTests {
         questionSet.add(q2);
         qb.setQuestions(questionSet);
         questionRepository.saveAll(questionSet);
-        questionBoardRepository.save(qb);
 
         // Act
         Set<Question> result = questionBoardService.getQuestionsByBoardId(qb.getId());
 
         // Assert
-        assertEquals(result, qb.getQuestions());
-        Set<Question> inDb = questionRepository.getQuestionByQuestionBoard(qb);
-        assertEquals(inDb, result);
+        assertEquals(questionSet, result);
     }
 
     @Test
@@ -203,17 +189,13 @@ public class QuestionBoardServiceTests {
         qb.setStartTime(currentStamp);
         qb.setTitle("Test board");
         qb.setClosed(false);
-        HashSet<Question> emptyQuestionSet = new HashSet<>();
-        qb.setQuestions(emptyQuestionSet);
         questionBoardRepository.save(qb);
 
         // Act
         Set<Question> result = questionBoardService.getQuestionsByBoardId(qb.getId());
 
         // Assert
-        assertEquals(qb.getQuestions(), result);
-        Set<Question> inDb = questionRepository.getQuestionByQuestionBoard(qb);
-        assertEquals(inDb, result);
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -277,10 +259,7 @@ public class QuestionBoardServiceTests {
 
         QuestionBoard inDb = questionBoardRepository.getById(qb.getId());
         assertTrue(inDb.isClosed());
-        assertEquals(inDb.getId(), result.getId());
-        assertEquals(inDb.getModeratorCode(), result.getModeratorCode());
-        assertEquals(inDb.getTitle(), result.getTitle());
-        assertEquals(inDb.getStartTime(), result.getStartTime());
+        assertEquals(inDb, result);
     }
 
     @Test
