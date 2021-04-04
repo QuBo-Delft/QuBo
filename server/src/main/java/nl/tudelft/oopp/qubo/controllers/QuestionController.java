@@ -32,7 +32,6 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 
-
 /**
  * The Question controller
  * used for requests starting with /api/question.
@@ -124,7 +123,7 @@ public class QuestionController {
         }
         if (!questionService.canModifyQuestion(question, code)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided code is neither the "
-                    + "secret code of this question nor the moderator code of its board.");
+                + "secret code of this question nor the moderator code of its board.");
         }
 
         QuestionDetailsDto dto = modelMapper.map(question, QuestionDetailsDto.class);
@@ -157,7 +156,7 @@ public class QuestionController {
         }
         if (!questionService.canModifyQuestion(question, code)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided code is neither the "
-                    + "secret code of this question nor the moderator code of its board.");
+                + "secret code of this question nor the moderator code of its board.");
         }
 
         Question edited = questionService.editQuestion(questionId, model);

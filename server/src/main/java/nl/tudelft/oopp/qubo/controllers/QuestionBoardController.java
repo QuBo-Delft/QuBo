@@ -174,9 +174,10 @@ public class QuestionBoardController {
      * Throw 400 upon wrong UUID formatting.
      * Throw 404 upon requesting non-existent boardid.
      *
-     * @param boardId ID property of a board.
-     * @param model   The binding model passed by the client containing the question text.
-     * @param request The HTTPServletRequest to get the IP of the user.
+     * @param boardId      ID property of a board.
+     * @param model        The binding model passed by the client containing the question text.
+     * @param request      The HTTPServletRequest to get the IP of the user.
+     * @param doNotSaveIps Whether IPs should be saved.
      * @return The newly-created question.
      */
     @RequestMapping(value = "/{boardid}/question", method = POST, consumes = "application/json")
