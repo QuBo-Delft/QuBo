@@ -90,6 +90,7 @@
 }
 
 .askBtn:hover {
+    -fx-cursor: hand;
     -fx-graphic: url(../icons/btn_ask_hover.png);
     -fx-background-size: 30px 30px;
 }
@@ -105,6 +106,13 @@
 
     -fx-translate-x: 0.2;
     -fx-translate-y: -0.2;
+}
+
+sideBarBrn:selected {
+    -fx-background-image: url(../icons/close_sidebar.png);
+    -fx-background-size: 27px 27px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
 
 .sideBarBtn:hover {
@@ -210,7 +218,27 @@
 }
 
 .qVotes {
+    -fx-alignment: center;
     -fx-font-family: "Arial";
     -fx-font-size: 16;
     -fx-text-fill: #7e6461;
+}
+
+.upvoteBtn {
+    -fx-background-color: transparent;
+    -fx-background-image: url(../icons/upvote_false.png);
+    -fx-background-size: 25px 25px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.upvoteBtn:selected {
+    -fx-background-color: transparent;
+    -fx-background-image: url(../icons/upvote_true.png);
+    -fx-background-size: 25px 25px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.upvoteBtn:hover {
+    -fx-cursor: hand;
 }

@@ -1,0 +1,29 @@
+sideBarBrn:selected {
+    -fx-background-image: url(../icons/close_sidebar.png);
+    -fx-background-size: 27px 27px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.upvoteBtn {
+    -fx-background-color: transparent;
+    -fx-background-image: url(../icons/upvote_false.png);
+    -fx-background-size: 25px 25px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.upvoteBtn:selected {
+    -fx-background-color: transparent;
+    -fx-background-image: url(../icons/upvote_true.png);
+    -fx-background-size: 25px 25px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.upvoteBtn:hover {
+    -fx-cursor: hand;
+}
+
+.paceBar {
+    -fx-background-color: linear-gradient(#F36F47 0%, #F7A13E 50%, #F36F47 100%);
+}

@@ -113,7 +113,7 @@
       </StackPane>
    </center>
    <right>
-          <VBox fx:id="sideBar" prefHeight="358.0" prefWidth="41.0" BorderPane.alignment="CENTER">
+          <VBox fx:id="sideBar" prefWidth="40.0" BorderPane.alignment="CENTER">
               <ToggleButton fx:id="ansQuestions" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#showHideAnsQuestions" styleClass="answeredBtn">
                   <tooltip>
                   <Tooltip text="Answered Questions" />
