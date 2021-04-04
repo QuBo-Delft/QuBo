@@ -208,7 +208,7 @@ public class StudentViewController {
 
     /**
      * Gets called by the "All right" radio button.
-     * Calls the paceVoteHandler method with the 'JUST_RIGHT' pace type.Pace vote okay.
+     * Calls the paceVoteHandler method with the 'JUST_RIGHT' pace type.
      */
     public void paceVoteOkay() {
         paceVoteHandler(PaceType.JUST_RIGHT);
@@ -228,6 +228,7 @@ public class StudentViewController {
         paceVoteOkay.disableProperty().bindBidirectional(paceVoteFast.disableProperty());
         paceVoteFast.disableProperty().bindBidirectional(paceVoteSlow.disableProperty());
         paceVoteOkay.setDisable(true);
+
         // Checks whether the user has already made a pace vote. If this is the case we should
         // first remove the old pace vote before creating a new one
         if (paceVoteCreationDto != null) {
