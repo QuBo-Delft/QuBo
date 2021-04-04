@@ -177,7 +177,7 @@ public class QuestionBoardServiceTests {
         Set<Question> result = questionBoardService.getQuestionsByBoardId(qb.getId());
 
         // Assert
-        assertEquals(Set.of(q1,q2), result);
+        assertEquals(Set.of(q1, q2), result);
     }
 
     @Test
@@ -257,7 +257,6 @@ public class QuestionBoardServiceTests {
         assertEquals(qb.getStartTime(), result.getStartTime());
 
         QuestionBoard inDb = questionBoardRepository.getById(qb.getId());
-        assertTrue(inDb.isClosed());
         assertEquals(inDb, result);
     }
 
