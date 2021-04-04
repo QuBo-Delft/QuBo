@@ -55,9 +55,7 @@
       <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
             <ScrollPane fx:id="unAnsQuScPane" styleClass="qList" HBox.hgrow="ALWAYS">
-               <content>
                   <VBox fx:id="unAnsQuVbox" spacing="15.0" />
-               </content>
                <padding>
                   <Insets left="30.0" right="15.0" top="20.0" />
                </padding>
@@ -68,12 +66,10 @@
                      </padding>
                   <Label fx:id="sideMenuTitle" text="Title" />
                   <ScrollPane fx:id="sideMenuPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                     <content>
                         <VBox>
                               <VBox fx:id="ansQuVbox" VBox.vgrow="ALWAYS" />
                               <VBox fx:id="pollVbox" VBox.vgrow="ALWAYS" />
                         </VBox>
-                     </content>
                   </ScrollPane>
                   </VBox>
             </HBox>
@@ -85,7 +81,7 @@
                              <Insets />
                           </VBox.margin>
                        </Text>
-                                <RadioButton mnemonicParsing="false" onAction="#paceVoteFast" styleClass="pacingBtn1" text="Too fast" toggleGroup="$pace">
+                                <RadioButton fx:id="paceVoteFast" mnemonicParsing="false" onAction="#paceVoteFast" styleClass="pacingBtn1" text="Too fast" toggleGroup="$pace">
                           <VBox.margin>
                              <Insets />
                           </VBox.margin>
@@ -93,12 +89,12 @@
                     <ToggleGroup fx:id="pace" />
                 </toggleGroup>
                        </RadioButton>
-                                <RadioButton mnemonicParsing="false" onAction="#paceVoteOkay" styleClass="pacingBtn2" text="All right" toggleGroup="$pace">
+                                <RadioButton fx:id="paceVoteOkay" mnemonicParsing="false" onAction="#paceVoteOkay" styleClass="pacingBtn2" text="All right" toggleGroup="$pace">
                           <VBox.margin>
                              <Insets />
                           </VBox.margin>
                        </RadioButton>
-                                <RadioButton mnemonicParsing="false" onAction="#paceVoteSlow" styleClass="pacingBtn2" text="Too slow" toggleGroup="$pace" />
+                                <RadioButton fx:id="paceVoteSlow" mnemonicParsing="false" onAction="#paceVoteSlow" styleClass="pacingBtn2" text="Too slow" toggleGroup="$pace" />
                     <padding>
                        <Insets left="15.0" right="15.0" top="15.0" />
                     </padding>
