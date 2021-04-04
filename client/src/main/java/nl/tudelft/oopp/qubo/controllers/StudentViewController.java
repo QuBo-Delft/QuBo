@@ -91,8 +91,11 @@ public class StudentViewController {
     private ToggleButton polls;
 
 
-    //Records if the side menu was open before hiding
+    /**
+    * Records if the side menu was open before hiding
+    */
     private boolean sideMenuOpen;
+
     /**
      * Stage to be shown when the QuBo details button is clicked.
      */
@@ -104,9 +107,14 @@ public class StudentViewController {
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
             .create();
 
-    //HashMap of questionId:upvoteId, needed when deleting vote
+    /**
+    * HashMap of questionId:upvoteId, needed when deleting vote
+    */
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
-    //HashMap of questionId:secretCode, needed when editing and deleting questions
+
+    /**
+    * HashMap of questionId:secretCode, needed when editing and deleting questions
+    */
     private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
 
     private Clipboard clipboard = Clipboard.getSystemClipboard();
