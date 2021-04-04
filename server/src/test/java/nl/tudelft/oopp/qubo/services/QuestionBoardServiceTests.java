@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.restdocs.hypermedia.Link;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -21,6 +22,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -178,7 +180,7 @@ public class QuestionBoardServiceTests {
         Set<Question> result = questionBoardService.getQuestionsByBoardId(qb.getId());
 
         // Assert
-        assertEquals(questionSet, result);
+        assertEquals(new LinkedHashSet<>(questionSet), result);
     }
 
     @Test
