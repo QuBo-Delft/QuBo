@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import nl.tudelft.oopp.qubo.controllers.QuBoCodesController;
+import nl.tudelft.oopp.qubo.controllers.QuBoDetailsController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
@@ -131,6 +132,9 @@ public class SceneLoader {
                 stage.setMinWidth(Double.MIN_VALUE);
                 stage.setMinHeight(Double.MIN_VALUE);
                 break;
+            case "QuBoDetails":
+                stage.show();
+                break;
             default:
                 break;
         }
@@ -173,6 +177,11 @@ public class SceneLoader {
 
                 controllerS.refresh();
                 break;
+            case ("QuBoDetails"):
+                QuBoDetailsController controllerD = loader.getController();
+                loader.setController(controllerD);
+                controllerD.setDetails(qd, modCode);
+                break;
             default:
         }
     }
@@ -199,6 +208,9 @@ public class SceneLoader {
                 break;
             case ("JoinQuBo"):
                 stage.setTitle("QuBo");
+                break;
+            case ("QuBoDetails"):
+                stage.setTitle("Details");
                 break;
             default:
                 break;

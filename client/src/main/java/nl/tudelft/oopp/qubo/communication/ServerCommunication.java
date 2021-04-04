@@ -2,22 +2,11 @@ package nl.tudelft.oopp.qubo.communication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
-import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteDetailsDto;
-import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.question.QuestionEditingBindingModel;
-import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * This class hold methods related to doing the actual requests to the endpoints.
