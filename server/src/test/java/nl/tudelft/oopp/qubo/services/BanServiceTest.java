@@ -83,7 +83,7 @@ public class BanServiceTest {
 
         // Act
         ConflictException exception = assertThrows(ConflictException.class,
-                        () -> banService.banIp(question.getId()));
+            () -> banService.banIp(question.getId()));
 
         // Assert
         assertEquals("The IP of the question is null.", exception.getMessage());
