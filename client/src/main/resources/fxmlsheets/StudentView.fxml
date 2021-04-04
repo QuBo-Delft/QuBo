@@ -54,7 +54,7 @@
    <center>
       <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
-            <ScrollPane fx:id="unAnsQuScPane" HBox.hgrow="ALWAYS" styleClass="qList">
+            <ScrollPane fx:id="unAnsQuScPane" styleClass="qList" HBox.hgrow="ALWAYS">
                <content>
                   <VBox fx:id="unAnsQuVbox" spacing="15.0" />
                </content>
@@ -85,7 +85,7 @@
                              <Insets />
                           </VBox.margin>
                        </Text>
-                                <RadioButton mnemonicParsing="false" styleClass="pacingBtn1" text="Too fast" toggleGroup="$pace">
+                                <RadioButton mnemonicParsing="false" onAction="#paceVoteFast" styleClass="pacingBtn1" text="Too fast" toggleGroup="$pace">
                           <VBox.margin>
                              <Insets />
                           </VBox.margin>
@@ -93,12 +93,12 @@
                     <ToggleGroup fx:id="pace" />
                 </toggleGroup>
                        </RadioButton>
-                                <RadioButton mnemonicParsing="false" styleClass="pacingBtn2" text="All right" toggleGroup="$pace">
+                                <RadioButton mnemonicParsing="false" onAction="#paceVoteOkay" styleClass="pacingBtn2" text="All right" toggleGroup="$pace">
                           <VBox.margin>
                              <Insets />
                           </VBox.margin>
                        </RadioButton>
-                                <RadioButton mnemonicParsing="false" text="Too slow" toggleGroup="$pace" styleClass="pacingBtn2" />
+                                <RadioButton mnemonicParsing="false" onAction="#paceVoteSlow" styleClass="pacingBtn2" text="Too slow" toggleGroup="$pace" />
                     <padding>
                        <Insets left="15.0" right="15.0" top="15.0" />
                     </padding>
