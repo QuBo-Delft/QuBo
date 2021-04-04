@@ -16,7 +16,7 @@ import java.util.UUID;
  * The type Ban.
  */
 @Entity
-@Table(name = "ban")
+@Table(name = "bans")
 public class Ban {
     @Id
     @GeneratedValue(generator = "UUID")
