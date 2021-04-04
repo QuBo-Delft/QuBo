@@ -170,17 +170,14 @@ public class QuestionBoardServiceTests {
         q2.setTimestamp(Timestamp.from(currentInstant.plus(1, ChronoUnit.HOURS)));
         q2.setQuestionBoard(qb);
 
-        HashSet<Question> questionSet = new HashSet<>();
-        questionSet.add(q1);
-        questionSet.add(q2);
-        qb.setQuestions(questionSet);
-        questionRepository.saveAll(questionSet);
+        qb.setQuestions(Set.of(q1,q2));
+        questionRepository.saveAll(Set.of(q1,q2));
 
         // Act
         Set<Question> result = questionBoardService.getQuestionsByBoardId(qb.getId());
 
         // Assert
-        assertEquals(new LinkedHashSet<>(questionSet), result);
+        assertEquals(Set.of(q1,q2), result);
     }
 
     @Test
