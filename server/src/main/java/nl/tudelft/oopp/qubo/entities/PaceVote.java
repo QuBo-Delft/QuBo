@@ -13,6 +13,9 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+/**
+ * The Pace vote entity.
+ */
 @Entity
 @Table(name = "pace_votes")
 public class PaceVote {
@@ -32,34 +35,73 @@ public class PaceVote {
     @Column(name = "pace_type", nullable = false)
     private PaceType paceType;
 
+    /**
+     * Instantiates a new Pace vote.
+     *
+     * @param questionBoard The question board.
+     * @param paceType      The pace type.
+     */
     public PaceVote(QuestionBoard questionBoard, PaceType paceType) {
         this.questionBoard = questionBoard;
         this.paceType = paceType;
     }
 
+    /**
+     * Instantiates a new Pace vote.
+     */
     public PaceVote() {
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public UUID getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id The id.
+     */
     public void setId(UUID id) {
         this.id = id;
     }
 
+    /**
+     * Gets question board.
+     *
+     * @return the question board
+     */
     public QuestionBoard getQuestionBoard() {
         return questionBoard;
     }
 
+    /**
+     * Sets question board.
+     *
+     * @param questionBoard The question board.
+     */
     public void setQuestionBoard(QuestionBoard questionBoard) {
         this.questionBoard = questionBoard;
     }
 
+    /**
+     * Gets pace type.
+     *
+     * @return the pace type
+     */
     public PaceType getPaceType() {
         return paceType;
     }
 
+    /**
+     * Sets pace type.
+     *
+     * @param paceType The pace type.
+     */
     public void setPaceType(PaceType paceType) {
         this.paceType = paceType;
     }

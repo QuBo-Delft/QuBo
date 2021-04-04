@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * The type Ban.
+ * The Ban entity.
  */
 @Entity
 @Table(name = "bans")

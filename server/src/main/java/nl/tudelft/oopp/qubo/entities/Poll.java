@@ -16,6 +16,9 @@ import javax.persistence.Table;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * The Poll entity.
+ */
 @Entity
 @Table(name = "polls")
 public class Poll {
@@ -55,45 +58,98 @@ public class Poll {
         this.open = true;
     }
 
+    /**
+     * Instantiates a new Poll.
+     */
     public Poll() {
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public UUID getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id The id.
+     */
     public void setId(UUID id) {
         this.id = id;
     }
 
+    /**
+     * Gets text.
+     *
+     * @return the text
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     * Sets text.
+     *
+     * @param text The text.
+     */
     public void setText(String text) {
         this.text = text;
     }
 
+    /**
+     * Is open boolean.
+     *
+     * @return the boolean
+     */
     public boolean isOpen() {
         return open;
     }
 
+    /**
+     * Sets open.
+     *
+     * @param open The open.
+     */
     public void setOpen(boolean open) {
         this.open = open;
     }
 
+    /**
+     * Gets question board.
+     *
+     * @return the question board
+     */
     public QuestionBoard getQuestionBoard() {
         return questionBoard;
     }
 
+    /**
+     * Sets question board.
+     *
+     * @param questionBoard The question board.
+     */
     public void setQuestionBoard(QuestionBoard questionBoard) {
         this.questionBoard = questionBoard;
     }
 
+    /**
+     * Gets poll options.
+     *
+     * @return the poll options
+     */
     public Set<PollOption> getPollOptions() {
         return pollOptions;
     }
 
+    /**
+     * Sets poll options.
+     *
+     * @param pollOptions The poll options.
+     */
     public void setPollOptions(Set<PollOption> pollOptions) {
         this.pollOptions = pollOptions;
     }

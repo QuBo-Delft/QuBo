@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.UUID;
 
+/**
+ * The Poll vote entity.
+ */
 @Entity
 @Table(name = "poll_votes")
 public class PollVote {
@@ -28,25 +31,53 @@ public class PollVote {
     @JoinColumn(name = "poll_option", nullable = false)
     private PollOption pollOption;
 
+    /**
+     * Instantiates a new Poll vote.
+     *
+     * @param pollOption The poll option.
+     */
     public PollVote(PollOption pollOption) {
         this.pollOption = pollOption;
     }
 
+    /**
+     * Instantiates a new Poll vote.
+     */
     public PollVote() {
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public UUID getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id The id.
+     */
     public void setId(UUID id) {
         this.id = id;
     }
 
+    /**
+     * Gets poll option.
+     *
+     * @return the poll option
+     */
     public PollOption getPollOption() {
         return pollOption;
     }
 
+    /**
+     * Sets poll option.
+     *
+     * @param pollOption The poll option.
+     */
     public void setPollOption(PollOption pollOption) {
         this.pollOption = pollOption;
     }
