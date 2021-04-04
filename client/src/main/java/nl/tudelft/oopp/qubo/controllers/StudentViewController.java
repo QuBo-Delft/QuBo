@@ -155,8 +155,6 @@ public class StudentViewController {
     @FXML
     private void initialize() {
         startUpProperties();
-        //Display the questions
-        refresh();
     }
 
     /**
