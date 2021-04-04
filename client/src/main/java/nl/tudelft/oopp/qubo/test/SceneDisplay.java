@@ -10,7 +10,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * The Scene display.
+ * The Scene display that loads the initial stage of the application.
  */
 public class SceneDisplay extends Application {
 

@@ -7,7 +7,7 @@ import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import java.io.IOException;
 
 /**
- * The Scene display.
+ * The Scene display which loads and displays the initial stage of the application.
  */
 public class SceneDisplay extends Application {
 

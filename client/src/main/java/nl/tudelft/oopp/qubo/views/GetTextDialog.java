@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- * The Get text dialog.
+ * The get text dialog which allows users to enter text in a pop-up dialog.
  */
 public class GetTextDialog {
 

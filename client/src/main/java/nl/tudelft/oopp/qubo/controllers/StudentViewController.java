@@ -152,7 +152,7 @@ public class StudentViewController {
     }
 
     /**
-     * Refresh.
+     * Refresh the student view by refreshing the question list.
      */
     public void refresh() {
         QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
