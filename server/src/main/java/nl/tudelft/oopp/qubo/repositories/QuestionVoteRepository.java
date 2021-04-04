@@ -15,7 +15,7 @@ public interface QuestionVoteRepository extends JpaRepository<QuestionVote, UUID
     /**
      * Gets question vote by id.
      *
-     * @param questionVoteId the question vote id
+     * @param questionVoteId The question vote id.
      * @return The question vote by id.
      */
     QuestionVote getQuestionVoteById(UUID questionVoteId);

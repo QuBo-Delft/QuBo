@@ -14,7 +14,7 @@ public interface QuestionBoardRepository extends JpaRepository<QuestionBoard, UU
     /**
      * Gets by id.
      *
-     * @param id the id
+     * @param id The id.
      * @return The by id.
      */
     QuestionBoard getById(UUID id);
@@ -22,7 +22,7 @@ public interface QuestionBoardRepository extends JpaRepository<QuestionBoard, UU
     /**
      * Gets by moderator code.
      *
-     * @param code the code
+     * @param code The code.
      * @return The by moderator code.
      */
     QuestionBoard getByModeratorCode(UUID code);

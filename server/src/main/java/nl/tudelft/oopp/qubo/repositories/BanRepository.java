@@ -14,7 +14,7 @@ public interface BanRepository extends JpaRepository<Ban, UUID> {
     /**
      * Gets by id.
      *
-     * @param banId the ban id
+     * @param banId The ban id.
      * @return The by id.
      */
     Ban getById(UUID banId);

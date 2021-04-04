@@ -45,7 +45,7 @@ public class JoinQuBoController {
     /**
      * Method that handles mouse click interaction with the create question board button.
      *
-     * @param event the mouse click event
+     * @param event The mouse click event.
      */
     @FXML
     void createButtonClicked(ActionEvent event) {
@@ -59,7 +59,7 @@ public class JoinQuBoController {
     /**
      * Method that handles mouse click interaction with the join question board button.
      *
-     * @param event the mouse click event
+     * @param event The mouse click event.
      */
     @FXML
     void joinButtonClicked(ActionEvent event) {

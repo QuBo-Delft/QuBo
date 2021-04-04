@@ -12,7 +12,7 @@ public class QuBo {
     /**
      * The entry point of this Spring application.
      *
-     * @param args the input arguments
+     * @param args The input arguments.
      */
     public static void main(String[] args) {
         SpringApplication.run(QuBo.class, args);

@@ -79,7 +79,7 @@ public class PaceVoteService {
     /**
      * Gets PaceVote by id.
      *
-     * @param paceVoteId the pace vote id.
+     * @param paceVoteId The pace vote id..
      * @return corresponding PaceVote object or null.
      */
     public PaceVote getById(UUID paceVoteId) {

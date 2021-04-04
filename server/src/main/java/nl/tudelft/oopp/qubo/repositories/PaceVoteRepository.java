@@ -16,7 +16,7 @@ public interface PaceVoteRepository extends JpaRepository<PaceVote, UUID> {
     /**
      * Gets by id.
      *
-     * @param paceVoteId the pace vote id
+     * @param paceVoteId The pace vote id.
      * @return The by id.
      */
     PaceVote getById(UUID paceVoteId);
