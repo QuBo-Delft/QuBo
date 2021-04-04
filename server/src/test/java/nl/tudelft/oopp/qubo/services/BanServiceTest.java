@@ -16,6 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,7 +41,7 @@ public class BanServiceTest {
     private QuestionBoardRepository questionBoardRepository;
 
     @Test
-    public void banIp_WithValidData() {
+    public void banIp_withValidData() {
         // Arrange
         QuestionBoard board = new QuestionBoard();
         board.setModeratorCode(UUID.randomUUID());
@@ -68,7 +69,7 @@ public class BanServiceTest {
     }
 
     @Test
-    public void banIp_WithNullIp_ThrowsConflictException() {
+    public void banIp_withNullIp_throwsConflictException() {
         // Arrange
         QuestionBoard board = new QuestionBoard();
         board.setModeratorCode(UUID.randomUUID());
@@ -94,7 +95,7 @@ public class BanServiceTest {
     }
 
     @Test
-    public void banIp_AlreadyBannedIp_ThrowsConflictException() {
+    public void banIp_withAlreadyBannedIp_throwsConflictException() {
         // Arrange
         QuestionBoard board = new QuestionBoard();
         board.setModeratorCode(UUID.randomUUID());
@@ -123,12 +124,10 @@ public class BanServiceTest {
         // Assert
         assertEquals("This IP has already been banned from the requested question board.",
             exception.getMessage());
-        assertFalse(banRepository.getBanByQuestionBoard(board).isEmpty());
-        assertTrue(banService.ipAlreadyBannedInBoard(board, question.getIp()));
     }
 
     @Test
-    public void banIp_MultipleAlreadyBannedIp_ThrowsConflictException() {
+    public void banIp_withMultipleAlreadyBannedIp_throwsConflictException() {
         // Arrange
         QuestionBoard board = new QuestionBoard();
         board.setModeratorCode(UUID.randomUUID());
@@ -168,8 +167,5 @@ public class BanServiceTest {
         assertEquals("This IP has already been banned from the requested question board.",
             exception.getMessage());
         assertFalse(banRepository.getBanByQuestionBoard(board).isEmpty());
-        assertTrue(banService.ipAlreadyBannedInBoard(board, question.getIp()));
-        assertTrue(banService.ipAlreadyBannedInBoard(board, "1.1.1.1"));
-        assertTrue(banService.ipAlreadyBannedInBoard(board, "2.2.2.2"));
     }
 }

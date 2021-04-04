@@ -117,7 +117,7 @@ public class BanRepositoryTests {
     }
 
     @Test
-    public void getByQuestionBoardValidId() {
+    public void getBanByQuestionBoard_withValidId_returnsSetOfBan() {
         // Arrange
         QuestionBoard board = new QuestionBoard();
         board.setModeratorCode(UUID.randomUUID());
@@ -139,7 +139,7 @@ public class BanRepositoryTests {
     }
 
     @Test
-    public void getByQuestionBoardNonExistentId() {
+    public void getByQuestionBoard_withNonExistentId_returnsEmptySet() {
         // Arrange
         QuestionBoard board1 = new QuestionBoard();
         board1.setModeratorCode(UUID.randomUUID());
@@ -167,7 +167,7 @@ public class BanRepositoryTests {
     }
 
     @Test
-    public void getByQuestionBoardSetOfBans() {
+    public void getByQuestionBoard_withValidId_returnsSetOfBans() {
         // Arrange
         QuestionBoard board = new QuestionBoard();
         board.setModeratorCode(UUID.randomUUID());

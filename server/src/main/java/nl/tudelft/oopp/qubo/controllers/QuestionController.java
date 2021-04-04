@@ -233,8 +233,8 @@ public class QuestionController {
         @PathVariable("questionid") UUID questionId,
         @RequestParam("code") UUID moderatorCode) {
         Question question = questionService.getQuestionById(questionId);
+        // Check if the question exists
         if (question == null) {
-            // Requested question does not exist
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question does not exist");
 
         }
@@ -263,8 +263,8 @@ public class QuestionController {
         @PathVariable("questionid") UUID questionId,
         @RequestParam("code") UUID moderatorCode) {
         Question question = questionService.getQuestionById(questionId);
+        // Check if the question exists
         if (question == null) {
-            // Requested question does not exist
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question does not exist");
 
         }
