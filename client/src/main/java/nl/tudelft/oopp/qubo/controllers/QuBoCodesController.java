@@ -12,6 +12,9 @@ import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 
 
+/**
+ * The code controller.
+ */
 public class QuBoCodesController {
 
     @FXML
@@ -39,10 +42,10 @@ public class QuBoCodesController {
 
 
     /**
-     * This method aims to make a window to display the student code, the moderator code, 
+     * This method aims to make a window to display the student code, the moderator code,
      * the title, and start time of the question board just created.
      *
-     * @param qb    The QuestionBoardCreationDto that contains the data of a question board.
+     * @param qb The QuestionBoardCreationDto that contains the data of a question board.
      */
     public void displayCodes(QuestionBoardCreationDto qb) {
         startTime.setText(qb.getStartTime().toString());
@@ -103,7 +106,7 @@ public class QuBoCodesController {
      * This method takes you back to JoinQuBo after clicking the Back to Homepage button.
      */
     public void backToHome() {
-        SceneLoader.defaultLoader((Stage) backToHome.getScene().getWindow(), "JoinQuBo");
+        new SceneLoader().defaultLoader((Stage) backToHome.getScene().getWindow(), "JoinQuBo");
     }
 
 }

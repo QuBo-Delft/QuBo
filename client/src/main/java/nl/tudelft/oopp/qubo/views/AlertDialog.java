@@ -4,14 +4,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.stage.StageStyle;
 
+/**
+ * The Alert dialog.
+ */
 public class AlertDialog {
-    
+
     /**
-     * This is an alert dialog with a title and message 
+     * This is an alert dialog with a title and message
      * that will pop up on the screen when this method is called.
      *
-     * @param title     The title of this alert.
-     * @param message   The message to be displayed.
+     * @param title   The title of this alert.
+     * @param message The message to be displayed.
      */
     public static void display(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

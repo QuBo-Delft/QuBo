@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import nl.tudelft.oopp.qubo.controllers.QuBoCodesController;
+import nl.tudelft.oopp.qubo.controllers.QuBoDetailsController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
@@ -27,6 +28,12 @@ public class SceneLoader {
     private static QuestionBoardCreationDto qc;
     private static String userName;
     private static UUID modCode;
+
+    /**
+     * Set when loading a student view. Used to possibly remove a set pace vote
+     * when attempting to leave a student view.
+     */
+    private static StudentViewController controllerS;
 
     /**
      * This method aims to load all scenes that do not require input details.
@@ -131,6 +138,9 @@ public class SceneLoader {
                 stage.setMinWidth(Double.MIN_VALUE);
                 stage.setMinHeight(Double.MIN_VALUE);
                 break;
+            case "QuBoDetails":
+                stage.show();
+                break;
             default:
                 break;
         }
@@ -165,13 +175,18 @@ public class SceneLoader {
                 break;
             case ("StudentView"):
                 // Get controller and initialize qb
-                StudentViewController controllerS = loader.getController();
+                controllerS = loader.getController();
                 loader.setController(controllerS);
                 controllerS.setQuBo(qd);
                 controllerS.setAuthorName(userName);
                 controllerS.setBoardDetails();
 
                 controllerS.refresh();
+                break;
+            case ("QuBoDetails"):
+                QuBoDetailsController controllerD = loader.getController();
+                loader.setController(controllerD);
+                controllerD.setDetails(qd, modCode);
                 break;
             default:
         }
@@ -199,6 +214,9 @@ public class SceneLoader {
                 break;
             case ("JoinQuBo"):
                 stage.setTitle("QuBo");
+                break;
+            case ("QuBoDetails"):
+                stage.setTitle("Details");
                 break;
             default:
                 break;
@@ -244,6 +262,10 @@ public class SceneLoader {
 
         if (!close) {
             windowEvent.consume();
+        } else {
+            if (controllerS != null && controllerS.getPaceVoteCreationDto() != null) {
+                controllerS.deletePaceVote();
+            }
         }
     }
 }

@@ -1,8 +1,16 @@
 package nl.tudelft.oopp.qubo.controllers;
 
-import javafx.event.ActionEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -14,20 +22,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
-import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.sql.Timestamp;
 
 /**
  * The controller for CreateQuBo.fxml
@@ -88,6 +86,8 @@ public class CreateQuBoController {
      * Once the user clicks the "create now" button, this method will be invoked
      * to create a question board that opens immediately on the server.
      * If the request was unsuccessful, an alert dialog is shown to the user.
+     *
+     * @param actionEvent The action event.
      */
     public void createNowBtnClicked(ActionEvent actionEvent) {
         String titleStr = title.getText();
@@ -102,6 +102,8 @@ public class CreateQuBoController {
      * Once the user clicks the "schedule" button, this method will be invoked to create
      * a question board, that opens and closes as scheduled, on the server.
      * If the request was unsuccessful, an alert dialog is shown to the user.
+     *
+     * @param actionEvent The action event.
      */
     public void scheduleBtnClicked(ActionEvent actionEvent) {
         String titleStr = title.getText();
@@ -155,7 +157,7 @@ public class CreateQuBoController {
      * When the user clicks the "cancel" button this method loads the home screen scene.
      */
     public void cancelBtnClicked() {
-        SceneLoader.defaultLoader((Stage) cancelBtn.getScene().getWindow(),
+        new SceneLoader().defaultLoader((Stage) cancelBtn.getScene().getWindow(),
             "JoinQuBo");
     }
 
@@ -186,13 +188,13 @@ public class CreateQuBoController {
         // Load the page that displays student code and moderator code
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
 
-        SceneLoader.loadQuBoCodes(questionBoardDto, stage);
+        new SceneLoader().loadQuBoCodes(questionBoardDto, stage);
     }
 
     /**
      * This method aims to check whether the start time is after the current time.
      *
-     * @param startTime     The start time of the question board.
+     * @param startTime The start time of the question board.
      * @return true if and only the start time is after the current time.
      */
     public static boolean isStartTimeBeforeCurrentTime(Date startTime) {
@@ -206,7 +208,8 @@ public class CreateQuBoController {
     /**
      * This method checks whether the title TextField is empty and if it is,
      * displays an error accordingly.
-     * @param     titleStr the title String to be checked.
+     *
+     * @param titleStr The title String to be checked.
      * @return returns true if empty.
      */
     public boolean titleIsEmpty(String titleStr) {
@@ -232,8 +235,8 @@ public class CreateQuBoController {
      * This method updates spinner values when the user types in the corresponding text field.
      * Source: https://stackoverflow.com/questions/42385584/changevalue-listener-spinner-javafx.
      *
-     * @param spinner   The spinner whose value should be updated.
-     * @param value     The value that the spinner should be updated to.
+     * @param spinner The spinner whose value should be updated.
+     * @param value   The value that the spinner should be updated to.
      */
     public void updateSpinner(Spinner<Integer> spinner, String value) {
         try {

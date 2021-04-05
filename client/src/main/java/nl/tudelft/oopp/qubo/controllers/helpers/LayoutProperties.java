@@ -1,21 +1,26 @@
 package nl.tudelft.oopp.qubo.controllers.helpers;
 
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * The Layout properties.
+ */
 public class LayoutProperties {
     /**
      * This method is run through the initialise method in StudentView and ModeratorView.
      *
-     * @param content       StackPane containing the content of the scene apart from the sideBar and topBar
-     * @param sideBar       Sidebar of the screen
-     * @param sideMenu      Menu that shows up when using the sidebar
-     * @param pollVbox      VBox containing the polls
-     * @param ansQuVbox     VBox containing the answered questions
-     * @param unAnsQuVbox   VBox containing the unanswered questions
-     * @param paceVotePane  BorderPane containing the pace votes
+     * @param content      StackPane containing the content of the scene apart from the sideBar and topBar
+     * @param sideBar      Sidebar of the screen
+     * @param sideMenu     Menu that shows up when using the sidebar
+     * @param pollVbox     VBox containing the polls
+     * @param ansQuVbox    VBox containing the answered questions
+     * @param unAnsQuVbox  VBox containing the unanswered questions
+     * @param paceVotePane BorderPane containing the pace votes
      */
     public static void startupProperties(StackPane content, VBox sideBar, VBox sideMenu, VBox pollVbox,
                                          VBox ansQuVbox, VBox unAnsQuVbox, BorderPane paceVotePane) {
@@ -34,6 +39,23 @@ public class LayoutProperties {
         //Make the children in the ScrollPane fill the width of said ScrollPane
         ansQuVbox.setFillWidth(true);
         unAnsQuVbox.setFillWidth(true);
+    }
+
+    /**
+     * This method is run through the initialise method in ModeratorView.
+     *
+     * @param paceBar    The StackPane used to display the pace of the lecture
+     * @param paceCursor The ImageView used to display the current pace of the lecture
+     */
+    public static void modStartUpProperties(StackPane paceBar, ImageView paceCursor) {
+        //Obtain the coordinates of the pace bar and pace cursor
+        Bounds paceBarBounds = paceBar.getBoundsInParent();
+        Bounds paceCursorBounds = paceCursor.getBoundsInParent();
+
+        double imageSize = paceCursorBounds.getMaxY() - paceCursorBounds.getMinY();
+
+        //Place the pace cursor at the middle of the pace bar
+        paceCursor.setTranslateY(0.5 * paceBarBounds.getHeight() - imageSize / 2);
     }
 
     /**

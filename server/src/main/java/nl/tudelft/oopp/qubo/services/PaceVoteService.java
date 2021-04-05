@@ -15,6 +15,9 @@ import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Pace vote service.
+ */
 @Service
 public class PaceVoteService {
     private final PaceVoteRepository paceVoteRepository;
@@ -76,7 +79,7 @@ public class PaceVoteService {
     /**
      * Gets PaceVote by id.
      *
-     * @param paceVoteId the pace vote id.
+     * @param paceVoteId The pace vote id..
      * @return corresponding PaceVote object or null.
      */
     public PaceVote getById(UUID paceVoteId) {

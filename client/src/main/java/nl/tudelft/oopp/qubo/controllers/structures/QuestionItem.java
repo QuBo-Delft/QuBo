@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * The QuestionItem pane.
+ */
 public class QuestionItem extends GridPane {
     private GridPane questionPane;
     private Label upvoteNumber;

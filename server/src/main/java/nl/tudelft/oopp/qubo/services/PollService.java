@@ -17,11 +17,12 @@ import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 
+/**
+ * The Poll service.
+ */
 @Service
 public class PollService {
     private final QuestionBoardRepository questionBoardRepository;
@@ -36,10 +37,10 @@ public class PollService {
     /**
      * Creates an instance of PollService.
      *
-     * @param currentTimeProvider     The CurrentTimeProvider.
      * @param questionBoardRepository A QuestionBoardRepository.
      * @param pollRepository          A PollRepository.
      * @param pollOptionRepository    A PollOptionRepository.
+     * @param currentTimeProvider     The CurrentTimeProvider.
      * @param modelMapper             The ModelMapper.
      */
     public PollService(
@@ -102,9 +103,9 @@ public class PollService {
     /**
      * Set the open attribute of the poll to false.
      *
-     * @param pollId    The ID of the poll.
+     * @param pollId The ID of the poll.
      * @return The updated poll.
-     * @throws NotFoundException if the board does not exist.
+     * @throws NotFoundException if the poll does not exist.
      * @throws ConflictException if the poll was already closed.
      */
     public Poll closePoll(UUID pollId) {
@@ -160,25 +161,25 @@ public class PollService {
 
     /**
      * Retrieve a set of PollOption objects corresponding to the question board's poll.
-     * Throw 404 if the question board does not exist.
-     * Throw 404 if there is no poll in this question board.
-     * Throw 403 if the poll is open.
      *
-     * @param boardId   The board ID.
+     * @param boardId The board ID.
      * @return A set of PollOption objects.
+     * @throws NotFoundException  if the board does not exist or if there is no poll open
+     *                            in this question board.
+     * @throws ForbiddenException if the poll is still open.
      */
     public Set<PollOptionResultDto> getPollResults(UUID boardId) {
         QuestionBoard board = questionBoardRepository.getById(boardId);
 
         // Check if the question board exists
         if (board == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The question board does not exist.");
+            throw new NotFoundException("The question board does not exist.");
         }
 
         Poll poll = board.getPoll();
         // Check if the poll exists
         if (poll == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no poll in this question board.");
+            throw new NotFoundException("There is no poll in this question board.");
         }
 
         // Check if the poll is open
@@ -189,7 +190,8 @@ public class PollService {
         Set<PollOption> pollOptions = pollOptionRepository.getPollOptionsByPoll(poll);
 
         Set<PollOptionResultDto> pollOptionResults = modelMapper.map(pollOptions,
-                new TypeToken<Set<PollOptionResultDto>>() {}.getType());
+            new TypeToken<Set<PollOptionResultDto>>() {
+            }.getType());
 
         return pollOptionResults;
     }

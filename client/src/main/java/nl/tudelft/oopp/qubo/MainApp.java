@@ -7,7 +7,6 @@ import nl.tudelft.oopp.qubo.communication.PollCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
-import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
@@ -18,13 +17,15 @@ import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteCreationDto;
 
-import java.net.http.HttpResponse;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * The startup file.
+ */
 public class MainApp {
 
     private static final Gson gson = new GsonBuilder()
@@ -36,7 +37,7 @@ public class MainApp {
      * It displays the working windows and views of the client.
      * It displays the working endpoints between the server and client.
      *
-     * @param args  Parameters passed by the user.
+     * @param args Parameters passed by the user.
      */
     public static void main(String[] args) {
         //Display the application homepage
@@ -191,6 +192,12 @@ public class MainApp {
         //Retrieve the poll details of the poll that was just added
         System.out.println("The current poll's details are:\n"
                 + (PollCommunication.retrievePollDetails(boardId)));
+
+        //TODO: Close the poll
+
+        //Retrieve the results of the poll that was just closed
+        System.out.println("These are the results of the closed poll: " + PollCommunication
+                .retrievePollResults(boardId));
 
         //Delete the poll that was added
         System.out.println("This poll has been deleted: " + PollCommunication

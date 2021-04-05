@@ -1,5 +1,7 @@
 package nl.tudelft.oopp.qubo.controllers;
 
+import java.util.UUID;
+import javax.validation.Valid;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
@@ -11,26 +13,22 @@ import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import nl.tudelft.oopp.qubo.entities.QuestionVote;
 import nl.tudelft.oopp.qubo.services.AnswerService;
+import nl.tudelft.oopp.qubo.services.BanService;
 import nl.tudelft.oopp.qubo.services.QuestionService;
 import nl.tudelft.oopp.qubo.services.QuestionVoteService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
-
-import javax.validation.Valid;
-
-import java.util.UUID;
-
 
 
 /**
@@ -44,6 +42,7 @@ public class QuestionController {
     private final QuestionService questionService;
     private final QuestionVoteService questionVoteService;
     private final AnswerService answerService;
+    private final BanService banService;
 
     private final ModelMapper modelMapper;
 
@@ -59,10 +58,12 @@ public class QuestionController {
         QuestionService questionService,
         QuestionVoteService questionVoteService,
         AnswerService answerService,
+        BanService banService,
         ModelMapper modelMapper) {
         this.questionService = questionService;
         this.questionVoteService = questionVoteService;
         this.answerService = answerService;
+        this.banService = banService;
         this.modelMapper = modelMapper;
     }
 
@@ -124,7 +125,7 @@ public class QuestionController {
         }
         if (!questionService.canModifyQuestion(question, code)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided code is neither the "
-                    + "secret code of this question nor the moderator code of its board.");
+                + "secret code of this question nor the moderator code of its board.");
         }
 
         QuestionDetailsDto dto = modelMapper.map(question, QuestionDetailsDto.class);
@@ -157,7 +158,7 @@ public class QuestionController {
         }
         if (!questionService.canModifyQuestion(question, code)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided code is neither the "
-                    + "secret code of this question nor the moderator code of its board.");
+                + "secret code of this question nor the moderator code of its board.");
         }
 
         Question edited = questionService.editQuestion(questionId, model);
@@ -229,8 +230,8 @@ public class QuestionController {
         @PathVariable("questionid") UUID questionId,
         @RequestParam("code") UUID moderatorCode) {
         Question question = questionService.getQuestionById(questionId);
+        // Check if the question exists
         if (question == null) {
-            // Requested question does not exist
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question does not exist");
 
         }
@@ -242,5 +243,34 @@ public class QuestionController {
         Question markedQuestion = questionService.markAsAnswered(questionId);
         QuestionDetailsDto dto = modelMapper.map(markedQuestion, QuestionDetailsDto.class);
         return dto;
+    }
+
+    /**
+     * POST endpoint for banning user IPs.
+     *
+     * @param questionId    The ID of the question where the ban request originated.
+     * @param moderatorCode The moderator code of the board this question is in.
+     * @throws ResponseStatusException 404 if the question was not found in the database.
+     * @throws ResponseStatusException 403 if the provided moderatorCode is not authorized
+     *                                 to ban this user IP from the question board.
+     */
+    @RequestMapping(value = "{questionid}/ban", method = POST)
+    @ResponseBody
+    public void banUserByIp(
+        @PathVariable("questionid") UUID questionId,
+        @RequestParam("code") UUID moderatorCode) {
+        Question question = questionService.getQuestionById(questionId);
+        // Check if the question exists
+        if (question == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question does not exist");
+
+        }
+        // Check if the moderatorCode is valid for the question board the question is in
+        if (!moderatorCode.equals(question.getQuestionBoard().getModeratorCode())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided moderatorCode is not valid "
+                + "for this Question");
+        }
+
+        banService.banIp(questionId);
     }
 }

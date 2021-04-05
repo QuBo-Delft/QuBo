@@ -3,12 +3,10 @@ package nl.tudelft.oopp.qubo.mappings.pacevote;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.qubo.entities.PaceVote;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PaceVoteCreationBindingModelTests {
     private ModelMapper mapper;

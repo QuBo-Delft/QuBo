@@ -1,22 +1,20 @@
 package nl.tudelft.oopp.qubo.repositories;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.UUID;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
 import nl.tudelft.oopp.qubo.entities.PollVote;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -65,9 +63,9 @@ public class PollVoteRepositoryTest {
         assertEquals(vote.getId(), result.getId());
         assertEquals(vote.getPollOption().getId(), result.getPollOption().getId());
         assertEquals(vote.getPollOption().getPoll().getId(),
-                result.getPollOption().getPoll().getId());
+            result.getPollOption().getPoll().getId());
         assertEquals(vote.getPollOption().getPoll().getQuestionBoard().getId(),
-                result.getPollOption().getPoll().getQuestionBoard().getId());
+            result.getPollOption().getPoll().getQuestionBoard().getId());
     }
 
     @Test

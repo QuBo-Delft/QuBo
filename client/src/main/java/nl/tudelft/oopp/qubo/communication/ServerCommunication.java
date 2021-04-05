@@ -2,22 +2,11 @@ package nl.tudelft.oopp.qubo.communication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
-import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteDetailsDto;
-import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.question.QuestionEditingBindingModel;
-import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * This class hold methods related to doing the actual requests to the endpoints.
@@ -25,7 +14,15 @@ import java.util.UUID;
 public class ServerCommunication {
 
     private static HttpClient client = HttpClient.newBuilder().build();
+
+    /**
+     * The base URL of the server.
+     */
     protected static final String subUrl = "http://localhost:8080/api/";
+
+    /**
+     * A configured Gson instance.
+     */
     protected static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         .create();
@@ -33,7 +30,7 @@ public class ServerCommunication {
     /**
      * Set the value of the client of ServerCommunication.
      *
-     * @param client    The HttpClient object to set.
+     * @param client The HttpClient object to set.
      */
     public static void setClient(HttpClient client) {
         ServerCommunication.client = client;
@@ -42,7 +39,7 @@ public class ServerCommunication {
     /**
      * Retrieves an http response from the server by sending an http request.
      *
-     * @param request       The http request to be sent to be server.
+     * @param request The http request to be sent to be server.
      * @return The http response returned.
      */
     protected static HttpResponse<String> sendRequest(HttpRequest request) {
@@ -60,11 +57,28 @@ public class ServerCommunication {
     }
 
     /**
-     * Retrieves an http response from the server by sending an http post request.
+     * Retrieves an http response from the server by sending an http post request without
+     * headers and the request body.
      *
-     * @param fullUrl         The full url of the request.
-     * @param requestBody     The request body of JSON form.
-     * @param headers         The http headers of the request.
+     * @param fullUrl   The url for the POST request.
+     * @return The http response returned.
+     */
+    protected static HttpResponse<String> post(String fullUrl) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(""))
+                .uri(URI.create(fullUrl))
+                .build();
+
+        return sendRequest(request);
+    }
+
+    /**
+     * Retrieves an http response from the server by sending an http post request with
+     * headers and the request body.
+     *
+     * @param fullUrl     The full url of the request.
+     * @param requestBody The request body of JSON form.
+     * @param headers     The http headers of the request.
      * @return The http response returned.
      */
     protected static HttpResponse<String> post(String fullUrl, String requestBody, String... headers) {
@@ -82,7 +96,7 @@ public class ServerCommunication {
     /**
      * Retrieves an HTTP response from the server by sending an HTTP delete request.
      *
-     * @param fullUrl   The URL corresponding to the server endpoint.
+     * @param fullUrl The URL corresponding to the server endpoint.
      * @return The HTTP response returned.
      */
     protected static HttpResponse<String> delete(String fullUrl) {
@@ -99,7 +113,7 @@ public class ServerCommunication {
     /**
      * Retrieves an HTTP response from the server by sending an HTTP patch request.
      *
-     * @param fullUrl   The URL corresponding to the server endpoint.
+     * @param fullUrl The URL corresponding to the server endpoint.
      * @return The http response.
      */
     protected static HttpResponse<String> patch(String fullUrl) {
@@ -117,9 +131,9 @@ public class ServerCommunication {
     /**
      * Retrieves an HTTP response from the server by sending an HTTP put request.
      *
-     * @param fullUrl       The URL corresponding to the server endpoint.
-     * @param requestBody   The body of the request. This should contain the information that should be sent to
-     *      the server.
+     * @param fullUrl     The URL corresponding to the server endpoint.
+     * @param requestBody The body of the request. This should contain the information that should be sent to
+     *                 the server.
      * @return The HTTP response returned.
      */
     protected static HttpResponse<String> put(String fullUrl, String requestBody) {
