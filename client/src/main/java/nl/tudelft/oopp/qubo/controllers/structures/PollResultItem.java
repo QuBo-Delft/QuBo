@@ -14,14 +14,12 @@ import javafx.scene.paint.Stop;
 import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 
-import java.util.Set;
-
 public class PollResultItem extends GridPane {
     private GridPane pollResultPane;
     private VBox pollVbox;
     private Text pollText;
 
-    private Set<PollOptionResultDto> pollOptionResults;
+    private PollOptionResultDto[] pollOptionResults;
 
     private ScrollPane pollScPane;
     private VBox pollContainer;
@@ -70,9 +68,11 @@ public class PollResultItem extends GridPane {
     private void addOptions() {
         int i = 1;
         for (PollOptionResultDto option : pollOptionResults) {
+            //Add the option text to a VBox.
             Text optionText = new Text(option.getText());
             VBox optionBox = new VBox(optionText);
 
+            //Set the coloured bar to display the relative amount of votes for the option.
             setOptionBar(optionText, calculateRelativeVotes(option));
 
             this.addRow((i++ + 1), optionBox);
@@ -88,16 +88,16 @@ public class PollResultItem extends GridPane {
         GridPane gridpane = new GridPane();
         pollVbox = newPollVbox();
 
-        //Add nodes to the gridpane
+        //Add the pollVbox to the grid pane.
         gridpane.addColumn(1, pollVbox);
 
-        //Set column constraints
+        //Set the column constraints.
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setHgrow(Priority.ALWAYS);
-        gridpane.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
-                new ColumnConstraints(50));
+        gridpane.getColumnConstraints().addAll(new ColumnConstraints(10), col2,
+                new ColumnConstraints(80));
 
-        //Set paddings
+        //Set padding for the cell that will contain the Poll.
         gridpane.setPadding(new Insets(10,3,5,3));
 
         return gridpane;
@@ -111,7 +111,7 @@ public class PollResultItem extends GridPane {
      */
     private VBox newPollVbox() {
         //Set pane to fixed height
-        pollText.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(180));
+        pollText.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(108));
 
         VBox vbox = new VBox(pollText);
 
@@ -130,13 +130,13 @@ public class PollResultItem extends GridPane {
             return 0;
         }
 
-        //Add all votes
+        //Add all votes.
         int totalVoteNumber = 0;
         for (PollOptionResultDto optionResult : pollOptionResults) {
             totalVoteNumber += optionResult.getVotes();
         }
 
-        //Return 0 if there were no votes
+        //Return 0 if there were no votes.
         if (totalVoteNumber == 0) {
             return 0;
         }
@@ -173,6 +173,6 @@ public class PollResultItem extends GridPane {
         //Use the gradient to colour the option bar.
         LinearGradient gradient = new LinearGradient(startHori, verti, endHori, verti, true,
                 CycleMethod.NO_CYCLE, stops);
-        optionBar.setStyle("-fx-background-color: " + gradient);
+        optionBar.setStyle("-fx-background-color: " + gradient + ";");
     }
 }

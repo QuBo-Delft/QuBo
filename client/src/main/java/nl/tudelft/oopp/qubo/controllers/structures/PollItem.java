@@ -37,6 +37,7 @@ public class PollItem extends GridPane {
      * @param pollOptions   The options that students can select.
      * @param pollContainer The VBox containing the poll.
      * @param scrollPane    ScrollPane containing the VBox that contains the list of questions
+     * @param controller    The Student View Controller associated with the client.
      */
     public PollItem(String text, Set<PollOptionDetailsDto> pollOptions, VBox pollContainer,
                         ScrollPane scrollPane, StudentViewController controller) {
@@ -64,14 +65,39 @@ public class PollItem extends GridPane {
         //Set padding for the cell that will contain the Poll.
         this.setPadding(new Insets(0,10,20,0));
 
-        //Construct a new questionPane to hold the question and add to content pane
+        //Construct a new questionPane to hold the question and add to content pane.
         pollPane = newPollPane();
         this.addRow(0, pollPane);
 
-        //Add the poll options
+        //Add the poll options.
         addOptions();
 
         this.setGridLinesVisible(true);
+    }
+
+    /**
+     * This method constructs a new pollPane to hold the poll text and poll options.
+     *
+     * @return A GridPane containing all poll information needed by the student.
+     */
+    private GridPane newPollPane() {
+        GridPane gridpane = new GridPane();
+
+        //Add the poll question to the gridpane and make sure that the poll question text does not overflow.
+        gridpane.addColumn(1, pollQuestion);
+        pollQuestion.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(109));
+
+        //Set column constraints.
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setHgrow(Priority.ALWAYS);
+
+        gridpane.getColumnConstraints().addAll(new ColumnConstraints(10), col2,
+                new ColumnConstraints(90));
+
+        //Set padding.
+        gridpane.setPadding(new Insets(10,3,5,3));
+
+        return gridpane;
     }
 
     /**
@@ -88,6 +114,7 @@ public class PollItem extends GridPane {
             //Create a new radio button for the poll option and add it to the menu
             RadioButton optionButton = new RadioButton(option.getOptionText());
             optionButton.setToggleGroup(optionGroup);
+            optionButton.getText();
 
             //Set the action handler for the option button
             optionButton.setOnAction(e -> {
@@ -113,33 +140,9 @@ public class PollItem extends GridPane {
     }
 
     /**
-     * This method constructs a new pollPane to hold the poll text and poll options.
-     *
-     * @return A GridPane containing all poll information needed by the student.
-     */
-    private GridPane newPollPane() {
-        GridPane gridpane = new GridPane();
-
-        //Add the poll question to the gridpane and make sure that the poll question text does not overflow
-        gridpane.addColumn(1, pollQuestion);
-        pollQuestion.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(109));
-
-        //Set column constraints
-        ColumnConstraints col2 = new ColumnConstraints();
-        col2.setHgrow(Priority.ALWAYS);
-
-        gridpane.getColumnConstraints().addAll(new ColumnConstraints(10), col2,
-                new ColumnConstraints(90));
-
-        //Set padding
-        gridpane.setPadding(new Insets(10,3,5,3));
-
-        return gridpane;
-    }
-
-    /**
      * Returns the ID of the option associated with the radio button.
      *
+     * @param button    The RadioButton that was selected and whose associated poll option should be retrieved.
      * @return The ID of the option associated with the radio button.
      */
     public UUID findOptionId(RadioButton button) {

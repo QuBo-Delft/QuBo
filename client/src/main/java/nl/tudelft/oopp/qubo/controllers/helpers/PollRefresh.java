@@ -8,10 +8,14 @@ import nl.tudelft.oopp.qubo.communication.PollCommunication;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.controllers.structures.PollItem;
 import nl.tudelft.oopp.qubo.controllers.structures.PollResult;
+import nl.tudelft.oopp.qubo.controllers.structures.PollResultItem;
 import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PollRefresh {
     private static QuestionBoardDetailsDto thisQuBoId;
@@ -60,9 +64,11 @@ public class PollRefresh {
         //Retrieve the current poll and convert it to a PollDetailsDto.
         String jsonPoll = PollCommunication.retrievePollDetails(thisQuBoId.getId());
 
+        //Remove all previous displayed polls if there is no current poll.
         if (jsonPoll == null) {
-            //If there is no current poll, map the remaining poll results
-            mapPolls(null);
+            pollsVbox.getChildren().removeAll(pollsVbox.getChildren());
+
+        //Map the poll to the pollsVbox to display it.
         } else {
             PollDetailsDto poll = gson.fromJson(jsonPoll, PollDetailsDto.class);
 
@@ -72,13 +78,21 @@ public class PollRefresh {
     }
 
     private static void mapPolls(PollDetailsDto current) {
-        //If there is a current poll, put this at the top of the VBox
-        if (current != null) {
+        //If the poll is open, display the poll with voting functionality.
+        if (current.isOpen()) {
             PollItem currentPoll = new PollItem(current.getText(), current.getOptions(), pollsVbox,
-                    pollsScrollPane, sController);
+                pollsScrollPane, sController);
             pollsVbox.getChildren().add(currentPoll);
-        }
 
-        //TODO: Add the PollResultItems to the VBOX
+        //If the poll is closed, display the poll with its results.
+        } else {
+            String jsonResults = PollCommunication.retrievePollResults();
+
+            PollOptionResultDto[] optionResults = gson.fromJson(jsonResults, PollOptionResultDto[].class);
+
+            PollResult closedPoll = new PollResult(current.getText(), optionResults);
+            PollResultItem pollResultItem = new PollResultItem(closedPoll, pollsVbox, pollsScrollPane);
+            pollsVbox.getChildren().add(pollResultItem);
+        }
     }
 }

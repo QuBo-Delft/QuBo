@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class PollResult {
     private String text;
-    private Set<PollOptionResultDto> pollOptionResults;
+    private PollOptionResultDto[] pollOptionResults;
 
     /**
      * Initialises a PollResult object with the provided text and poll option results.
@@ -14,7 +14,7 @@ public class PollResult {
      * @param text              The text that should be associated with the poll result.
      * @param pollOptionResults The poll option results that should be associated with the poll result.
      */
-    public PollResult(String text, Set<PollOptionResultDto> pollOptionResults) {
+    public PollResult(String text, PollOptionResultDto[] pollOptionResults) {
         this.text = text;
         this.pollOptionResults = pollOptionResults;
     }
@@ -42,7 +42,7 @@ public class PollResult {
      *
      * @return The set of poll option results associated with the poll.
      */
-    public Set<PollOptionResultDto> getPollOptionResults() {
+    public PollOptionResultDto[] getPollOptionResults() {
         return pollOptionResults;
     }
 
@@ -51,7 +51,7 @@ public class PollResult {
      *
      * @param pollOptionResults The set of poll option results of the poll.
      */
-    public void setPollOptionResults(Set<PollOptionResultDto> pollOptionResults) {
+    public void setPollOptionResults(PollOptionResultDto[] pollOptionResults) {
         this.pollOptionResults = pollOptionResults;
     }
 }
