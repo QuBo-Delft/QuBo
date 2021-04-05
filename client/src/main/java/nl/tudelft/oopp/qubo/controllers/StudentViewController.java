@@ -94,7 +94,7 @@ public class StudentViewController {
     @FXML
     private ToggleButton polls;
 
-    // The VBox pace votes are placed in and their toggle group
+    // The VBox pace votes are placed in, and their toggle group
     @FXML
     private VBox paceVbox;
     @FXML
@@ -181,7 +181,7 @@ public class StudentViewController {
      */
     @FXML
     private void initialize() {
-        // Helps restore the toggle group on failure by setting up a listener for changes made to it's
+        // Helps restore the toggle group on failure by setting up a listener for changes made to its
         // radio buttons and storing the previously selected radio button
         pace.selectedToggleProperty().addListener(
             (observable, oldValue, newValue) -> previouslyPressed = oldValue);
@@ -255,7 +255,7 @@ public class StudentViewController {
         // Checks whether the user has already made a pace vote. If this is the case we should
         // first remove the old pace vote before creating a new one
         if (paceVoteCreationDto != null) {
-            // If deletion fails, reset the radio button to it's state before the call to this method and return
+            // If deletion fails, reset the radio button to its state before the call to this method and return
             if (!deletePaceVote()) {
                 pace.selectToggle(previouslyPressed);
                 // Allow input again, as processing the pace vote is completed
@@ -264,7 +264,7 @@ public class StudentViewController {
             }
         }
         // Add a new pace vote using the input pace type. If addition fails,
-        // reset the radio button to it's state before the call to this method and return
+        // reset the radio button to its state before the call to this method and return
         if (!addPaceVote(paceType)) {
             pace.selectToggle(previouslyPressed);
         }
