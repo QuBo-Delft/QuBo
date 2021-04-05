@@ -90,7 +90,17 @@ public class PollItem extends GridPane {
             optionButton.setToggleGroup(optionGroup);
 
             //Set the action handler for the option button
-            optionButton.setOnAction(e -> sController.handlePollChoice(optionButton, this));
+            optionButton.setOnAction(e -> {
+                //Ignore the first click event of the radio button as radio buttons are triggered twice.
+                try {
+                    wait(100);
+                } catch (Exception a) {
+                    System.out.println("The wait was interrupted.");
+                    return;
+                }
+
+                sController.handlePollChoice(optionButton, this);
+            });
 
             pollOptionBox.getChildren().add(optionButton);
             optionIds.put(optionButton, option.getOptionId());
