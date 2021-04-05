@@ -1,9 +1,7 @@
 package nl.tudelft.oopp.qubo.controllers.structures;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.ColumnConstraints;
@@ -27,7 +25,7 @@ public class PollItem extends GridPane {
 
     private ScrollPane pollScPane;
     private VBox pollContainer;
-    private HashMap<RadioMenuItem, UUID> optionIDs;
+    private HashMap<RadioButton, UUID> optionIds;
 
     /**
      * Constructs a new PollItem.
@@ -44,6 +42,8 @@ public class PollItem extends GridPane {
 
         this.pollContainer = pollContainer;
         pollScPane = scrollPane;
+
+        optionIds = new HashMap<>();
 
         construct();
     }
@@ -73,8 +73,7 @@ public class PollItem extends GridPane {
      * This method adds the poll options to the GridPane containing the poll.
      */
     private void addOptions() {
-        MenuBar bar = new MenuBar();
-        Menu optionsMenu = new Menu();
+        VBox pollOptionBox = new VBox();
 
         //Set up the toggle group to which all poll options will be bound
         ToggleGroup optionGroup = new ToggleGroup();
@@ -82,19 +81,13 @@ public class PollItem extends GridPane {
         //Add all PollOptionDetailsDtos to the menu
         for (PollOptionDetailsDto option : options) {
             //Create a new radio button for the poll option and add it to the menu
-            RadioMenuItem optionButton = new RadioMenuItem(option.getOptionText());
+            RadioButton optionButton = new RadioButton(option.getOptionText());
             optionButton.setToggleGroup(optionGroup);
-            optionsMenu.getItems().add(optionButton);
 
-            optionIDs.put(optionButton, option.getOptionId());
+            pollOptionBox.getChildren().add(optionButton);
+            optionIds.put(optionButton, option.getOptionId());
         }
 
-        //Add the menu to a MenuBar
-        bar.getMenus().add(optionsMenu);
-
-        //Add the menubar to a VBox
-        VBox pollOptionBox = new VBox();
-        pollOptionBox.getChildren().add(bar);
         pollOptionBox.setPadding(new Insets(10,15,10,15));
 
         //Add the option box to the PollItem GridPane
@@ -111,13 +104,14 @@ public class PollItem extends GridPane {
 
         //Add the poll question to the gridpane and make sure that the poll question text does not overflow
         gridpane.addColumn(1, pollQuestion);
-        pollQuestion.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(180));
+        pollQuestion.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(109));
 
         //Set column constraints
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setHgrow(Priority.ALWAYS);
-        gridpane.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
-                new ColumnConstraints(50));
+
+        gridpane.getColumnConstraints().addAll(new ColumnConstraints(10), col2,
+                new ColumnConstraints(90));
 
         //Set padding
         gridpane.setPadding(new Insets(10,3,5,3));
@@ -130,8 +124,8 @@ public class PollItem extends GridPane {
      *
      * @return The ID of the option associated with the radio button.
      */
-    public UUID findOptionId(RadioMenuItem button) {
-        return optionIDs.get(button);
+    public UUID findOptionId(RadioButton button) {
+        return optionIds.get(button);
     }
 
 }
