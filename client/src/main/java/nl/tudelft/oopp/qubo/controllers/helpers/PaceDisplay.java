@@ -44,17 +44,11 @@ public class PaceDisplay {
 
         //If the jsonPace was not null, use the server's pace results
         //If the jsonPace was null, set the just right votes to 1 to center the pace cursor
-        if (jsonPace != null) {
-            pace = gson.fromJson(jsonPace, PaceDetailsDto.class);
-        } else {
-            pace = new PaceDetailsDto();
-            pace.setJustRightVotes(1);
-            pace.setTooFastVotes(0);
-            pace.setTooSlowVotes(0);
-        }
+        pace = gson.fromJson(jsonPace, PaceDetailsDto.class);
 
         //Calculate the pace bar modifier
-        double paceBarModifier = calculatePace(pace);
+        double paceBarModifier = calculatePace(pace.getTooFastVotes(), pace.getJustRightVotes(),
+            pace.getTooSlowVotes());
 
         //Move the pace bar cursor
         movePaceCursor(paceBar, paceCursor, paceBarModifier);
@@ -65,30 +59,45 @@ public class PaceDisplay {
      * top left of the screen, this method assigns a higher value to the tooSlowVotes and a lower value to
      * the tooFastVotes. This ensures that the double returned will transform the cursor appropriately.
      *
-     * @param pace  The PaceDetailsDto containing integers of the number of votes per pace type.
+     * @param tooFast   The amount of too fast votes.
+     * @param justRight The amount of just right votes.
+     * @param tooSlow   The amount of too slow votes.
      * @return A double between 0 and 1.
      */
-    private static double calculatePace(PaceDetailsDto pace) {
-        int numberOfVotes = pace.getTooSlowVotes() + pace.getJustRightVotes() + pace.getTooSlowVotes();
-
-        //If there are no pace votes, set the pace to "Just Right"
-        if (numberOfVotes == 0) {
+    private static double calculatePace(double tooFast, double justRight, double tooSlow) {
+        //If two values are equal to 0, return 0, 1, or 0.5 depending on the pace type.
+        if (tooFast == 0 && tooSlow == 0 || tooFast == tooSlow) {
             return 0.5;
+        } else if (justRight == 0 && tooFast == 0) {
+            return 1;
+        } else if (justRight == 0 && tooSlow == 0) {
+            return 0;
         }
 
-        //Set too slow votes equal to 2
-        double tooSlow = pace.getTooSlowVotes() * 2;
-        //Set just right votes equal to 1.5
-        double justRight = pace.getJustRightVotes() * 1.5;
-        //Set too fast votes equal to 1
-        double tooFast = pace.getTooFastVotes();
+        double location;
 
-        //Calculate the average pace by adding all votes (with relative weights) and dividing it by the total
-        //number of votes
-        double aggregatedPaceVotes = (tooSlow + justRight + tooFast) / numberOfVotes;
+        //If there were no too slow votes, return the fraction that the too fast votes contributed.
+        if (tooSlow == 0) {
+            location = tooFast / (tooFast + justRight);
+            location = 0.5 - 0.5 * location;
 
-        //Return a double between 0 and 1
-        return aggregatedPaceVotes - 1;
+        //If there were no too fast votes, return the fraction that the too slow votes contributed.
+        } else if (tooFast == 0) {
+            location = tooSlow / (tooSlow + justRight);
+            location = 1 - (0.5 + 0.5 * location);
+
+        //Calculate the relative fractions of the too slow and too fast votes and return the combined fractions.
+        } else {
+            double lowLoc = tooFast / (tooFast + tooSlow + justRight);
+            lowLoc = 0.5 - lowLoc;
+            location = tooSlow / (tooFast + tooSlow + justRight);
+            location = 1 - location;
+
+            location -= lowLoc;
+        }
+
+        System.out.println(location);
+        return location;
     }
 
     /**
@@ -113,7 +122,6 @@ public class PaceDisplay {
         //Set up a Transition to move the cursor visibly
         TranslateTransition translate = new TranslateTransition(Duration.seconds(0.5), paceCursor);
         translate.setFromY(paceCursor.getY());
-        System.out.println(paceCursorBounds.getMinY());
         translate.setToY(newPosition);
 
         //Move the cursor
