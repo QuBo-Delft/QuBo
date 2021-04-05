@@ -44,6 +44,14 @@ public class PaceDisplay {
 
         //If the jsonPace was not null, use the server's pace results
         //If the jsonPace was null, set the just right votes to 1 to center the pace cursor
+        if (jsonPace != null) {
+            pace = gson.fromJson(jsonPace, PaceDetailsDto.class);
+        } else {
+            pace = new PaceDetailsDto();
+            pace.setJustRightVotes(1);
+            pace.setTooFastVotes(0);
+            pace.setTooSlowVotes(0);
+        }
         pace = gson.fromJson(jsonPace, PaceDetailsDto.class);
 
         //Calculate the pace bar modifier
