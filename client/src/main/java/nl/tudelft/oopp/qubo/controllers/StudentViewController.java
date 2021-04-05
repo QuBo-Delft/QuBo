@@ -7,8 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -93,14 +94,11 @@ public class StudentViewController {
     @FXML
     private ToggleButton polls;
 
-    // Pace votes
+    // The VBox pace votes are placed in and their toggle group
     @FXML
-    private RadioButton paceVoteFast;
+    private VBox paceVbox;
     @FXML
-    private RadioButton paceVoteOkay;
-    @FXML
-    private RadioButton paceVoteSlow;
-
+    ToggleGroup pace;
 
     //Records if the side menu was open before hiding
     private boolean sideMenuOpen;
@@ -108,6 +106,8 @@ public class StudentViewController {
     Stage popUp = new Stage();
     // Dto set upon creation of a pace vote
     PaceVoteCreationDto paceVoteCreationDto;
+    // Pace vote that was pressed before update method call
+    Toggle previouslyPressed;
 
     private String authorName;
 
@@ -157,6 +157,11 @@ public class StudentViewController {
      */
     @FXML
     private void initialize() {
+        // Helps restore the toggle group on failure by setting up a listener for changes made to it's
+        // radio buttons and storing the previously selected radio button
+        pace.selectedToggleProperty().addListener(
+            (observable, oldValue, newValue) -> previouslyPressed = oldValue);
+
         startUpProperties();
         //Display the questions
         refresh();
@@ -208,7 +213,7 @@ public class StudentViewController {
 
     /**
      * Gets called by the "All right" radio button.
-     * Calls the paceVoteHandler method with the 'JUST_RIGHT' pace type.Pace vote okay.
+     * Calls the paceVoteHandler method with the 'JUST_RIGHT' pace type.
      */
     public void paceVoteOkay() {
         paceVoteHandler(PaceType.JUST_RIGHT);
@@ -223,23 +228,26 @@ public class StudentViewController {
     }
 
     private void paceVoteHandler(PaceType paceType) {
-        // Disable pace vote input to prevent double pace vote placement during method execution.
-        // The radio buttons are bound together, so changing the disable property of one changes all of them
-        paceVoteOkay.disableProperty().bindBidirectional(paceVoteFast.disableProperty());
-        paceVoteFast.disableProperty().bindBidirectional(paceVoteSlow.disableProperty());
-        paceVoteOkay.setDisable(true);
+        // Disables radio button input when processing pace vote by disabling entire VBox
+        paceVbox.setDisable(true);
         // Checks whether the user has already made a pace vote. If this is the case we should
         // first remove the old pace vote before creating a new one
         if (paceVoteCreationDto != null) {
-            // If deletion fails, we stop code execution using the return statement
-            if (deletePaceVote()) {
-                paceVoteOkay.setDisable(false);
+            // If deletion fails, reset the radio button to it's state before the call to this method and return
+            if (!deletePaceVote()) {
+                pace.selectToggle(previouslyPressed);
+                // Allow input again, as processing the pace vote is completed
+                paceVbox.setDisable(false);
                 return;
             }
         }
-        // Add a new pace vote using the input pace type
-        addPaceVote(paceType);
-        paceVoteOkay.setDisable(false);
+        // Add a new pace vote using the input pace type. If addition fails,
+        // reset the radio button to it's state before the call to this method and return
+        if (!addPaceVote(paceType)) {
+            pace.selectToggle(previouslyPressed);
+        }
+        // Allow input again, as processing the pace vote is completed
+        paceVbox.setDisable(false);
     }
 
     private boolean deletePaceVote() {
@@ -247,21 +255,20 @@ public class StudentViewController {
         if (resBody == null) {
             AlertDialog.display("Unsuccessful Request",
                 "Failed to change your pace vote, please try again.");
-            // Return true if deletion fails
-            return true;
+            return false;
         }
-        // Return false if deletion succeeds
-        return false;
+        return true;
     }
 
-    private void addPaceVote(PaceType paceType) {
+    private boolean addPaceVote(PaceType paceType) {
         String resBody = PaceVoteCommunication.addPaceVote(quBo.getId(), paceType);
         if (resBody == null) {
             AlertDialog.display("Unsuccessful Request",
                 "Failed to add your pace vote, please try again.");
-            return;
+            return false;
         }
         paceVoteCreationDto = gson.fromJson(resBody, PaceVoteCreationDto.class);
+        return true;
     }
 
     /**
