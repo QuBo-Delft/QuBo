@@ -18,7 +18,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
-import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 

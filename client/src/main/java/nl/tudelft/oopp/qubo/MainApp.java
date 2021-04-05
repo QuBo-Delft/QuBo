@@ -39,8 +39,6 @@ public class MainApp {
      * @param args  Parameters passed by the user.
      */
     public static void main(String[] args) {
-        //Display working views
-
         //Display the application homepage
         SceneDisplay.main(new String[0]);
 
