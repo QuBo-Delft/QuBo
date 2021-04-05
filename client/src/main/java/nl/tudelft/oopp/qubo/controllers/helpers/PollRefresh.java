@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import nl.tudelft.oopp.qubo.communication.PollCommunication;
+import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.controllers.structures.PollItem;
 import nl.tudelft.oopp.qubo.controllers.structures.PollResult;
 import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
@@ -18,6 +19,7 @@ public class PollRefresh {
     private static VBox pollsVbox;
     private static ScrollPane pollsScrollPane;
     private static List<PollResult> polls;
+    private static StudentViewController sController;
 
     private static final Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
@@ -31,13 +33,15 @@ public class PollRefresh {
      * @param pollScrollPane    ScrollPane containing the VBox that contains the list of polls.
      * @param pollList          A list containing all polls that have already been closed and should thus
      *                          be displayed as well.
+     * @param controller        The StudentViewController associated with the client.
      */
     public static void studentRefresh(QuestionBoardDetailsDto quBo, VBox pollVbox, ScrollPane pollScrollPane,
-                                      List<PollResult> pollList) {
+                                      List<PollResult> pollList, StudentViewController controller) {
         thisQuBoId = quBo;
         pollsVbox = pollVbox;
         pollsScrollPane = pollScrollPane;
         polls = pollList;
+        sController = controller;
 
         displayPolls();
     }
@@ -71,7 +75,7 @@ public class PollRefresh {
         //If there is a current poll, put this at the top of the VBox
         if (current != null) {
             PollItem currentPoll = new PollItem(current.getText(), current.getOptions(), pollsVbox,
-                    pollsScrollPane);
+                    pollsScrollPane, sController);
             pollsVbox.getChildren().add(currentPoll);
         }
 
