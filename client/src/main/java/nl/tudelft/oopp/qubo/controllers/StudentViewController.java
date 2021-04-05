@@ -167,6 +167,16 @@ public class StudentViewController {
     }
 
     /**
+     * Returns the paceVoteCreationDto of a student view object. It is used by the SceneLoader class
+     * to check whether a pace vote has been set when attempting to close the student view stage.
+     *
+     * @return  The paceVoteCreationDto of the object.
+     */
+    public PaceVoteCreationDto getPaceVoteCreationDto() {
+        return paceVoteCreationDto;
+    }
+
+    /**
      * Code that is run upon loading StudentView.fxml
      */
     @FXML
@@ -262,7 +272,13 @@ public class StudentViewController {
         paceVbox.setDisable(false);
     }
 
-    private boolean deletePaceVote() {
+    /**
+     * Gets called by the paceVoteHandler and upon closing the stage, either through the sidebar or by
+     * making use of the close button of the stage. It removes a set pace vote.
+     *
+     * @return True or false depending on whether the removal was successful.
+     */
+    public boolean deletePaceVote() {
         String resBody = PaceVoteCommunication.deletePaceVote(quBo.getId(), paceVoteCreationDto.getId());
         if (resBody == null) {
             AlertDialog.display("Unsuccessful Request",
@@ -272,6 +288,12 @@ public class StudentViewController {
         return true;
     }
 
+    /**
+     * Adds a pace vote to the question board of the student view.
+     *
+     * @param paceType Either 'too slow', 'just right' or 'too fast'.
+     * @return True or false depending on whether the addition was successful.
+     */
     private boolean addPaceVote(PaceType paceType) {
         String resBody = PaceVoteCommunication.addPaceVote(quBo.getId(), paceType);
         if (resBody == null) {
