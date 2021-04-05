@@ -10,6 +10,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 
 import java.util.HashMap;
@@ -27,6 +28,8 @@ public class PollItem extends GridPane {
     private VBox pollContainer;
     private HashMap<RadioButton, UUID> optionIds;
 
+    private static StudentViewController sController;
+
     /**
      * Constructs a new PollItem.
      *
@@ -36,7 +39,7 @@ public class PollItem extends GridPane {
      * @param scrollPane    ScrollPane containing the VBox that contains the list of questions
      */
     public PollItem(String text, Set<PollOptionDetailsDto> pollOptions, VBox pollContainer,
-                        ScrollPane scrollPane) {
+                        ScrollPane scrollPane, StudentViewController controller) {
         this.pollQuestion = new Text(text);
         this.options = pollOptions;
 
@@ -44,6 +47,8 @@ public class PollItem extends GridPane {
         pollScPane = scrollPane;
 
         optionIds = new HashMap<>();
+
+        sController = controller;
 
         construct();
     }
@@ -83,6 +88,9 @@ public class PollItem extends GridPane {
             //Create a new radio button for the poll option and add it to the menu
             RadioButton optionButton = new RadioButton(option.getOptionText());
             optionButton.setToggleGroup(optionGroup);
+
+            //Set the action handler for the option button
+            optionButton.setOnAction(e -> sController.handlePollChoice(optionButton, this));
 
             pollOptionBox.getChildren().add(optionButton);
             optionIds.put(optionButton, option.getOptionId());
@@ -125,7 +133,11 @@ public class PollItem extends GridPane {
      * @return The ID of the option associated with the radio button.
      */
     public UUID findOptionId(RadioButton button) {
-        return optionIds.get(button);
+        if (optionIds.containsKey(button)) {
+            return optionIds.get(button);
+        } else {
+            return null;
+        }
     }
 
 }
