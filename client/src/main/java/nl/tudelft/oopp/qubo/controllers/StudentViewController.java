@@ -3,34 +3,30 @@ package nl.tudelft.oopp.qubo.controllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.fxml.FXML;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
+import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
-import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
-import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
+import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
-import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
 
-import javafx.scene.image.ImageView;
-
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -200,10 +196,33 @@ public class StudentViewController {
     }
 
     /**
+     * Method that returns whether the board and it's functions should be usable by students.
+     *
+     * @return True or false depending on whether students are allowed to make changes
+     */
+    private boolean isQuBoClosed() {
+        if (quBo.isClosed()) {
+            AlertDialog.display("Action blocked",
+                "This Question Board has been closed by it's moderators.");
+            return true;
+        }
+        if (quBo.getStartTime().toLocalDateTime().isBefore(LocalDateTime.now())) {
+            AlertDialog.display("Action limited",
+                "This Question Board is currently closed, it will open at" + quBo.getStartTime());
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Add the questions that the user entered to the question board, add the returned question ID
      * to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
      */
     public void addQuestion() {
+        // If the question board is closed, block this action
+        if (isQuBoClosed()) {
+            return;
+        }
         // Display a dialog to extract the user's question text,
         // and ensure it is at least 8 characters long
         String questionText = GetTextDialog.display("Write your question here...",
