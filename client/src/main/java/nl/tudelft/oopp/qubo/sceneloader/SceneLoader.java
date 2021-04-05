@@ -30,6 +30,12 @@ public class SceneLoader {
     private static UUID modCode;
 
     /**
+     * Set when loading a student view. Used to possibly remove a set pace vote
+     * when attempting to leave a student view.
+     */
+    private static StudentViewController controllerS;
+
+    /**
      * This method aims to load all scenes that do not require input details.
      *
      * @param stage The stage of the scene where the method is called.
@@ -169,7 +175,7 @@ public class SceneLoader {
                 break;
             case ("StudentView"):
                 // Get controller and initialize qb
-                StudentViewController controllerS = loader.getController();
+                controllerS = loader.getController();
                 loader.setController(controllerS);
                 controllerS.setQuBo(qd);
                 controllerS.setAuthorName(userName);
@@ -256,6 +262,10 @@ public class SceneLoader {
 
         if (!close) {
             windowEvent.consume();
+        } else {
+            if (controllerS != null && controllerS.getPaceVoteCreationDto() != null) {
+                controllerS.deletePaceVote();
+            }
         }
     }
 }
