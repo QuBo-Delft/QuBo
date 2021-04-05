@@ -1,5 +1,22 @@
 package nl.tudelft.oopp.qubo.entities;
 
+/**
+ * The enum for pace type.
+ */
 public enum PaceType {
-    JUST_RIGHT, TOO_SLOW, TOO_FAST
+
+    /**
+     * Just right pace type.
+     */
+    JUST_RIGHT,
+
+    /**
+     * Too slow pace type.
+     */
+    TOO_SLOW,
+
+    /**
+     * Too fast pace type.
+     */
+    TOO_FAST
 }

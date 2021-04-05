@@ -22,7 +22,7 @@ public class QuBoInformation {
      * @param quBo  the qu bo
      * @param icon  the icon
      * @param text  the text
-     * @param title the title
+     * @param title The title.
      */
     public void setBoardDetails(QuestionBoardDetailsDto quBo, ImageView icon, Label text, Label title) {
         // Sets the board title

@@ -1,5 +1,11 @@
 package nl.tudelft.oopp.qubo.services;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.entities.Poll;
@@ -14,6 +20,11 @@ import nl.tudelft.oopp.qubo.services.exceptions.ConflictException;
 import nl.tudelft.oopp.qubo.services.exceptions.ForbiddenException;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,19 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

@@ -67,8 +67,8 @@ public class QuBoDetailsController {
      * through a student view or shows all when requested through a moderator view.
      * It also sets the moderator code and QuestionBoardDetailsDto so they can be used for copying.
      *
-     * @param qd        The QuestionBoardDetailsDto.
-     * @param modCode   The moderator code of the question board.
+     * @param qd      The QuestionBoardDetailsDto.
+     * @param modCode The moderator code of the question board.
      */
     public void setDetails(QuestionBoardDetailsDto qd, UUID modCode) {
         title.setText(qd.getTitle());

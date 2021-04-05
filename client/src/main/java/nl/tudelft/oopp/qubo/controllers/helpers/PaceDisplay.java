@@ -13,6 +13,9 @@ import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 
 import java.util.UUID;
 
+/**
+ * The Pace display.
+ */
 public class PaceDisplay {
 
     //Used for converting JSON responses to their appropriate DTOs.
@@ -23,10 +26,10 @@ public class PaceDisplay {
     /**
      * This method displays the pace of the lecture as perceived by students.
      *
-     * @param quBo          The details of the question board whose pace should be displayed.
-     * @param modCode       The moderator code of the question board.
-     * @param paceBar       The stack pane used to display the pace bar.
-     * @param paceCursor    The image view used to display the current pace of the lecture.
+     * @param quBo       The details of the question board whose pace should be displayed.
+     * @param modCode    The moderator code of the question board.
+     * @param paceBar    The stack pane used to display the pace bar.
+     * @param paceCursor The image view used to display the current pace of the lecture.
      */
     public static void displayPace(QuestionBoardDetailsDto quBo, UUID modCode,
                             StackPane paceBar, ImageView paceCursor) {

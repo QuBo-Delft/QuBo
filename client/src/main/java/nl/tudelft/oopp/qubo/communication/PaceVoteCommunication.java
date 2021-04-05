@@ -1,13 +1,12 @@
 package nl.tudelft.oopp.qubo.communication;
 
-import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
-import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
-import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteDetailsDto;
-
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.UUID;
+import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
+import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
+import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteDetailsDto;
 
 /**
  * This class hold methods related to communication for PaceVotes.
@@ -18,8 +17,8 @@ public class PaceVoteCommunication {
      * Adds a pace vote to the question board.
      * Communicates with the /api/board/{boardid}/pace server endpoint.
      *
-     * @param boardId   The ID of the question board to which a pace vote should be added.
-     * @param paceType  The type of pace vote that should be added.
+     * @param boardId  The ID of the question board to which a pace vote should be added.
+     * @param paceType The type of pace vote that should be added.
      * @return The PaceVoteCreationDto in JSON String format if the vote was added successfully.
      */
     public static String addPaceVote(UUID boardId, PaceType paceType) {
@@ -33,7 +32,7 @@ public class PaceVoteCommunication {
 
         //Request the pace vote creation, and retrieve the response
         HttpResponse<String> response = ServerCommunication.post(fullUrl, requestBody, "Content-Type",
-                "application/json;charset=UTF-8");
+            "application/json;charset=UTF-8");
 
         //If the request was unsuccessful, return null
         if (response == null || response.statusCode() != 200) {
@@ -47,10 +46,10 @@ public class PaceVoteCommunication {
      * Deletes a pace vote with specified ID from the question board.
      * Communicates with the /api/board/{boardid}/pace/{pacevoteid} server endpoint.
      *
-     * @param boardId       The question board from which the pace vote should be deleted.
-     * @param paceVoteId    The ID of the pace vote that should be deleted.
+     * @param boardId    The question board from which the pace vote should be deleted.
+     * @param paceVoteId The ID of the pace vote that should be deleted.
      * @return The PaceVoteDetailsDto associated with the deleted pace vote in JSON String
-     *          format if, and only if, the deletion was successful.
+     *         format if, and only if, the deletion was successful.
      */
     public static String deletePaceVote(UUID boardId, UUID paceVoteId) {
         //Set up the URL that will be sent to the delete helper method
@@ -66,7 +65,7 @@ public class PaceVoteCommunication {
 
         //Check if the deleted pace vote had the same ID
         PaceVoteDetailsDto deletedVote = ServerCommunication.gson
-                .fromJson(response.body(), PaceVoteDetailsDto.class);
+            .fromJson(response.body(), PaceVoteDetailsDto.class);
         if (!deletedVote.getId().equals(paceVoteId)) {
             return null;
         }
@@ -77,7 +76,7 @@ public class PaceVoteCommunication {
     /**
      * Gets aggregated pace votes from the question board with the provided ID.
      *
-     * @param boardId    The ID of the question board from which the pace votes should be counted.
+     * @param boardId       The ID of the question board from which the pace votes should be counted.
      * @param moderatorCode The ID of the pace vote from which the results should be counted.
      * @return The aggregated pace votes in a PaceDetailsDto in JSON format.
      */

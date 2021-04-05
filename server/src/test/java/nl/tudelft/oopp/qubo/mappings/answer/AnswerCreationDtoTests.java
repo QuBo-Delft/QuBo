@@ -1,10 +1,9 @@
 package nl.tudelft.oopp.qubo.mappings.answer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.UUID;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationDto;
 import nl.tudelft.oopp.qubo.entities.Answer;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;

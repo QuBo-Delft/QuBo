@@ -1,18 +1,16 @@
 package nl.tudelft.oopp.qubo.mappings.poll;
 
+import java.util.HashSet;
 import nl.tudelft.oopp.qubo.config.custommappings.PollCreationBindingModelToPollConverter;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
-
-import java.util.HashSet;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 
 public class PollCreationBindingModelTests {
     private ModelMapper mapper;
@@ -51,8 +49,8 @@ public class PollCreationBindingModelTests {
         assertEquals(optionSet.size(), options.length);
         assertNotEquals(options[0].getText(), options[1].getText());
         assertTrue(options[0].getText().equals(option1)
-                || options[0].getText().equals(option2));
+            || options[0].getText().equals(option2));
         assertTrue(options[1].getText().equals(option1)
-                || options[1].getText().equals(option2));
+            || options[1].getText().equals(option2));
     }
 }

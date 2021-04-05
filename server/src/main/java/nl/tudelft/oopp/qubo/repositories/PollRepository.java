@@ -1,16 +1,29 @@
 package nl.tudelft.oopp.qubo.repositories;
 
+import java.util.UUID;
+import javax.transaction.Transactional;
 import nl.tudelft.oopp.qubo.entities.Poll;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
-import java.util.UUID;
-
+/**
+ * The Poll repository.
+ */
 @Repository("PollRepository")
 public interface PollRepository extends JpaRepository<Poll, UUID> {
+    /**
+     * Get poll by id.
+     *
+     * @param pollId The poll id.
+     * @return The by id.
+     */
     Poll getById(UUID pollId);
 
+    /**
+     * Delete poll by id.
+     *
+     * @param id The id.
+     */
     @Transactional
     void deletePollById(UUID id);
 }

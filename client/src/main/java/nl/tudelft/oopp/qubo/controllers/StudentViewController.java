@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * Controller for the StudentView.fxml sheet
+ * Controller for the StudentView.fxml sheet.
  */
 public class StudentViewController {
     @FXML
@@ -100,9 +100,14 @@ public class StudentViewController {
     @FXML
     ToggleGroup pace;
 
-    //Records if the side menu was open before hiding
+    /**
+    * Records if the side menu was open before hiding.
+    */
     private boolean sideMenuOpen;
-    // Stage to be shown when the QuBo details button is clicked
+
+    /**
+     * Stage to be shown when the QuBo details button is clicked.
+     */
     Stage popUp = new Stage();
     // Dto set upon creation of a pace vote
     PaceVoteCreationDto paceVoteCreationDto;
@@ -115,9 +120,14 @@ public class StudentViewController {
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
             .create();
 
-    //HashMap of questionId:upvoteId, needed when deleting vote
+    /**
+    * HashMap of questionId:upvoteId, needed when deleting vote.
+    */
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
-    //HashMap of questionId:secretCode, needed when editing and deleting questions
+
+    /**
+    * HashMap of questionId:secretCode, needed when editing and deleting questions.
+    */
     private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
 
     private Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -128,7 +138,7 @@ public class StudentViewController {
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
      *
-     * @param quBo  The QuestionBoardDetailsDto of the question board that the student joined.
+     * @param quBo The QuestionBoardDetailsDto of the question board that the student joined.
      */
     public void setQuBo(QuestionBoardDetailsDto quBo) {
         this.quBo = quBo;
@@ -137,7 +147,7 @@ public class StudentViewController {
     /**
      * Method that sets the username of the application user.
      *
-     * @param authorName    The name of the student that joined the question board.
+     * @param authorName The name of the student that joined the question board.
      */
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
@@ -163,12 +173,10 @@ public class StudentViewController {
             (observable, oldValue, newValue) -> previouslyPressed = oldValue);
 
         startUpProperties();
-        //Display the questions
-        refresh();
     }
 
     /**
-     * Passes the data necessary for refreshing the view to the QuestionRefresh class.
+     * Refresh the student view by refreshing the question list.
      */
     public void refresh() {
         QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
@@ -314,7 +322,7 @@ public class StudentViewController {
     /**
      * This method auto-upvotes the question that the user has just asked.
      *
-     * @param questionId    UUID of the question that was just asked.
+     * @param questionId UUID of the question that was just asked.
      */
     public void autoUpvote(UUID questionId) {
         String response = QuestionVoteCommunication.addQuestionVote(questionId);
