@@ -52,7 +52,6 @@ public class PaceDisplay {
             pace.setTooFastVotes(0);
             pace.setTooSlowVotes(0);
         }
-        pace = gson.fromJson(jsonPace, PaceDetailsDto.class);
 
         //Calculate the pace bar modifier
         double paceBarModifier = calculatePace(pace.getTooFastVotes(), pace.getJustRightVotes(),
@@ -87,12 +86,12 @@ public class PaceDisplay {
         //If there were no too slow votes, return the fraction that the too fast votes contributed.
         if (tooSlow == 0) {
             location = tooFast / (tooFast + justRight);
-            location = 0.5 - 0.5 * location;
+            location = 0.5 + 0.5 * location;
 
         //If there were no too fast votes, return the fraction that the too slow votes contributed.
         } else if (tooFast == 0) {
             location = tooSlow / (tooSlow + justRight);
-            location = 1 - (0.5 + 0.5 * location);
+            location = 0.5 - 0.5 * location;
 
         //Calculate the relative fractions of the too slow and too fast votes and return the combined fractions.
         } else {
@@ -103,7 +102,6 @@ public class PaceDisplay {
 
             location -= lowLoc;
         }
-
         return location;
     }
 
