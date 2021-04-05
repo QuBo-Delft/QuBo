@@ -13,12 +13,10 @@ import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class PollRefresh {
-    private static QuestionBoardDetailsDto thisQuBoId;
+    private static QuestionBoardDetailsDto thisQuBo;
 
     private static VBox pollsVbox;
     private static ScrollPane pollsScrollPane;
@@ -35,16 +33,13 @@ public class PollRefresh {
      * @param quBo              QuestionBoardDetailsDto of the board.
      * @param pollVbox          VBox containing the list of polls.
      * @param pollScrollPane    ScrollPane containing the VBox that contains the list of polls.
-     * @param pollList          A list containing all polls that have already been closed and should thus
-     *                          be displayed as well.
      * @param controller        The StudentViewController associated with the client.
      */
     public static void studentRefresh(QuestionBoardDetailsDto quBo, VBox pollVbox, ScrollPane pollScrollPane,
-                                      List<PollResult> pollList, StudentViewController controller) {
-        thisQuBoId = quBo;
+                                      StudentViewController controller) {
+        thisQuBo = quBo;
         pollsVbox = pollVbox;
         pollsScrollPane = pollScrollPane;
-        polls = pollList;
         sController = controller;
 
         displayPolls();
@@ -57,12 +52,12 @@ public class PollRefresh {
      */
     private static void displayPolls() {
         //If the question board is null, return.
-        if (thisQuBoId == null) {
+        if (thisQuBo == null) {
             return;
         }
 
         //Retrieve the current poll and convert it to a PollDetailsDto.
-        String jsonPoll = PollCommunication.retrievePollDetails(thisQuBoId.getId());
+        String jsonPoll = PollCommunication.retrievePollDetails(thisQuBo.getId());
 
         //Remove all previous displayed polls if there is no current poll.
         if (jsonPoll == null) {
@@ -86,7 +81,7 @@ public class PollRefresh {
 
         //If the poll is closed, display the poll with its results.
         } else {
-            String jsonResults = PollCommunication.retrievePollResults();
+            String jsonResults = PollCommunication.retrievePollResults(thisQuBo.getId());
 
             PollOptionResultDto[] optionResults = gson.fromJson(jsonResults, PollOptionResultDto[].class);
 
