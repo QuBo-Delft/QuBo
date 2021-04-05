@@ -41,7 +41,7 @@ public class JoinQuBoController {
 
     private static final String quBoError = "Error: Could not find the requested question board!\nPlease "
             + "check if you inserted the code correctly!";
-    private static final String userNameError = "Error: No username was entered. Please enter a username";
+    private static final String userNameError = "Error: No username was entered!\nPlease enter a username!";
 
     /**
      * Method that handles mouse click interaction with the create question board button.
