@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import nl.tudelft.oopp.qubo.controllers.helpers.OptionsMenuIconProvider;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoActionEvents;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
 
@@ -28,6 +29,12 @@ import java.util.UUID;
  * The QuestionItem pane.
  */
 public class QuestionItem extends GridPane {
+    private static final MenuItem edit = OptionsMenuIconProvider.getEditIcon();
+    private static final MenuItem reply = OptionsMenuIconProvider.getReplyIcon();
+    private static final MenuItem markAsAns = OptionsMenuIconProvider.getMarkAsAnsIcon();
+    private static final MenuItem ban = OptionsMenuIconProvider.getBanIcon();
+    private static final MenuItem delete = OptionsMenuIconProvider.getDeleteIcon();
+
     private GridPane questionPane;
     private Label upvoteNumber;
     private VBox questionVbox;
@@ -197,7 +204,7 @@ public class QuestionItem extends GridPane {
         MenuButton options = new MenuButton();
 
         //Create the edit menu item and set action event
-        MenuItem edit = new MenuItem("Edit");
+
         edit.setOnAction(event -> QuBoActionEvents
             .editQuestionOption(questionBody, questionVbox, options, questionId,
                 code));
@@ -209,7 +216,6 @@ public class QuestionItem extends GridPane {
         }
 
         //create the delete menu item and set action event
-        MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(event -> QuBoActionEvents.deleteQuestionOption(
             this, questionPane, questionContainer, options, questionId, code));
         options.getItems().add(delete);
@@ -225,16 +231,18 @@ public class QuestionItem extends GridPane {
     }
 
     private void newModOptions(MenuButton options, UUID code) {
-        MenuItem reply = new MenuItem("Reply");
         reply.setOnAction(event -> QuBoActionEvents.replyToQuestionOption(
             this, questionPane, questionId, code, options, questionBody));
         options.getItems().add(reply);
 
         if (quScPane.getId().equals("unAnsQuScPane")) {
-            MenuItem markAsAns = new MenuItem("Mark As Answered");
             markAsAns.setOnAction(event -> QuBoActionEvents.markAsAnsUnAns(questionId, code));
             options.getItems().add(markAsAns);
         }
+
+        ban.setOnAction(event -> QuBoActionEvents.banUserOption(
+            options, questionContainer, questionPane, questionId, code));
+        options.getItems().add(ban);
     }
 
     /**
