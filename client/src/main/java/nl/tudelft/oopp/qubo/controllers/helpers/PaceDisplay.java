@@ -96,7 +96,6 @@ public class PaceDisplay {
             location -= lowLoc;
         }
 
-        System.out.println(location);
         return location;
     }
 
