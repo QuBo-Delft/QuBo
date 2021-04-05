@@ -109,9 +109,13 @@ public class StudentViewController {
      * Stage to be shown when the QuBo details button is clicked.
      */
     Stage popUp = new Stage();
-    // Dto set upon creation of a pace vote
+    /**
+     * Dto to set upon creation of a pace vote.
+     */
     PaceVoteCreationDto paceVoteCreationDto;
-    // Pace vote that was pressed before update method call
+    /**
+     * Pace vote that was pressed before update method call.
+     */
     Toggle previouslyPressed;
 
     private String authorName;
