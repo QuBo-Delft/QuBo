@@ -261,7 +261,8 @@ public class SceneLoader {
             windowEvent.consume();
         } else {
             if (controllerS != null && controllerS.getPaceVoteCreationDto() != null) {
-                controllerS.deletePaceVote(true);
+                // Deletes set pace vote and do not show an error message on failure
+                controllerS.deletePaceVote(false);
             }
         }
     }
