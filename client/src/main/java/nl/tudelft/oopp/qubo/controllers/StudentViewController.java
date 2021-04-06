@@ -207,8 +207,8 @@ public class StudentViewController {
      * Refresh the student view by refreshing the question list.
      */
     public void refresh() {
-        QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
-            sideMenuPane, this);
+        QuestionRefresh.studentRefresh(this, quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
+            sideMenuPane);
     }
 
     /**
@@ -426,9 +426,9 @@ public class StudentViewController {
      * The method in that class handles the showing and hiding of elements in the sideMenu based on the
      * ToggleButton.
      *
-     * @param select    The selected ToggleButton
-     * @param deselect  The unselected ToggleButton
-     * @return Boolean of whether or not the sideMenu is still showing
+     * @param select    The selected ToggleButton.
+     * @param deselect  The unselected ToggleButton.
+     * @return Boolean of whether or not the sideMenu is still showing.
      */
     public boolean sidebarLogic(ToggleButton select, ToggleButton deselect) {
         return SideBarControl.showHideSelected(select, deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox);
@@ -437,8 +437,8 @@ public class StudentViewController {
     /**
      * Method that runs when the Leave button is clicked.
      * Pops up a confirmation dialogue.
-     * If the user clicks yes -> Question board closes and user returns to the JoinQuBo page
-     * If the user clicks no -> Confirmation dialogue closes and user returns to the question board
+     * If the user clicks yes -> Question board closes and user returns to the JoinQuBo page.
+     * If the user clicks no -> Confirmation dialogue closes and user returns to the question board.
      */
     public void leaveQuBo() {
         boolean backHome = ConfirmationDialog.display("Leave Question Board?",

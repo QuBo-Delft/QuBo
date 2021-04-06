@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
+import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.controllers.structures.QuestionItem;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
@@ -20,8 +21,11 @@ import java.util.UUID;
  * The Question refreshing helper.
  */
 public class QuestionRefresh {
-    private static QuestionBoardDetailsDto thisQuBoId;
+    private static StudentViewController thisStuController;
+    private static ModeratorViewController thisModController;
 
+    private static QuestionBoardDetailsDto thisQuBoId;
+    
     private static QuestionDetailsDto[] answeredQuestions;
     private static QuestionDetailsDto[] unansweredQuestions;
 
@@ -35,7 +39,6 @@ public class QuestionRefresh {
     private static ScrollPane ansQuScPane;
 
     private static UUID modCode = null;
-    private static StudentViewController controller;
 
     private static final Gson gson = new GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
@@ -44,20 +47,21 @@ public class QuestionRefresh {
     /**
      * This method takes in the information and nodes to be able to refresh the question lists for students.
      *
-     * @param quBo                  QuestionBoardDetailsDto of the board
-     * @param unAnsVbox             VBox containing the list of unanswered questions
-     * @param ansVbox               VBox containing the list of answered questions
-     * @param upvote                HashMap of questionId:upvoteId
-     * @param secret                HashMap of questionId:secretCode
-     * @param unAnsScrollPane       ScrollPane containing the VBox that contains the list of
-     *                              unanswered questions
-     * @param ansScrollPane         ScrollPane containing the VBox that contains the list of answered questions
-     * @param studentViewController Controller
+     * @param quBo            QuestionBoardDetailsDto of the board.
+     * @param unAnsVbox       VBox containing the list of unanswered questions.
+     * @param ansVbox         VBox containing the list of answered questions.
+     * @param upvote          HashMap of questionId:upvoteId.
+     * @param secret          HashMap of questionId:secretCode.
+     * @param unAnsScrollPane ScrollPane containing the VBox that contains the list of unanswered questions.
+     * @param ansScrollPane   ScrollPane containing the VBox that contains the list of answered questions.
      */
-    public static void studentRefresh(QuestionBoardDetailsDto quBo, VBox unAnsVbox, VBox ansVbox, HashMap<UUID,
-        UUID> upvote, HashMap<UUID, UUID> secret, ScrollPane unAnsScrollPane,
-                                      ScrollPane ansScrollPane,
-                                      StudentViewController studentViewController) {
+    public static void studentRefresh(StudentViewController controller,
+                                      QuestionBoardDetailsDto quBo, VBox unAnsVbox, VBox ansVbox, HashMap<UUID,
+                                      UUID> upvote, HashMap<UUID, UUID> secret, ScrollPane unAnsScrollPane,
+                                      ScrollPane ansScrollPane) {
+        thisStuController = controller;
+        thisModController = null;
+
         thisQuBoId = quBo;
 
         unAnsQuVbox = unAnsVbox;
@@ -70,24 +74,28 @@ public class QuestionRefresh {
         ansQuScPane = ansScrollPane;
 
         modCode = null;
-        controller = studentViewController;
+
         displayQuestions();
     }
 
     /**
      * This method takes in the information and nodes to be able to refresh the question lists for mods.
      *
-     * @param quBo            QuestionBoardDetailsDto of the board
-     * @param code            Moderator code of the board
-     * @param unAnsVbox       VBox containing the list of unanswered questions
-     * @param ansVbox         VBox containing the list of answered questions
-     * @param upvote          HashMap of questionId:upvoteId
-     * @param unAnsScrollPane ScrollPane containing the VBox that contains the list of unanswered questions
-     * @param ansScrollPane   ScrollPane containing the VBox that contains the list of answered questions
+     * @param quBo            QuestionBoardDetailsDto of the board.
+     * @param code            Moderator code of the board.
+     * @param unAnsVbox       VBox containing the list of unanswered questions.
+     * @param ansVbox         VBox containing the list of answered questions.
+     * @param upvote          HashMap of questionId:upvoteId.
+     * @param unAnsScrollPane ScrollPane containing the VBox that contains the list of unanswered questions.
+     * @param ansScrollPane   ScrollPane containing the VBox that contains the list of answered questions.
      */
-    public static void modRefresh(QuestionBoardDetailsDto quBo, UUID code, VBox unAnsVbox, VBox ansVbox,
+    public static void modRefresh(ModeratorViewController controller, QuestionBoardDetailsDto quBo, UUID code,
+                                  VBox unAnsVbox, VBox ansVbox,
                                   HashMap<UUID, UUID> upvote, ScrollPane unAnsScrollPane,
                                   ScrollPane ansScrollPane) {
+        thisStuController = null;
+        thisModController = controller;
+
         thisQuBoId = quBo;
 
         unAnsQuVbox = unAnsVbox;
@@ -188,8 +196,14 @@ public class QuestionRefresh {
         for (QuestionDetailsDto question : questionList) {
             QuestionItem newQu = new QuestionItem(question.getId(), question.getUpvotes(),
                 question.getText(), question.getAuthorName(), question.getAnswers(),
-                question.getAnswered(), questionVbox, scrollpane, controller);
+                question.getAnswered(), questionVbox, scrollpane);
 
+            //Set controller
+            if (thisModController == null) {
+                newQu.setStuController(thisStuController);
+            } else {
+                newQu.setModController(thisModController);
+            }
             //Display the upvotes and the options menu
             newQu.newUpvoteVbox(upvoteMap);
             newQu.displayOptions(secretCodeMap, modCode);

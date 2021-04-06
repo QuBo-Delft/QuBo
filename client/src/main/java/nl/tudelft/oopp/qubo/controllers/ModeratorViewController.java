@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.qubo.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -160,7 +161,7 @@ public class ModeratorViewController {
      * This method refreshes the questions and pace bar.
      */
     public void refresh() {
-        QuestionRefresh.modRefresh(quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
+        QuestionRefresh.modRefresh(this, quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
 
         //Refresh the pace
@@ -243,8 +244,8 @@ public class ModeratorViewController {
     /**
      * Method that runs when the Leave button is clicked.
      * Pops up a confirmation dialogue.
-     * If the user clicks yes -> Question board closes and user returns to the JoinQuBo page
-     * If the user clicks no -> Confirmation dialogue closes and user returns to the question board
+     * If the user clicks yes -> Question board closes and user returns to the JoinQuBo page.
+     * If the user clicks no -> Confirmation dialogue closes and user returns to the question board.
      */
     public void leaveQuBo() {
         boolean backHome = ConfirmationDialog.display("Leave Question Board?",
@@ -252,5 +253,9 @@ public class ModeratorViewController {
         if (backHome) {
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
+    }
+
+    public void export(ActionEvent actionEvent) {
+        System.out.println("Exprot");
     }
 }
