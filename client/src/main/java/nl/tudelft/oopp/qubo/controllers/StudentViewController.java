@@ -3,39 +3,43 @@ package nl.tudelft.oopp.qubo.controllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.communication.PaceVoteCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
+import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
-import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
-import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
+import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
+import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
-import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
-
-import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * The Student view controller.
+ * Controller for the StudentView.fxml sheet.
  */
 public class StudentViewController {
     @FXML
@@ -90,6 +94,11 @@ public class StudentViewController {
     @FXML
     private ToggleButton polls;
 
+    // The VBox pace votes are placed in, and their toggle group
+    @FXML
+    private VBox paceVbox;
+    @FXML
+    ToggleGroup pace;
 
     /**
     * Records if the side menu was open before hiding.
@@ -100,6 +109,14 @@ public class StudentViewController {
      * Stage to be shown when the QuBo details button is clicked.
      */
     Stage popUp = new Stage();
+    /**
+     * Dto to set upon creation of a pace vote.
+     */
+    PaceVoteCreationDto paceVoteCreationDto;
+    /**
+     * Pace vote that was pressed before update method call.
+     */
+    Toggle previouslyPressed;
 
     private String authorName;
 
@@ -150,10 +167,25 @@ public class StudentViewController {
     }
 
     /**
+     * Returns the paceVoteCreationDto of a student view object. It is used by the SceneLoader class
+     * to check whether a pace vote has been set when attempting to close the student view stage.
+     *
+     * @return  The paceVoteCreationDto of the object.
+     */
+    public PaceVoteCreationDto getPaceVoteCreationDto() {
+        return paceVoteCreationDto;
+    }
+
+    /**
      * Code that is run upon loading StudentView.fxml
      */
     @FXML
     private void initialize() {
+        // Helps restore the toggle group on failure by setting up a listener for changes made to its
+        // radio buttons and storing the previously selected radio button
+        pace.selectedToggleProperty().addListener(
+            (observable, oldValue, newValue) -> previouslyPressed = oldValue);
+
         startUpProperties();
     }
 
@@ -186,7 +218,7 @@ public class StudentViewController {
     }
 
     /**
-     * Copy student code.
+     * Copies the student code to the clipboard when the copy button is clicked.
      */
     public void copyStudentCode() {
         clipboardContent.putString(quBo.getId().toString());
@@ -194,7 +226,92 @@ public class StudentViewController {
     }
 
     /**
-     * Display help doc.
+     * Gets called by the "Too slow" radio button.
+     * Calls the paceVoteHandler method with the 'TOO_SLOW' pace type.
+     */
+    public void paceVoteSlow() {
+        paceVoteHandler(PaceType.TOO_SLOW);
+    }
+
+    /**
+     * Gets called by the "All right" radio button.
+     * Calls the paceVoteHandler method with the 'JUST_RIGHT' pace type.
+     */
+    public void paceVoteOkay() {
+        paceVoteHandler(PaceType.JUST_RIGHT);
+    }
+
+    /**
+     * Gets called by the "Too fast" radio button.
+     * Calls the paceVoteHandler method with the 'TOO_FAST' pace type.
+     */
+    public void paceVoteFast() {
+        paceVoteHandler(PaceType.TOO_FAST);
+    }
+
+    private void paceVoteHandler(PaceType paceType) {
+        // Disables radio button input when processing pace vote by disabling entire VBox
+        paceVbox.setDisable(true);
+        // Checks whether the user has already made a pace vote. If this is the case we should
+        // first remove the old pace vote before creating a new one
+        if (paceVoteCreationDto != null) {
+            // If deletion fails, reset the radio button to its state before the call to this method and return
+            if (!deletePaceVote(true)) {
+                pace.selectToggle(previouslyPressed);
+                // Allow input again, as processing the pace vote is completed
+                paceVbox.setDisable(false);
+                return;
+            }
+        }
+        // Add a new pace vote using the input pace type. If addition fails,
+        // reset the radio button to its state before the call to this method and return
+        if (!addPaceVote(paceType)) {
+            pace.selectToggle(previouslyPressed);
+        }
+        // Allow input again, as processing the pace vote is completed
+        paceVbox.setDisable(false);
+    }
+
+    /**
+     * Gets called by the paceVoteHandler and upon closing the stage, either through the sidebar or by
+     * making use of the close button of the stage. It removes a set pace vote.
+     *
+     * @param dialogOnError  A boolean value that decides whether an error dialog is shown on error.
+     * @return          True or false depending on whether the removal was successful.
+     */
+    public boolean deletePaceVote(boolean dialogOnError) {
+        String resBody = PaceVoteCommunication.deletePaceVote(quBo.getId(), paceVoteCreationDto.getId());
+        if (resBody == null) {
+            if (!dialogOnError) {
+                return false;
+            }
+            AlertDialog.display("Unsuccessful Request",
+                "Failed to change your pace vote, please try again.");
+            return false;
+        }
+        paceVoteCreationDto = null;
+        return true;
+    }
+
+    /**
+     * Adds a pace vote to the question board of the student view.
+     *
+     * @param paceType Either 'too slow', 'just right' or 'too fast'.
+     * @return True or false depending on whether the addition was successful.
+     */
+    private boolean addPaceVote(PaceType paceType) {
+        String resBody = PaceVoteCommunication.addPaceVote(quBo.getId(), paceType);
+        if (resBody == null) {
+            AlertDialog.display("Unsuccessful Request",
+                "Failed to add your pace vote, please try again.");
+            return false;
+        }
+        paceVoteCreationDto = gson.fromJson(resBody, PaceVoteCreationDto.class);
+        return true;
+    }
+
+    /**
+     * Displays help documentation.
      */
     public void displayHelpDoc() {
     }
@@ -278,11 +395,13 @@ public class StudentViewController {
     }
 
     /**
-     * Sidebar logic.
+     * Passes the necessary JavaFX elements to the showHideSelected method in the SideBarControl class.
+     * The method in that class handles the showing and hiding of elements in the sideMenu based on the
+     * ToggleButton.
      *
-     * @param select   The select button.
-     * @param deselect The deselect button.
-     * @return result
+     * @param select    The selected ToggleButton.
+     * @param deselect  The unselected ToggleButton.
+     * @return Boolean of whether or not the sideMenu is still showing.
      */
     public boolean sidebarLogic(ToggleButton select, ToggleButton deselect) {
         return SideBarControl.showHideSelected(select, deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox);
@@ -291,13 +410,18 @@ public class StudentViewController {
     /**
      * Method that runs when the Leave button is clicked.
      * Pops up a confirmation dialogue.
-     * If the user clicks yes -> Question board closes and user returns to the JoinQuBo page
-     * If the user clicks no -> Confirmation dialogue closes and user returns to the question board
+     * If the user clicks yes -> Question board closes and user returns to the JoinQuBo page.
+     * If the user clicks no -> Confirmation dialogue closes and user returns to the question board.
      */
     public void leaveQuBo() {
         boolean backHome = ConfirmationDialog.display("Leave Question Board?",
             "You will have to use your code to join again.");
         if (backHome) {
+            // If a pace vote is set upon leaving the Question Board, remove the pace vote when the user leaves
+            if (paceVoteCreationDto != null) {
+                // Deletes set pace vote and do not show an error message on failure
+                deletePaceVote(false);
+            }
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
     }

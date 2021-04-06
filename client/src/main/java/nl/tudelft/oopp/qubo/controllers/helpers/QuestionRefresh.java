@@ -42,13 +42,13 @@ public class QuestionRefresh {
     /**
      * This method takes in the information and nodes to be able to refresh the question lists for students.
      *
-     * @param quBo            QuestionBoardDetailsDto of the board
-     * @param unAnsVbox       VBox containing the list of unanswered questions
-     * @param ansVbox         VBox containing the list of answered questions
-     * @param upvote          HashMap of questionId:upvoteId
-     * @param secret          HashMap of questionId:secretCode
-     * @param unAnsScrollPane ScrollPane containing the VBox that contains the list of unanswered questions
-     * @param ansScrollPane   ScrollPane containing the VBox that contains the list of answered questions
+     * @param quBo            QuestionBoardDetailsDto of the board.
+     * @param unAnsVbox       VBox containing the list of unanswered questions.
+     * @param ansVbox         VBox containing the list of answered questions.
+     * @param upvote          HashMap of questionId:upvoteId.
+     * @param secret          HashMap of questionId:secretCode.
+     * @param unAnsScrollPane ScrollPane containing the VBox that contains the list of unanswered questions.
+     * @param ansScrollPane   ScrollPane containing the VBox that contains the list of answered questions.
      */
     public static void studentRefresh(QuestionBoardDetailsDto quBo, VBox unAnsVbox, VBox ansVbox, HashMap<UUID,
                                         UUID> upvote, HashMap<UUID, UUID> secret, ScrollPane unAnsScrollPane,
@@ -72,13 +72,13 @@ public class QuestionRefresh {
     /**
      * This method takes in the information and nodes to be able to refresh the question lists for mods.
      *
-     * @param quBo            QuestionBoardDetailsDto of the board
-     * @param code            Moderator code of the board
-     * @param unAnsVbox       VBox containing the list of unanswered questions
-     * @param ansVbox         VBox containing the list of answered questions
-     * @param upvote          HashMap of questionId:upvoteId
-     * @param unAnsScrollPane ScrollPane containing the VBox that contains the list of unanswered questions
-     * @param ansScrollPane   ScrollPane containing the VBox that contains the list of answered questions
+     * @param quBo            QuestionBoardDetailsDto of the board.
+     * @param code            Moderator code of the board.
+     * @param unAnsVbox       VBox containing the list of unanswered questions.
+     * @param ansVbox         VBox containing the list of answered questions.
+     * @param upvote          HashMap of questionId:upvoteId.
+     * @param unAnsScrollPane ScrollPane containing the VBox that contains the list of unanswered questions.
+     * @param ansScrollPane   ScrollPane containing the VBox that contains the list of answered questions.
      */
     public static void modRefresh(QuestionBoardDetailsDto quBo, UUID code, VBox unAnsVbox, VBox ansVbox,
                                   HashMap<UUID, UUID> upvote, ScrollPane unAnsScrollPane,
