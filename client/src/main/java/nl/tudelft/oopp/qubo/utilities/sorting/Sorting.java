@@ -50,14 +50,16 @@ public class Sorting {
          * @param o1    The QuestionDetailsDto that is to be compared with o2.
          * @param o2    The QuestionDetailsDto that is to be compared with o1.
          *
-         * @return 0 if the number of votes are equal, 1 if the number of votes of o1 is smaller than that
-         *      of o2, and -1 if the number of votes of o1 is greater than that of o2. This ensures that the
-         *      list of questions starts with the question with the greatest number of upvotes.
+         * @return the inverse of the comparason of timestamps if the upvotes are equal,
+         *      1 if the number of votes of o1 is smaller than that of o2,
+         *      and -1 if the number of votes of o1 is greater than that of o2. This ensures that the
+         *      list of questions starts with the question with the greatest number of upvotes,
+         *      and secondly the order of equal upvotes is goes from recent to longest ago.
          */
         @Override
         public int compare(QuestionDetailsDto o1, QuestionDetailsDto o2) {
             if (o1.getUpvotes() == o2.getUpvotes()) {
-                return 0;
+                return o1.getTimestamp().compareTo(o2.getTimestamp()) * -1;
             } else if (o1.getUpvotes() < o2.getUpvotes()) {
                 return 1;
             } else {
@@ -78,7 +80,7 @@ public class Sorting {
 
         //Sort the list in non-decreasing order. The question that was answered last is placed at the
         //front of the list.
-        Collections.sort(sortList, new QuestionTimeAnsweredComparator());
+        sortList.sort(new QuestionTimeAnsweredComparator());
     }
 
     /**
