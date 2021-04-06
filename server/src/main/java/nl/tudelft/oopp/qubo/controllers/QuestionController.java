@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.qubo.controllers;
 
 import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationDto;
@@ -111,13 +112,15 @@ public class QuestionController {
      *
      * @param questionId The question id.
      * @param code       The secret code of the question or the moderator code of its board.
+     * @param request    The HTTPServletRequest to get the IP of the user.
      * @return The details of the deleted question.
      */
     @RequestMapping(value = "{questionid}", method = DELETE)
     @ResponseBody
     public QuestionDetailsDto deleteQuestion(
         @PathVariable("questionid") UUID questionId,
-        @RequestParam("code") UUID code) {
+        @RequestParam("code") UUID code,
+        HttpServletRequest request) {
         Question question = questionService.getQuestionById(questionId);
         if (question == null) {
             // Requested question does not exist
@@ -127,6 +130,8 @@ public class QuestionController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided code is neither the "
                 + "secret code of this question nor the moderator code of its board.");
         }
+
+        banService.performBanCheck(question.getQuestionBoard(), request.getRemoteAddr());
 
         QuestionDetailsDto dto = modelMapper.map(question, QuestionDetailsDto.class);
         questionService.deleteQuestionById(question.getId());
@@ -143,6 +148,7 @@ public class QuestionController {
      * @param model      The question editing model.
      * @param questionId The question id.
      * @param code       The secret code of the question or the moderator code of its board.
+     * @param request    The HTTPServletRequest to get the IP of the user.
      * @return The details of the edited question.
      */
     @RequestMapping(value = "{questionid}", method = PUT)
@@ -150,7 +156,8 @@ public class QuestionController {
     public QuestionDetailsDto editQuestion(
         @Valid @RequestBody QuestionEditingBindingModel model,
         @PathVariable("questionid") UUID questionId,
-        @RequestParam("code") UUID code) {
+        @RequestParam("code") UUID code,
+        HttpServletRequest request) {
         Question question = questionService.getQuestionById(questionId);
         if (question == null) {
             // Requested question does not exist
@@ -160,6 +167,8 @@ public class QuestionController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided code is neither the "
                 + "secret code of this question nor the moderator code of its board.");
         }
+
+        banService.performBanCheck(question.getQuestionBoard(), request.getRemoteAddr());
 
         Question edited = questionService.editQuestion(questionId, model);
 
@@ -171,12 +180,20 @@ public class QuestionController {
      * POST endpoint for registering QuestionVotes.
      *
      * @param questionId The question ID.
+     * @param request    The HTTPServletRequest to get the IP of the user.
      * @return The QuestionVote DTO.
      */
     @RequestMapping(value = "/{questionid}/vote", method = POST)
     @ResponseBody
     public QuestionVoteCreationDto registerQuestionVote(
-        @PathVariable("questionid") UUID questionId) {
+        @PathVariable("questionid") UUID questionId,
+        HttpServletRequest request) {
+        Question q = questionService.getQuestionById(questionId);
+        if (q == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        banService.performBanCheck(q.getQuestionBoard(), request.getRemoteAddr());
+
         QuestionVote vote = questionVoteService.registerVote(questionId);
         QuestionVoteCreationDto dto = modelMapper.map(vote, QuestionVoteCreationDto.class);
         return dto;

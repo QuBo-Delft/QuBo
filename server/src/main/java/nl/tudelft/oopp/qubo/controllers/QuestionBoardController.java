@@ -12,6 +12,7 @@ import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
+import nl.tudelft.oopp.qubo.services.BanService;
 import nl.tudelft.oopp.qubo.services.QuestionBoardService;
 import nl.tudelft.oopp.qubo.services.QuestionService;
 import org.modelmapper.ModelMapper;
@@ -39,6 +40,7 @@ public class QuestionBoardController {
 
     private final QuestionBoardService service;
     private final QuestionService questionService;
+    private final BanService banService;
 
     private final ModelMapper modelMapper;
 
@@ -47,13 +49,15 @@ public class QuestionBoardController {
      *
      * @param service         The QuestionBoardService.
      * @param questionService The QuestionService.
+     * @param banService      The BanService.
      * @param modelMapper     The ModelMapper.
      */
     public QuestionBoardController(QuestionBoardService service,
                                    QuestionService questionService,
-                                   ModelMapper modelMapper) {
+                                   BanService banService, ModelMapper modelMapper) {
         this.service = service;
         this.questionService = questionService;
+        this.banService = banService;
         this.modelMapper = modelMapper;
     }
 
@@ -187,6 +191,12 @@ public class QuestionBoardController {
         @Valid @RequestBody QuestionCreationBindingModel model,
         HttpServletRequest request,
         @Value("${qubo.anonymity.do_not_save_ips}") boolean doNotSaveIps) {
+        QuestionBoard qb = service.getBoardById(boardId);
+        if (qb == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        banService.performBanCheck(qb, request.getRemoteAddr());
+
         Question question = questionService.createQuestion(model, boardId,
             doNotSaveIps ? null : request.getRemoteAddr());
         QuestionCreationDto dto = modelMapper.map(question, QuestionCreationDto.class);

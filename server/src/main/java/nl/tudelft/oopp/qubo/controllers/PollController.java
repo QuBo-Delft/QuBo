@@ -2,6 +2,7 @@ package nl.tudelft.oopp.qubo.controllers;
 
 import java.util.Set;
 import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.poll.PollCreationDto;
@@ -12,6 +13,7 @@ import nl.tudelft.oopp.qubo.entities.Poll;
 import nl.tudelft.oopp.qubo.entities.PollOption;
 import nl.tudelft.oopp.qubo.entities.PollVote;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
+import nl.tudelft.oopp.qubo.services.BanService;
 import nl.tudelft.oopp.qubo.services.PollService;
 import nl.tudelft.oopp.qubo.services.PollVoteService;
 import nl.tudelft.oopp.qubo.services.QuestionBoardService;
@@ -41,6 +43,7 @@ public class PollController {
     private final QuestionBoardService questionBoardService;
     private final PollService pollService;
     private final PollVoteService pollVoteService;
+    private final BanService banService;
 
     private final ModelMapper modelMapper;
 
@@ -50,15 +53,17 @@ public class PollController {
      * @param questionBoardService The QuestionBoardService.
      * @param pollService          The PollService.
      * @param pollVoteService      The PollVoteService.
+     * @param banService           The BanService.
      * @param modelMapper          The ModelMapper.
      */
     public PollController(QuestionBoardService questionBoardService,
                           PollService pollService,
                           PollVoteService pollVoteService,
-                          ModelMapper modelMapper) {
+                          BanService banService, ModelMapper modelMapper) {
         this.questionBoardService = questionBoardService;
         this.pollService = pollService;
         this.pollVoteService = pollVoteService;
+        this.banService = banService;
         this.modelMapper = modelMapper;
     }
 
@@ -218,18 +223,22 @@ public class PollController {
      *
      * @param boardId  The board ID.
      * @param optionId The option ID.
+     * @param request  The HTTPServletRequest to get the IP of the user.
      * @return The PollVoteDetails DTO.
      */
     @RequestMapping(value = "/{boardid}/poll/{optionid}/vote", method = POST)
     @ResponseBody
     public PollVoteDetailsDto registerPollVote(
         @PathVariable("boardid") UUID boardId,
-        @PathVariable("optionid") UUID optionId) {
+        @PathVariable("optionid") UUID optionId,
+        HttpServletRequest request) {
         PollOption option = pollService.getPollOptionById(optionId);
 
         if (option == null || !option.getPoll().getQuestionBoard().getId().equals(boardId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find PollOption");
         }
+
+        banService.performBanCheck(option.getPoll().getQuestionBoard(), request.getRemoteAddr());
 
         PollVote vote = pollVoteService.registerVote(optionId);
         PollVoteDetailsDto dto = modelMapper.map(vote, PollVoteDetailsDto.class);
