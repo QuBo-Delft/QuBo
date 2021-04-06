@@ -4,6 +4,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.qubo.views.AlertDialog;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class QuBoInformation {
     /**
      * The name of the image that has to be set when setting up the board details.
      */
-    private String iconImage;
+    private static String iconImage;
 
     /**
      * Sets the board details of the respective view by setting appropriate values to the input
@@ -31,7 +32,7 @@ public class QuBoInformation {
      * @param text  The status text.
      * @param title The board title.
      */
-    public void setBoardDetails(QuestionBoardDetailsDto quBo, ImageView icon, Label text, Label title) {
+    public static void setBoardDetails(QuestionBoardDetailsDto quBo, ImageView icon, Label text, Label title) {
         // Sets the board title
         title.setText(quBo.getTitle());
         if (quBo.isClosed()) {
@@ -60,7 +61,7 @@ public class QuBoInformation {
      * @param quBo The QuestionBoardDetailsDto which start time must be used.
      * @return The correct text to display.
      */
-    public String getTimeText(QuestionBoardDetailsDto quBo) {
+    public static String getTimeText(QuestionBoardDetailsDto quBo) {
 
         // Gets the start date and time of the Question Board
         ZonedDateTime startTime = quBo.getStartTime().toInstant().atZone(ZoneId.systemDefault());
@@ -124,5 +125,24 @@ public class QuBoInformation {
             displayDate = openText + formatterD.format(startTime);
         }
         return displayDate;
+    }
+
+    /**
+     * Method that returns whether the board and it's functions should be usable by students.
+     *
+     * @param quBo The question board that is checked.
+     * @return True or false depending on whether students are allowed to make changes
+     */
+    public static boolean isQuBoClosed(QuestionBoardDetailsDto quBo) {
+        if (quBo.isClosed()) {
+            AlertDialog.display("Action blocked",
+                "This Question Board has been closed by its moderators.");
+            return true;
+        }
+        if (quBo.getStartTime().toLocalDateTime().isAfter(LocalDateTime.now())) {
+            AlertDialog.display("Action limited", getTimeText(quBo) + ".");
+            return true;
+        }
+        return false;
     }
 }

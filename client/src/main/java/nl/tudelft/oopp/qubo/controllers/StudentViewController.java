@@ -35,9 +35,6 @@ import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -166,7 +163,7 @@ public class StudentViewController {
      * which actually sets their values.
      */
     public void setBoardDetails() {
-        new QuBoInformation().setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
+        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
     }
 
     /**
@@ -254,7 +251,7 @@ public class StudentViewController {
 
     private void paceVoteHandler(PaceType paceType) {
         // If the question board is closed, block this action and reset the toggle group
-        if (isQuBoClosed()) {
+        if (QuBoInformation.isQuBoClosed(quBo)) {
             pace.selectToggle(previouslyPressed);
             return;
         }
@@ -324,30 +321,12 @@ public class StudentViewController {
     }
 
     /**
-     * Method that returns whether the board and it's functions should be usable by students.
-     *
-     * @return True or false depending on whether students are allowed to make changes
-     */
-    private boolean isQuBoClosed() {
-        if (quBo.isClosed()) {
-            AlertDialog.display("Action blocked",
-                "This Question Board has been closed by its moderators.");
-            return true;
-        }
-        if (quBo.getStartTime().toLocalDateTime().isAfter(LocalDateTime.now())) {
-            AlertDialog.display("Action limited", new QuBoInformation().getTimeText(quBo) + ".");
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Add the questions that the user entered to the question board, add the returned question ID
      * to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
      */
     public void addQuestion() {
         // If the question board is closed, block this action
-        if (isQuBoClosed()) {
+        if (QuBoInformation.isQuBoClosed(quBo)) {
             return;
         }
         // Display a dialog to extract the user's question text,

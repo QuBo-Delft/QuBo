@@ -183,7 +183,7 @@ public class QuestionRefresh {
         for (QuestionDetailsDto question : questionList) {
             QuestionItem newQu = new QuestionItem(question.getId(), question.getUpvotes(),
                 question.getText(), question.getAuthorName(), question.getAnswers(),
-                question.getAnswered(), questionVbox, scrollpane);
+                question.getAnswered(), questionVbox, scrollpane, thisQuBoId);
 
             //Display the upvotes and the options menu
             newQu.newUpvoteVbox(upvoteMap);
