@@ -1,5 +1,7 @@
 package nl.tudelft.oopp.qubo.controllers.structures;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -50,7 +52,6 @@ public class QuestionItem extends GridPane {
     private Timestamp answeredTime;
 
     private ScrollPane quScPane;
-    private VBox questionContainer;
 
     private StudentViewController stuController;
     private ModeratorViewController modController;
@@ -72,11 +73,10 @@ public class QuestionItem extends GridPane {
      * @param authorName        Author of the question.
      * @param answers           Textual answers to the question.
      * @param answeredTime      TimeStamp of when the question was answered.
-     * @param questionContainer VBox containing the list of questions.
      * @param scrollPane        ScrollPane containing the VBox that contains the list of questions.
      */
     public QuestionItem(UUID questionId, int upvoteNumber, String questionBody, String authorName,
-                        Set<AnswerDetailsDto> answers, Timestamp answeredTime, VBox questionContainer,
+                        Set<AnswerDetailsDto> answers, Timestamp answeredTime,
                         ScrollPane scrollPane) {
         this.upvoteNumber = new Label(Integer.toString(upvoteNumber));
         this.questionBody = new Text(questionBody);
@@ -86,8 +86,6 @@ public class QuestionItem extends GridPane {
         this.questionId = questionId;
         this.answers = answers;
         this.answeredTime = answeredTime;
-
-        this.questionContainer = questionContainer;
         
         quScPane = scrollPane;
 
@@ -202,13 +200,20 @@ public class QuestionItem extends GridPane {
         //If yes create and display the options menu
         if (modCode != null) {
             MenuButton options = newOptionsMenu(modCode, true);
-            options.setOnAction(event ->
-                QuBoActionEvents.modOptionsTrigger(options, modController));
+            //TODO: add refresh pausing and resuming for modview
+
             questionPane.addColumn(2, options);
         } else if (secretCodeMap.containsKey(questionId)) {
             MenuButton options = newOptionsMenu(secretCodeMap.get(questionId), false);
-            options.setOnAction(event ->
-                QuBoActionEvents.stuOptionsTrigger(options, stuController));
+            options.setOnShowing(event -> System.out.println("Context menu showing | refresh false"));
+            options.visibleProperty().addListener((observableValue, oldValue, newValue) -> {
+                if (newValue) {
+                    System.out.println("options visible | refresh true");
+                } else {
+                    System.out.println("options not visible | refresh false");
+                }
+            });
+            options.setOnHiding(event -> System.out.println("Context menu hiding | refresh true"));
             questionPane.addColumn(2, options);
         }
     }

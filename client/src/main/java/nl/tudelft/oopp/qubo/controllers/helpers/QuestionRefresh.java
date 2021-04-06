@@ -196,10 +196,10 @@ public class QuestionRefresh {
         for (QuestionDetailsDto question : questionList) {
             QuestionItem newQu = new QuestionItem(question.getId(), question.getUpvotes(),
                 question.getText(), question.getAuthorName(), question.getAnswers(),
-                question.getAnswered(), questionVbox, scrollpane);
+                question.getAnswered(), scrollpane);
 
             //Set controller
-            if (thisModController == null) {
+            if (thisStuController != null) {
                 newQu.setStuController(thisStuController);
             } else {
                 newQu.setModController(thisModController);

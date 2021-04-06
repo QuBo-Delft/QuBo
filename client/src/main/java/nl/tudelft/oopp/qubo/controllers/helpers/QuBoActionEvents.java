@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import java.util.HashMap;
 import java.util.UUID;
 import javafx.beans.value.ObservableDoubleValue;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -499,22 +500,6 @@ public class QuBoActionEvents {
             //If the request failed
             AlertDialog.display("Unsuccessful Request",
                 "Failed to ban user IP, please try again.");
-        }
-    }
-
-    public static void stuOptionsTrigger(MenuButton options, StudentViewController controller) {
-        if (options.isShowing()) {
-            System.out.println("Pause");
-        } else {
-            System.out.println("Resume");
-        }
-    }
-
-    public static void modOptionsTrigger(MenuButton options, ModeratorViewController controller) {
-        if (options.isShowing()) {
-            System.out.println("Pause");
-        } else {
-            System.out.println("Resume");
         }
     }
 }
