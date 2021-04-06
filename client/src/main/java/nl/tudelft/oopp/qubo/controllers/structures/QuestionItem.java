@@ -1,7 +1,5 @@
 package nl.tudelft.oopp.qubo.controllers.structures;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,9 +22,12 @@ import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoActionEvents;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
+import nl.tudelft.oopp.qubo.utilities.sorting.Sorting;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -106,7 +107,9 @@ public class QuestionItem extends GridPane {
 
         //Add the answers if there are any
         if (answers != null && answers.size() != 0) {
-            addAnswers();
+            List<AnswerDetailsDto> answerList = new ArrayList<>(answers);
+            Sorting.sortAnswersOnTime(answerList);
+            addAnswers(answerList);
         }
 
         this.getStyleClass().add("qPane");
@@ -117,9 +120,9 @@ public class QuestionItem extends GridPane {
     /**
      * This method adds the answers to a question if there are any.
      */
-    private void addAnswers() {
+    private void addAnswers(List<AnswerDetailsDto> answerList) {
         int i = 1;
-        for (AnswerDetailsDto answerDetails : answers) {
+        for (AnswerDetailsDto answerDetails : answerList) {
             Text answer = new Text(answerDetails.getText());
             BorderPane answerPane = new BorderPane(answer);
             answerPane.setPadding(new Insets(10, 15, 10, 15));
