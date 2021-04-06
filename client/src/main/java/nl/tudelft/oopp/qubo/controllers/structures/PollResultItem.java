@@ -7,11 +7,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 
 public class PollResultItem extends GridPane {
@@ -25,7 +23,7 @@ public class PollResultItem extends GridPane {
     private VBox pollContainer;
 
     /**
-     * Constructs a new QuestionItem.
+     * Constructs a new PollResultItem.
      *
      * @param poll          The poll results including the text of the poll and the option results.
      * @param pollContainer VBox containing the list of polls
@@ -50,13 +48,14 @@ public class PollResultItem extends GridPane {
         //in the layout when it is not visible.
         pollText.managedProperty().bind(pollText.visibleProperty());
 
-        //Set padding for individual cell (needed to prevent horizontal overflow)
+        //Set padding for the cell that will contain the Poll.
         this.setPadding(new Insets(0,0,20,0));
 
-        //Construct a new questionPane to hold the question and add to content pane
+        //Construct a new pollPane to hold the poll, and add it to the content pane.
         pollResultPane = newPollPane();
         this.addRow(0, pollResultPane);
 
+        //Add the poll results.
         addOptions();
 
         this.setGridLinesVisible(true);
@@ -69,7 +68,7 @@ public class PollResultItem extends GridPane {
      */
     private GridPane newPollPane() {
         GridPane gridpane = new GridPane();
-        pollVbox = newPollVbox();
+        pollVbox = PollItem.newPollVbox(pollText, pollScPane);
 
         //Set padding for individual cells.
         this.setPadding(new Insets(3, 3, 3, 3));
@@ -83,31 +82,6 @@ public class PollResultItem extends GridPane {
         gridpane.getColumnConstraints().addAll(new ColumnConstraints(5), col2);
 
         return gridpane;
-    }
-
-    /**
-     * Constructs and returns a new VBox containing the question body and the author name.
-     *
-     * @return  Returns a new VBox containing the question body and the
-     *          author name to be displayed.
-     */
-    private VBox newPollVbox() {
-        //Set pane to fixed height
-        Pane space = new Pane();
-        Pane bot = new Pane();
-        space.setMinHeight(10);
-        space.setMaxHeight(10);
-        bot.setMinHeight(10);
-        bot.setMaxHeight(10);
-
-        VBox vbox = new VBox(space, pollText, bot);
-        pollText.setTextAlignment(TextAlignment.CENTER);
-
-        //Set the title layout properties to fill the grid pane and prevent overflow.
-        pollText.wrappingWidthProperty().bind(pollScPane.widthProperty()
-                .subtract(pollScPane.getPadding().getLeft() + pollScPane.getPadding().getRight() + 15));
-
-        return vbox;
     }
 
     /**
@@ -138,7 +112,7 @@ public class PollResultItem extends GridPane {
             optionBox.setPadding(new Insets(5, 5, 5, 5));
             HBox.setHgrow(optionText, Priority.ALWAYS);
 
-            //Add the horizontal box to the gridpane.
+            //Add the horizontal box to the grid pane.
             this.addRow((i++ + 1), optionBox);
         }
     }
