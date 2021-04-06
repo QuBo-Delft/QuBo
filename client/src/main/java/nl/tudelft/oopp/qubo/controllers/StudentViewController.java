@@ -256,7 +256,7 @@ public class StudentViewController {
         // first remove the old pace vote before creating a new one
         if (paceVoteCreationDto != null) {
             // If deletion fails, reset the radio button to its state before the call to this method and return
-            if (!deletePaceVote()) {
+            if (!deletePaceVote(true)) {
                 pace.selectToggle(previouslyPressed);
                 // Allow input again, as processing the pace vote is completed
                 paceVbox.setDisable(false);
@@ -276,15 +276,20 @@ public class StudentViewController {
      * Gets called by the paceVoteHandler and upon closing the stage, either through the sidebar or by
      * making use of the close button of the stage. It removes a set pace vote.
      *
-     * @return True or false depending on whether the removal was successful.
+     * @param dialogOnError  A boolean value that decides whether an error dialog is shown on error.
+     * @return          True or false depending on whether the removal was successful.
      */
-    public boolean deletePaceVote() {
+    public boolean deletePaceVote(boolean dialogOnError) {
         String resBody = PaceVoteCommunication.deletePaceVote(quBo.getId(), paceVoteCreationDto.getId());
         if (resBody == null) {
+            if (!dialogOnError) {
+                return false;
+            }
             AlertDialog.display("Unsuccessful Request",
                 "Failed to change your pace vote, please try again.");
             return false;
         }
+        paceVoteCreationDto = null;
         return true;
     }
 
@@ -394,9 +399,9 @@ public class StudentViewController {
      * The method in that class handles the showing and hiding of elements in the sideMenu based on the
      * ToggleButton.
      *
-     * @param select    The selected ToggleButton
-     * @param deselect  The unselected ToggleButton
-     * @return Boolean of whether or not the sideMenu is still showing
+     * @param select    The selected ToggleButton.
+     * @param deselect  The unselected ToggleButton.
+     * @return Boolean of whether or not the sideMenu is still showing.
      */
     public boolean sidebarLogic(ToggleButton select, ToggleButton deselect) {
         return SideBarControl.showHideSelected(select, deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox);
@@ -405,8 +410,8 @@ public class StudentViewController {
     /**
      * Method that runs when the Leave button is clicked.
      * Pops up a confirmation dialogue.
-     * If the user clicks yes -> Question board closes and user returns to the JoinQuBo page
-     * If the user clicks no -> Confirmation dialogue closes and user returns to the question board
+     * If the user clicks yes -> Question board closes and user returns to the JoinQuBo page.
+     * If the user clicks no -> Confirmation dialogue closes and user returns to the question board.
      */
     public void leaveQuBo() {
         boolean backHome = ConfirmationDialog.display("Leave Question Board?",
@@ -414,7 +419,8 @@ public class StudentViewController {
         if (backHome) {
             // If a pace vote is set upon leaving the Question Board, remove the pace vote when the user leaves
             if (paceVoteCreationDto != null) {
-                deletePaceVote();
+                // Deletes set pace vote and do not show an error message on failure
+                deletePaceVote(false);
             }
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }

@@ -60,19 +60,14 @@
         <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
             <StackPane fx:id="paceBar" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" styleClass="paceBar" HBox.hgrow="NEVER">
-               <children>
                   <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
                         <Image url="@../icons/status_open.png" />
-                     </image></ImageView>
-               </children>
+                     </ImageView>
             </StackPane>
                 <ScrollPane fx:id="unAnsQuScPane" HBox.hgrow="ALWAYS">
-                    <content>
-                        <VBox fx:id="unAnsQuVbox" spacing="15.0" />
-                    </content>
+                        <VBox fx:id="unAnsQuVbox" maxWidth="800.0" spacing="15.0" />
                     <padding>
-                        <Insets left="30.0" right="15.0" top="20.0" />
+                        <Insets left="30.0" top="20.0" />
                     </padding>
                 </ScrollPane>
                 <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0" spacing="15.0">
@@ -81,12 +76,11 @@
                     </padding>
                     <Label fx:id="sideMenuTitle" text="Title" />
                     <ScrollPane fx:id="sideMenuPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                        <content>
                             <VBox>
-                                <VBox fx:id="ansQuVbox" VBox.vgrow="ALWAYS" />
+                                <VBox fx:id="ansQuVbox" spacing="15.0" VBox.vgrow="ALWAYS">
+                                </VBox>
                                 <VBox fx:id="pollVbox" VBox.vgrow="ALWAYS" />
                             </VBox>
-                        </content>
                     </ScrollPane>
                 </VBox>
             </HBox>
@@ -94,22 +88,13 @@
                 <center>
                     <VBox minHeight="160.0" minWidth="140.0" spacing="10.0" BorderPane.alignment="CENTER">
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How is the current lecture pacing?" wrappingWidth="118.5263671875">
-                            <VBox.margin>
-                                <Insets />
-                            </VBox.margin>
                         </Text>
                         <RadioButton mnemonicParsing="false" text="Too fast" toggleGroup="$pace">
-                            <VBox.margin>
-                                <Insets />
-                            </VBox.margin>
                             <toggleGroup>
                                 <ToggleGroup fx:id="pace" />
                             </toggleGroup>
                         </RadioButton>
                         <RadioButton mnemonicParsing="false" text="All right" toggleGroup="$pace">
-                            <VBox.margin>
-                                <Insets />
-                            </VBox.margin>
                         </RadioButton>
                         <RadioButton mnemonicParsing="false" text="Too slow" toggleGroup="$pace" />
                         <padding>
