@@ -13,6 +13,8 @@ import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
@@ -29,6 +31,8 @@ public class PollItem extends GridPane {
     private HashMap<RadioButton, UUID> optionIds;
 
     private static StudentViewController sController;
+
+    private ToggleGroup optionGroup;
 
     /**
      * Constructs a new PollItem.
@@ -85,14 +89,14 @@ public class PollItem extends GridPane {
 
         //Add the poll question to the gridpane and make sure that the poll question text does not overflow.
         gridpane.addColumn(1, pollQuestion);
-        pollQuestion.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(109));
+        pollQuestion.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(150));
 
         //Set column constraints.
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setHgrow(Priority.ALWAYS);
 
         gridpane.getColumnConstraints().addAll(new ColumnConstraints(10), col2,
-                new ColumnConstraints(90));
+                new ColumnConstraints(50));
 
         //Set padding.
         gridpane.setPadding(new Insets(10,3,5,3));
@@ -107,27 +111,22 @@ public class PollItem extends GridPane {
         VBox pollOptionBox = new VBox();
 
         //Set up the toggle group to which all poll options will be bound
-        ToggleGroup optionGroup = new ToggleGroup();
+        optionGroup = new ToggleGroup();
+
+        UUID selectedOption = sController.getOptionVote();
 
         //Add all PollOptionDetailsDtos to the menu
         for (PollOptionDetailsDto option : options) {
             //Create a new radio button for the poll option and add it to the menu
             RadioButton optionButton = new RadioButton(option.getOptionText());
             optionButton.setToggleGroup(optionGroup);
-            optionButton.getText();
 
-            //Set the action handler for the option button
-            optionButton.setOnAction(e -> {
-                //Ignore the first click event of the radio button as radio buttons are triggered twice.
-                try {
-                    wait(100);
-                } catch (Exception a) {
-                    System.out.println("The wait was interrupted.");
-                    return;
-                }
+            optionButton.setOnAction(e -> sController.handlePollChoice((RadioButton) optionGroup
+                .getSelectedToggle(), PollItem.this));
 
-                sController.handlePollChoice(optionButton, this);
-            });
+            if (option.getOptionId().equals(selectedOption)) {
+                optionButton.setSelected(true);
+            }
 
             pollOptionBox.getChildren().add(optionButton);
             optionIds.put(optionButton, option.getOptionId());

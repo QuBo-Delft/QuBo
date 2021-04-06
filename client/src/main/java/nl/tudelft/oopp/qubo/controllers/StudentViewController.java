@@ -130,7 +130,6 @@ public class StudentViewController {
      */
     private UUID optionVote;
     private RadioButton selectedOption;
-    private PollItem poll;
 
     private static final Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
@@ -186,6 +185,16 @@ public class StudentViewController {
      */
     public PaceVoteCreationDto getPaceVoteCreationDto() {
         return paceVoteCreationDto;
+    }
+
+    /**
+     * Returns the option vote of a student view object. It is used by the PollItem class to re-select the
+     * selected poll option when refreshing the polls.
+     *
+     * @return  The UUID of the option that the student voted for.
+     */
+    public UUID getOptionVote() {
+        return optionVote;
     }
 
     /**
@@ -432,24 +441,28 @@ public class StudentViewController {
             if (currentOption == null) {
                 selectedOption = null;
                 optionVote = null;
-                this.poll = null;
 
                 addPollVote(optionButton, poll);
                 return;
             }
 
             //Remove the poll vote.
-            String response = PollCommunication.removePollVote(quBo.getId(), currentOption);
+            String response = PollCommunication.removePollVote(quBo.getId(), optionVote);
 
             //If the request did not fail, attempt to add the new vote.
             if (response != null) {
-                addPollVote(optionButton, poll);
+                boolean failed = addPollVote(optionButton, poll);
+
+                if (failed) {
+                    selectedOption = null;
+                    optionVote = null;
+                }
 
             //If the request failed, display an alert and reset the selection.
             } else {
-                AlertDialog.display("", "The poll vote could not be deleted. Please try again.");
                 optionButton.setSelected(false);
                 selectedOption.setSelected(true);
+                AlertDialog.display("", "The poll vote could not be deleted. Please try again.");
             }
         }
     }
@@ -461,20 +474,20 @@ public class StudentViewController {
      * @param optionButton  The selected RadioButton.
      * @param poll          The PollItem that the RadioButton was part of.
      */
-    private void addPollVote(RadioButton optionButton, PollItem poll) {
+    private boolean addPollVote(RadioButton optionButton, PollItem poll) {
         String response = PollCommunication.addPollVote(quBo.getId(), poll.findOptionId(optionButton));
 
         //If the request did not fail, update the poll variables
         if (response != null) {
             optionVote = gson.fromJson(response, PollVoteDetailsDto.class).getId();
             selectedOption = optionButton;
-            this.poll = poll;
-
+            return true;
         //If the request did fail, display an alert and reset the selection.
         } else {
-            AlertDialog.display("", "The poll vote could not be added. Please try again.");
             optionButton.setSelected(false);
             selectedOption.setSelected(true);
+            AlertDialog.display("", "The poll vote could not be added. Please try again.");
+            return false;
         }
     }
 

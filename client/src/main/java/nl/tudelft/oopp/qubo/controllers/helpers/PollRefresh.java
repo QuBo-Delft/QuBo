@@ -56,13 +56,14 @@ public class PollRefresh {
             return;
         }
 
+        pollsVbox.getChildren().removeAll(pollsVbox.getChildren());
+
         //Retrieve the current poll and convert it to a PollDetailsDto.
         String jsonPoll = PollCommunication.retrievePollDetails(thisQuBo.getId());
 
         //Remove all previous displayed polls if there is no current poll.
         if (jsonPoll == null) {
-            pollsVbox.getChildren().removeAll(pollsVbox.getChildren());
-
+            return;
         //Map the poll to the pollsVbox to display it.
         } else {
             PollDetailsDto poll = gson.fromJson(jsonPoll, PollDetailsDto.class);
