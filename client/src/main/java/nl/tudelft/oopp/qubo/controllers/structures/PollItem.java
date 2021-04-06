@@ -13,13 +13,13 @@ import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
 
 public class PollItem extends GridPane {
+    private PollItem previousPollItem;
+    private PollItem temp;
     private GridPane pollPane;
     private Text pollQuestion;
     private VBox pollVbox;
@@ -44,15 +44,20 @@ public class PollItem extends GridPane {
      * @param controller    The Student View Controller associated with the client.
      */
     public PollItem(String text, Set<PollOptionDetailsDto> pollOptions, VBox pollContainer,
-                        ScrollPane scrollPane, StudentViewController controller) {
+                        ScrollPane scrollPane, StudentViewController controller, PollItem previous) {
+        //Only set the previousPollItem if it did not have a prior value.
+        if (previousPollItem == null) {
+            previousPollItem = previous;
+        }
+        //Set the temporary PollItem variable to the previous poll.
+        temp = previous;
+
         this.pollQuestion = new Text(text);
         this.options = pollOptions;
-
         this.pollContainer = pollContainer;
         pollScPane = scrollPane;
 
         optionIds = new HashMap<>();
-
         sController = controller;
 
         construct();
@@ -87,7 +92,7 @@ public class PollItem extends GridPane {
     private GridPane newPollPane() {
         GridPane gridpane = new GridPane();
 
-        //Add the poll question to the gridpane and make sure that the poll question text does not overflow.
+        //Add the poll question to the grid pane and make sure that the poll question text does not overflow.
         gridpane.addColumn(1, pollQuestion);
         pollQuestion.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(150));
 
@@ -113,29 +118,57 @@ public class PollItem extends GridPane {
         //Set up the toggle group to which all poll options will be bound
         optionGroup = new ToggleGroup();
 
-        UUID selectedOption = sController.getOptionVote();
+        RadioButton selectedOption = sController.getSelectedOption();
 
-        //Add all PollOptionDetailsDtos to the menu
+        //Add all PollOptionDetailsDtos to the VBox.
         for (PollOptionDetailsDto option : options) {
-            //Create a new radio button for the poll option and add it to the menu
-            RadioButton optionButton = new RadioButton(option.getOptionText());
-            optionButton.setToggleGroup(optionGroup);
-
-            optionButton.setOnAction(e -> sController.handlePollChoice((RadioButton) optionGroup
-                .getSelectedToggle(), PollItem.this));
-
-            if (option.getOptionId().equals(selectedOption)) {
-                optionButton.setSelected(true);
-            }
-
+            RadioButton optionButton = createOption(option, selectedOption, pollOptionBox);
             pollOptionBox.getChildren().add(optionButton);
-            optionIds.put(optionButton, option.getOptionId());
+        }
+
+        //Update the previous poll item variable if the poll has not changed.
+        if (temp != null) {
+            if (optionIds.values().equals(temp.optionIds.values())) {
+                previousPollItem = temp;
+            }
         }
 
         pollOptionBox.setPadding(new Insets(10,15,10,15));
 
         //Add the option box to the PollItem GridPane
         this.addRow(1, pollOptionBox);
+    }
+
+    /**
+     * This method creates a poll option radio button, and retains option selection.
+     *
+     * @param option            The poll option that should be added to the VBox.
+     * @param selectedOption    The poll option that was selected in the previous poll.
+     * @param pollOptionBox     The VBox to which the option should be added.
+     * @return The created poll option RadioButton.
+     */
+    private RadioButton createOption(PollOptionDetailsDto option, RadioButton selectedOption,
+                                     VBox pollOptionBox) {
+        //Create a new radio button for the poll option and add it to the menu
+        RadioButton optionButton = new RadioButton(option.getOptionText());
+        optionButton.setToggleGroup(optionGroup);
+
+        optionButton.setOnAction(e -> sController.handlePollChoice((RadioButton) optionGroup
+                .getSelectedToggle(), PollItem.this));
+
+        //If there was a previous PollItem, check if the added option was selected in that PollItem.
+        //Set the option as selected if this is true.
+        if (previousPollItem != null) {
+            if (option.getOptionId().equals(previousPollItem.findOptionId(selectedOption))) {
+                optionButton.setSelected(true);
+                sController.setSelectedOption(optionButton);
+            }
+        }
+
+        //Store the option ID associated with it.
+        optionIds.put(optionButton, option.getOptionId());
+
+        return optionButton;
     }
 
     /**

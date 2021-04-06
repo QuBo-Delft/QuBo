@@ -46,9 +46,9 @@ public class PollRefresh {
     }
 
     /**
-     * Method that displays the questions that are in the question board on the screen. Answered questions
-     * will be sorted by the time at which they were answered, and unanswered questions will be sorted by
-     * the number of upvotes they have received.
+     * Method that displays the current poll of the question board on the screen. This will display a poll with
+     * voting functionality if the current poll is open, or a poll with its results if the current poll is
+     * closed.
      */
     private static void displayPolls() {
         //If the question board is null, return.
@@ -56,14 +56,15 @@ public class PollRefresh {
             return;
         }
 
+        //Reset the current poll box so that no duplicate polls will be added.
         pollsVbox.getChildren().removeAll(pollsVbox.getChildren());
 
         //Retrieve the current poll and convert it to a PollDetailsDto.
         String jsonPoll = PollCommunication.retrievePollDetails(thisQuBo.getId());
 
-        //Remove all previous displayed polls if there is no current poll.
         if (jsonPoll == null) {
             return;
+
         //Map the poll to the pollsVbox to display it.
         } else {
             PollDetailsDto poll = gson.fromJson(jsonPoll, PollDetailsDto.class);
@@ -73,20 +74,31 @@ public class PollRefresh {
         }
     }
 
+    /**
+     * This method maps the current poll to a PollItem or a PollResult to allow poll display.
+     *
+     * @param current   The poll details of the current poll.
+     */
     private static void mapPolls(PollDetailsDto current) {
         //If the poll is open, display the poll with voting functionality.
         if (current.isOpen()) {
+            PollItem previousPoll = sController.getPollItem();
+
+            //Create a new poll item and display it.
             PollItem currentPoll = new PollItem(current.getText(), current.getOptions(), pollsVbox,
-                pollsScrollPane, sController);
+                pollsScrollPane, sController, previousPoll);
             pollsVbox.getChildren().add(currentPoll);
+
+            sController.setPollItem(currentPoll);
 
         //If the poll is closed, display the poll with its results.
         } else {
+            //Retrieve the poll results.
             String jsonResults = PollCommunication.retrievePollResults(thisQuBo.getId());
-
             PollOptionResultDto[] optionResults = gson.fromJson(jsonResults, PollOptionResultDto[].class);
-
             PollResult closedPoll = new PollResult(current.getText(), optionResults);
+
+            //Create a new poll result item and display it.
             PollResultItem pollResultItem = new PollResultItem(closedPoll, pollsVbox, pollsScrollPane);
             pollsVbox.getChildren().add(pollResultItem);
         }

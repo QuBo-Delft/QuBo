@@ -130,6 +130,7 @@ public class StudentViewController {
      */
     private UUID optionVote;
     private RadioButton selectedOption;
+    private PollItem pollItem;
 
     private static final Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
@@ -188,13 +189,34 @@ public class StudentViewController {
     }
 
     /**
-     * Returns the option vote of a student view object. It is used by the PollItem class to re-select the
-     * selected poll option when refreshing the polls.
-     *
-     * @return  The UUID of the option that the student voted for.
+     * This method is called by a PollRefresh method and returns the current PollItem.
      */
-    public UUID getOptionVote() {
-        return optionVote;
+    public PollItem getPollItem() {
+        return pollItem;
+    }
+
+    /**
+     * This method is called by a PollRefresh method and sets the current PollItem.
+     */
+    public void setPollItem(PollItem pollItem) {
+        this.pollItem = pollItem;
+    }
+
+    /**
+     * Returns the selected option. It is used by the PollItem class to re-select the selected poll option
+     * when refreshing the polls.
+     *
+     * @return  The RadioButton associated with the option that the student voted for.
+     */
+    public RadioButton getSelectedOption() {
+        return selectedOption;
+    }
+
+    /**
+     * This method is called by the PollItem addOptions method and sets the current selected option.
+     */
+    public void setSelectedOption(RadioButton selectedOption) {
+        this.selectedOption = selectedOption;
     }
 
     /**
