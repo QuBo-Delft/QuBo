@@ -22,6 +22,8 @@ import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.communication.BanUserCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
+import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
+import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 
@@ -497,6 +499,22 @@ public class QuBoActionEvents {
             //If the request failed
             AlertDialog.display("Unsuccessful Request",
                 "Failed to ban user IP, please try again.");
+        }
+    }
+
+    public static void stuOptionsTrigger(MenuButton options, StudentViewController controller) {
+        if (options.isShowing()) {
+            System.out.println("Pause");
+        } else {
+            System.out.println("Resume");
+        }
+    }
+
+    public static void modOptionsTrigger(MenuButton options, ModeratorViewController controller) {
+        if (options.isShowing()) {
+            System.out.println("Pause");
+        } else {
+            System.out.println("Resume");
         }
     }
 }

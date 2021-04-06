@@ -202,9 +202,13 @@ public class QuestionItem extends GridPane {
         //If yes create and display the options menu
         if (modCode != null) {
             MenuButton options = newOptionsMenu(modCode, true);
+            options.setOnAction(event ->
+                QuBoActionEvents.modOptionsTrigger(options, modController));
             questionPane.addColumn(2, options);
         } else if (secretCodeMap.containsKey(questionId)) {
             MenuButton options = newOptionsMenu(secretCodeMap.get(questionId), false);
+            options.setOnAction(event ->
+                QuBoActionEvents.stuOptionsTrigger(options, stuController));
             questionPane.addColumn(2, options);
         }
     }
@@ -241,8 +245,6 @@ public class QuestionItem extends GridPane {
         //Set alignment of children in the GridPane
         GridPane.setValignment(options, VPos.TOP);
         GridPane.setHalignment(options, HPos.RIGHT);
-
-        options.setOnAction(event -> );
 
         return options;
     }

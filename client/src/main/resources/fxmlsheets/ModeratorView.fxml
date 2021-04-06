@@ -118,7 +118,7 @@
                 </tooltip>
             </ToggleButton>
             <Pane prefHeight="323.0" prefWidth="41.0" VBox.vgrow="ALWAYS" />
-         <Button fx:id="export" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Button" />
+         <Button fx:id="export" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Button" onAction="#export"/>
             <Button fx:id="leaveQuBo" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#leaveQuBo" prefHeight="40.0" prefWidth="40.0" text="Leave">
                 <tooltip>
                     <Tooltip text="Leave Question Board" />

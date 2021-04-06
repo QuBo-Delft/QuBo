@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.qubo.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -252,5 +253,9 @@ public class ModeratorViewController {
         if (backHome) {
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
+    }
+
+    public void export(ActionEvent actionEvent) {
+        System.out.println("Exprot");
     }
 }

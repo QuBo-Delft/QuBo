@@ -198,15 +198,15 @@ public class QuestionRefresh {
                 question.getText(), question.getAuthorName(), question.getAnswers(),
                 question.getAnswered(), questionVbox, scrollpane);
 
-            //Display the upvotes and the options menu
-            newQu.newUpvoteVbox(upvoteMap);
-            newQu.displayOptions(secretCodeMap, modCode);
+            //Set controller
             if (thisModController == null) {
                 newQu.setStuController(thisStuController);
             } else {
                 newQu.setModController(thisModController);
             }
-
+            //Display the upvotes and the options menu
+            newQu.newUpvoteVbox(upvoteMap);
+            newQu.displayOptions(secretCodeMap, modCode);
 
             //Add the question to the ObservableList
             questionVbox.getChildren().add(newQu);
