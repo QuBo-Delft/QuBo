@@ -112,13 +112,15 @@ public class QuestionController {
      *
      * @param questionId The question id.
      * @param code       The secret code of the question or the moderator code of its board.
+     * @param request    The HTTPServletRequest to get the IP of the user.
      * @return The details of the deleted question.
      */
     @RequestMapping(value = "{questionid}", method = DELETE)
     @ResponseBody
     public QuestionDetailsDto deleteQuestion(
         @PathVariable("questionid") UUID questionId,
-        @RequestParam("code") UUID code) {
+        @RequestParam("code") UUID code,
+        HttpServletRequest request) {
         Question question = questionService.getQuestionById(questionId);
         if (question == null) {
             // Requested question does not exist
@@ -128,6 +130,8 @@ public class QuestionController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided code is neither the "
                 + "secret code of this question nor the moderator code of its board.");
         }
+
+        banService.performBanCheck(question.getQuestionBoard(), request.getRemoteAddr());
 
         QuestionDetailsDto dto = modelMapper.map(question, QuestionDetailsDto.class);
         questionService.deleteQuestionById(question.getId());
