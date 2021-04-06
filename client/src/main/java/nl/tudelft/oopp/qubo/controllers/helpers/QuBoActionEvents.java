@@ -460,7 +460,7 @@ public class QuBoActionEvents {
      * This method runs when the user selects Ban from the options Menu.
      *
      * @param options       The options menu node. (Needs to be enabled after successful ban.)
-     * @param questionVbox  Text node of the question content. (Needed for layout purposes.)
+     * @param questionBody  Text node of the question content. (Needed for layout purposes.)
      * @param questionPane  GridPane of the question. (Needed to add a row for the ban dialogue.)
      * @param questionId    The UUID of the question where a ban is being requested.
      * @param modCode       The moderator code of the board.
