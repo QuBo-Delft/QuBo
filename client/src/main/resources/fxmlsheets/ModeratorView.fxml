@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -19,21 +17,15 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.qubo.controllers.ModeratorViewController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="550" minWidth="850" prefHeight="550.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.qubo.controllers.ModeratorViewController">
     <top>
-        <HBox fx:id="topBar" alignment="CENTER" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="TOP_LEFT">
-            <ImageView fx:id="boardStatusIcon" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" scaleX="0.6" scaleY="0.6" translateX="1.0">
+        <HBox fx:id="topBar" alignment="CENTER" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="600.0" styleClass="upperBar" BorderPane.alignment="TOP_LEFT">
+            <ImageView fx:id="boardStatusIcon" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" scaleX="0.65" scaleY="0.65" translateX="1.0">
                 <Image url="@../icons/status_open.png" />
             </ImageView>
-            <Separator orientation="VERTICAL" prefHeight="200.0">
-                <padding>
-                    <Insets bottom="5.0" top="5.0" />
-                </padding>
-            </Separator>
-            <VBox maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
-                <Label fx:id="boardTitle" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" text="Lecture Title">
+            <VBox maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="616.0" spacing="3.0" styleClass="upperBox" HBox.hgrow="ALWAYS">
+                <Label fx:id="boardTitle" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" styleClass="lecTitleText" text="Lecture Title">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -48,20 +40,22 @@
                         <Tooltip text="Right-click to copy student code" />
                     </tooltip>
                 </Label>
-                <Label fx:id="boardStatusText" maxWidth="1.7976931348623157E308" text="open" />
+                <Label fx:id="boardStatusText" maxWidth="1.7976931348623157E308" styleClass="openText" text="open" />
+            <padding>
+               <Insets top="6.0" />
+            </padding>
             </VBox>
-            <Button fx:id="boardInfo" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="40.0" prefWidth="40.0" text="Button" />
-            <Pane maxHeight="40.0" maxWidth="150.0" minHeight="40.0" minWidth="40.0" prefHeight="40.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="helpDoc" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#displayHelpDoc" prefHeight="40.0" prefWidth="40.0" text="Help" />
-            <ToggleButton fx:id="hamburger" alignment="CENTER_RIGHT" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#showHideSideBar" prefHeight="40.0" prefWidth="40.0" text="sideBar" HBox.hgrow="NEVER" />
+            <Button fx:id="boardInfo" maxHeight="54.0" maxWidth="51.0" minHeight="40.0" minWidth="51.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="40.0" prefWidth="40.0" styleClass="boardInfoBtn" />
+            <Button fx:id="helpDoc" maxHeight="54.0" maxWidth="51.0" minHeight="40.0" minWidth="51.0" mnemonicParsing="false" onAction="#displayHelpDoc" prefHeight="40.0" prefWidth="40.0" styleClass="helpBtn" />
+            <ToggleButton fx:id="hamburger" alignment="CENTER_RIGHT" maxHeight="54.0" maxWidth="51.0" minHeight="40.0" minWidth="51.0" mnemonicParsing="false" onAction="#showHideSideBar" prefHeight="40.0" prefWidth="40.0" styleClass="sideBarBtn" HBox.hgrow="NEVER" />
         </HBox>
     </top>
     <center>
         <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
-            <StackPane fx:id="paceBar" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" HBox.hgrow="NEVER">
-                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@../icons/status_open.png" />
+            <StackPane fx:id="paceBar" maxWidth="48.0" minWidth="40.0" prefHeight="496.0" prefWidth="44.0" styleClass="paceBar" HBox.hgrow="NEVER">
+                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true" scaleX="0.7" scaleY="0.9">
+                        <Image url="@../icons/triangle_pace_bar.png" />
                      </ImageView>
             </StackPane>
                 <ScrollPane fx:id="unAnsQuScPane" HBox.hgrow="ALWAYS">
@@ -70,7 +64,7 @@
                         <Insets left="30.0" top="20.0" />
                     </padding>
                 </ScrollPane>
-                <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0" spacing="15.0">
+                <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0" spacing="15.0" styleClass="sidePane">
                     <padding>
                         <Insets left="20.0" right="20.0" top="20.0" />
                     </padding>
@@ -84,47 +78,33 @@
                     </ScrollPane>
                 </VBox>
             </HBox>
-            <BorderPane fx:id="paceVotePane" maxHeight="160.0" maxWidth="140.0" minHeight="160.0" minWidth="140.0" prefHeight="160.0" prefWidth="140.0" StackPane.alignment="BOTTOM_RIGHT">
-                <center>
-                    <VBox minHeight="160.0" minWidth="140.0" spacing="10.0" BorderPane.alignment="CENTER">
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How is the current lecture pacing?" wrappingWidth="118.5263671875">
-                        </Text>
-                        <RadioButton mnemonicParsing="false" text="Too fast" toggleGroup="$pace">
-                            <toggleGroup>
-                                <ToggleGroup fx:id="pace" />
-                            </toggleGroup>
-                        </RadioButton>
-                        <RadioButton mnemonicParsing="false" text="All right" toggleGroup="$pace">
-                        </RadioButton>
-                        <RadioButton mnemonicParsing="false" text="Too slow" toggleGroup="$pace" />
-                        <padding>
-                            <Insets left="15.0" right="15.0" top="15.0" />
-                        </padding>
-                    </VBox>
-                </center>
-            </BorderPane>
+            <BorderPane fx:id="paceVotePane" maxHeight="160.0" maxWidth="140.0" minHeight="160.0" minWidth="140.0" prefHeight="160.0" prefWidth="140.0" StackPane.alignment="BOTTOM_RIGHT" />
         </StackPane>
     </center>
     <right>
-        <VBox fx:id="sideBar" prefWidth="40.0" BorderPane.alignment="CENTER">
-            <ToggleButton fx:id="ansQuestions" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#showHideAnsQuestions" prefHeight="40.0" prefWidth="40.0" text="AnsQ">
+        <VBox fx:id="sideBar" prefWidth="40.0" styleClass="sideBar" BorderPane.alignment="CENTER">
+            <ToggleButton fx:id="ansQuestions" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#showHideAnsQuestions" styleClass="answeredBtn">
                 <tooltip>
                     <Tooltip text="Answered Questions" />
                 </tooltip>
             </ToggleButton>
-            <ToggleButton fx:id="polls" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#showHidePolls" prefHeight="40.0" prefWidth="40.0" text="Polls">
+            <ToggleButton fx:id="polls" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#showHidePolls" styleClass="pollBtn">
                 <tooltip>
                     <Tooltip text="Polls" />
                 </tooltip>
             </ToggleButton>
-            <Pane prefHeight="323.0" prefWidth="41.0" VBox.vgrow="ALWAYS" />
-         <Button fx:id="export" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Button" />
-            <Button fx:id="leaveQuBo" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#leaveQuBo" prefHeight="40.0" prefWidth="40.0" text="Leave">
+            <Pane prefWidth="40.0" VBox.vgrow="ALWAYS" />
+         <Button fx:id="export" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" styleClass="exportBtn" />
+            <Button fx:id="leaveQuBo" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#leaveQuBo" styleClass="exitBtn">
                 <tooltip>
                     <Tooltip text="Leave Question Board" />
                 </tooltip>
             </Button>
-         <Button fx:id="closeQuBo" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Close" />
+         <Button fx:id="closeQuBo" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" styleClass="closeBoardBtn" />
         </VBox>
     </right>
+   <stylesheets>
+      <URL value="@../css/ModeratorView.css" />
+      <URL value="@../css/StudentModeratorCommon.css" />
+   </stylesheets>
 </BorderPane>
