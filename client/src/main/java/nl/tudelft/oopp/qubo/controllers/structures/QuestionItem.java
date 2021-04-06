@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoActionEvents;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
 
@@ -41,6 +42,7 @@ public class QuestionItem extends GridPane {
 
     private ScrollPane quScPane;
     private VBox questionContainer;
+    private StudentViewController controller;
 
     /**
      * Constructs a new QuestionItem.
@@ -53,10 +55,12 @@ public class QuestionItem extends GridPane {
      * @param answeredTime      TimeStamp of when the question was answered
      * @param questionContainer VBox containing the list of questions
      * @param scrollPane        ScrollPane containing the VBox that contains the list of questions
+     * @param controller        Controller
      */
     public QuestionItem(UUID questionId, int upvoteNumber, String questionBody, String authorName,
                         Set<AnswerDetailsDto> answers, Timestamp answeredTime, VBox questionContainer,
-                        ScrollPane scrollPane) {
+                        ScrollPane scrollPane,
+                        StudentViewController controller) {
         this.upvoteNumber = new Label(Integer.toString(upvoteNumber));
         this.questionBody = new Text(questionBody);
         this.authorName = new Label(authorName);
@@ -67,9 +71,9 @@ public class QuestionItem extends GridPane {
         this.answeredTime = answeredTime;
 
         this.questionContainer = questionContainer;
-        
-        quScPane = scrollPane;
 
+        quScPane = scrollPane;
+        this.controller = controller;
         construct();
     }
 
@@ -79,7 +83,7 @@ public class QuestionItem extends GridPane {
         questionBody.managedProperty().bind(questionBody.visibleProperty());
 
         //Set padding for individual cell (needed to prevent horizontal overflow)
-        this.setPadding(new Insets(0,10,20,0));
+        this.setPadding(new Insets(0, 10, 20, 0));
 
         //Construct a new questionPane to hold the question and add to content pane
         questionPane = newQuestionPane();
@@ -105,7 +109,7 @@ public class QuestionItem extends GridPane {
         for (AnswerDetailsDto answerDetails : answers) {
             Text answer = new Text(answerDetails.getText());
             BorderPane answerPane = new BorderPane(answer);
-            answerPane.setPadding(new Insets(10,15,10,15));
+            answerPane.setPadding(new Insets(10, 15, 10, 15));
             answer.wrappingWidthProperty().bind(questionBody.wrappingWidthProperty().add(40));
 
             this.addRow((i + 1), answerPane);
@@ -117,7 +121,7 @@ public class QuestionItem extends GridPane {
      * This method constructs a new questionPane to hold the upvote button, upvote number,
      * question body, options menu, and author name.
      *
-     * @return      A GridPane containing above mentioned information
+     * @return A GridPane containing above mentioned information
      */
     private GridPane newQuestionPane() {
         GridPane gridpane = new GridPane();
@@ -133,7 +137,7 @@ public class QuestionItem extends GridPane {
             new ColumnConstraints(50));
 
         //Set paddings
-        gridpane.setPadding(new Insets(10,3,5,3));
+        gridpane.setPadding(new Insets(10, 3, 5, 3));
 
         return gridpane;
     }
@@ -141,8 +145,8 @@ public class QuestionItem extends GridPane {
     /**
      * Constructs and returns a new VBox containing the question body and the author name.
      *
-     * @return  Returns a new VBox containing the question body and the
-     *          author name to be displayed.
+     * @return Returns a new VBox containing the question body and the
+     *      author name to be displayed.
      */
     private VBox newQuestionVbox() {
         //Create a pane for putting the author name
@@ -191,16 +195,17 @@ public class QuestionItem extends GridPane {
     /**
      * Constructs and returns a new options menu.
      *
-     * @return      Returns a new options menu to be displayed.
+     * @return Returns a new options menu to be displayed.
      */
     private MenuButton newOptionsMenu(UUID code, boolean isMod) {
         MenuButton options = new MenuButton();
 
         //Create the edit menu item and set action event
         MenuItem edit = new MenuItem("Edit");
-        edit.setOnAction(event -> QuBoActionEvents
-            .editQuestionOption(questionBody, questionVbox, options, questionId,
-                code));
+        edit
+            .setOnAction(event -> QuBoActionEvents
+                .editQuestionOption(questionBody, questionVbox, options, questionId,
+                    code));
         options.getItems().add(edit);
 
         if (isMod) {

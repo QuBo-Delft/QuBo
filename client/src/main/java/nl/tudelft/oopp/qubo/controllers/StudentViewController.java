@@ -2,6 +2,7 @@ package nl.tudelft.oopp.qubo.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,6 +26,7 @@ import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
+import nl.tudelft.oopp.qubo.controllers.structures.QuestionItem;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
@@ -36,7 +38,13 @@ import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Controller for the StudentView.fxml sheet.
@@ -139,6 +147,12 @@ public class StudentViewController {
 
     private QuestionBoardDetailsDto quBo;
 
+    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+    private ScheduledFuture<?> future = scheduledExecutorService.scheduleAtFixedRate(
+        this::conditionalRefresh, 1, 1, TimeUnit.SECONDS);
+    private Boolean refreshing = true;
+
+
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
      *
@@ -194,7 +208,20 @@ public class StudentViewController {
      */
     public void refresh() {
         QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
-            sideMenuPane);
+            sideMenuPane, this);
+    }
+
+    /**
+     * Conditional refresh.
+     */
+    public void conditionalRefresh() {
+        if (refreshing) {
+            refresh();
+        }
+    }
+
+    public void setRefreshing(Boolean bool) {
+        refreshing = bool;
     }
 
     private void startUpProperties() {
