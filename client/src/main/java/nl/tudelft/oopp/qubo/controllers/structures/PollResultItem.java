@@ -1,12 +1,17 @@
 package nl.tudelft.oopp.qubo.controllers.structures;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 
 public class PollResultItem extends GridPane {
@@ -46,7 +51,7 @@ public class PollResultItem extends GridPane {
         pollText.managedProperty().bind(pollText.visibleProperty());
 
         //Set padding for individual cell (needed to prevent horizontal overflow)
-        this.setPadding(new Insets(0,10,20,0));
+        this.setPadding(new Insets(0,0,20,0));
 
         //Construct a new questionPane to hold the question and add to content pane
         pollResultPane = newPollPane();
@@ -66,17 +71,16 @@ public class PollResultItem extends GridPane {
         GridPane gridpane = new GridPane();
         pollVbox = newPollVbox();
 
+        //Set padding for individual cells.
+        this.setPadding(new Insets(3, 3, 3, 3));
+
         //Add the pollVbox to the grid pane.
         gridpane.addColumn(1, pollVbox);
 
         //Set the column constraints.
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setHgrow(Priority.ALWAYS);
-        gridpane.getColumnConstraints().addAll(new ColumnConstraints(10), col2,
-                new ColumnConstraints(80));
-
-        //Set padding for the cell that will contain the Poll.
-        gridpane.setPadding(new Insets(10,3,5,3));
+        gridpane.getColumnConstraints().addAll(new ColumnConstraints(5), col2);
 
         return gridpane;
     }
@@ -89,9 +93,19 @@ public class PollResultItem extends GridPane {
      */
     private VBox newPollVbox() {
         //Set pane to fixed height
-        pollText.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(108));
+        Pane space = new Pane();
+        Pane bot = new Pane();
+        space.setMinHeight(10);
+        space.setMaxHeight(10);
+        bot.setMinHeight(10);
+        bot.setMaxHeight(10);
 
-        VBox vbox = new VBox(pollText);
+        VBox vbox = new VBox(space, pollText, bot);
+        pollText.setTextAlignment(TextAlignment.CENTER);
+
+        //Set the title layout properties to fill the grid pane and prevent overflow.
+        pollText.wrappingWidthProperty().bind(pollScPane.widthProperty()
+                .subtract(pollScPane.getPadding().getLeft() + pollScPane.getPadding().getRight() + 15));
 
         return vbox;
     }
@@ -102,13 +116,29 @@ public class PollResultItem extends GridPane {
     private void addOptions() {
         int i = 1;
         for (PollOptionResultDto option : pollOptionResults) {
-            //Add the option text to a VBox.
+            //Add the option text to an HBox.
             Text optionText = new Text(option.getText());
-            VBox optionBox = new VBox(optionText);
+            HBox optionBox = new HBox();
+
+            //Instantiate the percentage label.
+            double relativeVote = calculateRelativeVotes(option);
+            String labelText = (int)(relativeVote * 100) + "%";
+            Label votePercentageLabel = new Label(labelText);
 
             //Set the coloured bar to display the relative amount of votes for the option.
-            setOptionBar(optionBox, calculateRelativeVotes(option));
+            setOptionBar(optionBox, relativeVote);
 
+            //Add the option text and percentage label to the horizontal box.
+            optionBox.getChildren().addAll(optionText, votePercentageLabel);
+            votePercentageLabel.setAlignment(Pos.CENTER_RIGHT);
+
+            //Set the wrapping width,and padding properties for layout purposes.
+            optionText.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(
+                votePercentageLabel.getWidth() + 53));
+            optionBox.setPadding(new Insets(5, 5, 5, 5));
+            HBox.setHgrow(optionText, Priority.ALWAYS);
+
+            //Add the horizontal box to the gridpane.
             this.addRow((i++ + 1), optionBox);
         }
     }
@@ -149,12 +179,16 @@ public class PollResultItem extends GridPane {
      * @param relativeVote  A number between 0 and 1 that represents the relative amount of votes for the
      *                      option.
      */
-    private void setOptionBar(VBox optionBox, double relativeVote) {
+    private void setOptionBar(HBox optionBox, double relativeVote) {
         //Scale the relativeVote to a percentage and round it down to the nearest integer.
         int vote = (int) (relativeVote * 100);
 
-        //Add the linear gradient to colour the VBox
-        optionBox.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #3690ad, #3690ad "
+        if (vote == 0) {
+            optionBox.setStyle("-fx-background-color: white");
+        } else {
+            //Add the linear gradient to colour the VBox
+            optionBox.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #3690ad, #3690ad "
                 + vote + "%, white " + (vote + 1) + "%, white)");
+        }
     }
 }
