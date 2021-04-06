@@ -35,7 +35,9 @@ import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -251,6 +253,11 @@ public class StudentViewController {
     }
 
     private void paceVoteHandler(PaceType paceType) {
+        // If the question board is closed, block this action and reset the toggle group
+        if (isQuBoClosed()) {
+            pace.selectToggle(previouslyPressed);
+            return;
+        }
         // Disables radio button input when processing pace vote by disabling entire VBox
         paceVbox.setDisable(true);
         // Checks whether the user has already made a pace vote. If this is the case we should
@@ -320,12 +327,11 @@ public class StudentViewController {
     private boolean isQuBoClosed() {
         if (quBo.isClosed()) {
             AlertDialog.display("Action blocked",
-                "This Question Board has been closed by it's moderators.");
+                "This Question Board has been closed by its moderators.");
             return true;
         }
-        if (quBo.getStartTime().toLocalDateTime().isBefore(LocalDateTime.now())) {
-            AlertDialog.display("Action limited",
-                "This Question Board is currently closed, it will open at" + quBo.getStartTime());
+        if (quBo.getStartTime().toLocalDateTime().isAfter(LocalDateTime.now())) {
+            AlertDialog.display("Action limited", new QuBoInformation().getTimeText(quBo) + ".");
             return true;
         }
         return false;
