@@ -44,27 +44,12 @@ public class BanService {
             throw new ConflictException("The IP of the question is null.");
         }
 
-        if (ipAlreadyBannedInBoard(question.getQuestionBoard(), ip)) {
+        if (isIpBanned(question.getQuestionBoard(), ip)) {
             throw new ConflictException("This IP has already been banned from the requested question board.");
         }
 
         Ban ban = new Ban(question.getQuestionBoard(), ip);
         banRepository.save(ban);
-    }
-
-    /**
-     * This method checks whether the IP to be banned already exists in the set of banned IPs of the
-     * requested question board.
-     *
-     * @param questionBoard Question board containing the question where the ban request came from.
-     * @param ip            IP of the question to be banned.
-     * @return True iff the IP to be banned already exists in the list of banned IPs
-     *         for the question board, otherwise returns false.
-     */
-    public boolean ipAlreadyBannedInBoard(QuestionBoard questionBoard, String ip) {
-        Ban ban = banRepository.getBanByQuestionBoardAndIp(questionBoard, ip);
-
-        return ban != null;
     }
 
     /**
@@ -76,8 +61,21 @@ public class BanService {
      * @throws ForbiddenException if the IP is banned from the question board
      */
     public void performBanCheck(QuestionBoard questionBoard, String ip) {
-        if (ipAlreadyBannedInBoard(questionBoard, ip)) {
-            throw new ForbiddenException("You are banned from this question board");
+        if (isIpBanned(questionBoard, ip)) {
+            throw new ForbiddenException("You are banned from this question board.");
         }
+    }
+
+    /**
+     * This method checks whether the IP is banned from the specified question board.
+     *
+     * @param questionBoard Question board which should be checked.
+     * @param ip            IP to be checked.
+     * @return Whether the IP is banned.
+     */
+    private boolean isIpBanned(QuestionBoard questionBoard, String ip) {
+        Ban ban = banRepository.getBanByQuestionBoardAndIp(questionBoard, ip);
+
+        return ban != null;
     }
 }
