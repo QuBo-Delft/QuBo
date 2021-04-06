@@ -108,7 +108,7 @@ public class PollResultItem extends GridPane {
 
             //Set the wrapping width,and padding properties for layout purposes.
             optionText.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(
-                votePercentageLabel.getWidth() + 53));
+                votePercentageLabel.getWidth() + 42));
             optionBox.setPadding(new Insets(5, 5, 5, 5));
             HBox.setHgrow(optionText, Priority.ALWAYS);
 
