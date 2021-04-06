@@ -19,19 +19,19 @@
     -fx-font-weight: bold;
     -fx-font-family: "Arial";
     -fx-font-size: 17;
-    -fx-text-fill: #F0DED7;
+    -fx-text-fill: #fff8f5;
 }
 
 /*button becomes darker with some shadow, font becomes brighter, cursor becomes a hand*/
 .joinBtn:hover {
-    -fx-text-fill: #f3ecec;
+    -fx-text-fill: #ffffff;
     -fx-background-color: #ba5f19;
     -fx-effect: dropshadow( three-pass-box, #736d69, 5.0, 0.0, 0.5, 3.0);
     -fx-cursor: hand;
 }
 
 .createBtn {
-    -fx-background-color: #EEA24D;
+    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
     -fx-background-radius: 6;
     -fx-min-height: 50;
     -fx-min-width: 130;
@@ -40,12 +40,12 @@
     -fx-font-weight: bold;
     -fx-font-family: "Arial";
     -fx-font-size: 14;
-    -fx-text-fill: #F0DED7;
+    -fx-text-fill: #fff7f3;
 }
 
 /*button becomes darker with some shadow, font becomes brighter, cursor becomes a hand*/
 .createBtn:hover {
-    -fx-text-fill: #f3ece8;
+    -fx-text-fill: #fff9f9;
     -fx-background-color: #c88a45;
     -fx-effect: dropshadow( three-pass-box, #736d69, 5.0, 0.0, 0.5, 3.0);
     -fx-cursor: hand;

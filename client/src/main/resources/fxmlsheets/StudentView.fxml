@@ -8,7 +8,6 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
@@ -28,12 +27,7 @@
             <ImageView fx:id="boardStatusIcon" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" scaleX="0.6" scaleY="0.6" translateX="1.0">
                 <Image url="@../icons/status_open.png" />
             </ImageView>
-            <Separator orientation="VERTICAL" prefHeight="200.0">
-                <padding>
-                    <Insets bottom="5.0" top="5.0" />
-                </padding>
-            </Separator>
-            <VBox maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+            <VBox maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="401.0" spacing="2.0" styleClass="upperBox" HBox.hgrow="ALWAYS">
                 <Label fx:id="boardTitle" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" styleClass="lecTitleText" text="Lecture Title">
                     <font>
                         <Font size="16.0" />
@@ -50,6 +44,9 @@
                     </tooltip>
                 </Label>
                 <Label fx:id="boardStatusText" maxWidth="1.7976931348623157E308" styleClass="openText" text="open" />
+            <padding>
+               <Insets top="6.0" />
+            </padding>
             </VBox>
             <Button fx:id="boardInfo" maxHeight="54.0" maxWidth="51.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="50.0" prefWidth="50.0" styleClass="boardInfoBtn">
                 <tooltip>

@@ -39,7 +39,7 @@
     -fx-cursor: hand;
 }
 
-sideBarBtn:selected {
+.sideBarBtn:selected {
     -fx-background-image: url(../icons/close_sidebar.png);
     -fx-background-size: 27px 27px;
     -fx-background-repeat: no-repeat;
@@ -73,7 +73,7 @@ sideBarBtn:selected {
 }
 
 .boardInfoBtn:hover {
-    -fx-background-color: #ffaf79;
+    -fx-background-color: #cd7000;
     -fx-background-size: 30px 30px;
     -fx-cursor: hand;
 }
@@ -127,12 +127,14 @@ sideBarBtn:selected {
 }
 
 .upperBox {
-    -fx-effect: dropshadow( three-pass-box, #626234, 5.0, 0.0, 0.0, 0.0);
+    -fx-effect: dropshadow( three-pass-box, #626234, 4.0, 0.0, 0.0, 0.0);
+    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
 }
 
 .upperBar {
     -fx-min-height: 54;
     -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
+    -fx-effect: dropshadow( three-pass-box, #626234, 5.0, 0.0, 0.0, 0.0);
 }
 
 .sideBar {

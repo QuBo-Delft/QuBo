@@ -21,10 +21,10 @@
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="550" minWidth="850" prefHeight="550.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.qubo.controllers.ModeratorViewController">
     <top>
         <HBox fx:id="topBar" alignment="CENTER" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="600.0" styleClass="upperBar" BorderPane.alignment="TOP_LEFT">
-            <ImageView fx:id="boardStatusIcon" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" scaleX="0.6" scaleY="0.6" translateX="1.0">
+            <ImageView fx:id="boardStatusIcon" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" scaleX="0.65" scaleY="0.65" translateX="1.0">
                 <Image url="@../icons/status_open.png" />
             </ImageView>
-            <VBox maxWidth="1.7976931348623157E308" spacing="3.0" HBox.hgrow="ALWAYS">
+            <VBox maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="616.0" spacing="3.0" styleClass="upperBox" HBox.hgrow="ALWAYS">
                 <Label fx:id="boardTitle" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" styleClass="lecTitleText" text="Lecture Title">
                     <font>
                         <Font size="16.0" />
@@ -53,9 +53,9 @@
     <center>
         <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
-            <StackPane fx:id="paceBar" maxWidth="48.0" minWidth="40.0" prefHeight="496.0" prefWidth="48.0" styleClass="paceBar" HBox.hgrow="NEVER">
-                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@../icons/edit.png" />
+            <StackPane fx:id="paceBar" maxWidth="48.0" minWidth="40.0" prefHeight="496.0" prefWidth="44.0" styleClass="paceBar" HBox.hgrow="NEVER">
+                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true" scaleX="0.7" scaleY="0.9">
+                        <Image url="@../icons/triangle_pace_bar.png" />
                      </ImageView>
             </StackPane>
                 <ScrollPane fx:id="unAnsQuScPane" HBox.hgrow="ALWAYS">
