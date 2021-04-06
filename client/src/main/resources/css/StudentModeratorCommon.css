@@ -126,6 +126,10 @@ sideBarBtn:selected {
     -fx-cursor: hand;
 }
 
+.upperBox {
+    -fx-effect: dropshadow( three-pass-box, #626234, 5.0, 0.0, 0.0, 0.0);
+}
+
 .upperBar {
     -fx-min-height: 54;
     -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);

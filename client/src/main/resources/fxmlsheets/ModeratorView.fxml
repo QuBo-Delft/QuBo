@@ -7,7 +7,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
@@ -25,12 +24,7 @@
             <ImageView fx:id="boardStatusIcon" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" scaleX="0.6" scaleY="0.6" translateX="1.0">
                 <Image url="@../icons/status_open.png" />
             </ImageView>
-            <Separator orientation="VERTICAL" prefHeight="200.0">
-                <padding>
-                    <Insets bottom="5.0" top="5.0" />
-                </padding>
-            </Separator>
-            <VBox maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+            <VBox maxWidth="1.7976931348623157E308" spacing="3.0" HBox.hgrow="ALWAYS">
                 <Label fx:id="boardTitle" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" styleClass="lecTitleText" text="Lecture Title">
                     <font>
                         <Font size="16.0" />
@@ -47,6 +41,9 @@
                     </tooltip>
                 </Label>
                 <Label fx:id="boardStatusText" maxWidth="1.7976931348623157E308" styleClass="openText" text="open" />
+            <padding>
+               <Insets top="6.0" />
+            </padding>
             </VBox>
             <Button fx:id="boardInfo" maxHeight="54.0" maxWidth="51.0" minHeight="40.0" minWidth="51.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="40.0" prefWidth="40.0" styleClass="boardInfoBtn" />
             <Button fx:id="helpDoc" maxHeight="54.0" maxWidth="51.0" minHeight="40.0" minWidth="51.0" mnemonicParsing="false" onAction="#displayHelpDoc" prefHeight="40.0" prefWidth="40.0" styleClass="helpBtn" />
@@ -58,7 +55,7 @@
             <HBox prefHeight="100.0" prefWidth="200.0">
             <StackPane fx:id="paceBar" maxWidth="48.0" minWidth="40.0" prefHeight="496.0" prefWidth="48.0" styleClass="paceBar" HBox.hgrow="NEVER">
                   <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@../icons/status_open.png" />
+                        <Image url="@../icons/edit.png" />
                      </ImageView>
             </StackPane>
                 <ScrollPane fx:id="unAnsQuScPane" HBox.hgrow="ALWAYS">
