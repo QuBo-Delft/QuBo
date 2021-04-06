@@ -1,16 +1,14 @@
 package nl.tudelft.oopp.qubo.mappings.answer;
 
-import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
-import nl.tudelft.oopp.qubo.entities.Answer;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
-
+import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
+import nl.tudelft.oopp.qubo.entities.Answer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 
 public class AnswerDetailsDtoTests {
     private ModelMapper mapper;

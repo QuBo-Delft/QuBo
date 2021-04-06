@@ -1,7 +1,6 @@
 package nl.tudelft.oopp.qubo.services;
 
 import java.util.UUID;
-
 import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionVote;
 import nl.tudelft.oopp.qubo.repositories.QuestionRepository;
@@ -9,6 +8,9 @@ import nl.tudelft.oopp.qubo.repositories.QuestionVoteRepository;
 import nl.tudelft.oopp.qubo.services.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Question vote service.
+ */
 @Service
 public class QuestionVoteService {
     private final QuestionVoteRepository questionVoteRepository;

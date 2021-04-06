@@ -14,6 +14,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+/**
+ * The get text dialog which allows users to enter text in a pop-up dialog.
+ */
 public class GetTextDialog {
 
     private static String userInput;
@@ -22,12 +25,12 @@ public class GetTextDialog {
      * This method creates a dialog window which allows users to enter text,
      * and send the user input to the method caller.
      *
-     * @param message               The message to be displayed as a prompt
-     *                              in the text area.
-     * @param submitBtnText         The display name of the submit button.
-     * @param cancelBtnText         The display name of the cancel button.
-     * @param checkMinEightChars    The fact that the user input needs to be
-     *                              check if it has at least 8 characters.
+     * @param message            The message to be displayed as a prompt
+     *                           in the text area.
+     * @param submitBtnText      The display name of the submit button.
+     * @param cancelBtnText      The display name of the cancel button.
+     * @param checkMinEightChars The fact that the user input needs to be
+     *                           check if it has at least 8 characters.
      * @return The user's text input.
      */
     public static String display(String message, String submitBtnText,
@@ -116,7 +119,7 @@ public class GetTextDialog {
         window.setScene(scene);
         // Can return back only if the current dialog is closed
         window.showAndWait();
-        
+
         // Return user's text input
         return userInput;
     }
@@ -124,7 +127,7 @@ public class GetTextDialog {
     /**
      * This method checks if the user input is at least 8 characters long.
      *
-     * @param messageLabel  The message label that displays a message.
+     * @param messageLabel The message label that displays a message.
      * @return True if and only if the user input is at least 8 characters long.
      */
     private static boolean isAtLeastEightChars(Label messageLabel) {

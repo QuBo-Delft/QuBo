@@ -71,9 +71,11 @@
       <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
             <ScrollPane fx:id="unAnsQuScPane" styleClass="qList" HBox.hgrow="ALWAYS">
-               <content>
+<!--<<<<<<< HEAD-->
+<!--               <content>-->
+<!--=======-->
+<!--&gt;>>>>>> 02f4ab3dd90dc4bb1260b132626eacdb5f0a629f-->
                   <VBox fx:id="unAnsQuVbox" spacing="15.0" />
-               </content>
                <padding>
                   <Insets left="30.0" right="15.0" top="20.0" />
                </padding>
@@ -84,24 +86,22 @@
                      </padding>
                   <Label fx:id="sideMenuTitle" text="Title" />
                   <ScrollPane fx:id="sideMenuPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                     <content>
                         <VBox>
                               <VBox fx:id="ansQuVbox" VBox.vgrow="ALWAYS" />
                               <VBox fx:id="pollVbox" VBox.vgrow="ALWAYS" />
                         </VBox>
-                     </content>
                   </ScrollPane>
                   </VBox>
             </HBox>
          <BorderPane fx:id="paceVotePane" maxHeight="200.0" maxWidth="172.0" minHeight="160.0" minWidth="140.0" prefHeight="200.0" prefWidth="172.0" StackPane.alignment="BOTTOM_RIGHT">
             <left>
-                 <VBox prefHeight="200.0" prefWidth="172.0" spacing="10.0" styleClass="pacingBox" BorderPane.alignment="CENTER">
+                 <VBox fx:id="paceVbox" prefHeight="200.0" prefWidth="172.0" spacing="10.0" styleClass="pacingBox" BorderPane.alignment="CENTER">
                                 <Text fill="#b39288" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pacingText" text="How is the current lecture pacing?" wrappingWidth="118.5263671875">
                           <VBox.margin>
                              <Insets />
                           </VBox.margin>
                        </Text>
-                                <RadioButton mnemonicParsing="false" styleClass="pacingBtn1" text="Too fast" toggleGroup="$pace">
+                                <RadioButton mnemonicParsing="false" onAction="#paceVoteFast" styleClass="pacingBtn1" text="Too fast" toggleGroup="$pace">
                           <VBox.margin>
                              <Insets />
                           </VBox.margin>
@@ -109,12 +109,12 @@
                     <ToggleGroup fx:id="pace" />
                 </toggleGroup>
                        </RadioButton>
-                                <RadioButton mnemonicParsing="false" styleClass="pacingBtn2" text="All right" toggleGroup="$pace">
+                                <RadioButton mnemonicParsing="false" onAction="#paceVoteOkay" styleClass="pacingBtn2" text="All right" toggleGroup="$pace">
                           <VBox.margin>
                              <Insets />
                           </VBox.margin>
                        </RadioButton>
-                                <RadioButton mnemonicParsing="false" text="Too slow" toggleGroup="$pace" styleClass="pacingBtn2" />
+                                <RadioButton mnemonicParsing="false" onAction="#paceVoteSlow" styleClass="pacingBtn2" text="Too slow" toggleGroup="$pace" />
                     <padding>
                        <Insets left="15.0" right="15.0" top="15.0" />
                     </padding>

@@ -15,6 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+/**
+ * The Rate limiting handler interceptor.
+ */
 @Component
 public class RateLimitingHandlerInterceptor implements HandlerInterceptor {
 

@@ -3,37 +3,44 @@ package nl.tudelft.oopp.qubo.controllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.communication.PaceVoteCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
+import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
-import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
-import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
+import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
+import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
-import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
-
-import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Controller for the StudentView.fxml sheet.
+ */
 public class StudentViewController {
     @FXML
     private HBox topBar;
@@ -87,11 +94,29 @@ public class StudentViewController {
     @FXML
     private ToggleButton polls;
 
+    // The VBox pace votes are placed in, and their toggle group
+    @FXML
+    private VBox paceVbox;
+    @FXML
+    ToggleGroup pace;
 
-    //Records if the side menu was open before hiding
+    /**
+    * Records if the side menu was open before hiding.
+    */
     private boolean sideMenuOpen;
-    // Stage to be shown when the QuBo details button is clicked
+
+    /**
+     * Stage to be shown when the QuBo details button is clicked.
+     */
     Stage popUp = new Stage();
+    /**
+     * Dto to set upon creation of a pace vote.
+     */
+    PaceVoteCreationDto paceVoteCreationDto;
+    /**
+     * Pace vote that was pressed before update method call.
+     */
+    Toggle previouslyPressed;
 
     private String authorName;
 
@@ -99,9 +124,14 @@ public class StudentViewController {
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
             .create();
 
-    //HashMap of questionId:upvoteId, needed when deleting vote
+    /**
+    * HashMap of questionId:upvoteId, needed when deleting vote.
+    */
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
-    //HashMap of questionId:secretCode, needed when editing and deleting questions
+
+    /**
+    * HashMap of questionId:secretCode, needed when editing and deleting questions.
+    */
     private HashMap<UUID, UUID> secretCodeMap = new HashMap<>();
 
     private Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -112,7 +142,7 @@ public class StudentViewController {
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
      *
-     * @param quBo  The QuestionBoardDetailsDto of the question board that the student joined.
+     * @param quBo The QuestionBoardDetailsDto of the question board that the student joined.
      */
     public void setQuBo(QuestionBoardDetailsDto quBo) {
         this.quBo = quBo;
@@ -121,7 +151,7 @@ public class StudentViewController {
     /**
      * Method that sets the username of the application user.
      *
-     * @param authorName    The name of the student that joined the question board.
+     * @param authorName The name of the student that joined the question board.
      */
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
@@ -137,15 +167,31 @@ public class StudentViewController {
     }
 
     /**
+     * Returns the paceVoteCreationDto of a student view object. It is used by the SceneLoader class
+     * to check whether a pace vote has been set when attempting to close the student view stage.
+     *
+     * @return  The paceVoteCreationDto of the object.
+     */
+    public PaceVoteCreationDto getPaceVoteCreationDto() {
+        return paceVoteCreationDto;
+    }
+
+    /**
      * Code that is run upon loading StudentView.fxml
      */
     @FXML
     private void initialize() {
+        // Helps restore the toggle group on failure by setting up a listener for changes made to its
+        // radio buttons and storing the previously selected radio button
+        pace.selectedToggleProperty().addListener(
+            (observable, oldValue, newValue) -> previouslyPressed = oldValue);
+
         startUpProperties();
-        //Display the questions
-        refresh();
     }
 
+    /**
+     * Refresh the student view by refreshing the question list.
+     */
     public void refresh() {
         QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
             sideMenuPane);
@@ -171,17 +217,103 @@ public class StudentViewController {
         }
     }
 
+    /**
+     * Copies the student code to the clipboard when the copy button is clicked.
+     */
     public void copyStudentCode() {
         clipboardContent.putString(quBo.getId().toString());
         clipboard.setContent(clipboardContent);
     }
 
+    /**
+     * Gets called by the "Too slow" radio button.
+     * Calls the paceVoteHandler method with the 'TOO_SLOW' pace type.
+     */
+    public void paceVoteSlow() {
+        paceVoteHandler(PaceType.TOO_SLOW);
+    }
+
+    /**
+     * Gets called by the "All right" radio button.
+     * Calls the paceVoteHandler method with the 'JUST_RIGHT' pace type.
+     */
+    public void paceVoteOkay() {
+        paceVoteHandler(PaceType.JUST_RIGHT);
+    }
+
+    /**
+     * Gets called by the "Too fast" radio button.
+     * Calls the paceVoteHandler method with the 'TOO_FAST' pace type.
+     */
+    public void paceVoteFast() {
+        paceVoteHandler(PaceType.TOO_FAST);
+    }
+
+    private void paceVoteHandler(PaceType paceType) {
+        // Disables radio button input when processing pace vote by disabling entire VBox
+        paceVbox.setDisable(true);
+        // Checks whether the user has already made a pace vote. If this is the case we should
+        // first remove the old pace vote before creating a new one
+        if (paceVoteCreationDto != null) {
+            // If deletion fails, reset the radio button to its state before the call to this method and return
+            if (!deletePaceVote()) {
+                pace.selectToggle(previouslyPressed);
+                // Allow input again, as processing the pace vote is completed
+                paceVbox.setDisable(false);
+                return;
+            }
+        }
+        // Add a new pace vote using the input pace type. If addition fails,
+        // reset the radio button to its state before the call to this method and return
+        if (!addPaceVote(paceType)) {
+            pace.selectToggle(previouslyPressed);
+        }
+        // Allow input again, as processing the pace vote is completed
+        paceVbox.setDisable(false);
+    }
+
+    /**
+     * Gets called by the paceVoteHandler and upon closing the stage, either through the sidebar or by
+     * making use of the close button of the stage. It removes a set pace vote.
+     *
+     * @return True or false depending on whether the removal was successful.
+     */
+    public boolean deletePaceVote() {
+        String resBody = PaceVoteCommunication.deletePaceVote(quBo.getId(), paceVoteCreationDto.getId());
+        if (resBody == null) {
+            AlertDialog.display("Unsuccessful Request",
+                "Failed to change your pace vote, please try again.");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Adds a pace vote to the question board of the student view.
+     *
+     * @param paceType Either 'too slow', 'just right' or 'too fast'.
+     * @return True or false depending on whether the addition was successful.
+     */
+    private boolean addPaceVote(PaceType paceType) {
+        String resBody = PaceVoteCommunication.addPaceVote(quBo.getId(), paceType);
+        if (resBody == null) {
+            AlertDialog.display("Unsuccessful Request",
+                "Failed to add your pace vote, please try again.");
+            return false;
+        }
+        paceVoteCreationDto = gson.fromJson(resBody, PaceVoteCreationDto.class);
+        return true;
+    }
+
+    /**
+     * Displays help documentation.
+     */
     public void displayHelpDoc() {
     }
 
     /**
-     *  Add the questions that the user entered to the question board, add the returned question ID
-     *  to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
+     * Add the questions that the user entered to the question board, add the returned question ID
+     * to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
      */
     public void addQuestion() {
         // Display a dialog to extract the user's question text,
@@ -216,7 +348,7 @@ public class StudentViewController {
     /**
      * This method auto-upvotes the question that the user has just asked.
      *
-     * @param questionId    UUID of the question that was just asked.
+     * @param questionId UUID of the question that was just asked.
      */
     public void autoUpvote(UUID questionId) {
         String response = QuestionVoteCommunication.addQuestionVote(questionId);
@@ -257,6 +389,15 @@ public class StudentViewController {
         sideMenuOpen = sidebarLogic(polls, ansQuestions);
     }
 
+    /**
+     * Passes the necessary JavaFX elements to the showHideSelected method in the SideBarControl class.
+     * The method in that class handles the showing and hiding of elements in the sideMenu based on the
+     * ToggleButton.
+     *
+     * @param select    The selected ToggleButton
+     * @param deselect  The unselected ToggleButton
+     * @return Boolean of whether or not the sideMenu is still showing
+     */
     public boolean sidebarLogic(ToggleButton select, ToggleButton deselect) {
         return SideBarControl.showHideSelected(select, deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox);
     }
@@ -271,6 +412,10 @@ public class StudentViewController {
         boolean backHome = ConfirmationDialog.display("Leave Question Board?",
             "You will have to use your code to join again.");
         if (backHome) {
+            // If a pace vote is set upon leaving the Question Board, remove the pace vote when the user leaves
+            if (paceVoteCreationDto != null) {
+                deletePaceVote();
+            }
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
     }
