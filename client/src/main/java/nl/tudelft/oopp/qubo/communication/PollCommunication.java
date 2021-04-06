@@ -160,9 +160,9 @@ public class PollCommunication {
     /**
      * Closes the poll of the question board.
      *
-     * @param boardId           The ID of the question board that corresponds the poll to be closed.
-     * @param moderatorCode     The moderator code of the question board that corresponds the poll to
+     * @param boardId           The ID of the question board that corresponds to the poll that should
      *                          be closed.
+     * @param moderatorCode     The moderator code of the question board.
      * @return The PollDetailsDto in JSON format if the request was made successfully, null otherwise.
      */
     public static String closePoll(UUID boardId, UUID moderatorCode) {
