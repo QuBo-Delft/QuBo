@@ -78,9 +78,7 @@
                     <ScrollPane fx:id="sideMenuPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                             <VBox>
                                 <VBox fx:id="ansQuVbox" spacing="15.0" VBox.vgrow="ALWAYS">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin></VBox>
+                                </VBox>
                                 <VBox fx:id="pollVbox" VBox.vgrow="ALWAYS" />
                             </VBox>
                     </ScrollPane>
@@ -90,22 +88,13 @@
                 <center>
                     <VBox minHeight="160.0" minWidth="140.0" spacing="10.0" BorderPane.alignment="CENTER">
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How is the current lecture pacing?" wrappingWidth="118.5263671875">
-                            <VBox.margin>
-                                <Insets />
-                            </VBox.margin>
                         </Text>
                         <RadioButton mnemonicParsing="false" text="Too fast" toggleGroup="$pace">
-                            <VBox.margin>
-                                <Insets />
-                            </VBox.margin>
                             <toggleGroup>
                                 <ToggleGroup fx:id="pace" />
                             </toggleGroup>
                         </RadioButton>
                         <RadioButton mnemonicParsing="false" text="All right" toggleGroup="$pace">
-                            <VBox.margin>
-                                <Insets />
-                            </VBox.margin>
                         </RadioButton>
                         <RadioButton mnemonicParsing="false" text="Too slow" toggleGroup="$pace" />
                         <padding>

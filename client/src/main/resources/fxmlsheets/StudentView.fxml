@@ -83,9 +83,7 @@
                   <ScrollPane fx:id="sideMenuPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                         <VBox>
                               <VBox fx:id="ansQuVbox" spacing="15.0" VBox.vgrow="ALWAYS">
-                        <VBox.margin>
-                           <Insets />
-                        </VBox.margin></VBox>
+                        </VBox>
                               <VBox fx:id="pollVbox" VBox.vgrow="ALWAYS" />
                         </VBox>
                   </ScrollPane>
@@ -108,9 +106,6 @@
                 </toggleGroup>
                        </RadioButton>
                                 <RadioButton mnemonicParsing="false" onAction="#paceVoteOkay" styleClass="pacingBtn2" text="All right" toggleGroup="$pace">
-                          <VBox.margin>
-                             <Insets />
-                          </VBox.margin>
                        </RadioButton>
                                 <RadioButton mnemonicParsing="false" onAction="#paceVoteSlow" styleClass="pacingBtn2" text="Too slow" toggleGroup="$pace" />
                     <padding>
