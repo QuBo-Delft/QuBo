@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import nl.tudelft.oopp.qubo.communication.PollCommunication;
+import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.controllers.structures.PollItem;
 import nl.tudelft.oopp.qubo.controllers.structures.PollResult;
@@ -22,6 +23,7 @@ public class PollRefresh {
     private static ScrollPane pollsScrollPane;
     private static List<PollResult> polls;
     private static StudentViewController sController;
+    private static ModeratorViewController mController;
 
     private static final Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
@@ -42,15 +44,35 @@ public class PollRefresh {
         pollsScrollPane = pollScrollPane;
         sController = controller;
 
-        displayPolls();
+        displayPolls(false);
+    }
+
+    /**
+     * This method takes in the information and nodes to be able to refresh the list of polls for students.
+     *
+     * @param quBo              QuestionBoardDetailsDto of the board.
+     * @param pollVbox          VBox containing the list of polls.
+     * @param pollScrollPane    ScrollPane containing the VBox that contains the list of polls.
+     * @param controller        The StudentViewController associated with the client.
+     */
+    public static void modRefresh(QuestionBoardDetailsDto quBo, VBox pollVbox, ScrollPane pollScrollPane,
+                                      ModeratorViewController controller) {
+        thisQuBo = quBo;
+        pollsVbox = pollVbox;
+        pollsScrollPane = pollScrollPane;
+        mController = controller;
+
+        displayPolls(true);
     }
 
     /**
      * Method that displays the current poll of the question board on the screen. This will display a poll with
      * voting functionality if the current poll is open, or a poll with its results if the current poll is
      * closed.
+     *
+     * @param moderator A boolean which represents the type of user. This will be true if they are a moderator.
      */
-    private static void displayPolls() {
+    private static void displayPolls(boolean moderator) {
         //If the question board is null, return.
         if (thisQuBo == null) {
             return;
@@ -70,7 +92,7 @@ public class PollRefresh {
             PollDetailsDto poll = gson.fromJson(jsonPoll, PollDetailsDto.class);
 
             //Map the poll results and current poll to cells in the ScrollPane
-            mapPolls(poll);
+            mapPolls(poll, moderator);
         }
     }
 
@@ -78,10 +100,16 @@ public class PollRefresh {
      * This method maps the current poll to a PollItem or a PollResult to allow poll display.
      *
      * @param current   The poll details of the current poll.
+     * @param moderator The boolean that represents the type of user. This will be true if they are a moderator.
      */
-    private static void mapPolls(PollDetailsDto current) {
+    private static void mapPolls(PollDetailsDto current, boolean moderator) {
         //If the poll is open, display the poll with voting functionality.
         if (current.isOpen()) {
+            if (moderator) {
+                return;
+                //TODO: Add moderator open poll refresh.
+            }
+
             PollItem previousPoll = sController.getPollItem();
 
             //Create a new poll item and display it.

@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
+import nl.tudelft.oopp.qubo.controllers.helpers.PollRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
@@ -160,11 +161,15 @@ public class ModeratorViewController {
      * This method refreshes the questions and pace bar.
      */
     public void refresh() {
+        //Refresh the question list.
         QuestionRefresh.modRefresh(quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
 
-        //Refresh the pace
+        //Refresh the pace.
         PaceDisplay.displayPace(quBo, modCode, paceBar, paceCursor);
+
+        //Refresh the list of polls.
+        PollRefresh.modRefresh(quBo, pollVbox, sideMenuPane, this);
     }
 
     private void startUpProperties() {
