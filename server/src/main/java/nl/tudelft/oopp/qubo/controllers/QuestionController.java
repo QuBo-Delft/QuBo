@@ -144,6 +144,7 @@ public class QuestionController {
      * @param model      The question editing model.
      * @param questionId The question id.
      * @param code       The secret code of the question or the moderator code of its board.
+     * @param request    The HTTPServletRequest to get the IP of the user.
      * @return The details of the edited question.
      */
     @RequestMapping(value = "{questionid}", method = PUT)
@@ -151,7 +152,8 @@ public class QuestionController {
     public QuestionDetailsDto editQuestion(
         @Valid @RequestBody QuestionEditingBindingModel model,
         @PathVariable("questionid") UUID questionId,
-        @RequestParam("code") UUID code) {
+        @RequestParam("code") UUID code,
+        HttpServletRequest request) {
         Question question = questionService.getQuestionById(questionId);
         if (question == null) {
             // Requested question does not exist
@@ -161,6 +163,8 @@ public class QuestionController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The provided code is neither the "
                 + "secret code of this question nor the moderator code of its board.");
         }
+
+        banService.performBanCheck(question.getQuestionBoard(), request.getRemoteAddr());
 
         Question edited = questionService.editQuestion(questionId, model);
 
