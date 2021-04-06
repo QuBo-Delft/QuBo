@@ -157,4 +157,27 @@ public class PollCommunication {
         return response.body();
     }
 
+    /**
+     * Closes the poll of the question board.
+     *
+     * @param boardId           The ID of the question board that corresponds the poll to be closed.
+     * @param moderatorCode     The moderator code of the question board that corresponds the poll to
+     *                          be closed.
+     * @return The PollDetailsDto in JSON format if the request was made successfully, null otherwise.
+     */
+    public static String closePoll(UUID boardId, UUID moderatorCode) {
+        // Set up the variables required by the patch helper method
+        String fullUrl = ServerCommunication.subUrl + "board/" + boardId + "/poll?code=" + moderatorCode;
+
+        // Send the patch request to close the poll
+        HttpResponse<String> response = ServerCommunication.patch(fullUrl);
+
+        // If the request was unsuccessful, return null
+        if (response == null || response.statusCode() != 200) {
+            return null;
+        }
+
+        return response.body();
+    }
+
 }
