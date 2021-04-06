@@ -87,7 +87,7 @@ public class QuestionItem extends GridPane {
         questionBody.managedProperty().bind(questionBody.visibleProperty());
 
         //Set padding for individual cell (needed to prevent horizontal overflow)
-        this.setPadding(new Insets(0,10,20,0));
+        this.setPadding(new Insets(10,0,15,0));
 
         //Construct a new questionPane to hold the question and add to content pane
         questionPane = newQuestionPane();
@@ -140,8 +140,7 @@ public class QuestionItem extends GridPane {
         gridpane.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
             new ColumnConstraints(50));
 
-        //Set paddings
-        gridpane.setPadding(new Insets(10,3,5,3));
+        gridpane.setGridLinesVisible(true);
 
         return gridpane;
     }
@@ -157,6 +156,7 @@ public class QuestionItem extends GridPane {
         HBox authorHbox = new HBox(authorName);
         authorHbox.setAlignment(Pos.BOTTOM_RIGHT);
         BorderPane space = new BorderPane(authorHbox);
+        HBox.setHgrow(authorHbox, Priority.ALWAYS);
 
         //Set pane to fixed height
         int spaceHeight = 40;
@@ -169,7 +169,11 @@ public class QuestionItem extends GridPane {
         space.visibleProperty().bind(questionBody.visibleProperty());
 
         //Bind the wrapping width of the question body so that it doesn't overflow
-        questionBody.wrappingWidthProperty().bind(quScPane.widthProperty().subtract(180));
+        questionBody.wrappingWidthProperty().bind(quScPane.widthProperty()
+            .subtract(quScPane.getPadding().getLeft() + quScPane.getPadding().getRight() + 120));
+        space.prefWidthProperty().bind(questionBody.wrappingWidthProperty());
+        space.minWidthProperty().bind(questionBody.wrappingWidthProperty());
+        space.maxWidthProperty().bind(questionBody.wrappingWidthProperty());
 
         VBox vbox = new VBox(questionBody, space);
         vbox.setSpacing(10);
@@ -219,7 +223,7 @@ public class QuestionItem extends GridPane {
         //Create the delete menu item and set action event
         MenuItem delete = newIconItem("Delete", deleteImage);
         delete.setOnAction(event -> QuBoActionEvents.deleteQuestionOption(
-            this, questionPane, questionContainer, options, questionId, code));
+            this, questionPane, questionBody, options, questionId, code));
         options.getItems().add(delete);
 
         //Bind properties so that the visibility depends on the disabled property
@@ -249,14 +253,15 @@ public class QuestionItem extends GridPane {
             //Create the mark as answered menu item if the question resides in the unanswered
             //question list, and set action event
             MenuItem markAsAns = newIconItem("Mark As Answered", markAsAnsImage);
-            markAsAns.setOnAction(event -> QuBoActionEvents.markAsAnsUnAns(questionId, code));
+            markAsAns.setOnAction(event -> QuBoActionEvents.markAsAnsOption(
+                options, questionBody, questionPane, questionId, code));
             options.getItems().add(markAsAns);
         }
 
         //Create the ban menu item and set action event
         MenuItem ban = newIconItem("Ban", banImage);
         ban.setOnAction(event -> QuBoActionEvents.banUserOption(
-            options, questionContainer, questionPane, questionId, code));
+            options, questionPane, questionBody, questionId, code));
         options.getItems().add(ban);
     }
 

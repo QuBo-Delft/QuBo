@@ -17,6 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.communication.BanUserCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
@@ -158,7 +159,7 @@ public class QuBoActionEvents {
         //Create the warning Label
         Label warning = new Label("Error: Question must be more than 8 characters long.");
         warning.setWrapText(true);
-        warning.setStyle("-fx-text-fill: #ef4f4f");
+        warning.setTextFill(Color.web("#ef4f4f"));
         warning.setStyle("-fx-font-style: italic");
         warning.managedProperty().bind(warning.visibleProperty());
         warning.setVisible(false);
@@ -267,18 +268,17 @@ public class QuBoActionEvents {
      *
      * @param content           GridPane of the cell. (Needs to be hidden after deletion.)
      * @param questionPane      GridPane of the question. (Needed to add a row for the confirmation dialogue.)
-     * @param questionVbox      VBox containing the questionBody and the authorName.
+     * @param questionBody      Text node of the question content. (Needed for layout purposes.)
      * @param options           The options menu node.
      *                          (Needs to be disabled when confirmation dialogue shows up.)
      * @param questionId        The UUID of the question that is being deleted.
      * @param code              Secret code of the question.
      */
-    public static void deleteQuestionOption(GridPane content, GridPane questionPane,
-                                            VBox questionVbox,
+    public static void deleteQuestionOption(GridPane content, GridPane questionPane, Text questionBody,
                                             MenuButton options, UUID questionId, UUID code) {
         //Create new InQuestionDialog
-        InQuestionDialog dialog = new InQuestionDialog(options, questionVbox, questionPane,
-            "Are you sure you want to delete this question?");
+        InQuestionDialog dialog = new InQuestionDialog(options, questionBody,
+            questionPane, "Are you sure you want to delete this question?");
 
         //Set action listeners
         dialog.yes.setOnAction(event -> deleteQuestion(content, questionId, code));
@@ -329,10 +329,28 @@ public class QuBoActionEvents {
     /**
      * This method runs when the user selects Mark As Answered from the options Menu.
      *
-     * @param questionId The UUID of the question that is being marked as answered.
-     * @param code       The moderator code of the board.
+     * @param options       The options menu node. (Needs to be enabled.)
+     * @param questionBody  Text node of the question content. (Needed for layout purposes.)
+     * @param questionPane  GridPane of the question. (Needed to add a row for the confirmation dialogue.)
+     * @param questionId    The UUID of the question that is being marked as answered.
+     * @param code          The moderator code of the board.
      */
-    public static void markAsAnsUnAns(UUID questionId, UUID code) {
+    public static void markAsAnsOption(MenuButton options, Text questionBody, GridPane questionPane,
+                                       UUID questionId, UUID code) {
+        InQuestionDialog dialog =  new InQuestionDialog(options, questionBody, questionPane,
+            "Are you sure you want to mark this question as answered?");
+        dialog.yes.setOnAction(event -> markAsAns(questionId, code));
+        dialog.cancel.setOnAction(event -> cancelDialog(options, questionPane, dialog.dialogue));
+    }
+
+    /**
+     * This method runs when the Delete button (created in markAsAnsOption) is clicked.
+     * Sends a markQuestionAsAnswered request to the server.
+     *
+     * @param questionId    The UUID of the question that is being marked as answered.
+     * @param code          The moderator code of the board.
+     */
+    private static void markAsAns(UUID questionId, UUID code) {
         String response = QuestionCommunication.markQuestionAsAnswered(questionId, code);
 
         if (response == null) {
@@ -377,6 +395,7 @@ public class QuBoActionEvents {
         //Create a VBox to arrange the TextArea and buttons
         VBox answerBox = new VBox(input, buttons);
         answerBox.setPadding(new Insets(10, 20, 10, 20));
+        answerBox.setSpacing(10);
 
         //Set actions events for the buttons
         reply.setOnAction(event -> replyToQuestion(content, questionPane, answerBox, questionBody,
@@ -441,14 +460,14 @@ public class QuBoActionEvents {
      * This method runs when the user selects Ban from the options Menu.
      *
      * @param options       The options menu node. (Needs to be enabled after successful ban.)
-     * @param questionVbox  VBox containing the questionBody and the authorName.
+     * @param questionBody  Text node of the question content. (Needed for layout purposes.)
      * @param questionPane  GridPane of the question. (Needed to add a row for the ban dialogue.)
      * @param questionId    The UUID of the question where a ban is being requested.
      * @param modCode       The moderator code of the board.
      */
-    public static void banUserOption(MenuButton options, VBox questionVbox, GridPane questionPane,
-                                     UUID questionId, UUID modCode) {
-        InQuestionDialog dialog =  new InQuestionDialog(options, questionVbox, questionPane,
+    public static void banUserOption(MenuButton options, GridPane questionPane,
+                                     Text questionBody, UUID questionId, UUID modCode) {
+        InQuestionDialog dialog =  new InQuestionDialog(options, questionBody, questionPane,
             "Are you sure you want to ban the user who posted this question?");
 
         dialog.yes.setOnAction(event -> banUser(
@@ -458,6 +477,7 @@ public class QuBoActionEvents {
 
     /**
      * This method runs when the Ban button (created in banUserOption) is clicked.
+     * Sends a banUser request to the server.
      *
      * @param options       The options menu node. (Needs to be enabled after successful ban.)
      * @param questionPane  GridPane of the question. (Needed to add a row for the ban dialogue.)
