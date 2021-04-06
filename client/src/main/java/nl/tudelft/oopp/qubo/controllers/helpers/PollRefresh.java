@@ -62,7 +62,7 @@ public class PollRefresh {
         pollsScrollPane = pollScrollPane;
         mController = controller;
 
-        displayPolls(true);
+        //displayPolls(true);
     }
 
     /**
@@ -113,8 +113,8 @@ public class PollRefresh {
             PollItem previousPoll = sController.getPollItem();
 
             //Create a new poll item and display it.
-            PollItem currentPoll = new PollItem(current.getText(), current.getOptions(), pollsVbox,
-                pollsScrollPane, sController, previousPoll);
+            PollItem currentPoll = new PollItem(current.getText(), current.getOptions(), pollsScrollPane,
+                sController, previousPoll);
             pollsVbox.getChildren().add(currentPoll);
 
             sController.setPollItem(currentPoll);

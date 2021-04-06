@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javafx.scene.text.TextAlignment;
+import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 
@@ -32,10 +33,10 @@ public class PollItem extends GridPane {
     private Set<PollOptionDetailsDto> options;
 
     private ScrollPane pollScPane;
-    private VBox pollContainer;
     private HashMap<RadioButton, UUID> optionIds;
 
     private static StudentViewController sController;
+    private static ModeratorViewController mController;
 
     private ToggleGroup optionGroup;
 
@@ -44,12 +45,11 @@ public class PollItem extends GridPane {
      *
      * @param text          The text that should be associated with the poll.
      * @param pollOptions   The options that students can select.
-     * @param pollContainer The VBox containing the poll.
      * @param scrollPane    ScrollPane containing the VBox that will contain the poll.
      * @param controller    The Student View Controller associated with the client.
      */
-    public PollItem(String text, Set<PollOptionDetailsDto> pollOptions, VBox pollContainer,
-                        ScrollPane scrollPane, StudentViewController controller, PollItem previous) {
+    public PollItem(String text, Set<PollOptionDetailsDto> pollOptions, ScrollPane scrollPane,
+                    StudentViewController controller, PollItem previous) {
         //Only set the previousPollItem if it did not have a prior value.
         if (previousPollItem == null) {
             previousPollItem = previous;
@@ -59,19 +59,47 @@ public class PollItem extends GridPane {
 
         this.pollQuestion = new Text(text);
         this.options = pollOptions;
-        this.pollContainer = pollContainer;
         pollScPane = scrollPane;
 
         optionIds = new HashMap<>();
         sController = controller;
 
-        construct();
+        construct(false);
     }
 
     /**
-     * This method constructs the gridpane that will contain the poll and its options.
+     * Constructs a new PollItem.
+     *
+     * @param text          The text that should be associated with the poll.
+     * @param pollOptions   The options that students can select.
+     * @param scrollPane    ScrollPane containing the VBox that will contain the poll.
+     * @param controller    The Moderator View Controller associated with the client.
      */
-    private void construct() {
+    public PollItem(String text, Set<PollOptionDetailsDto> pollOptions, ScrollPane scrollPane,
+                    ModeratorViewController controller, PollItem previous) {
+        //Only set the previousPollItem if it did not have a prior value.
+        if (previousPollItem == null) {
+            previousPollItem = previous;
+        }
+        //Set the temporary PollItem variable to the previous poll.
+        temp = previous;
+
+        this.pollQuestion = new Text(text);
+        this.options = pollOptions;
+        pollScPane = scrollPane;
+
+        optionIds = new HashMap<>();
+        mController = controller;
+
+        construct(true);
+    }
+
+    /**
+     * This method constructs the grid pane that will contain the poll and its options.
+     *
+     * @param moderator The boolean that represents the type of user.
+     */
+    private void construct(boolean moderator) {
         //Bind the managed property to the visible property so that the node is not accounted for
         //in the layout when it is not visible.
         pollQuestion.managedProperty().bind(pollQuestion.visibleProperty());
@@ -84,7 +112,7 @@ public class PollItem extends GridPane {
         this.addRow(0, pollPane);
 
         //Add the poll options.
-        addOptions();
+        addOptions(moderator);
 
         this.setGridLinesVisible(true);
     }
@@ -139,21 +167,28 @@ public class PollItem extends GridPane {
 
     /**
      * This method adds the poll options to the GridPane containing the poll.
+     *
+     * @param moderator The boolean that represents the type of user.
      */
-    private void addOptions() {
+    private void addOptions(boolean moderator) {
         //Set up the toggle group to which all poll option radio buttons will be bound.
-        optionGroup = new ToggleGroup();
+        if (!moderator) {
+            optionGroup = new ToggleGroup();
 
-        RadioButton selectedOption = sController.getSelectedOption();
+            RadioButton selectedOption = sController.getSelectedOption();
 
-        int i = 1;
-        HBox optionBox = null;
+            int i = 1;
+            //Add all PollOptionDetailsDtos to the grid pane.
+            for (PollOptionDetailsDto option : options) {
+                HBox optionBox = createOption(option, selectedOption);
+                optionBox.setPadding(new Insets(5, 5, 5, 5));
+                this.addRow((i++ + 1), optionBox);
+            }
+        } else {
+            int i = 1;
+            HBox optionBox = null;
 
-        //Add all PollOptionDetailsDtos to the grid pane.
-        for (PollOptionDetailsDto option : options) {
-            optionBox = createOption(option, selectedOption);
-            optionBox.setPadding(new Insets(5,5,5,5));
-            this.addRow((i++ + 1), optionBox);
+            //TODO: Add labels for moderators and align them
         }
 
         //Update the previous poll item variable if the poll has not changed.
