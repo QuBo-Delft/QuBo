@@ -182,7 +182,8 @@ public class PollItem extends GridPane {
             for (PollOptionDetailsDto option : options) {
                 HBox optionBox = createOption(option, selectedOption);
                 optionBox.setPadding(new Insets(5, 5, 5, 5));
-                this.addRow((i++ + 1), optionBox);
+                this.addRow((i + 1), optionBox);
+                i++;
             }
         } else {
             int i = 1;
