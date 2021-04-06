@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
@@ -94,11 +95,13 @@ public class StudentViewController {
     @FXML
     private ToggleButton polls;
 
-    // The VBox pace votes are placed in, and their toggle group
+    // The VBox pace votes are placed in, their toggle group, and the "All right" button.
     @FXML
     private VBox paceVbox;
     @FXML
     ToggleGroup pace;
+    @FXML
+    RadioButton justRight;
 
     /**
     * Records if the side menu was open before hiding.
@@ -195,6 +198,13 @@ public class StudentViewController {
     public void refresh() {
         QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
             sideMenuPane);
+
+        //Add a Just Right vote on the first refresh of the question board after the student joined.
+        if (previouslyPressed == null) {
+            justRight.setSelected(true);
+            previouslyPressed = justRight;
+            paceVoteOkay();
+        }
     }
 
     private void startUpProperties() {
