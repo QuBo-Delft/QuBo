@@ -127,6 +127,8 @@ public class QuBoActionEvents {
         input.setWrapText(true);
 
         input.prefWidthProperty().bind(widthBind);
+        input.maxWidthProperty().bind(widthBind);
+        input.minWidthProperty().bind(widthBind);
         input.setPrefRowCount(5);
 
         return input;
@@ -142,7 +144,8 @@ public class QuBoActionEvents {
      * Cancel -> Cancels the action
      *
      * @param questionBody Text node of the question content (Needs to be hidden when editing)
-     * @param questionVbox VBox containing question content (Needed to display the text area in it)
+     * @param questionVbox VBox containing the questionBody and the authorName
+     *                     (Needed to display the text area in it)
      * @param options      The options menu node (Needs to be disabled when editing)
      * @param questionId   The UUID of the question that is being edited
      * @param code         Secret code of the question
@@ -200,7 +203,8 @@ public class QuBoActionEvents {
      * @param code         Secret code of the question
      * @param text         Content of the text area (Edited question)
      * @param questionBody Text node of the question content (Needs to be shown after successful edit)
-     * @param questionVbox VBox containing question content (Needed to remove the text area in it)
+     * @param questionVbox VBox containing the questionBody and the authorName
+     *                     (Needed to remove the text area in it)
      * @param input        The Text Area node (Needs to be removed after a successful edit)
      * @param buttons      The HBox containing the buttons (Needs to be removed after a successful edit)
      * @param warning      Label containing warning that the content inside of the TextArea might be
@@ -240,7 +244,8 @@ public class QuBoActionEvents {
      * Removes all the nodes that were added when editing the question and displays original question.
      *
      * @param options      The options menu node (Needs to be disabled when editing)
-     * @param questionVbox VBox containing question content (Needed to remove the text area in it)
+     * @param questionVbox VBox containing the questionBody and the authorName
+     *                     (Needed to remove the text area in it)
      * @param input        The Text Area node (Needs to be removed after a successful edit)
      * @param buttons      The HBox containing the buttons (Needs to be removed after a successful edit)
      * @param questionBody Text node of the question content (Needs to be shown after successful edit)
@@ -262,16 +267,16 @@ public class QuBoActionEvents {
      *
      * @param content           GridPane of the cell (Needs to be hidden after deletion)
      * @param questionPane      GridPane of the question (Needed to add a row for the confirmation dialogue)
-     * @param questionContainer VBox containing the questionBody and the authorName
+     * @param questionVbox      VBox containing the questionBody and the authorName
      * @param options           The options menu node (Needs to be disabled when confirmation dialogue shows up)
      * @param questionId        The UUID of the question that is being deleted
      * @param code              Secret code of the question
      */
     public static void deleteQuestionOption(GridPane content, GridPane questionPane,
-                                            VBox questionContainer,
+                                            VBox questionVbox,
                                             MenuButton options, UUID questionId, UUID code) {
         //Create new InQuestionDialog
-        InQuestionDialog dialog = new InQuestionDialog(options, questionContainer, questionPane,
+        InQuestionDialog dialog = new InQuestionDialog(options, questionVbox, questionPane,
             "Are you sure you want to delete this question?");
 
         //Set action listeners
@@ -308,8 +313,9 @@ public class QuBoActionEvents {
     }
 
     /**
-     * This method runs when the Cancel button (created in deleteQuestion) is clicked.
+     * This method runs when the Cancel button in in-question-dialogues is clicked.
      * Removes the confirmation dialogue and enables the options menu.
+     *
      * @param options  The options menu node (Needs to be enabled)
      * @param gridPane GridPane of the cell (Needed to remove row of confirmation dialogue)
      * @param dialogue The confirmation dialogue (Needs to be removed)
@@ -430,25 +436,46 @@ public class QuBoActionEvents {
         options.setDisable(false);
     }
 
-    public static void banUserOption(MenuButton options, VBox questionContainer, GridPane questionPane,
+    /**
+     * This method runs when the user selects Ban from the options Menu.
+     *
+     * @param options       The options menu node (Needs to be enabled after successful ban)
+     * @param questionVbox  VBox containing the questionBody and the authorName
+     * @param questionPane  GridPane of the question (Needed to add a row for the ban dialogue)
+     * @param questionId    The UUID of the question where a ban is being requested
+     * @param modCode       The moderator code of the board
+     */
+    public static void banUserOption(MenuButton options, VBox questionVbox, GridPane questionPane,
                                      UUID questionId, UUID modCode) {
-        InQuestionDialog dialog =  new InQuestionDialog(options, questionContainer, questionPane, "Ban User");
+        InQuestionDialog dialog =  new InQuestionDialog(options, questionVbox, questionPane,
+            "Are you sure you want to ban the user who posted this question?");
 
-        dialog.yes.setOnAction(event -> banUser(options, questionPane, dialog.dialogue, questionId, modCode));
+        dialog.yes.setOnAction(event -> banUser(
+            options, questionPane, dialog.dialogue, questionId, modCode));
         dialog.cancel.setOnAction(event -> cancelDialog(options, questionPane, dialog.dialogue));
     }
 
-    private static void banUser(MenuButton options, GridPane questionPane, HBox questionContainer,
+    /**
+     * This method runs when the Ban button (created in banUserOption) is clicked.
+     *
+     * @param options       The options menu node (Needs to be enabled after successful ban)
+     * @param questionPane  GridPane of the question (Needed to add a row for the ban dialogue)
+     * @param questionVbox  VBox containing the questionBody and the authorName
+     * @param questionId    The UUID of the question where a ban is being requested
+     * @param modCode       The moderator code of the board
+     */
+    private static void banUser(MenuButton options, GridPane questionPane, HBox questionVbox,
                                 UUID questionId, UUID modCode) {
         boolean successful = BanUserCommunication.banUser(questionId, modCode);
 
         if (successful) {
             //If the request was successful
-            cancelDialog(options, questionPane, questionContainer);
+            cancelDialog(options, questionPane, questionVbox);
             AlertDialog.display("", "User IP successfully banned.");
         } else {
             //If the request failed
-            AlertDialog.display("Unsuccessful Request", "Failed to ban user IP, please try again.");
+            AlertDialog.display("Unsuccessful Request",
+                "Failed to ban user IP, please try again.");
         }
     }
 }
