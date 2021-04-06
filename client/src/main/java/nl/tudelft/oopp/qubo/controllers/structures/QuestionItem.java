@@ -67,13 +67,13 @@ public class QuestionItem extends GridPane {
     /**
      * Constructs a new QuestionItem.
      *
-     * @param questionId        The UUID of the question.
-     * @param upvoteNumber      Label displaying the number of upvotes for the question.
-     * @param questionBody      Text node of the question content.
-     * @param authorName        Author of the question.
-     * @param answers           Textual answers to the question.
-     * @param answeredTime      TimeStamp of when the question was answered.
-     * @param scrollPane        ScrollPane containing the VBox that contains the list of questions.
+     * @param questionId   The UUID of the question.
+     * @param upvoteNumber Label displaying the number of upvotes for the question.
+     * @param questionBody Text node of the question content.
+     * @param authorName   Author of the question.
+     * @param answers      Textual answers to the question.
+     * @param answeredTime TimeStamp of when the question was answered.
+     * @param scrollPane   ScrollPane containing the VBox that contains the list of questions.
      */
     public QuestionItem(UUID questionId, int upvoteNumber, String questionBody, String authorName,
                         Set<AnswerDetailsDto> answers, Timestamp answeredTime,
@@ -86,7 +86,7 @@ public class QuestionItem extends GridPane {
         this.questionId = questionId;
         this.answers = answers;
         this.answeredTime = answeredTime;
-        
+
         quScPane = scrollPane;
 
         construct();
@@ -134,7 +134,7 @@ public class QuestionItem extends GridPane {
      * This method constructs a new questionPane to hold the upvote button, upvote number,
      * question body, options menu, and author name.
      *
-     * @return      A GridPane containing above mentioned information.
+     * @return A GridPane containing above mentioned information.
      */
     private GridPane newQuestionPane() {
         GridPane gridpane = new GridPane();
@@ -155,8 +155,8 @@ public class QuestionItem extends GridPane {
     /**
      * Constructs and returns a new VBox containing the question body and the author name.
      *
-     * @return  Returns a new VBox containing the question body and the
-     *          author name to be displayed.
+     * @return Returns a new VBox containing the question body and the
+     *      author name to be displayed.
      */
     private VBox newQuestionVbox() {
         //Create a pane for putting the author name
@@ -205,15 +205,24 @@ public class QuestionItem extends GridPane {
             questionPane.addColumn(2, options);
         } else if (secretCodeMap.containsKey(questionId)) {
             MenuButton options = newOptionsMenu(secretCodeMap.get(questionId), false);
-            options.setOnShowing(event -> System.out.println("Context menu showing | refresh false"));
+            options.setOnShowing(event -> {
+                System.out.println("Context menu showing | refresh false");
+                stuController.setRefreshing(false);
+            });
             options.visibleProperty().addListener((observableValue, oldValue, newValue) -> {
                 if (newValue) {
                     System.out.println("options visible | refresh true");
+                    stuController.setRefreshing(true);
                 } else {
                     System.out.println("options not visible | refresh false");
+                    stuController.setRefreshing(false);
                 }
             });
-            options.setOnHiding(event -> System.out.println("Context menu hiding | refresh true"));
+            options.setOnHiding(event -> {
+                System.out.println("Context menu hiding | refresh true");
+                stuController.setRefreshing(true);
+            });
+
             questionPane.addColumn(2, options);
         }
     }
@@ -221,7 +230,7 @@ public class QuestionItem extends GridPane {
     /**
      * Constructs and returns a new options menu.
      *
-     * @return  Returns a new options menu to be displayed.
+     * @return Returns a new options menu to be displayed.
      */
     private MenuButton newOptionsMenu(UUID code, boolean isMod) {
         MenuButton options = new MenuButton();
@@ -257,8 +266,8 @@ public class QuestionItem extends GridPane {
     /**
      * Adds mod options to the options menu.
      *
-     * @param options   The options menu where the new MenuItems are added.
-     * @param code      The moderator code. (To be passed on in the action events.)
+     * @param options The options menu where the new MenuItems are added.
+     * @param code    The moderator code. (To be passed on in the action events.)
      */
     private void newModOptions(MenuButton options, UUID code) {
         //Create the reply menu item and set action event
@@ -286,9 +295,9 @@ public class QuestionItem extends GridPane {
     /**
      * Helper method to construct MenuItems with a custom icon.
      *
-     * @param name      The name to be displayed for the MenuItem.
-     * @param image     The image to be displayed in the MenuItem.
-     * @return          The MenuItem constructed with above mentioned data.
+     * @param name  The name to be displayed for the MenuItem.
+     * @param image The image to be displayed in the MenuItem.
+     * @return The MenuItem constructed with above mentioned data.
      */
     private MenuItem newIconItem(String name, Image image) {
         ImageView icon = new ImageView(image);

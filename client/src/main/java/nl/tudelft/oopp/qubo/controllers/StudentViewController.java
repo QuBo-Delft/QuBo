@@ -45,6 +45,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Controller for the StudentView.fxml sheet.
@@ -147,10 +148,15 @@ public class StudentViewController {
 
     private QuestionBoardDetailsDto quBo;
 
-    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-    private ScheduledFuture<?> future = scheduledExecutorService.scheduleAtFixedRate(
-        this::conditionalRefresh, 1, 1, TimeUnit.SECONDS);
-    private Boolean refreshing = true;
+
+    private AtomicBoolean refreshing = new AtomicBoolean(true);
+    private Timer timer = new Timer();
+    private TimerTask refreshQuestions = new TimerTask() {
+        @Override
+        public void run() {
+            Platform.runLater(() -> conditionalRefresh(refreshing.get()));
+        }
+    };
 
 
     /**
@@ -201,27 +207,28 @@ public class StudentViewController {
             (observable, oldValue, newValue) -> previouslyPressed = oldValue);
 
         startUpProperties();
+        timer.scheduleAtFixedRate(refreshQuestions, 100, 1000);
     }
 
     /**
      * Refresh the student view by refreshing the question list.
      */
     public void refresh() {
-        QuestionRefresh.studentRefresh(this, quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
-            sideMenuPane);
+        QuestionRefresh.studentRefresh(this, quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap,
+            unAnsQuScPane, sideMenuPane);
     }
 
     /**
      * Conditional refresh.
      */
-    public void conditionalRefresh() {
-        if (refreshing) {
+    public void conditionalRefresh(boolean condition) {
+        if (condition) {
             refresh();
         }
     }
 
     public void setRefreshing(Boolean bool) {
-        refreshing = bool;
+        refreshing.set(bool);
     }
 
     private void startUpProperties() {
