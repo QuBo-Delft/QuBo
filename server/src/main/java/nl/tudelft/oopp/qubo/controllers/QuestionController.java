@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.qubo.controllers;
 
 import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerCreationDto;
@@ -171,12 +172,20 @@ public class QuestionController {
      * POST endpoint for registering QuestionVotes.
      *
      * @param questionId The question ID.
+     * @param request    The HTTPServletRequest to get the IP of the user.
      * @return The QuestionVote DTO.
      */
     @RequestMapping(value = "/{questionid}/vote", method = POST)
     @ResponseBody
     public QuestionVoteCreationDto registerQuestionVote(
-        @PathVariable("questionid") UUID questionId) {
+        @PathVariable("questionid") UUID questionId,
+        HttpServletRequest request) {
+        Question q = questionService.getQuestionById(questionId);
+        if (q == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        banService.performBanCheck(q.getQuestionBoard(), request.getRemoteAddr());
+
         QuestionVote vote = questionVoteService.registerVote(questionId);
         QuestionVoteCreationDto dto = modelMapper.map(vote, QuestionVoteCreationDto.class);
         return dto;
