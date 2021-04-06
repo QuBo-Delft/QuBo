@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles({"test", "mockCurrentTimeProvider"})
-public class BanServiceTest {
+public class BanServiceTests {
     @Autowired
     private BanRepository banRepository;
 
