@@ -264,7 +264,7 @@ public class SceneLoader {
             windowEvent.consume();
         } else {
             if (controllerS != null && controllerS.getPaceVoteCreationDto() != null) {
-                controllerS.deletePaceVote();
+                controllerS.deletePaceVote(true);
             }
         }
     }
