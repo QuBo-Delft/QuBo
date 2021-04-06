@@ -256,7 +256,7 @@ public class StudentViewController {
         // first remove the old pace vote before creating a new one
         if (paceVoteCreationDto != null) {
             // If deletion fails, reset the radio button to its state before the call to this method and return
-            if (!deletePaceVote(false)) {
+            if (!deletePaceVote(true)) {
                 pace.selectToggle(previouslyPressed);
                 // Allow input again, as processing the pace vote is completed
                 paceVbox.setDisable(false);
@@ -276,19 +276,20 @@ public class StudentViewController {
      * Gets called by the paceVoteHandler and upon closing the stage, either through the sidebar or by
      * making use of the close button of the stage. It removes a set pace vote.
      *
-     * @param noDialogOnError  A boolean value that decides whether an error dialog is shown on error.
+     * @param dialogOnError  A boolean value that decides whether an error dialog is shown on error.
      * @return          True or false depending on whether the removal was successful.
      */
-    public boolean deletePaceVote(boolean noDialogOnError) {
+    public boolean deletePaceVote(boolean dialogOnError) {
         String resBody = PaceVoteCommunication.deletePaceVote(quBo.getId(), paceVoteCreationDto.getId());
         if (resBody == null) {
-            if (noDialogOnError) {
+            if (!dialogOnError) {
                 return false;
             }
             AlertDialog.display("Unsuccessful Request",
                 "Failed to change your pace vote, please try again.");
             return false;
         }
+        paceVoteCreationDto = null;
         return true;
     }
 
@@ -418,7 +419,8 @@ public class StudentViewController {
         if (backHome) {
             // If a pace vote is set upon leaving the Question Board, remove the pace vote when the user leaves
             if (paceVoteCreationDto != null) {
-                deletePaceVote(true);
+                // Deletes set pace vote and do not show an error message on failure
+                deletePaceVote(false);
             }
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
