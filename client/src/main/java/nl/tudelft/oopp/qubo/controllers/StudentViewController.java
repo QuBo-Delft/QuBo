@@ -484,7 +484,7 @@ public class StudentViewController {
             } else {
                 optionButton.setSelected(false);
                 selectedOption.setSelected(true);
-                AlertDialog.display("", "The poll vote could not be deleted. Please try again.");
+                AlertDialog.display("", "The poll vote could not be deleted.\nPlease try again.");
             }
         }
     }
@@ -508,7 +508,7 @@ public class StudentViewController {
         } else {
             optionButton.setSelected(false);
             selectedOption.setSelected(true);
-            AlertDialog.display("", "The poll vote could not be added. Please try again.");
+            AlertDialog.display("", "The poll vote could not be added.\nPlease try again.");
             return false;
         }
     }
