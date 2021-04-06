@@ -49,11 +49,33 @@ sideBarBtn:selected {
 .helpBtn {
     -fx-background-radius: 0;
     -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
+
+    -fx-background-image: url(../icons/help.png);
+    -fx-background-size: 27px 27px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.helpBtn:hover {
+    -fx-background-color: #cd7000;
+    -fx-background-size: 30px 30px;
+    -fx-cursor: hand;
 }
 
 .boardInfoBtn {
     -fx-background-radius: 0;
     -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
+
+    -fx-background-image: url(../icons/board_details.png);
+    -fx-background-size: 27px 27px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.boardInfoBtn:hover {
+    -fx-background-color: #ffaf79;
+    -fx-background-size: 30px 30px;
+    -fx-cursor: hand;
 }
 
 .exitBtn {
