@@ -15,7 +15,15 @@ public class InQuestionDialog {
     public Button cancel;
     public HBox dialogue;
 
-    public InQuestionDialog(MenuButton options, VBox questionContainer, GridPane questionPane,
+    /**
+     * This method displays a confirmation dialogue at the bottom of the question.
+     *
+     * @param options       The options menu node (Needs to be disabled)
+     * @param questionVbox  VBox containing the questionBody and the authorName
+     * @param questionPane  GridPane of the question (Needed to add a row for the dialogue)
+     * @param message       Message to be displayed in the dialogue
+     */
+    public InQuestionDialog(MenuButton options, VBox questionVbox, GridPane questionPane,
                                  String message) {
         //Disable options menu
         options.setDisable(true);
@@ -25,9 +33,9 @@ public class InQuestionDialog {
         confirmation.setPadding(new Insets(0, 5, 0, 0));
         confirmation.setWrapText(true);
         //Set width bounds to the dialogue so it doesn't overflow the question box
-        double widthBind = questionContainer.getPadding().getLeft()
-            + questionContainer.getPadding().getRight() + 200;
-        confirmation.prefWidthProperty().bind(questionContainer.widthProperty().subtract(widthBind));
+        double widthBind = questionVbox.getPadding().getLeft()
+            + questionVbox.getPadding().getRight() + 200;
+        confirmation.prefWidthProperty().bind(questionVbox.widthProperty().subtract(widthBind));
         HBox.setHgrow(confirmation, Priority.ALWAYS);
 
         //Create buttons
