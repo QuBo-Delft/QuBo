@@ -19,10 +19,10 @@ public class InQuestionDialog {
     /**
      * This method displays a confirmation dialogue at the bottom of the question.
      *
-     * @param options       The options menu node (Needs to be disabled)
-     * @param questionBody  Text node of the question content (Needed for layout purposes)
-     * @param questionPane  GridPane of the question (Needed to add a row for the dialogue)
-     * @param message       Message to be displayed in the dialogue
+     * @param options       The options menu node. (Needs to be disabled.)
+     * @param questionBody  Text node of the question content. (Needed for layout purposes.)
+     * @param questionPane  GridPane of the question. (Needed to add a row for the dialogue.)
+     * @param message       Message to be displayed in the dialogue.
      */
     public InQuestionDialog(MenuButton options, Text questionBody,
                             GridPane questionPane, String message) {
