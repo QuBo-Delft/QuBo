@@ -476,4 +476,59 @@ public class PollCommunicationTests {
         // Verify if the request was truly made
         httpClientMock.verify().get(url).called();
     }
+
+    // Test if the closePoll method returns a non-null response body after being called
+    // with a valid boardId and moderator code, and receiving a response with status code 200.
+    @Test
+    public void testClosePollThroughValidCodes() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String url = subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2;
+        httpClientMock.onPatch(url).doReturnStatus(200);
+
+        // Act
+        String responseBody = PollCommunication.closePoll(uuid1, uuid2);
+
+        // Assert
+        assertNotNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().patch(url).called();
+    }
+
+    // Test if the closePoll method returns null after being called with an invalid boardId
+    // and moderator code, and receiving status code 404 and the failureToken as its response body.
+    @Test
+    public void testClosePollThroughInvalidCodes() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String url = subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid1;
+        httpClientMock.onPatch(url).doReturnStatus(404).doReturn(failureToken);
+
+        // Act
+        String responseBody = PollCommunication.closePoll(uuid1, uuid1);
+
+        // Assert
+        assertNull(responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().patch(url).called();
+    }
+
+    // Test if the closePoll method returns the successToken after being called with a valid boardId
+    // and moderator code, and receiving status code 200 and the failureToken as its response body.
+    @Test
+    public void testClosePollGivingCorrectResponseBody() {
+        // Arrange
+        ServerCommunication.setClient(httpClientMock);
+        String url = subUrl + "api/board/" + uuid1 + "/poll?code=" + uuid2;
+        httpClientMock.onPatch(url).doReturn(successToken);
+
+        // Act
+        String responseBody = PollCommunication.closePoll(uuid1, uuid2);
+
+        // Assert
+        assertEquals(successToken, responseBody);
+        // Verify if the request was truly made
+        httpClientMock.verify().patch(url).called();
+    }
+
 }
