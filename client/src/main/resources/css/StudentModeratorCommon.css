@@ -5,7 +5,10 @@
 
 .label {
     -fx-font-family: "Arial";
-    -fx-translate-x: 5;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+
+    -fx-translate-x: 10;
     -fx-padding: 2, 2, 2, 2;
 }
 
@@ -19,7 +22,7 @@
 
 .sideBarBtn {
     -fx-background-radius: 0;
-    -fx-background-color: #d47e1d;
+    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
 
     -fx-background-image: url(../icons/hamburger.png);
     -fx-background-size: 27px 27px;
@@ -31,7 +34,7 @@
 }
 
 .sideBarBtn:hover {
-    -fx-background-color: #8d4e00;
+    -fx-background-color: #cd7000;
     -fx-background-size: 30px 30px;
     -fx-cursor: hand;
 }
@@ -45,7 +48,12 @@ sideBarBtn:selected {
 
 .helpBtn {
     -fx-background-radius: 0;
-    -fx-background-color: #f6a54a;
+    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
+}
+
+.boardInfoBtn {
+    -fx-background-radius: 0;
+    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
 }
 
 .exitBtn {
@@ -97,8 +105,8 @@ sideBarBtn:selected {
 }
 
 .upperBar {
-    -fx-background-color: #f6a54a;
     -fx-min-height: 54;
+    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
 }
 
 .sideBar {

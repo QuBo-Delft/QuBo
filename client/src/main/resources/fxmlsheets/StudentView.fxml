@@ -51,7 +51,7 @@
                </Label>
                <Label fx:id="boardStatusText" maxWidth="1.7976931348623157E308" styleClass="openText" text="open" />
          </VBox>
-         <Button fx:id="boardInfo" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="50.0" prefWidth="50.0" text="B">
+         <Button fx:id="boardInfo" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="50.0" prefWidth="50.0" styleClass="boardInfoBtn" text="B">
             <tooltip>
                <Tooltip text="Right-click to copy student code" />
             </tooltip>
