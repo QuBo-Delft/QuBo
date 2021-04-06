@@ -1,16 +1,11 @@
 package nl.tudelft.oopp.qubo.controllers.structures;
 
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
 import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 
@@ -63,23 +58,6 @@ public class PollResultItem extends GridPane {
     }
 
     /**
-     * This method adds the answers to a question if there are any.
-     */
-    private void addOptions() {
-        int i = 1;
-        for (PollOptionResultDto option : pollOptionResults) {
-            //Add the option text to a VBox.
-            Text optionText = new Text(option.getText());
-            VBox optionBox = new VBox(optionText);
-
-            //Set the coloured bar to display the relative amount of votes for the option.
-            setOptionBar(optionText, calculateRelativeVotes(option));
-
-            this.addRow((i++ + 1), optionBox);
-        }
-    }
-
-    /**
      * This method constructs a new pollPane to hold the poll text and its options.
      *
      * @return A GridPane containing the poll text and its options.
@@ -119,6 +97,23 @@ public class PollResultItem extends GridPane {
     }
 
     /**
+     * This method adds the poll options to the poll container.
+     */
+    private void addOptions() {
+        int i = 1;
+        for (PollOptionResultDto option : pollOptionResults) {
+            //Add the option text to a VBox.
+            Text optionText = new Text(option.getText());
+            VBox optionBox = new VBox(optionText);
+
+            //Set the coloured bar to display the relative amount of votes for the option.
+            setOptionBar(optionBox, calculateRelativeVotes(option));
+
+            this.addRow((i++ + 1), optionBox);
+        }
+    }
+
+    /**
      * Returns the relative amount of votes that the poll option received.
      *
      * @param option    The option whose relative votes should be returned.
@@ -150,29 +145,16 @@ public class PollResultItem extends GridPane {
     /**
      * This method sets the background of the poll option result to display the amount of votes it received.
      *
-     * @param optionBar     The container for the poll option result.
+     * @param optionBox     The container for the poll option result.
      * @param relativeVote  A number between 0 and 1 that represents the relative amount of votes for the
      *                      option.
      */
-    private void setOptionBar(Text optionBar, double relativeVote) {
-        double arbitraryDifference = 0.00000000001;
-        Color colour = new Color(11.8, 59.8, 60.8, 0);
+    private void setOptionBar(VBox optionBox, double relativeVote) {
+        //Scale the relativeVote to a percentage and round it down to the nearest integer.
+        int vote = (int) (relativeVote * 100);
 
-        //Set the stops for the gradient. It should be coloured until the relative vote value, after which it
-        //will appear as white.
-        Stop[] stops = new Stop[] { new Stop(0, colour),
-            new Stop(relativeVote - arbitraryDifference, colour),
-            new Stop(relativeVote + arbitraryDifference, Color.WHITE)};
-
-        //Set the start and end coordinates
-        Bounds textBounds = optionBar.getBoundsInParent();
-        double startHori = textBounds.getMinX();
-        double verti = textBounds.getCenterY();
-        double endHori = textBounds.getMaxX();
-
-        //Use the gradient to colour the option bar.
-        LinearGradient gradient = new LinearGradient(startHori, verti, endHori, verti, true,
-                CycleMethod.NO_CYCLE, stops);
-        optionBar.setStyle("-fx-background-color: " + gradient + ";");
+        //Add the linear gradient to colour the VBox
+        optionBox.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #3690ad, #3690ad "
+                + vote + "%, white " + (vote + 1) + "%, white)");
     }
 }
