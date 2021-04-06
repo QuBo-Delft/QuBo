@@ -160,7 +160,7 @@ public class ModeratorViewController {
      * This method refreshes the questions and pace bar.
      */
     public void refresh() {
-        QuestionRefresh.modRefresh(quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
+        QuestionRefresh.modRefresh(this, quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
 
         //Refresh the pace

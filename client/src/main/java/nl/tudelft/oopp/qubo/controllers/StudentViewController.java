@@ -193,7 +193,7 @@ public class StudentViewController {
      * Refresh the student view by refreshing the question list.
      */
     public void refresh() {
-        QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
+        QuestionRefresh.studentRefresh(this, quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
             sideMenuPane);
     }
 

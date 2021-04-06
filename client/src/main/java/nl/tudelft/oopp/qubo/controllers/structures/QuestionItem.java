@@ -18,6 +18,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
+import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoActionEvents;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
 
@@ -49,6 +51,17 @@ public class QuestionItem extends GridPane {
 
     private ScrollPane quScPane;
     private VBox questionContainer;
+
+    private StudentViewController stuController;
+    private ModeratorViewController modController;
+
+    public void setStuController(StudentViewController controller) {
+        this.stuController = controller;
+    }
+
+    public void setModController(ModeratorViewController controller) {
+        this.modController = controller;
+    }
 
     /**
      * Constructs a new QuestionItem.
@@ -101,8 +114,6 @@ public class QuestionItem extends GridPane {
         this.getStyleClass().add("qPane");
         questionBody.getStyleClass().add("qContent");
         upvoteNumber.getStyleClass().add("qVotes");
-
-        this.setGridLinesVisible(true);
     }
 
     /**
@@ -139,8 +150,6 @@ public class QuestionItem extends GridPane {
         col2.setHgrow(Priority.ALWAYS);
         gridpane.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
             new ColumnConstraints(50));
-
-        gridpane.setGridLinesVisible(true);
 
         return gridpane;
     }
@@ -232,6 +241,8 @@ public class QuestionItem extends GridPane {
         //Set alignment of children in the GridPane
         GridPane.setValignment(options, VPos.TOP);
         GridPane.setHalignment(options, HPos.RIGHT);
+
+        options.setOnAction(event -> );
 
         return options;
     }
