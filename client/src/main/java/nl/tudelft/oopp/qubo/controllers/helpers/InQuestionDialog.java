@@ -18,10 +18,10 @@ public class InQuestionDialog {
     /**
      * This method displays a confirmation dialogue at the bottom of the question.
      *
-     * @param options       The options menu node (Needs to be disabled)
-     * @param questionVbox  VBox containing the questionBody and the authorName
-     * @param questionPane  GridPane of the question (Needed to add a row for the dialogue)
-     * @param message       Message to be displayed in the dialogue
+     * @param options       The options menu node. (Needs to be disabled.)
+     * @param questionVbox  VBox containing the questionBody and the authorName.
+     * @param questionPane  GridPane of the question. (Needed to add a row for the dialogue.)
+     * @param message       Message to be displayed in the dialogue.
      */
     public InQuestionDialog(MenuButton options, VBox questionVbox, GridPane questionPane,
                                  String message) {
