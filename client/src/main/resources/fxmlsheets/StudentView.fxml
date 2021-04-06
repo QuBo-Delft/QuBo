@@ -62,7 +62,6 @@
                         </items>
                     </ContextMenu>
                 </contextMenu></Button>
-            <Pane maxHeight="40.0" maxWidth="150.0" minHeight="40.0" minWidth="40.0" prefHeight="40.0" prefWidth="80.0" styleClass="upperBar" HBox.hgrow="ALWAYS" />
             <Button fx:id="helpDoc" maxHeight="54.0" maxWidth="51.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#displayHelpDoc" prefHeight="50.0" prefWidth="50.0" styleClass="helpBtn" />
             <ToggleButton fx:id="hamburger" alignment="CENTER_RIGHT" maxHeight="54.0" maxWidth="51.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#showHideSideBar" prefHeight="50.0" prefWidth="50.0" styleClass="sideBarBtn" HBox.hgrow="NEVER" />
         </HBox>
