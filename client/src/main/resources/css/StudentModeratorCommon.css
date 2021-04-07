@@ -290,12 +290,13 @@
 
 .menu-item:focused {
     -fx-background-color: rgba(120, 120, 120, 0.90);
+    -fx-cursor: hand;
 }
 
 .inQuestionConfirmationYes {
     -fx-background-color: #454545;
     -fx-background: #454545;
-    -fx-text-fill: #bfbfbf;
+    -fx-text-fill: #efefef;
     -fx-background-radius: 10px;
 }
 
