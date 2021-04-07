@@ -3,6 +3,7 @@ package nl.tudelft.oopp.qubo.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -284,4 +285,7 @@ public class ModeratorViewController {
 
     }
 
+    public void displayMessage(MouseEvent mouseEvent) {
+        System.out.println("pace cursor clicked");
+    }
 }

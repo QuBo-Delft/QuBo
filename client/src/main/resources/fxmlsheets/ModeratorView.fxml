@@ -50,7 +50,7 @@
         <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
             <StackPane fx:id="paceBar" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" styleClass="paceBar" HBox.hgrow="NEVER">
-                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" scaleX="0.7" scaleY="0.9">
+                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" scaleX="0.7" scaleY="0.9" onMouseClicked="#displayMessage">
                         <Image url="@../icons/triangle_pace_bar.png" />
                      </ImageView>
             </StackPane>
