@@ -50,7 +50,15 @@
         <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
             <StackPane fx:id="paceBar" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" styleClass="paceBar" HBox.hgrow="NEVER">
-                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" scaleX="0.7" scaleY="0.9" onMouseClicked="#displayMessage">
+               <VBox alignment="CENTER" StackPane.alignment="CENTER">
+                     <Label text="Fast" styleClass="paceLabel"/>
+                     <Pane VBox.vgrow="ALWAYS" />
+                     <Label text="Slow" styleClass="paceLabel"/>
+                  <padding>
+                     <Insets bottom="5.0" top="5.0" />
+                  </padding>
+               </VBox>
+                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" onMouseClicked="#displayMessage" scaleX="0.7" scaleY="0.9">
                         <Image url="@../icons/triangle_pace_bar.png" />
                      </ImageView>
             </StackPane>
@@ -78,7 +86,6 @@
                     </ScrollPane>
                 </VBox>
             </HBox>
-            <BorderPane fx:id="paceVotePane" maxHeight="160.0" maxWidth="140.0" minHeight="160.0" minWidth="140.0" prefHeight="160.0" prefWidth="140.0" StackPane.alignment="BOTTOM_RIGHT" />
         </StackPane>
     </center>
     <right>
