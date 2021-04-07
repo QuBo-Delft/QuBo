@@ -4,8 +4,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.qubo.views.AlertDialog;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,28 +17,42 @@ import java.time.temporal.ChronoUnit;
  * This class handles setting board information for the student and moderator views.
  */
 public class QuBoInformation {
+
+    /**
+     * The name of the image that has to be set when setting up the board details.
+     */
+    private static String iconImage;
+
     /**
      * Sets the board details of the respective view by setting appropriate values to the input
      * parameters.
      *
-     * @param quBo  the qu bo
-     * @param icon  the icon
-     * @param text  the text
-     * @param title The title.
+     * @param quBo  The Question Board Details Dto.
+     * @param icon  The board status icon (red/yellow/green).
+     * @param text  The status text.
+     * @param title The board title.
      */
-    public void setBoardDetails(QuestionBoardDetailsDto quBo, ImageView icon, Label text, Label title) {
+    public static void setBoardDetails(QuestionBoardDetailsDto quBo, ImageView icon, Label text, Label title) {
         // Sets the board title
         title.setText(quBo.getTitle());
         if (quBo.isClosed()) {
+            // Sets the board icon to be a closed indicator (red), board is closed
+            iconImage = "status_closed";
             // Sets the following text below the board's title
             text.setText("Question board is closed, making changes is no longer possible ");
-            // Sets the board icon to a closed indicator, instead of the default open indicator
-            icon.setImage(new Image(getClass().getResource(
-                "/images/qubo/status_closed.png").toString()));
+        } else if (quBo.getStartTime().toLocalDateTime().isAfter(LocalDateTime.now())) {
+            // Sets the board icon to be a scheduled indicator (yellow), board not open yet
+            iconImage = "status_scheduled";
+            // Calls the getTimeText method to determine which text to display below the board's title
+            text.setText(getTimeText(quBo));
         } else {
+            // Sets the board icon to be a scheduled indicator (green), board is open
+            iconImage = "status_open";
             // Calls the getTimeText method to determine which text to display below the board's title
             text.setText(getTimeText(quBo));
         }
+        // Sets the actual board icon, the path is relative to the resources folder
+        icon.setImage(new Image("/icons/" + iconImage + ".png"));
     }
 
     /**
@@ -45,7 +61,7 @@ public class QuBoInformation {
      * @param quBo The QuestionBoardDetailsDto which start time must be used.
      * @return The correct text to display.
      */
-    public String getTimeText(QuestionBoardDetailsDto quBo) {
+    public static String getTimeText(QuestionBoardDetailsDto quBo) {
 
         // Gets the start date and time of the Question Board
         ZonedDateTime startTime = quBo.getStartTime().toInstant().atZone(ZoneId.systemDefault());
@@ -109,5 +125,24 @@ public class QuBoInformation {
             displayDate = openText + formatterD.format(startTime);
         }
         return displayDate;
+    }
+
+    /**
+     * Method that returns whether the board and it's functions should be usable by students.
+     *
+     * @param quBo The question board that is checked.
+     * @return True or false depending on whether students are allowed to make changes
+     */
+    public static boolean isQuBoClosed(QuestionBoardDetailsDto quBo) {
+        if (quBo.isClosed()) {
+            AlertDialog.display("Action blocked",
+                "This Question Board has been closed by its moderators.");
+            return true;
+        }
+        if (quBo.getStartTime().toLocalDateTime().isAfter(LocalDateTime.now())) {
+            AlertDialog.display("Action limited", getTimeText(quBo) + ".");
+            return true;
+        }
+        return false;
     }
 }

@@ -165,7 +165,6 @@ public class SceneLoader {
             case ("ModeratorView"):
                 // Get controller and initialize qb
                 ModeratorViewController controllerM = loader.getController();
-                loader.setController(controllerM);
                 controllerM.setQuBo(qd);
                 controllerM.setModCode(modCode);
                 controllerM.setAuthorName(userName);
@@ -176,7 +175,6 @@ public class SceneLoader {
             case ("StudentView"):
                 // Get controller and initialize qb
                 controllerS = loader.getController();
-                loader.setController(controllerS);
                 controllerS.setQuBo(qd);
                 controllerS.setAuthorName(userName);
                 controllerS.setBoardDetails();
@@ -185,7 +183,6 @@ public class SceneLoader {
                 break;
             case ("QuBoDetails"):
                 QuBoDetailsController controllerD = loader.getController();
-                loader.setController(controllerD);
                 controllerD.setDetails(qd, modCode);
                 break;
             default:

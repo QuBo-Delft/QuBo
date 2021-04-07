@@ -94,12 +94,14 @@ public class GetTextDialog {
         Region r1 = new Region();
         Region r2 = new Region();
         middleHBox.getChildren().addAll(r1, inputField, r2);
+        middleHBox.setMinHeight(Region.USE_PREF_SIZE);
 
         // The bottom hBox, contains the message label, the submit button, and the cancel button
         HBox bottomHBox = new HBox(20);
         Region r3 = new Region();
         Region r4 = new Region();
         bottomHBox.getChildren().addAll(r4, messageLabel, r3, submitButton, cancelButton);
+        bottomHBox.setMinHeight(Region.USE_PREF_SIZE);
 
         // Set the r3 spacer to scale with other layouts
         HBox.setHgrow(r3, Priority.ALWAYS);

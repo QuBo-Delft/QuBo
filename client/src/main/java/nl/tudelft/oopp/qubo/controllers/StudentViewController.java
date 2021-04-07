@@ -163,7 +163,7 @@ public class StudentViewController {
      * which actually sets their values.
      */
     public void setBoardDetails() {
-        new QuBoInformation().setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
+        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
     }
 
     /**
@@ -250,6 +250,11 @@ public class StudentViewController {
     }
 
     private void paceVoteHandler(PaceType paceType) {
+        // If the question board is closed, block this action and reset the toggle group
+        if (QuBoInformation.isQuBoClosed(quBo)) {
+            pace.selectToggle(previouslyPressed);
+            return;
+        }
         // Disables radio button input when processing pace vote by disabling entire VBox
         paceVbox.setDisable(true);
         // Checks whether the user has already made a pace vote. If this is the case we should
@@ -321,6 +326,10 @@ public class StudentViewController {
      * to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
      */
     public void addQuestion() {
+        // If the question board is closed, block this action
+        if (QuBoInformation.isQuBoClosed(quBo)) {
+            return;
+        }
         // Display a dialog to extract the user's question text,
         // and ensure it is at least 8 characters long
         String questionText = GetTextDialog.display("Write your question here...",

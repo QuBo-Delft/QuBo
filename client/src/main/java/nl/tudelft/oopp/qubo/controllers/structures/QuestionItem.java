@@ -19,7 +19,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoActionEvents;
+import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -50,6 +52,8 @@ public class QuestionItem extends GridPane {
     private ScrollPane quScPane;
     private VBox questionContainer;
 
+    private QuestionBoardDetailsDto quBo;
+
     /**
      * Constructs a new QuestionItem.
      *
@@ -61,10 +65,11 @@ public class QuestionItem extends GridPane {
      * @param answeredTime      TimeStamp of when the question was answered.
      * @param questionContainer VBox containing the list of questions.
      * @param scrollPane        ScrollPane containing the VBox that contains the list of questions.
+     * @param quBo              The question board of the question item.
      */
     public QuestionItem(UUID questionId, int upvoteNumber, String questionBody, String authorName,
                         Set<AnswerDetailsDto> answers, Timestamp answeredTime, VBox questionContainer,
-                        ScrollPane scrollPane) {
+                        ScrollPane scrollPane, QuestionBoardDetailsDto quBo) {
         this.upvoteNumber = new Label(Integer.toString(upvoteNumber));
         this.questionBody = new Text(questionBody);
         this.authorName = new Label(authorName);
@@ -73,6 +78,7 @@ public class QuestionItem extends GridPane {
         this.questionId = questionId;
         this.answers = answers;
         this.answeredTime = answeredTime;
+        this.quBo = quBo;
 
         this.questionContainer = questionContainer;
         
@@ -210,9 +216,15 @@ public class QuestionItem extends GridPane {
 
         //Create the edit menu item and set action event
         MenuItem edit = newIconItem("Edit", editImage);
-        edit.setOnAction(event -> QuBoActionEvents
-            .editQuestionOption(questionBody, questionVbox, options, questionId,
-                code));
+        edit.setOnAction(event -> {
+            if (QuBoInformation.isQuBoClosed(quBo)) {
+                event.consume();
+                return;
+            }
+            QuBoActionEvents
+                .editQuestionOption(questionBody, questionVbox, options, questionId,
+                    code);
+        });
         options.getItems().add(edit);
 
         if (isMod) {
@@ -222,8 +234,14 @@ public class QuestionItem extends GridPane {
 
         //Create the delete menu item and set action event
         MenuItem delete = newIconItem("Delete", deleteImage);
-        delete.setOnAction(event -> QuBoActionEvents.deleteQuestionOption(
-            this, questionPane, questionBody, options, questionId, code));
+        delete.setOnAction(event -> {
+            if (QuBoInformation.isQuBoClosed(quBo)) {
+                event.consume();
+                return;
+            }
+            QuBoActionEvents.deleteQuestionOption(
+                this, questionPane, questionBody, options, questionId, code);
+        });
         options.getItems().add(delete);
 
         //Bind properties so that the visibility depends on the disabled property
@@ -296,8 +314,16 @@ public class QuestionItem extends GridPane {
         upvote.setAlignment(Pos.TOP_CENTER);
 
         //Set event listener
-        upvoteTriangle.setOnAction(event -> QuBoActionEvents.upvoteQuestion(questionId, upvoteMap,
-            upvoteTriangle, upvoteNumber));
+        upvoteTriangle.setOnAction(event -> {
+            if (QuBoInformation.isQuBoClosed(quBo)) {
+                event.consume();
+                boolean select = upvoteTriangle.isSelected();
+                upvoteTriangle.setSelected(!select);
+                return;
+            }
+            QuBoActionEvents.upvoteQuestion(questionId, upvoteMap,
+                upvoteTriangle, upvoteNumber);
+        });
 
         //Set upvote triangle to selected if question has been upvoted
         if (upvoteMap.containsKey(questionId)) {
