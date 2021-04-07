@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.qubo.services.profiles;
+package nl.tudelft.oopp.qubo.profiles;
 
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import org.mockito.Mockito;
