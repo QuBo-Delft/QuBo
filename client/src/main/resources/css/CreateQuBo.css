@@ -29,6 +29,14 @@
     -fx-text-fill: #893B18;
 }
 
+/*button becomes darker with some shadow, font becomes brighter, cursor becomes a hand*/
+.createQuBo:hover {
+    -fx-text-fill: #ffdec3;
+    -fx-background-color: #e57d05;
+    -fx-effect: dropshadow( three-pass-box, #736d69, 5.0, 0.0, 0.5, 3.0);
+    -fx-cursor: hand;
+}
+
 #or {
     -fx-font-weight: bold;
     -fx-font-family: "Arial";
@@ -72,9 +80,18 @@
     -fx-min-width: 80;
     -fx-effect: dropshadow(gaussian, #8D8776 , 2,0,0,1);
 
-    -fx-font-weight: bold;
+    -fx-font-family: "Arial";
     -fx-text-fill: #6B5E59;
     -fx-font-size: 14;
+}
+
+/*button becomes darker with some shadow, font becomes brighter, cursor becomes a hand*/
+.cancelButton:hover {
+    -fx-font-weight: bold;
+    -fx-text-fill: #fdf5f1;
+    -fx-background-color: #a09c93;
+    -fx-effect: dropshadow( three-pass-box, #736d69, 5.0, 0.0, 0.5, 3.0);
+    -fx-cursor: hand;
 }
 
 .attribute {

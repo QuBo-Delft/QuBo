@@ -196,7 +196,7 @@ public class QuestionRefresh {
         for (QuestionDetailsDto question : questionList) {
             QuestionItem newQu = new QuestionItem(question.getId(), question.getUpvotes(),
                 question.getText(), question.getAuthorName(), question.getAnswers(),
-                question.getAnswered(), scrollpane);
+                question.getAnswered(), scrollpane, thisQuBoId);
 
             //Set controller
             if (thisStuController != null) {
