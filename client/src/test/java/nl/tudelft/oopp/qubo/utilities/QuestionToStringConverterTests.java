@@ -32,12 +32,12 @@ public class QuestionToStringConverterTests {
 
         QuestionDetailsDto[] questions = {question1, question2};
 
-        String expected = "Questions:\n\n" +
-            "[01/03/2020 10:02] Author 2: (15↑)\n" +
-            "  Test question 2\n" +
-            "    - Test answer [01/03/2020 10:12]\n\n" +
-            "[01/03/2020 10:02] Author 1: (5↑)\n" +
-            "  Test question 1\n\n";
+        String expected = "Questions:\n\n"
+            + "[01/03/2020 10:02] Author 2: (15↑)\n"
+            + "  Test question 2\n"
+            + "    - Test answer [01/03/2020 10:12]\n\n"
+            + "[01/03/2020 10:02] Author 1: (5↑)\n"
+            + "  Test question 1\n\n";
 
         // Act
         String actual = QuestionToStringConverter.convertToString(questions);
