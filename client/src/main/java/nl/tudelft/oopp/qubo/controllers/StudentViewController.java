@@ -207,7 +207,7 @@ public class StudentViewController {
             (observable, oldValue, newValue) -> previouslyPressed = oldValue);
 
         startUpProperties();
-        timer.scheduleAtFixedRate(refreshQuestions, 100, 1000);
+        timer.scheduleAtFixedRate(refreshQuestions, 0, 2000);
     }
 
     /**

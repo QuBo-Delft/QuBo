@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.qubo.controllers;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
@@ -26,7 +27,10 @@ import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The Moderator view controller.
@@ -110,6 +114,14 @@ public class ModeratorViewController {
     private ClipboardContent clipboardContent = new ClipboardContent();
 
     private QuestionBoardDetailsDto quBo;
+    private AtomicBoolean refreshing = new AtomicBoolean(true);
+    private Timer timer = new Timer();
+    private TimerTask refreshQuestions = new TimerTask() {
+        @Override
+        public void run() {
+            Platform.runLater(() -> conditionalRefresh(refreshing.get()));
+        }
+    };
 
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
@@ -154,7 +166,7 @@ public class ModeratorViewController {
     private void initialize() {
         startUpProperties();
         //Display the questions and pace
-        refresh();
+        timer.scheduleAtFixedRate(refreshQuestions, 0, 2000);
     }
 
     /**
@@ -166,6 +178,19 @@ public class ModeratorViewController {
 
         //Refresh the pace
         PaceDisplay.displayPace(quBo, modCode, paceBar, paceCursor);
+    }
+
+    /**
+     * Conditional refresh.
+     */
+    public void conditionalRefresh(boolean condition) {
+        if (condition) {
+            refresh();
+        }
+    }
+
+    public void setRefreshing(Boolean bool) {
+        refreshing.set(bool);
     }
 
     private void startUpProperties() {

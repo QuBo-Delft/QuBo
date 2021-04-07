@@ -200,7 +200,23 @@ public class QuestionItem extends GridPane {
         //If yes create and display the options menu
         if (modCode != null) {
             MenuButton options = newOptionsMenu(modCode, true);
-            //TODO: add refresh pausing and resuming for modview
+            options.setOnShowing(event -> {
+                System.out.println("Context menu showing | refresh false");
+                modController.setRefreshing(false);
+            });
+            options.visibleProperty().addListener((observableValue, oldValue, newValue) -> {
+                if (newValue) {
+                    System.out.println("options visible | refresh true");
+                    modController.setRefreshing(true);
+                } else {
+                    System.out.println("options not visible | refresh false");
+                    modController.setRefreshing(false);
+                }
+            });
+            options.setOnHiding(event -> {
+                System.out.println("Context menu hiding | refresh true");
+                modController.setRefreshing(true);
+            });
 
             questionPane.addColumn(2, options);
         } else if (secretCodeMap.containsKey(questionId)) {
