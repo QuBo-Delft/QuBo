@@ -123,11 +123,17 @@ public class SortingTest {
         questions[5] = new QuestionDetailsDto();
 
         questions[0].setUpvotes(10);
+        questions[0].setTimestamp(Timestamp.valueOf("2020-11-01 22:22:22"));
         questions[1].setUpvotes(1);
+        questions[1].setTimestamp(Timestamp.valueOf("2020-11-01 22:22:22"));
         questions[2].setUpvotes(3);
-        questions[3].setUpvotes(5);
-        questions[4].setUpvotes(0);
+        questions[2].setTimestamp(Timestamp.valueOf("2020-11-01 22:22:22"));
+        questions[3].setUpvotes(3);
+        questions[3].setTimestamp(Timestamp.valueOf("2020-11-01 22:23:22"));
+        questions[4].setUpvotes(9);
+        questions[4].setTimestamp(Timestamp.valueOf("2020-11-01 22:22:22"));
         questions[5].setUpvotes(10);
+        questions[5].setTimestamp(Timestamp.valueOf("2020-11-01 22:22:22"));
 
         //Act
         Sorting.sortOnUpvotes(questions);
@@ -135,7 +141,7 @@ public class SortingTest {
         //Assert
         assertTrue(questions[0].getUpvotes() >= questions[1].getUpvotes());
         assertTrue(questions[1].getUpvotes() >= questions[2].getUpvotes());
-        assertTrue(questions[2].getUpvotes() >= questions[3].getUpvotes());
+        assertTrue(questions[2].getUpvotes() > questions[3].getUpvotes());
         assertTrue(questions[3].getUpvotes() >= questions[4].getUpvotes());
         assertTrue(questions[4].getUpvotes() >= questions[5].getUpvotes());
     }
