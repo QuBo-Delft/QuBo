@@ -115,7 +115,7 @@
                     </VBox>
                 </left>
             </BorderPane>
-            <Button maxHeight="90.0" maxWidth="90.0" minHeight="90.0" minWidth="90.0" mnemonicParsing="false" onAction="#addQuestion" prefHeight="90.0" prefWidth="90.0" styleClass="askBtn" StackPane.alignment="BOTTOM_LEFT">
+            <Button maxHeight="90.0" maxWidth="90.0" minHeight="90.0" minWidth="90.0" mnemonicParsing="false" onAction="#addQuestion" pickOnBounds="false" prefHeight="90.0" prefWidth="90.0" styleClass="askBtn" StackPane.alignment="BOTTOM_LEFT">
                 <StackPane.margin>
                     <Insets bottom="30.0" left="40.0" />
                 </StackPane.margin>

@@ -20,15 +20,17 @@
 
 .lecTitleText {
     -fx-font-size: 17;
+    -fx-text-fill: #3E1502;
 }
 
 .openText {
     -fx-font-size: 13;
+    -fx-text-fill: #3E1502;
 }
 
 .sideBarBtn {
     -fx-background-radius: 0;
-    -fx-background-color: linear-gradient(to top, #feA137 20%, rgb(255, 164, 105) 80%);
+    -fx-background-color: transparent;
 
     -fx-background-image: url(../icons/hamburger.png);
     -fx-background-size: 27px 27px;
@@ -52,7 +54,7 @@
 
 .helpBtn {
     -fx-background-radius: 0;
-    -fx-background-color: linear-gradient(to top, #feA137 20%, rgb(255, 164, 105) 80%);
+    -fx-background-color: transparent;
 
     -fx-background-image: url(../icons/help.png);
     -fx-background-size: 27px 27px;
@@ -68,7 +70,7 @@
 
 .boardInfoBtn {
     -fx-background-radius: 0;
-    -fx-background-color: linear-gradient(to top, #feA137 20%, rgb(255, 164, 105) 80%);
+    -fx-background-color: transparent;
 
     -fx-background-image: url(../icons/board_details.png);
     -fx-background-size: 27px 27px;
@@ -141,14 +143,14 @@
 }
 
 .upperBox {
-    -fx-effect: dropshadow( three-pass-box, #626234, 4.0, 0.0, 0.0, 0.0);
-    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
+    -fx-effect: dropshadow( three-pass-box, #964C2A, 2.0, 0.0, -2.0, 0.0);
+    -fx-background-color: linear-gradient(to top, #FF8B3E 20%, #FF986E 80%);
 }
 
 .upperBar {
     -fx-min-height: 54;
-    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
-    -fx-effect: dropshadow( three-pass-box, #626234, 5.0, 0.0, 0.0, 0.0);
+    -fx-background-color: linear-gradient(to top, #FF8B3E 20%, #FF986E 80%);
+    -fx-effect: dropshadow( three-pass-box, #964C2A, 5.0, 0.0, 0.0, 0.0);
 }
 
 .sideBar {

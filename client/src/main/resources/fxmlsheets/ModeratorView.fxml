@@ -16,7 +16,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.qubo.controllers.ModeratorViewController">
     <top>
@@ -26,9 +25,6 @@
             </ImageView>
             <VBox spacing="3.0" styleClass="upperBox" HBox.hgrow="ALWAYS">
                 <Label fx:id="boardTitle" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" styleClass="lecTitleText" text="Lecture Title">
-                    <font>
-                        <Font size="16.0" />
-                    </font>
                     <contextMenu>
                         <ContextMenu>
                             <items>
@@ -54,7 +50,7 @@
         <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
             <StackPane fx:id="paceBar" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" styleClass="paceBar" HBox.hgrow="NEVER">
-                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true" scaleX="0.7" scaleY="0.9">
+                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" scaleX="0.7" scaleY="0.9">
                         <Image url="@../icons/triangle_pace_bar.png" />
                      </ImageView>
             </StackPane>

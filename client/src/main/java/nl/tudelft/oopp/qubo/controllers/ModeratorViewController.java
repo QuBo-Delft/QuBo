@@ -152,8 +152,6 @@ public class ModeratorViewController {
     @FXML
     private void initialize() {
         startUpProperties();
-        //Display the questions and pace
-        refresh();
     }
 
     /**
