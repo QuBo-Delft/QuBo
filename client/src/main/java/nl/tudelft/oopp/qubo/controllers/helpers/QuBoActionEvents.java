@@ -279,12 +279,14 @@ public class QuBoActionEvents {
      */
     public static void deleteQuestionOption(GridPane content, GridPane questionPane, Text questionBody,
                                             MenuButton options, UUID questionId, UUID code) {
+        options.setDisable(true);
+
         //Create new InQuestionDialog
         InQuestionDialog dialog = new InQuestionDialog(options, questionBody,
             questionPane, "Are you sure you want to delete this question?");
 
         //Set action listeners
-        dialog.yes.setOnAction(event -> deleteQuestion(content, questionId, code));
+        dialog.yes.setOnAction(event -> deleteQuestion(options, content, questionId, code));
         dialog.cancel.setOnAction(event -> cancelDialog(options, questionPane, dialog.dialogue));
     }
 
@@ -301,7 +303,7 @@ public class QuBoActionEvents {
      * @param questionId The UUID of the question that is being edited.
      * @param code       Secret code of the question.
      */
-    public static void deleteQuestion(GridPane content, UUID questionId, UUID code) {
+    public static void deleteQuestion(MenuButton options, GridPane content, UUID questionId, UUID code) {
         //Send a request to the server
         String response = QuestionCommunication.deleteQuestion(questionId, code);
 
@@ -313,6 +315,7 @@ public class QuBoActionEvents {
             AlertDialog.display("", "Question deletion successful.");
             content.setVisible(false);
             content.setManaged(false);
+            options.setDisable(false);
         }
     }
 
@@ -340,9 +343,11 @@ public class QuBoActionEvents {
      */
     public static void markAsAnsOption(MenuButton options, Text questionBody, GridPane questionPane,
                                        UUID questionId, UUID code) {
+        options.setDisable(true);
+
         InQuestionDialog dialog =  new InQuestionDialog(options, questionBody, questionPane,
             "Are you sure you want to mark this question as answered?");
-        dialog.yes.setOnAction(event -> markAsAns(questionId, code));
+        dialog.yes.setOnAction(event -> markAsAns(options, questionId, code));
         dialog.cancel.setOnAction(event -> cancelDialog(options, questionPane, dialog.dialogue));
     }
 
@@ -353,7 +358,7 @@ public class QuBoActionEvents {
      * @param questionId    The UUID of the question that is being marked as answered.
      * @param code          The moderator code of the board.
      */
-    private static void markAsAns(UUID questionId, UUID code) {
+    private static void markAsAns(MenuButton options, UUID questionId, UUID code) {
         String response = QuestionCommunication.markQuestionAsAnswered(questionId, code);
 
         if (response == null) {
@@ -363,6 +368,7 @@ public class QuBoActionEvents {
         } else {
             //If the request was successful
             AlertDialog.display("", "Question has been marked as answered.");
+            options.setDisable(false);
         }
     }
 
@@ -444,6 +450,8 @@ public class QuBoActionEvents {
 
             //Add answer to the VBox containing the questions (and answers)
             content.addRow(content.getRowCount(), answerPane);
+
+            options.setDisable(false);
         }
     }
 
@@ -470,6 +478,8 @@ public class QuBoActionEvents {
      */
     public static void banUserOption(MenuButton options, GridPane questionPane,
                                      Text questionBody, UUID questionId, UUID modCode) {
+        options.setDisable(true);
+
         InQuestionDialog dialog =  new InQuestionDialog(options, questionBody, questionPane,
             "Are you sure you want to ban the user who posted this question?");
 
@@ -496,6 +506,7 @@ public class QuBoActionEvents {
             //If the request was successful
             cancelDialog(options, questionPane, questionVbox);
             AlertDialog.display("", "User IP successfully banned.");
+            options.setDisable(false);
         } else {
             //If the request failed
             AlertDialog.display("Unsuccessful Request",
