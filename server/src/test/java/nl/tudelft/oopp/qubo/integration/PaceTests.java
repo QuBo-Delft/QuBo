@@ -5,6 +5,7 @@ import java.util.UUID;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationDto;
+import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteDetailsDto;
 import nl.tudelft.oopp.qubo.entities.Ban;
 import nl.tudelft.oopp.qubo.entities.PaceVote;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
@@ -16,6 +17,7 @@ import nl.tudelft.oopp.qubo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -199,5 +202,94 @@ public class PaceTests {
         assertNotNull(result.getResolvedException());
         assertEquals("You are banned from this question board.",
             result.getResolvedException().getMessage());
+    }
+
+    @Test
+    public void deletePaceVote_withValidData_deletesVote() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
+
+        PaceVote vote = new PaceVote();
+        vote.setPaceType(nl.tudelft.oopp.qubo.entities.PaceType.TOO_FAST);
+        vote.setQuestionBoard(qb);
+        paceVoteRepository.save(vote);
+
+        // Act, Assert
+        MvcResult result = mockMvc.perform(delete("/api/board/{id}/pace/{paceid}", qb.getId(), vote.getId())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        PaceVoteDetailsDto dto = deserialize(result.getResponse().getContentAsString(),
+            PaceVoteDetailsDto.class);
+
+        assertEquals(vote.getId(), dto.getId());
+        assertEquals(vote.getPaceType().toString(), dto.getPaceType().toString());
+
+        PaceVote voteInDatabase = paceVoteRepository.getById(dto.getId());
+        assertNull(voteInDatabase);
+    }
+
+    @Test
+    public void deletePaceVote_withNonexistentVoteId_returns404() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
+
+        PaceVote vote = new PaceVote();
+        vote.setPaceType(nl.tudelft.oopp.qubo.entities.PaceType.TOO_FAST);
+        vote.setQuestionBoard(qb);
+        paceVoteRepository.save(vote);
+
+        // Act, Assert
+        MvcResult result = mockMvc.perform(delete("/api/board/{id}/pace/{paceid}",
+            qb.getId(), UUID.randomUUID())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+        assertEquals("Pace vote does not exist", result.getResponse().getErrorMessage());
+    }
+
+    @Test
+    public void deletePaceVote_withInvalidBoardId_returns404() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
+
+        QuestionBoard qb2 = new QuestionBoard();
+        qb2.setModeratorCode(UUID.randomUUID());
+        qb2.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb2.setTitle("Test board 2");
+        qb2.setClosed(false);
+        questionBoardRepository.save(qb2);
+
+        PaceVote vote = new PaceVote();
+        vote.setPaceType(nl.tudelft.oopp.qubo.entities.PaceType.TOO_FAST);
+        vote.setQuestionBoard(qb);
+        paceVoteRepository.save(vote);
+
+        // Act, Assert
+        MvcResult result = mockMvc.perform(delete("/api/board/{id}/pace/{paceid}",
+            qb2.getId(), vote.getId())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+        assertEquals("Pace vote was not found in requested Question board",
+            result.getResponse().getErrorMessage());
     }
 }
