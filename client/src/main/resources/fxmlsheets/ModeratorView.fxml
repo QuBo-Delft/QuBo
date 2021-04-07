@@ -100,7 +100,7 @@
                     <Tooltip text="Leave Question Board" />
                 </tooltip>
             </Button>
-         <Button fx:id="closeQuBo" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" styleClass="closeBoardBtn" />
+         <Button fx:id="closeQuBo" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#closeQuBo" styleClass="closeBoardBtn" />
         </VBox>
     </right>
    <stylesheets>

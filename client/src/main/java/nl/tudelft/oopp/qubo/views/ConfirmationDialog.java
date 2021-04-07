@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -80,6 +81,7 @@ public class ConfirmationDialog {
         vbox.setPrefHeight(VBox.USE_COMPUTED_SIZE);
         vbox.setAlignment(Pos.CENTER);
         vbox.setSpacing(15);
+        vbox.setMinHeight(Region.USE_PREF_SIZE);
 
         // Create BorderPane to put vbox
         BorderPane dialogue = new BorderPane(vbox);

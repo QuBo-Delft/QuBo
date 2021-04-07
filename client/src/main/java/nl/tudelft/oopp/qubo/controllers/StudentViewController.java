@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
@@ -94,11 +95,13 @@ public class StudentViewController {
     @FXML
     private ToggleButton polls;
 
-    // The VBox pace votes are placed in, and their toggle group
+    // The VBox pace votes are placed in, their toggle group, and the "All right" button.
     @FXML
     private VBox paceVbox;
     @FXML
     ToggleGroup pace;
+    @FXML
+    RadioButton justRight;
 
     /**
     * Records if the side menu was open before hiding.
@@ -163,7 +166,7 @@ public class StudentViewController {
      * which actually sets their values.
      */
     public void setBoardDetails() {
-        new QuBoInformation().setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
+        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
     }
 
     /**
@@ -195,6 +198,13 @@ public class StudentViewController {
     public void refresh() {
         QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
             sideMenuPane);
+
+        //Add a Just Right vote on the first refresh of the question board after the student joined.
+        if (previouslyPressed == null) {
+            justRight.setSelected(true);
+            previouslyPressed = justRight;
+            paceVoteOkay();
+        }
     }
 
     private void startUpProperties() {
@@ -250,6 +260,11 @@ public class StudentViewController {
     }
 
     private void paceVoteHandler(PaceType paceType) {
+        // If the question board is closed, block this action and reset the toggle group
+        if (QuBoInformation.isQuBoClosed(quBo)) {
+            pace.selectToggle(previouslyPressed);
+            return;
+        }
         // Disables radio button input when processing pace vote by disabling entire VBox
         paceVbox.setDisable(true);
         // Checks whether the user has already made a pace vote. If this is the case we should
@@ -321,6 +336,10 @@ public class StudentViewController {
      * to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
      */
     public void addQuestion() {
+        // If the question board is closed, block this action
+        if (QuBoInformation.isQuBoClosed(quBo)) {
+            return;
+        }
         // Display a dialog to extract the user's question text,
         // and ensure it is at least 8 characters long
         String questionText = GetTextDialog.display("Write your question here...",
