@@ -150,7 +150,6 @@
 .upperBar {
     -fx-min-height: 54;
     -fx-background-color: linear-gradient(to top, #FF8B3E 20%, #FF986E 80%);
-    -fx-effect: dropshadow( three-pass-box, #964C2A, 5.0, 0.0, 0.0, 0.0);
 }
 
 .sideBar {
