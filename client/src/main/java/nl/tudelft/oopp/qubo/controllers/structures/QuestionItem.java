@@ -261,7 +261,7 @@ public class QuestionItem extends GridPane {
         //Create the reply menu item and set action event
         MenuItem reply = newIconItem("Reply", replyImage);
         reply.setOnAction(event -> QuBoActionEvents.replyToQuestionOption(
-            this, questionPane, questionId, code, options, questionBody));
+            questionPane, questionId, code, options, questionBody));
         options.getItems().add(reply);
 
         if (quScPane.getId().equals("unAnsQuScPane")) {

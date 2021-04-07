@@ -67,10 +67,13 @@
         <StackPane fx:id="content">
             <HBox prefHeight="100.0" prefWidth="200.0">
                 <ScrollPane fx:id="unAnsQuScPane" styleClass="mainContentBackGround" HBox.hgrow="ALWAYS">
-                    <VBox fx:id="unAnsQuVbox" maxWidth="800.0" spacing="15.0" styleClass="mainContentBackGround" />
                     <padding>
                         <Insets left="30.0" top="20.0" />
                     </padding>
+                  <VBox>
+                      <VBox fx:id="unAnsQuVbox" maxWidth="800.0" spacing="15.0" styleClass="mainContentBackGround" />
+                      <Pane maxHeight="100.0" minHeight="100.0" prefHeight="100.0" VBox.vgrow="NEVER" />
+                  </VBox>
                 </ScrollPane>
                 <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0" spacing="15.0" styleClass="sidePane">
                     <padding>
@@ -82,6 +85,7 @@
                             <VBox fx:id="ansQuVbox" spacing="15.0" styleClass="sidePaneBackground" VBox.vgrow="ALWAYS">
                             </VBox>
                             <VBox fx:id="pollVbox" styleClass="sidePaneBackground" VBox.vgrow="ALWAYS" />
+                     <Pane maxHeight="100.0" minHeight="100.0" prefHeight="100.0" VBox.vgrow="NEVER" />
                         </VBox>
                     </ScrollPane>
                 </VBox>

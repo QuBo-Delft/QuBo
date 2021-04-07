@@ -6,9 +6,16 @@
 .label {
     -fx-font-family: "Arial";
     -fx-font-weight: bold;
-    -fx-text-fill: #000000;
 
     -fx-padding: 2, 2, 2, 2;
+}
+
+.text-area {
+    -fx-control-inner-background: #f4f2ee;
+}
+
+.button:hover {
+    -fx-cursor: hand;
 }
 
 .lecTitleText {
@@ -208,14 +215,34 @@
     -fx-background-color: #c3b9ad;
 }
 
-.thumb {
+/*Scrollbar stuff*/
+.scroll-bar .thumb {
     -fx-background-color: #736d69;
+    -fx-background-radius : 8px;
 }
 
-.track {
+.scroll-bar {
     -fx-background-color: transparent;
 }
 
+.scroll-bar .track {
+    -fx-opacity: 0;
+}
+
+.scroll-bar .track-background {
+    -fx-opacity: 0;
+}
+
+.scroll-bar .increment-button {
+    -fx-opacity: 0;
+}
+
+.scroll-bar .decrement-button {
+    -fx-opacity: 0;
+}
+/**/
+
+/*Options MenuButton stuff*/
 .optionsMenu {
     -fx-background-color: transparent;
     -fx-background-image: url(../icons/options.png);
@@ -230,8 +257,8 @@
 }
 
 .optionsMenu:showing {
-    -fx-background-color: rgba(190, 190, 190, 0.70);
-    -fx-background: rgba(190, 190, 190, 0.70);
+    -fx-background-color: rgba(210, 210, 210, 0.80);
+    -fx-background: rgba(210, 210, 210, 0.80);
 }
 
 .menu-button > .arrow-button {
@@ -241,6 +268,7 @@
 .menu-button > .arrow-button > .arrow {
     -fx-background-color: transparent;
 }
+/**/
 
 .answers {
     -fx-background-color: #979288;
@@ -253,7 +281,71 @@
 }
 
 .context-menu {
-    -fx-background-color: rgba(190, 190, 190, 0.70);
-    -fx-background: rgba(190, 190, 190, 0.70);
+    -fx-background-color: rgba(210, 210, 210, 0.80);
+    -fx-background: rgba(210, 210, 210, 0.80);
     -fx-background-radius: 0 0 8 8;
+}
+
+.menu-item:focused {
+    -fx-background-color: rgba(120, 120, 120, 0.90);
+}
+
+.inQuestionConfirmationYes {
+    -fx-background-color: #454545;
+    -fx-background: #454545;
+    -fx-text-fill: #bfbfbf;
+    -fx-background-radius: 10px;
+}
+
+.inQuestionConfirmationYes:hover {
+    -fx-background-color: #3a3a3a;
+    -fx-background: #3a3a3a;
+}
+
+.inQuestionConfirmationYes:pressed {
+    -fx-background-color: #2f2f2f;
+    -fx-background: #2f2f2f;
+}
+
+.inQuestionConfirmationCancel {
+    -fx-background-color: rgba(0, 0, 0, 0.15);
+    -fx-background: rgba(0, 0, 0, 0.15);
+    -fx-background-radius: 10px;
+}
+
+.inQuestionConfirmationCancel:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.22);
+    -fx-background: rgba(0, 0, 0, 0.22);
+}
+.inQuestionConfirmationCancel:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.30);
+    -fx-background: rgba(0, 0, 0, 0.30);
+}
+
+.textAreaButtonConfirm {
+    -fx-background-color: #b8a788;
+    -fx-text-fill: #FAF7F4;
+    -fx-background-radius: 8px;
+}
+
+.textAreaButtonConfirm:hover {
+    -fx-background-color: #A99777;
+}
+
+.textAreaButtonConfirm:pressed {
+    -fx-background-color: #9A8764;
+}
+
+.textAreaButtonCancel {
+    -fx-background-color: #ece7e1;
+    -fx-text-fill: #8F7E5F;
+    -fx-background-radius: 8px;
+}
+
+.textAreaButtonCancel:hover {
+    -fx-background-color: #D9CFC4;
+}
+
+.textAreaButtonCancel:pressed {
+    -fx-background-color: #C4B7A8;
 }
