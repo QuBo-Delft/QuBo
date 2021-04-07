@@ -19,12 +19,12 @@
 }
 
 .lecTitleText {
-    -fx-font-size: 17;
+    -fx-font-size: 1.3em;
     -fx-text-fill: #3E1502;
 }
 
 .openText {
-    -fx-font-size: 13;
+    -fx-font-size: 1em;
     -fx-text-fill: #3E1502;
 }
 
@@ -181,14 +181,14 @@
 
 .qContent {
     -fx-font-family: "Arial";
-    -fx-font-size: 16;
+    -fx-font-size: 1.2em;
     -fx-text-fill: #b39288;
     -fx-background-color: black;
 }
 
 .qVotes {
     -fx-font-family: "Arial";
-    -fx-font-size: 16;
+    -fx-font-size: 1.2em;
     -fx-text-fill: #7e6461;
 }
 
