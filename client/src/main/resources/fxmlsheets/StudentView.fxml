@@ -77,7 +77,7 @@
                 </ScrollPane>
                 <VBox fx:id="sideMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="282.0" spacing="15.0" styleClass="sidePane">
                     <padding>
-                        <Insets left="20.0" right="20.0" top="20.0" />
+                        <Insets left="20.0" right="5.0" top="20.0" />
                     </padding>
                     <Label fx:id="sideMenuTitle" text="Title" />
                     <ScrollPane fx:id="sideMenuPane" prefHeight="200.0" prefWidth="200.0" styleClass="sidePaneBackground" VBox.vgrow="ALWAYS">
