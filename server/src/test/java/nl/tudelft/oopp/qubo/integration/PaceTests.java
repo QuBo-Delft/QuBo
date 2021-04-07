@@ -31,6 +31,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -80,14 +81,17 @@ public class PaceTests {
         PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
         model.setPaceType(PaceType.TOO_FAST);
 
-        // Act, Assert
-        MvcResult result = mockMvc.perform(post("/api/board/{id}/pace", qb.getId())
+        // Act
+        ResultActions resultActions = mockMvc.perform(post("/api/board/{id}/pace", qb.getId())
             .with(req -> {
                 req.setRemoteAddr("1.1.1.2");
                 return req;
             })
             .contentType(MediaType.APPLICATION_JSON)
-            .content(serialize(model)))
+            .content(serialize(model)));
+
+        // Assert
+        MvcResult result = resultActions
             .andExpect(status().isOk())
             .andReturn();
 
@@ -114,10 +118,13 @@ public class PaceTests {
         PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
         model.setPaceType(PaceType.TOO_FAST);
 
-        // Act, Assert
-        MvcResult result = mockMvc.perform(post("/api/board/{id}/pace", UUID.randomUUID())
+        // Act
+        ResultActions resultActions = mockMvc.perform(post("/api/board/{id}/pace", UUID.randomUUID())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(serialize(model)))
+            .content(serialize(model)));
+
+        // Assert
+        MvcResult result = resultActions
             .andExpect(status().isNotFound())
             .andReturn();
 
@@ -137,10 +144,13 @@ public class PaceTests {
         PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
         model.setPaceType(PaceType.TOO_FAST);
 
-        // Act, Assert
-        MvcResult result = mockMvc.perform(post("/api/board/{id}/pace", qb.getId())
+        // Act
+        ResultActions resultActions = mockMvc.perform(post("/api/board/{id}/pace", qb.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(serialize(model)))
+            .content(serialize(model)));
+
+        // Assert
+        MvcResult result = resultActions
             .andExpect(status().isForbidden())
             .andReturn();
 
@@ -161,10 +171,13 @@ public class PaceTests {
         PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
         model.setPaceType(PaceType.TOO_FAST);
 
-        // Act, Assert
-        MvcResult result = mockMvc.perform(post("/api/board/{id}/pace", qb.getId())
+        // Act
+        ResultActions resultActions = mockMvc.perform(post("/api/board/{id}/pace", qb.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(serialize(model)))
+            .content(serialize(model)));
+
+        // Assert
+        MvcResult result = resultActions
             .andExpect(status().isForbidden())
             .andReturn();
 
@@ -190,14 +203,17 @@ public class PaceTests {
         PaceVoteCreationBindingModel model = new PaceVoteCreationBindingModel();
         model.setPaceType(PaceType.TOO_FAST);
 
-        // Act, Assert
-        MvcResult result = mockMvc.perform(post("/api/board/{id}/pace", qb.getId())
+        // Act
+        ResultActions resultActions = mockMvc.perform(post("/api/board/{id}/pace", qb.getId())
             .with(req -> {
                 req.setRemoteAddr(ban.getIp());
                 return req;
             })
             .contentType(MediaType.APPLICATION_JSON)
-            .content(serialize(model)))
+            .content(serialize(model)));
+
+        // Assert
+        MvcResult result = resultActions
             .andExpect(status().isForbidden())
             .andReturn();
 
@@ -221,9 +237,13 @@ public class PaceTests {
         vote.setQuestionBoard(qb);
         paceVoteRepository.save(vote);
 
-        // Act, Assert
-        MvcResult result = mockMvc.perform(delete("/api/board/{id}/pace/{paceid}", qb.getId(), vote.getId())
-            .contentType(MediaType.APPLICATION_JSON))
+        // Act
+        ResultActions resultActions =
+            mockMvc.perform(delete("/api/board/{id}/pace/{paceid}", qb.getId(), vote.getId())
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
             .andExpect(status().isOk())
             .andReturn();
 
@@ -252,10 +272,13 @@ public class PaceTests {
         vote.setQuestionBoard(qb);
         paceVoteRepository.save(vote);
 
-        // Act, Assert
-        MvcResult result = mockMvc.perform(delete("/api/board/{id}/pace/{paceid}",
+        // Act
+        ResultActions resultActions = mockMvc.perform(delete("/api/board/{id}/pace/{paceid}",
             qb.getId(), UUID.randomUUID())
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
             .andExpect(status().isNotFound())
             .andReturn();
 
@@ -284,10 +307,13 @@ public class PaceTests {
         vote.setQuestionBoard(qb);
         paceVoteRepository.save(vote);
 
-        // Act, Assert
-        MvcResult result = mockMvc.perform(delete("/api/board/{id}/pace/{paceid}",
+        // Act
+        ResultActions resultActions = mockMvc.perform(delete("/api/board/{id}/pace/{paceid}",
             qb2.getId(), vote.getId())
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
             .andExpect(status().isNotFound())
             .andReturn();
 
@@ -326,10 +352,13 @@ public class PaceTests {
             paceVoteRepository.save(vote);
         }
 
-        // Act, Assert
-        MvcResult result = mockMvc.perform(get("/api/board/{id}/pace", qb.getId())
+        // Act
+        ResultActions resultActions = mockMvc.perform(get("/api/board/{id}/pace", qb.getId())
             .queryParam("code", qb.getModeratorCode().toString())
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
             .andExpect(status().isOk())
             .andReturn();
 
@@ -356,10 +385,13 @@ public class PaceTests {
         vote.setQuestionBoard(qb);
         paceVoteRepository.save(vote);
 
-        // Act, Assert
-        MvcResult result = mockMvc.perform(get("/api/board/{id}/pace", UUID.randomUUID())
+        // Act
+        ResultActions resultActions = mockMvc.perform(get("/api/board/{id}/pace", UUID.randomUUID())
             .queryParam("code", qb.getModeratorCode().toString())
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
             .andExpect(status().isNotFound())
             .andReturn();
 
@@ -381,10 +413,13 @@ public class PaceTests {
         vote.setQuestionBoard(qb);
         paceVoteRepository.save(vote);
 
-        // Act, Assert
-        MvcResult result = mockMvc.perform(get("/api/board/{id}/pace", qb.getId())
+        // Act
+        ResultActions resultActions = mockMvc.perform(get("/api/board/{id}/pace", qb.getId())
             .queryParam("code", UUID.randomUUID().toString())
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
             .andExpect(status().isForbidden())
             .andReturn();
 
