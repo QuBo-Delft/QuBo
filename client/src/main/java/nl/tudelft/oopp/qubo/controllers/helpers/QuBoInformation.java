@@ -79,14 +79,14 @@ public class QuBoInformation {
      */
     public static QuestionBoardDetailsDto refreshBoardStatus(QuestionBoardDetailsDto quBo,
                                                              ImageView icon, Label text) {
-        String response = QuestionBoardCommunication.retrieveQuestions(quBo.getId());
+        String response = QuestionBoardCommunication.retrieveBoardDetails(quBo.getId());
         QuestionBoardDetailsDto newQuBo = gson.fromJson(response, QuestionBoardDetailsDto.class);
 
         if (response == null) {
             AlertDialog.display("Unsuccessful request", "Could not fetch board details.");
             return quBo;
         } else {
-            displayBoardStatus(quBo, icon, text);
+            displayBoardStatus(newQuBo, icon, text);
             return newQuBo;
         }
     }
