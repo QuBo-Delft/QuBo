@@ -1,11 +1,14 @@
 package nl.tudelft.oopp.qubo.utilities.sorting;
 
+import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -16,6 +19,7 @@ public class SortingTest {
     private final Sorting.QuestionTimeAnsweredComparator comparatorAnswered = new Sorting
             .QuestionTimeAnsweredComparator();
     private QuestionDetailsDto[] questions;
+    private List<AnswerDetailsDto> answerList;
     private Timestamp now;
 
     /**
@@ -186,5 +190,83 @@ public class SortingTest {
         //Assert
         assertTrue(questions[0].getUpvotes() >= questions[1].getUpvotes());
         assertTrue(questions[1].getUpvotes() >= questions[2].getUpvotes());
+    }
+
+    @Test
+    public void testAnswerSortOnTimePostedMixed() {
+        //Arrange
+        answerList = new ArrayList<>();
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+
+        answerList.get(0).setTimestamp(new Timestamp(now.getTime() + 2 * 1000));
+        answerList.get(1).setTimestamp(new Timestamp(now.getTime()));
+        answerList.get(2).setTimestamp(new Timestamp(now.getTime() + 6 * 1000));
+        answerList.get(3).setTimestamp(new Timestamp(now.getTime() + 4 * 1000));
+        answerList.get(4).setTimestamp(new Timestamp(now.getTime() + 8 * 1000));
+
+        //Act
+        Sorting.sortAnswersOnTime(answerList);
+
+        //Assert
+        assertTrue(answerList.get(0).getTimestamp().getTime() <= answerList.get(1).getTimestamp().getTime());
+        assertTrue(answerList.get(1).getTimestamp().getTime() <= answerList.get(2).getTimestamp().getTime());
+        assertTrue(answerList.get(2).getTimestamp().getTime() <= answerList.get(3).getTimestamp().getTime());
+        assertTrue(answerList.get(3).getTimestamp().getTime() <= answerList.get(4).getTimestamp().getTime());
+    }
+
+    @Test
+    public void testAnswerSortOnTimePostedReversed() {
+        //Arrange
+        answerList = new ArrayList<>();
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+
+        answerList.get(0).setTimestamp(new Timestamp(now.getTime() + 8 * 1000));
+        answerList.get(1).setTimestamp(new Timestamp(now.getTime() + 6 * 1000));
+        answerList.get(2).setTimestamp(new Timestamp(now.getTime() + 4 * 1000));
+        answerList.get(3).setTimestamp(new Timestamp(now.getTime() + 2 * 1000));
+        answerList.get(4).setTimestamp(new Timestamp(now.getTime()));
+
+        //Act
+        Sorting.sortAnswersOnTime(answerList);
+
+        //Assert
+        assertTrue(answerList.get(0).getTimestamp().getTime() <= answerList.get(1).getTimestamp().getTime());
+        assertTrue(answerList.get(1).getTimestamp().getTime() <= answerList.get(2).getTimestamp().getTime());
+        assertTrue(answerList.get(2).getTimestamp().getTime() <= answerList.get(3).getTimestamp().getTime());
+        assertTrue(answerList.get(3).getTimestamp().getTime() <= answerList.get(4).getTimestamp().getTime());
+    }
+
+    @Test
+    public void testAnswerSortOnTimePostedSorted() {
+        //Arrange
+        answerList = new ArrayList<>();
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+
+        answerList.get(0).setTimestamp(new Timestamp(now.getTime()));
+        answerList.get(1).setTimestamp(new Timestamp(now.getTime() + 2 * 1000));
+        answerList.get(2).setTimestamp(new Timestamp(now.getTime() + 4 * 1000));
+        answerList.get(3).setTimestamp(new Timestamp(now.getTime() + 6 * 1000));
+        answerList.get(4).setTimestamp(new Timestamp(now.getTime() + 8 * 1000));
+
+        //Act
+        Sorting.sortAnswersOnTime(answerList);
+
+        //Assert
+        assertTrue(answerList.get(0).getTimestamp().getTime() <= answerList.get(1).getTimestamp().getTime());
+        assertTrue(answerList.get(1).getTimestamp().getTime() <= answerList.get(2).getTimestamp().getTime());
+        assertTrue(answerList.get(2).getTimestamp().getTime() <= answerList.get(3).getTimestamp().getTime());
+        assertTrue(answerList.get(3).getTimestamp().getTime() <= answerList.get(4).getTimestamp().getTime());
     }
 }
