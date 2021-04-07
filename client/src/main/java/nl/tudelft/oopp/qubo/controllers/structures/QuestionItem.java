@@ -201,20 +201,16 @@ public class QuestionItem extends GridPane {
         if (modCode != null) {
             MenuButton options = newOptionsMenu(modCode, true);
             options.setOnShowing(event -> {
-                System.out.println("Context menu showing | refresh false");
+                //Context menu showing | refresh false
                 modController.setRefreshing(false);
             });
             options.visibleProperty().addListener((observableValue, oldValue, newValue) -> {
-                if (newValue) {
-                    System.out.println("options visible | refresh true");
-                    modController.setRefreshing(true);
-                } else {
-                    System.out.println("options not visible | refresh false");
-                    modController.setRefreshing(false);
-                }
+                //Options visible | refresh true
+                //Options not visible | refresh false
+                modController.setRefreshing(newValue);
             });
             options.setOnHiding(event -> {
-                System.out.println("Context menu hiding | refresh true");
+                //Context menu hiding | refresh true
                 modController.setRefreshing(true);
             });
 
@@ -222,20 +218,16 @@ public class QuestionItem extends GridPane {
         } else if (secretCodeMap.containsKey(questionId)) {
             MenuButton options = newOptionsMenu(secretCodeMap.get(questionId), false);
             options.setOnShowing(event -> {
-                System.out.println("Context menu showing | refresh false");
+                //Context menu showing | refresh false
                 stuController.setRefreshing(false);
             });
             options.visibleProperty().addListener((observableValue, oldValue, newValue) -> {
-                if (newValue) {
-                    System.out.println("options visible | refresh true");
-                    stuController.setRefreshing(true);
-                } else {
-                    System.out.println("options not visible | refresh false");
-                    stuController.setRefreshing(false);
-                }
+                //Options visible | refresh true
+                //Options not visible | refresh false
+                stuController.setRefreshing(newValue);
             });
             options.setOnHiding(event -> {
-                System.out.println("Context menu hiding | refresh true");
+                //Context menu hiding | refresh true
                 stuController.setRefreshing(true);
             });
 
