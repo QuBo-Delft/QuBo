@@ -158,7 +158,7 @@ public class ModeratorViewController {
      * which actually sets their values.
      */
     public void setBoardDetails() {
-        new QuBoInformation().setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
+        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
     }
 
     /**
@@ -175,7 +175,7 @@ public class ModeratorViewController {
      * This method refreshes the questions and pace bar.
      */
     public void refresh() {
-        QuestionRefresh.modRefresh(quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
+        QuestionRefresh.modRefresh(this, quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
 
         //Refresh the pace
@@ -302,7 +302,6 @@ public class ModeratorViewController {
                 // Null returned, the question board was not closed
                 AlertDialog.display("Unsuccessful Request",
                         "Failed to close the question board, please try again.");
-                return;
             } else {
                 AlertDialog.display("Successful Request",
                         "The question board has been closed.");

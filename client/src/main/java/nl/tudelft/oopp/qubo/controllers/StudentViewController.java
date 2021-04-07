@@ -217,7 +217,7 @@ public class StudentViewController {
      * Refresh the student view by refreshing the question list.
      */
     public void refresh() {
-        QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap,
+        QuestionRefresh.studentRefresh(this, quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap,
             unAnsQuScPane, sideMenuPane);
 
         //Add a Just Right vote on the first refresh of the question board after the student joined.
