@@ -166,7 +166,8 @@
 
 .qPane {
     -fx-background-color: #fefefe;
-    -fx-effect: dropshadow( three-pass-box, #80665d, 3.0, 0.0, 0.0, 0.2);
+    -fx-effect: dropshadow( three-pass-box, rgba(76, 40, 28, 0.2), 3, 0.0, 2, 2);
+    -fx-background-radius: 0 0 10 0;
     -fx-font-family: "Arial";
     -fx-text-fill: #b39288;
     -fx-grid-lines-visible: false;
@@ -179,7 +180,7 @@
 
 .qContent {
     -fx-font-family: "Arial";
-    -fx-font-size: 17;
+    -fx-font-size: 16;
     -fx-text-fill: #b39288;
     -fx-background-color: black;
 }
