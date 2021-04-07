@@ -261,7 +261,6 @@ public class ModeratorViewController {
      * Pops up a confirmation dialogue.
      * If the user clicks yes -> Question board will be closed.
      * If the user clicks no -> Confirmation dialogue closes and user returns to the question board.
-     *
      * The user will be informed whether the question board has been closed successfully on the server-side.
      */
     public void closeQuBo() {
