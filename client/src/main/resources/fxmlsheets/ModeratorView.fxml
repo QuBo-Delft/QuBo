@@ -58,7 +58,7 @@
                      <Insets bottom="5.0" top="5.0" />
                   </padding>
                </VBox>
-                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" onMouseClicked="#displayMessage" scaleX="0.7" scaleY="0.9">
+                  <ImageView fx:id="paceCursor" fitHeight="64.0" fitWidth="54.0" scaleX="0.7" scaleY="0.9">
                         <Image url="@../icons/triangle_pace_bar.png" />
                      </ImageView>
             </StackPane>
