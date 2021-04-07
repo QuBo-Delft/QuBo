@@ -13,12 +13,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
+import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 
@@ -253,4 +255,35 @@ public class ModeratorViewController {
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
     }
+
+    /**
+     * Method that runs when the closeQuBo button is clicked.
+     * Pops up a confirmation dialogue.
+     * If the user clicks yes -> Question board will be closed.
+     * If the user clicks no -> Confirmation dialogue closes and user returns to the question board.
+     * The user will be informed whether the question board has been closed successfully on the server-side.
+     */
+    public void closeQuBo() {
+        boolean closeConfirmed = ConfirmationDialog.display("Close Question Board?",
+                "This question board will be closed.");
+
+        // The user confirmed to close the question board
+        if (closeConfirmed) {
+            String questionBoardDetailsDto = QuestionBoardCommunication
+                    .closeBoardRequest(quBo.getId(), modCode);
+
+            if (questionBoardDetailsDto == null) {
+                // Null returned, the question board was not closed
+                AlertDialog.display("Unsuccessful Request",
+                        "Failed to close the question board, please try again.");
+                return;
+            } else {
+                AlertDialog.display("Successful Request",
+                        "The question board has been closed.");
+            }
+
+        }
+
+    }
+
 }
