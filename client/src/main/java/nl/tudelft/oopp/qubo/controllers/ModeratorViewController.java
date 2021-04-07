@@ -180,7 +180,11 @@ public class ModeratorViewController {
 
         //Refresh the pace
         PaceDisplay.displayPace(quBo, modCode, paceBar, paceCursor);
+
+        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText);
     }
+
+
 
     /**
      * Conditional refresh.

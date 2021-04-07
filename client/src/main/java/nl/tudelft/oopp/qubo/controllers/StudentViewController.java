@@ -226,6 +226,8 @@ public class StudentViewController {
             previouslyPressed = justRight;
             paceVoteOkay();
         }
+
+        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText);
     }
 
     /**

@@ -1,8 +1,12 @@
 package nl.tudelft.oopp.qubo.controllers.helpers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
+import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 
@@ -17,17 +21,15 @@ import java.time.temporal.ChronoUnit;
  * This class handles setting board information for the student and moderator views.
  */
 public class QuBoInformation {
-
-    /**
-     * The name of the image that has to be set when setting up the board details.
-     */
-    private static String iconImage;
+    private static final Gson gson = new GsonBuilder()
+        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+        .create();
 
     /**
      * Sets the board details of the respective view by setting appropriate values to the input
      * parameters.
      *
-     * @param quBo  The Question Board Details Dto.
+     * @param quBo  The Question BoardDetailsDto.
      * @param icon  The board status icon (red/yellow/green).
      * @param text  The status text.
      * @param title The board title.
@@ -35,6 +37,19 @@ public class QuBoInformation {
     public static void setBoardDetails(QuestionBoardDetailsDto quBo, ImageView icon, Label text, Label title) {
         // Sets the board title
         title.setText(quBo.getTitle());
+        displayBoardStatus(quBo, icon, text);
+    }
+
+    /**
+     * Sets the board status and changes the display accordingly.
+     *
+     * @param quBo  The Question BoardDetailsDto.
+     * @param icon  The board status icon (red/yellow/green).
+     * @param text  The status text.
+     */
+    public static void displayBoardStatus(QuestionBoardDetailsDto quBo, ImageView icon, Label text) {
+        String iconImage;
+
         if (quBo.isClosed()) {
             // Sets the board icon to be a closed indicator (red), board is closed
             iconImage = "status_closed";
@@ -53,6 +68,27 @@ public class QuBoInformation {
         }
         // Sets the actual board icon, the path is relative to the resources folder
         icon.setImage(new Image("/icons/" + iconImage + ".png"));
+    }
+
+    /**
+     * Sends a request to the server to retrieve the new board details and display them.
+     *
+     * @param quBo  The Question BoardDetailsDto.
+     * @param icon  The board status icon (red/yellow/green).
+     * @param text  The status text.
+     */
+    public static QuestionBoardDetailsDto refreshBoardStatus(QuestionBoardDetailsDto quBo,
+                                                             ImageView icon, Label text) {
+        String response = QuestionBoardCommunication.retrieveQuestions(quBo.getId());
+        QuestionBoardDetailsDto newQuBo = gson.fromJson(response, QuestionBoardDetailsDto.class);
+
+        if (response == null) {
+            AlertDialog.display("Unsuccessful request", "Could not fetch board details.");
+            return quBo;
+        } else {
+            displayBoardStatus(quBo, icon, text);
+            return newQuBo;
+        }
     }
 
     /**
