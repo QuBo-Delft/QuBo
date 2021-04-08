@@ -35,4 +35,4 @@ For Window users:
 
 ## How to contribute to it
 
-If you want to contribute, you should avoid failing builds, make commit messages clear and summarize the changes. You should follow our code style and test your code properly. When you create merge requests, properly comment on what this merge request is about and set correct labels, milestone, and sprint. We will approve your merge request if more than two members of our team believe that your code will not cause problems in our project and can improve the quality of our project to a certain extent.
+If you want to contribute, you should avoid failing builds, make commit messages clear and summarize the changes. You should follow our code style as stated in the checkstyle file and test your code properly before submitting. When you create merge requests, you should properly describe what this merge request is about and set correct labels, milestone, and sprint. We will approve your merge request if more than one member of our team believe that your code will not cause problems in our project and can improve the quality of our project to a certain extent.
