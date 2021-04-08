@@ -26,7 +26,6 @@ import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
-import nl.tudelft.oopp.qubo.controllers.structures.QuestionItem;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
@@ -41,10 +40,6 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
