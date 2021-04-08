@@ -3,11 +3,14 @@ package nl.tudelft.oopp.qubo.integration;
 import java.sql.Timestamp;
 import java.util.UUID;
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationBindingModel;
+import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.entities.Answer;
+import nl.tudelft.oopp.qubo.entities.Ban;
 import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import nl.tudelft.oopp.qubo.entities.QuestionVote;
@@ -68,9 +71,10 @@ public class QuestionBoardTests {
     @Autowired
     private CurrentTimeProvider mockCurrentTimeProvider;
 
+    private final Timestamp testTime = Timestamp.valueOf("2021-04-01 00:00:00");
+
     @BeforeEach
     public void setup() {
-        Timestamp testTime = Timestamp.valueOf("2021-04-01 00:00:00");
         Mockito.when(mockCurrentTimeProvider.getCurrentTime()).thenReturn(testTime.toInstant());
     }
 
@@ -459,5 +463,185 @@ public class QuestionBoardTests {
             .andReturn();
 
         assertEquals("Unable to find resource", result.getResponse().getErrorMessage());
+    }
+
+    @Test
+    public void createQuestion_withValidBoard_insertsQuestion() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
+
+        Ban ban = new Ban();
+        ban.setIp("1.1.1.1");
+        ban.setQuestionBoard(qb);
+        banRepository.save(ban);
+
+        QuestionCreationBindingModel model = new QuestionCreationBindingModel();
+        model.setText("Test question");
+        model.setAuthorName("Test author");
+
+        String testIp = "1.1.1.2";
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(post("/api/board/{id}/question", qb.getId())
+            .with(req -> {
+                req.setRemoteAddr(testIp);
+                return req;
+            })
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(serialize(model)));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isOk())
+            .andReturn();
+
+        QuestionCreationDto dto = deserialize(result.getResponse().getContentAsString(),
+            QuestionCreationDto.class);
+
+        assertNotNull(dto.getId());
+        Question questionInDb = questionRepository.getQuestionById(dto.getId());
+        assertNotNull(questionInDb);
+        assertEquals(model.getText(), questionInDb.getText());
+        assertEquals(model.getAuthorName(), questionInDb.getAuthorName());
+        assertEquals(dto.getSecretCode(), questionInDb.getSecretCode());
+        assertEquals(qb.getId(), questionInDb.getQuestionBoard().getId());
+        assertEquals(testIp, questionInDb.getIp());
+        assertEquals(testTime, questionInDb.getTimestamp());
+    }
+
+    @Test
+    public void createQuestion_withNonexistentBoardId_returns404() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
+
+        QuestionCreationBindingModel model = new QuestionCreationBindingModel();
+        model.setText("Test question");
+        model.setAuthorName("Test author");
+        // Act
+        ResultActions resultActions = mockMvc.perform(post("/api/board/{id}/question", UUID.randomUUID())
+            .with(req -> {
+                req.setRemoteAddr("1.1.1.2");
+                return req;
+            })
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(serialize(model)));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+        assertEquals("Unable to find resource", result.getResponse().getErrorMessage());
+    }
+
+    @Test
+    public void createQuestion_withBannedIp_returns403() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
+
+        Ban ban = new Ban();
+        ban.setIp("1.1.1.1");
+        ban.setQuestionBoard(qb);
+        banRepository.save(ban);
+
+        QuestionCreationBindingModel model = new QuestionCreationBindingModel();
+        model.setText("Test question");
+        model.setAuthorName("Test author");
+        // Act
+        ResultActions resultActions = mockMvc.perform(post("/api/board/{id}/question", qb.getId())
+            .with(req -> {
+                req.setRemoteAddr(ban.getIp());
+                return req;
+            })
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(serialize(model)));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isForbidden())
+            .andReturn();
+
+        assertNotNull(result.getResolvedException());
+        assertEquals("You are banned from this question board.",
+            result.getResolvedException().getMessage());
+    }
+
+    @Test
+    public void createQuestion_withClosedBoard_returns403() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(true);
+        questionBoardRepository.save(qb);
+
+        QuestionCreationBindingModel model = new QuestionCreationBindingModel();
+        model.setText("Test question");
+        model.setAuthorName("Test author");
+        // Act
+        ResultActions resultActions = mockMvc.perform(post("/api/board/{id}/question", qb.getId())
+            .with(req -> {
+                req.setRemoteAddr("1.1.1.2");
+                return req;
+            })
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(serialize(model)));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isForbidden())
+            .andReturn();
+
+        assertNotNull(result.getResolvedException());
+        assertEquals("Question board is not active",
+            result.getResolvedException().getMessage());
+    }
+
+    @Test
+    public void createQuestion_withNotStartedBoard_returns403() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-05-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
+
+        QuestionCreationBindingModel model = new QuestionCreationBindingModel();
+        model.setText("Test question");
+        model.setAuthorName("Test author");
+        // Act
+        ResultActions resultActions = mockMvc.perform(post("/api/board/{id}/question", qb.getId())
+            .with(req -> {
+                req.setRemoteAddr("1.1.1.2");
+                return req;
+            })
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(serialize(model)));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isForbidden())
+            .andReturn();
+
+        assertNotNull(result.getResolvedException());
+        assertEquals("Question board is not active",
+            result.getResolvedException().getMessage());
     }
 }
