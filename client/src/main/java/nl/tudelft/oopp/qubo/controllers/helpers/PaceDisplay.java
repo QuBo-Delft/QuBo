@@ -134,9 +134,9 @@ public class PaceDisplay {
 
         //Make sure the pace cursor stays inside of the window.
         if (paceBarModifier == 0) {
-            newPosition += paceCursorBounds.getHeight() / 2 - 4;
+            newPosition += paceCursorBounds.getHeight() / 2 + 9;
         } else if (paceBarModifier == 1) {
-            newPosition -= paceCursorBounds.getHeight() / 2 - 0.4;
+            newPosition -= paceCursorBounds.getHeight() / 2 + 7;
         }
 
         //Set up the transition.
