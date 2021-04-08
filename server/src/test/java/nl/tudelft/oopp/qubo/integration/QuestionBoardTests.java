@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -147,5 +149,107 @@ public class QuestionBoardTests {
             .andReturn();
 
         assertEquals("Unable to find resource", result.getResponse().getErrorMessage());
+    }
+
+    @Test
+    public void closeQuestionBoard_withValidBoard_closesBoard() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(patch("/api/board/{id}/close", qb.getId())
+            .queryParam("code", qb.getModeratorCode().toString())
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isOk())
+            .andReturn();
+
+        QuestionBoardDetailsDto dto = deserialize(result.getResponse().getContentAsString(),
+            QuestionBoardDetailsDto.class);
+
+        assertEquals(qb.getId(), dto.getId());
+        assertEquals(qb.getTitle(), dto.getTitle());
+        assertEquals(qb.getStartTime(), dto.getStartTime());
+        assertTrue(dto.isClosed());
+
+        QuestionBoard inDb = questionBoardRepository.getById(dto.getId());
+        assertTrue(inDb.isClosed());
+    }
+
+    @Test
+    public void closeQuestionBoard_withNonexistentBoardId_returns404() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(patch("/api/board/{id}/close", UUID.randomUUID())
+            .queryParam("code", qb.getModeratorCode().toString())
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+        assertEquals("Unable to find resource", result.getResponse().getErrorMessage());
+    }
+
+    @Test
+    public void closeQuestionBoard_withInvalidModeratorCode_returns403() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(false);
+        questionBoardRepository.save(qb);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(patch("/api/board/{id}/close", qb.getId())
+            .queryParam("code", UUID.randomUUID().toString())
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isForbidden())
+            .andReturn();
+
+        assertEquals("Invalid moderator code", result.getResponse().getErrorMessage());
+    }
+
+    @Test
+    public void closeQuestionBoard_withBoardAlreadyClosed_returns409() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(true);
+        questionBoardRepository.save(qb);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(patch("/api/board/{id}/close", qb.getId())
+            .queryParam("code", qb.getModeratorCode().toString())
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isConflict())
+            .andReturn();
+
+        assertNotNull(result.getResolvedException());
+        assertEquals("This QuestionBoard is already closed", result.getResolvedException().getMessage());
     }
 }
