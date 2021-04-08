@@ -34,3 +34,7 @@
     -fx-background-color: linear-gradient(#F36F47 0%, #F7A13E 50%, #F36F47 100%);
 }
 
+.paceLabel {
+    -fx-text-fill: #4f1f1f;
+    -fx-font-size: 1.1em;
+}

@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -92,8 +93,8 @@ public class QuestionItem extends GridPane {
         //in the layout when it is not visible.
         questionBody.managedProperty().bind(questionBody.visibleProperty());
 
-        //Set padding for individual cell (needed to prevent horizontal overflow)
-        this.setPadding(new Insets(10,0,15,0));
+        //Set padding for individual cell
+        this.setPadding(new Insets(10,0,0,0));
 
         //Construct a new questionPane to hold the question and add to content pane
         questionPane = newQuestionPane();
@@ -115,14 +116,21 @@ public class QuestionItem extends GridPane {
      * This method adds the answers to a question if there are any.
      */
     private void addAnswers() {
-        int i = 1;
+        int i = 2;
+        int size = answers.size() + 1;
         for (AnswerDetailsDto answerDetails : answers) {
             Text answer = new Text(answerDetails.getText());
             BorderPane answerPane = new BorderPane(answer);
-            answerPane.setPadding(new Insets(10,15,10,15));
+
+            if (size != i) {
+                answerPane.setBottom(new Separator());
+            }
+
+            answerPane.getStyleClass().add("answers");
+            BorderPane.setMargin(answer, new Insets(15,0,15,0));
             answer.wrappingWidthProperty().bind(questionBody.wrappingWidthProperty().add(40));
 
-            this.addRow((i + 1), answerPane);
+            this.addRow((i), answerPane);
             i++;
         }
     }
@@ -140,13 +148,13 @@ public class QuestionItem extends GridPane {
         //Add nodes to the gridpane
         gridpane.addColumn(1, questionVbox);
 
+        gridpane.setPadding(new Insets(0,0,15,0));
+
         //Set column constraints
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setHgrow(Priority.ALWAYS);
         gridpane.getColumnConstraints().addAll(new ColumnConstraints(50), col2,
             new ColumnConstraints(50));
-
-        gridpane.setGridLinesVisible(true);
 
         return gridpane;
     }
@@ -180,6 +188,8 @@ public class QuestionItem extends GridPane {
         space.prefWidthProperty().bind(questionBody.wrappingWidthProperty());
         space.minWidthProperty().bind(questionBody.wrappingWidthProperty());
         space.maxWidthProperty().bind(questionBody.wrappingWidthProperty());
+
+        VBox.setMargin(questionBody, new Insets(5,0,0,0));
 
         VBox vbox = new VBox(questionBody, space);
         vbox.setSpacing(10);
@@ -249,7 +259,12 @@ public class QuestionItem extends GridPane {
 
         //Set alignment of children in the GridPane
         GridPane.setValignment(options, VPos.TOP);
-        GridPane.setHalignment(options, HPos.RIGHT);
+        GridPane.setHalignment(options, HPos.CENTER);
+
+        options.setPrefWidth(30);
+        options.setPrefHeight(25);
+
+        options.getStyleClass().add("optionsMenu");
 
         return options;
     }
@@ -264,7 +279,7 @@ public class QuestionItem extends GridPane {
         //Create the reply menu item and set action event
         MenuItem reply = newIconItem("Reply", replyImage);
         reply.setOnAction(event -> QuBoActionEvents.replyToQuestionOption(
-            this, questionPane, questionId, code, options, questionBody));
+            questionPane, questionId, code, options, questionBody));
         options.getItems().add(reply);
 
         if (quScPane.getId().equals("unAnsQuScPane")) {
@@ -305,12 +320,11 @@ public class QuestionItem extends GridPane {
      * @param upvoteMap HashMap of questionId:upvoteId.
      */
     public void newUpvoteVbox(HashMap<UUID, UUID> upvoteMap) {
-        upvoteTriangle.setPrefWidth(25);
-        upvoteTriangle.setPrefHeight(25);
+        upvoteTriangle.setPrefWidth(30);
+        upvoteTriangle.setPrefHeight(20);
 
         //Create the Vbox for placing the upvote button and upvote number
         VBox upvote = new VBox(upvoteTriangle, upvoteNumber);
-        upvote.setSpacing(8);
         upvote.setAlignment(Pos.TOP_CENTER);
 
         //Set event listener

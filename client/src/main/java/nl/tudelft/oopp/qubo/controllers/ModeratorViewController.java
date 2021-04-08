@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
@@ -49,8 +48,6 @@ public class ModeratorViewController {
     private Button helpDoc;
     @FXML
     private StackPane content;
-    @FXML
-    private BorderPane paceVotePane;
 
     //Nodes used to display the pace
     @FXML
@@ -153,7 +150,7 @@ public class ModeratorViewController {
      * which actually sets their values.
      */
     public void setBoardDetails() {
-        new QuBoInformation().setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
+        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
     }
 
     /**
@@ -162,8 +159,6 @@ public class ModeratorViewController {
     @FXML
     private void initialize() {
         startUpProperties();
-        //Display the questions and pace
-        refresh();
     }
 
     /**
@@ -180,7 +175,7 @@ public class ModeratorViewController {
     private void startUpProperties() {
         //Hide side menu and sidebar
         LayoutProperties.startupProperties(content, sideBar, sideMenu, pollVbox, ansQuVbox, unAnsQuVbox,
-            paceVotePane);
+            null);
         LayoutProperties.modStartUpProperties(paceBar, paceCursor);
     }
 
@@ -325,7 +320,6 @@ public class ModeratorViewController {
                 // Null returned, the question board was not closed
                 AlertDialog.display("Unsuccessful Request",
                         "Failed to close the question board, please try again.");
-                return;
             } else {
                 AlertDialog.display("Successful Request",
                         "The question board has been closed.");
@@ -334,5 +328,4 @@ public class ModeratorViewController {
         }
 
     }
-
 }
