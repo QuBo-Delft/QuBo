@@ -16,7 +16,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.tudelft.oopp.qubo.controllers.ModeratorViewController">
     <top>
@@ -52,15 +51,9 @@
             <HBox prefHeight="100.0" prefWidth="200.0">
             <StackPane fx:id="paceBar" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" styleClass="paceBar" HBox.hgrow="NEVER">
                <VBox alignment="CENTER" StackPane.alignment="CENTER">
-                     <Label styleClass="paceLabel" text="Fast">
-                     <font>
-                        <Font size="11.0" />
-                     </font></Label>
+                   <Label styleClass="paceLabel" text="Fast"/>
                      <Pane VBox.vgrow="ALWAYS" />
-                     <Label styleClass="paceLabel" text="Slow">
-                     <font>
-                        <Font size="11.0" />
-                     </font></Label>
+                   <Label styleClass="paceLabel" text="Slow"/>
                   <padding>
                      <Insets bottom="5.0" top="5.0" />
                   </padding>
