@@ -35,6 +35,7 @@ import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
+import nl.tudelft.oopp.qubo.views.QuBoDocumentation;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -329,6 +330,7 @@ public class StudentViewController {
      * Displays help documentation.
      */
     public void displayHelpDoc() {
+        QuBoDocumentation.display("StudentView");
     }
 
     /**
