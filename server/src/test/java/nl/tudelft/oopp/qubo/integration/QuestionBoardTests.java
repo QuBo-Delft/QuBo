@@ -2,15 +2,22 @@ package nl.tudelft.oopp.qubo.integration;
 
 import java.sql.Timestamp;
 import java.util.UUID;
+import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationBindingModel;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.qubo.entities.Answer;
+import nl.tudelft.oopp.qubo.entities.Question;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
+import nl.tudelft.oopp.qubo.entities.QuestionVote;
 import static nl.tudelft.oopp.qubo.integration.utils.JsonUtil.deserialize;
 import static nl.tudelft.oopp.qubo.integration.utils.JsonUtil.serialize;
+import nl.tudelft.oopp.qubo.repositories.AnswerRepository;
 import nl.tudelft.oopp.qubo.repositories.BanRepository;
 import nl.tudelft.oopp.qubo.repositories.QuestionBoardRepository;
 import nl.tudelft.oopp.qubo.repositories.QuestionRepository;
+import nl.tudelft.oopp.qubo.repositories.QuestionVoteRepository;
 import nl.tudelft.oopp.qubo.services.providers.CurrentTimeProvider;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -48,6 +55,12 @@ public class QuestionBoardTests {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private QuestionVoteRepository questionVoteRepository;
+
+    @Autowired
+    private AnswerRepository answerRepository;
 
     @Autowired
     private BanRepository banRepository;
@@ -312,4 +325,139 @@ public class QuestionBoardTests {
         assertEquals("Unable to find resource", result.getResponse().getErrorMessage());
     }
 
+    @Test
+    public void retrieveQuestionListByBoardId_withValidId_returnsQuestions() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(true);
+        questionBoardRepository.save(qb);
+
+        Question question1 = new Question();
+        question1.setSecretCode(UUID.fromString("e6f316f7-9000-4a29-bcbd-8b517ced267c"));
+        question1.setText("Question Text 1");
+        question1.setTimestamp(Timestamp.valueOf("2021-03-01 00:02:00"));
+        question1.setAnswered(null);
+        question1.setAuthorName("Question Author");
+        question1.setQuestionBoard(qb);
+        questionRepository.save(question1);
+
+        Answer answer1 = new Answer();
+        answer1.setQuestion(question1);
+        answer1.setText("Test answer");
+        answer1.setTimestamp(Timestamp.valueOf("2021-03-01 00:02:05"));
+        answerRepository.save(answer1);
+
+        Answer answer2 = new Answer();
+        answer2.setQuestion(question1);
+        answer2.setText("Test answer 2");
+        answer2.setTimestamp(Timestamp.valueOf("2021-03-01 00:02:15"));
+        answerRepository.save(answer2);
+
+        Question question2 = new Question();
+        question2.setSecretCode(UUID.fromString("e6f316f7-9000-4a29-bcbd-8b517ced267d"));
+        question2.setText("Question Text 2");
+        question2.setTimestamp(Timestamp.valueOf("2021-03-02 00:02:00"));
+        question2.setAnswered(Timestamp.valueOf("2021-03-02 00:05:00"));
+        question2.setAuthorName("Question Author 2");
+        question2.setQuestionBoard(qb);
+        questionRepository.save(question2);
+
+        QuestionVote vote = new QuestionVote();
+        vote.setQuestion(question2);
+        questionVoteRepository.save(vote);
+
+        QuestionVote vote2 = new QuestionVote();
+        vote2.setQuestion(question2);
+        questionVoteRepository.save(vote2);
+
+        QuestionBoard qb2 = new QuestionBoard();
+        qb2.setModeratorCode(UUID.randomUUID());
+        qb2.setStartTime(Timestamp.valueOf("2021-03-02 00:00:00"));
+        qb2.setTitle("Test board 2");
+        qb2.setClosed(false);
+        questionBoardRepository.save(qb2);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(get("/api/board/{id}/questions", qb.getId())
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isOk())
+            .andReturn();
+
+        QuestionDetailsDto[] dtos = deserialize(result.getResponse().getContentAsString(),
+            QuestionDetailsDto[].class);
+
+        assertEquals(2, dtos.length);
+
+        QuestionDetailsDto actualQ1, actualQ2;
+        if (dtos[0].getId().equals(question1.getId())) {
+            actualQ1 = dtos[0];
+            actualQ2 = dtos[1];
+        } else {
+            actualQ1 = dtos[1];
+            actualQ2 = dtos[0];
+        }
+
+        assertEquals(question1.getId(), actualQ1.getId());
+        assertEquals(question1.getText(), actualQ1.getText());
+        assertEquals(question1.getAuthorName(), actualQ1.getAuthorName());
+        assertEquals(question1.getTimestamp(), actualQ1.getTimestamp());
+        assertEquals(question1.getAnswered(), actualQ1.getAnswered());
+        assertEquals(0, actualQ1.getUpvotes());
+
+        AnswerDetailsDto[] actualAnswers = actualQ1.getAnswers().toArray(new AnswerDetailsDto[0]);
+
+        assertEquals(2, actualAnswers.length);
+        AnswerDetailsDto actualA1, actualA2;
+        if (actualAnswers[0].getId().equals(answer1.getId())) {
+            actualA1 = actualAnswers[0];
+            actualA2 = actualAnswers[1];
+        } else {
+            actualA1 = actualAnswers[1];
+            actualA2 = actualAnswers[0];
+        }
+
+        assertEquals(answer1.getId(), actualA1.getId());
+        assertEquals(answer1.getTimestamp(), actualA1.getTimestamp());
+        assertEquals(answer1.getText(), actualA1.getText());
+        assertEquals(answer2.getId(), actualA2.getId());
+        assertEquals(answer2.getTimestamp(), actualA2.getTimestamp());
+        assertEquals(answer2.getText(), actualA2.getText());
+
+        assertEquals(question2.getId(), actualQ2.getId());
+        assertEquals(question2.getText(), actualQ2.getText());
+        assertEquals(question2.getAuthorName(), actualQ2.getAuthorName());
+        assertEquals(question2.getTimestamp(), actualQ2.getTimestamp());
+        assertEquals(question2.getAnswered(), actualQ2.getAnswered());
+        assertEquals(2, actualQ2.getUpvotes());
+        assertEquals(0, actualQ2.getAnswers().size());
+    }
+
+    @Test
+    public void retrieveQuestionListByBoardId_withNonexistentId_returns404() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(true);
+        questionBoardRepository.save(qb);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(get("/api/board/{id}/questions",
+            UUID.randomUUID().toString())
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+        assertEquals("Unable to find resource", result.getResponse().getErrorMessage());
+    }
 }
