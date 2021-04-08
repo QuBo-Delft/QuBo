@@ -282,6 +282,8 @@ public class ModeratorViewController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Export questions");
         fileChooser.setInitialFileName(quBo.getTitle() + ".txt");
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Text file (*.txt)", "*.txt"));
         File file = fileChooser.showSaveDialog(boardTitle.getScene().getWindow());
 
         if (file == null) {
