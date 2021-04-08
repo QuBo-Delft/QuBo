@@ -2,6 +2,8 @@ package nl.tudelft.oopp.qubo.controllers;
 
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
+import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.Start;
 
@@ -15,8 +17,8 @@ class StudentViewControllerTest extends TestFxBase {
     /*
         These dto's are used in various tests as well as in @Start.
      */
-    QuestionBoardCreationDto qcOpen = createOpenQuBo();
-    QuestionBoardCreationDto qcClosed = createClosedQuBo();
+    QuestionBoardDetailsDto qcOpen = createOpenQuBo();
+    QuestionBoardDetailsDto qcClosed = createClosedQuBo();
 
     /**
      * Initiate testing done through the TestFX library.
@@ -26,8 +28,7 @@ class StudentViewControllerTest extends TestFxBase {
      */
     @Start
     void start(Stage stage) throws IOException {
-        String fxmlSheet = "StudentView";
-        startDetails(stage, fxmlSheet, qcOpen.getId());
+        new SceneLoader().viewLoader(qcOpen, stage, "", "StudentView", qcOpen.getId());
     }
 
     /**

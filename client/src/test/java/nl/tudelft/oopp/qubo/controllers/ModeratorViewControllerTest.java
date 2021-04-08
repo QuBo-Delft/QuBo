@@ -1,7 +1,10 @@
 package nl.tudelft.oopp.qubo.controllers;
 
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
+import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
+import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import org.testfx.framework.junit5.Start;
 
 import java.io.IOException;
@@ -14,7 +17,7 @@ class ModeratorViewControllerTest extends TestFxBase {
     /*
         These dto's are used in various tests as well as in @Start
      */
-    QuestionBoardCreationDto qcOpen = createOpenQuBo();
+    QuestionBoardDetailsDto qcOpen = createOpenQuBo();
 
     /**
      * Initiate testing done through the TestFX library.
@@ -24,7 +27,6 @@ class ModeratorViewControllerTest extends TestFxBase {
      */
     @Start
     void start(Stage stage) throws IOException {
-        String fxmlSheet = "ModeratorView";
-        startDetails(stage, fxmlSheet, qcOpen.getId());
+        new SceneLoader().viewLoader(qcOpen, stage, "", "ModeratorView", getModCodeOpen());
     }
 }

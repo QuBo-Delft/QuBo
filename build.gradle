@@ -62,12 +62,12 @@ subprojects {
 
 
     test {
-        exclude 'nl/tudelft/oopp/qubo/controllers/**'
+        //exclude 'nl/tudelft/oopp/qubo/controllers/**'
         outputs.dir snippetsDir
         useJUnitPlatform()
 
         // Set to false to enable GUI/"headfull" controller testing through TestFX
-        jvmArgs "-Dheadless=true"
+        jvmArgs "-Dheadless=false"
 
         jacoco {
             enabled = true

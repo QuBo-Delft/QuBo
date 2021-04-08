@@ -138,15 +138,13 @@ public class SceneLoader {
                 stage.setMinWidth(Double.MIN_VALUE);
                 stage.setMinHeight(Double.MIN_VALUE);
                 break;
-            case "QuBoDetails":
-                stage.show();
-                break;
             default:
                 break;
         }
 
         stage.setScene(newScene);
         stage.centerOnScreen();
+        stage.show();
         return stage;
     }
 
