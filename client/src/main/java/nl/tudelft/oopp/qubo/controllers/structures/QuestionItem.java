@@ -190,8 +190,8 @@ public class QuestionItem extends GridPane {
         space.maxWidthProperty().bind(questionBody.wrappingWidthProperty());
 
         VBox.setMargin(questionBody, new Insets(5,0,0,0));
-
         VBox vbox = new VBox(questionBody, space);
+        vbox.setId("question");
         vbox.setSpacing(10);
 
         return vbox;

@@ -46,6 +46,7 @@ public class GetTextDialog {
         window.initStyle(StageStyle.UNDECORATED);
 
         TextArea inputField = new TextArea();
+        inputField.setId("inputfield");
         inputField.setPromptText(message);
         inputField.setWrapText(true);
         inputField.setMinWidth(320);
@@ -64,6 +65,7 @@ public class GetTextDialog {
 
         // The submit button's text is set to be the submitBtnText
         Button submitButton = new Button(submitBtnText);
+        submitButton.setId("submitbutton");
         submitButton.setOnAction(e -> {
             userInput = inputField.getText();
             // Check if it is required to check if the user input is at least 8 characters long

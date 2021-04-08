@@ -53,6 +53,8 @@ public class StudentViewController {
     private StackPane content;
     @FXML
     private BorderPane paceVotePane;
+    @FXML
+    private Button askQuestionBtn;
 
     @FXML
     private Button leaveQuBo;
@@ -95,13 +97,17 @@ public class StudentViewController {
     @FXML
     private ToggleButton polls;
 
-    // The VBox pace votes are placed in, their toggle group, and the "All right" button.
+    // The VBox pace votes are placed in, their toggle group, and the radio buttons.
     @FXML
     private VBox paceVbox;
     @FXML
-    ToggleGroup pace;
+    private ToggleGroup pace;
     @FXML
-    RadioButton justRight;
+    private RadioButton justRight;
+    @FXML
+    private RadioButton tooFast;
+    @FXML
+    private RadioButton tooSlow;
 
     /**
     * Records if the side menu was open before hiding.

@@ -12,12 +12,12 @@ import java.io.IOException;
 /**
  * This class tests the StudentViewController which controls StudentView.fxml.
  */
-class StudentViewControllerTest extends TestFxBase {
+class StudentViewControllerClosedTest extends TestFxBase {
 
     /*
         Create an open Question Board which is loaded in @Start.
      */
-    QuestionBoardDetailsDto qdOpen = createOpenQuBo();
+    QuestionBoardDetailsDto qdClosed = createClosedQuBo();
 
     /**
      * Initiate testing done through the TestFX library.
@@ -26,9 +26,22 @@ class StudentViewControllerTest extends TestFxBase {
      */
     @Start
     void start(Stage stage) {
-        new SceneLoader().viewLoader(qdOpen, stage, "", "StudentView", qdOpen.getId());
+        // A scheduled Question Board is loaded
+        new SceneLoader().viewLoader(qdClosed, stage, "author", "StudentView", qdClosed.getId());
     }
-
+    //    askQuestionBtn
+    //    boardInfo
+    //        helpDoc
+    //    hamburger
+    //            ansQuestions
+    //    polls
+    //                boardTitle
+    //    boardStatusText
+    //                    boardStatusIcon
+    //    leaveQuBo
+    //                        tooSlow
+    //    justRight
+    //                            TooFast
 
 
 }

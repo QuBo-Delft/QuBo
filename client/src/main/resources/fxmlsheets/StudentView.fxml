@@ -98,7 +98,7 @@
                                 <Insets />
                             </VBox.margin>
                         </Text>
-                        <RadioButton mnemonicParsing="false" onAction="#paceVoteFast" styleClass="pacingBtn1" text="Too fast" toggleGroup="$pace">
+                        <RadioButton fx:id="tooFast" mnemonicParsing="false" onAction="#paceVoteFast" styleClass="pacingBtn1" text="Too fast" toggleGroup="$pace">
                             <VBox.margin>
                                 <Insets />
                             </VBox.margin>
@@ -108,14 +108,14 @@
                         </RadioButton>
                         <RadioButton fx:id="justRight" mnemonicParsing="false" onAction="#paceVoteOkay" styleClass="pacingBtn2" text="All right" toggleGroup="$pace">
                         </RadioButton>
-                        <RadioButton mnemonicParsing="false" onAction="#paceVoteSlow" styleClass="pacingBtn2" text="Too slow" toggleGroup="$pace" />
+                        <RadioButton fx:id="tooSlow" mnemonicParsing="false" onAction="#paceVoteSlow" styleClass="pacingBtn2" text="Too slow" toggleGroup="$pace" />
                         <padding>
                             <Insets left="10.0" right="15.0" top="15.0" />
                         </padding>
                     </VBox>
                 </left>
             </BorderPane>
-            <Button maxHeight="90.0" maxWidth="90.0" minHeight="90.0" minWidth="90.0" mnemonicParsing="false" onAction="#addQuestion" pickOnBounds="false" prefHeight="90.0" prefWidth="90.0" styleClass="askBtn" StackPane.alignment="BOTTOM_LEFT">
+            <Button fx:id="askQuestionBtn" maxHeight="90.0" maxWidth="90.0" minHeight="90.0" minWidth="90.0" mnemonicParsing="false" onAction="#addQuestion" pickOnBounds="false" prefHeight="90.0" prefWidth="90.0" styleClass="askBtn" StackPane.alignment="BOTTOM_LEFT">
                 <StackPane.margin>
                     <Insets bottom="30.0" left="40.0" />
                 </StackPane.margin>
