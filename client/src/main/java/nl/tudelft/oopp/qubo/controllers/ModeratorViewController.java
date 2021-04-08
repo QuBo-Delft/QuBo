@@ -1,9 +1,13 @@
 package nl.tudelft.oopp.qubo.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
@@ -12,13 +16,18 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
+import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
+import nl.tudelft.oopp.qubo.utilities.QuestionToStringConverter;
+import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 
@@ -39,8 +48,6 @@ public class ModeratorViewController {
     private Button helpDoc;
     @FXML
     private StackPane content;
-    @FXML
-    private BorderPane paceVotePane;
 
     //Nodes used to display the pace
     @FXML
@@ -143,7 +150,7 @@ public class ModeratorViewController {
      * which actually sets their values.
      */
     public void setBoardDetails() {
-        new QuBoInformation().setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
+        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
     }
 
     /**
@@ -152,8 +159,6 @@ public class ModeratorViewController {
     @FXML
     private void initialize() {
         startUpProperties();
-        //Display the questions and pace
-        refresh();
     }
 
     /**
@@ -170,7 +175,7 @@ public class ModeratorViewController {
     private void startUpProperties() {
         //Hide side menu and sidebar
         LayoutProperties.startupProperties(content, sideBar, sideMenu, pollVbox, ansQuVbox, unAnsQuVbox,
-            paceVotePane);
+            null);
         LayoutProperties.modStartUpProperties(paceBar, paceCursor);
     }
 
@@ -252,5 +257,75 @@ public class ModeratorViewController {
         if (backHome) {
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
+    }
+
+    /**
+     * Method that runs when the Export button is clicked.
+     * Shows a file picker dialogue.
+     * If the user selects a destination file -> Questions are exported to that file.
+     * If the user clicks cancel -> Dialogue closes and user returns to the question board.
+     */
+    public void exportQuestions() {
+        String jsonQuestions = QuestionBoardCommunication.retrieveQuestions(quBo.getId());
+
+        if (jsonQuestions == null) {
+            AlertDialog.display("Unsuccessful Request",
+                "Failed to retrieve questions, please try again.");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export questions");
+        fileChooser.setInitialFileName(quBo.getTitle() + ".txt");
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Text file (*.txt)", "*.txt"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        File file = fileChooser.showSaveDialog(boardTitle.getScene().getWindow());
+
+        if (file == null) {
+            return;
+        }
+
+        Gson gson = (new GsonBuilder()).create();
+
+        QuestionDetailsDto[] questions = gson.fromJson(jsonQuestions, QuestionDetailsDto[].class);
+
+        String asString = QuestionToStringConverter.convertToString(questions);
+
+        try {
+            Files.write(file.toPath(), asString.getBytes());
+        } catch (IOException e) {
+            AlertDialog.display("Error",
+                "Failed to save questions to file, please try again.");
+        }
+    }
+
+    /**
+     * Method that runs when the closeQuBo button is clicked.
+     * Pops up a confirmation dialogue.
+     * If the user clicks yes -> Question board will be closed.
+     * If the user clicks no -> Confirmation dialogue closes and user returns to the question board.
+     * The user will be informed whether the question board has been closed successfully on the server-side.
+     */
+    public void closeQuBo() {
+        boolean closeConfirmed = ConfirmationDialog.display("Close Question Board?",
+                "This question board will be closed.");
+
+        // The user confirmed to close the question board
+        if (closeConfirmed) {
+            String questionBoardDetailsDto = QuestionBoardCommunication
+                    .closeBoardRequest(quBo.getId(), modCode);
+
+            if (questionBoardDetailsDto == null) {
+                // Null returned, the question board was not closed
+                AlertDialog.display("Unsuccessful Request",
+                        "Failed to close the question board, please try again.");
+            } else {
+                AlertDialog.display("Successful Request",
+                        "The question board has been closed.");
+            }
+
+        }
+
     }
 }
