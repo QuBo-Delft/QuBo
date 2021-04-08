@@ -361,7 +361,7 @@ public class StudentViewController {
      * Displays help documentation.
      */
     public void displayHelpDoc() {
-        QuBoDocumentation.display("StudentView");
+        QuBoDocumentation.display(true);
     }
 
     /**

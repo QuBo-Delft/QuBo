@@ -238,7 +238,7 @@ public class ModeratorViewController {
      * Display help doc.
      */
     public void displayHelpDoc() {
-        QuBoDocumentation.display("ModeratorView");
+        QuBoDocumentation.display(true);
     }
 
     /**

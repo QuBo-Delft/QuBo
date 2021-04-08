@@ -18,13 +18,9 @@ public class QuBoDocumentation {
     /**
      * This method displays the documentation for either moderators or students.
      *
-     * @param typeToken     The type token that decides whether this documentation
-     *                      is for moderators or students.
+     * @param isStudentView     Indicates whether this documentation is for moderators or students.
      */
-    public static void display(String typeToken) {
-        if (typeToken == null) {
-            return;
-        }
+    public static void display(boolean isStudentView) {
         Stage window = new Stage();
 
         // Block the user from performing other actions
@@ -48,14 +44,14 @@ public class QuBoDocumentation {
         layout.getChildren().add(getHBoxOf("status_scheduled",
                 "It indicates that this question board will open as scheduled."));
 
-        if (typeToken.equals("ModeratorView")) {
+        if (!isStudentView) {
             window.setTitle("QuBo Documentation for Moderators");
             layout.getChildren().add(getHBoxOf("triangle_pace_bar",
                     "It indicates the pace of this lecture as students experienced, "
                             + "the higher it locates the faster the lecture is experienced."));
         }
 
-        if (typeToken.equals("StudentView")) {
+        if (isStudentView) {
             window.setTitle("QuBo Documentation for Students");
             layout.getChildren().add(getHBoxOf("btn_ask",
                     "Click it to post a question on this question board."));
@@ -71,7 +67,7 @@ public class QuBoDocumentation {
         layout.getChildren().add(getHBoxOf("delete", "Click it to delete this question."));
         layout.getChildren().add(getHBoxOf("edit", "Click it to edit this question."));
 
-        if (typeToken.equals("ModeratorView")) {
+        if (!isStudentView) {
             layout.getChildren().add(getHBoxOf("ban",
                     "Click it to ban the student who posted this question from the question board."));
             layout.getChildren().add(getHBoxOf("mark_as_answered",
@@ -82,12 +78,12 @@ public class QuBoDocumentation {
         layout.getChildren().add(getHBoxOf("board_details",
                 "Click it to display the details of this question board."));
 
-        if (typeToken.equals("StudentView")) {
+        if (isStudentView) {
             layout.getChildren().add(getHBoxOf("help",
                     "Click it to display the guide of using this question board as a student."));
         }
 
-        if (typeToken.equals("ModeratorView")) {
+        if (!isStudentView) {
             layout.getChildren().add(getHBoxOf("help",
                     "Click it to display the guide of using this question board as a moderator."));
         }
@@ -104,7 +100,7 @@ public class QuBoDocumentation {
                 "Click it to open a section that displays the details of a poll, "
                         + "click again to close this section."));
 
-        if (typeToken.equals("ModeratorView")) {
+        if (!isStudentView) {
             layout.getChildren().add(getHBoxOf("btn_export",
                     "Click it to export a list of most important questions of this lecture to a text file."));
         }
@@ -112,7 +108,7 @@ public class QuBoDocumentation {
         layout.getChildren().add(getHBoxOf("leave",
                 "Click it to choose to leave this question board."));
 
-        if (typeToken.equals("ModeratorView")) {
+        if (!isStudentView) {
             layout.getChildren().add(getHBoxOf("btn_closeBoard",
                     "Click it to close this question board."));
         }
