@@ -22,7 +22,9 @@ public class QuBoDocumentation {
      *                      is for moderators or students.
      */
     public static void display(String typeToken) {
-        if (typeToken == null) return;
+        if (typeToken == null) {
+            return;
+        }
         Stage window = new Stage();
 
         // Block the user from performing other actions
@@ -37,7 +39,6 @@ public class QuBoDocumentation {
 
         VBox layout = new VBox(15);
         layout.getStyleClass().add("layout");
-        ScrollPane scrollPane = new ScrollPane();
 
         // Add the explanation HBoxes of icons to the layout
         layout.getChildren().add(getHBoxOf("status_open",
@@ -127,6 +128,7 @@ public class QuBoDocumentation {
         // Center all components
         layout.setAlignment(Pos.CENTER);
 
+        ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(layout);
         Scene scene = new Scene(scrollPane);
         scene.getStylesheets().add("/css/QuBoDocumentation.css");
