@@ -62,7 +62,7 @@ public class PollRefresh {
         pollsScrollPane = pollScrollPane;
         mController = controller;
 
-        //displayPolls(true);
+        displayPolls(true);
     }
 
     /**
