@@ -15,14 +15,20 @@ import javafx.stage.Stage;
 
 public class QuBoDocumentation {
 
+    /**
+     * This method displays the documentation for either moderators or students.
+     *
+     * @param typeToken     The type token that decides whether this documentation
+     *                      is for moderators or students.
+     */
     public static void display(String typeToken) {
         if (typeToken == null) return;
         Stage window = new Stage();
 
         // Block the user from performing other actions
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setHeight(405);
-        window.setWidth(720);
+        window.setHeight(700);
+        window.setWidth(870);
 
         Button returnButton = new Button("Return");
         returnButton.setOnAction(e -> {
@@ -33,20 +39,23 @@ public class QuBoDocumentation {
         layout.getStyleClass().add("layout");
         ScrollPane scrollPane = new ScrollPane();
 
+        // Add the explanation HBoxes of icons to the layout
         layout.getChildren().add(getHBoxOf("status_open",
-                "Indicates that this question board is currently open."));
+                "It indicates that this question board is currently open."));
         layout.getChildren().add(getHBoxOf("status_closed",
-                "Indicates that this question board is currently closed."));
+                "It indicates that this question board is currently closed."));
         layout.getChildren().add(getHBoxOf("status_scheduled",
-                "Indicates that this question board will open as scheduled."));
+                "It indicates that this question board will open as scheduled."));
 
         if (typeToken.equals("ModeratorView")) {
+            window.setTitle("QuBo Documentation for Moderators");
             layout.getChildren().add(getHBoxOf("triangle_pace_bar",
-                    "The location of this icon indicates the pace of this lecture as students experienced, "
-                            + "the higher the faster."));
+                    "It indicates the pace of this lecture as students experienced, "
+                            + "the higher it locates the faster the lecture is experienced."));
         }
 
         if (typeToken.equals("StudentView")) {
+            window.setTitle("QuBo Documentation for Students");
             layout.getChildren().add(getHBoxOf("btn_ask",
                     "Click it to post a question on this question board."));
         }
@@ -54,10 +63,10 @@ public class QuBoDocumentation {
         layout.getChildren().add(getHBoxOf("upvote_true",
                 "Click it to upvote a question, click again to cancel the previous upvote."));
         layout.getChildren().add(getHBoxOf("upvote_false",
-                "Indicates that this question has not been voted by the user."));
+                "It indicates that this question has not been voted by the user."));
 
         layout.getChildren().add(getHBoxOf("options",
-                "Click it to open the option menu for a question."));
+                "Click it to open the option menu for the question."));
         layout.getChildren().add(getHBoxOf("delete", "Click it to delete this question."));
         layout.getChildren().add(getHBoxOf("edit", "Click it to edit this question."));
 
@@ -96,7 +105,7 @@ public class QuBoDocumentation {
 
         if (typeToken.equals("ModeratorView")) {
             layout.getChildren().add(getHBoxOf("btn_export",
-                    "Click it to export a list of most important questions of a lecture to a text file."));
+                    "Click it to export a list of most important questions of this lecture to a text file."));
         }
 
         layout.getChildren().add(getHBoxOf("leave",
@@ -126,10 +135,17 @@ public class QuBoDocumentation {
         window.setScene(scene);
         // Can return back only if the current dialog is closed
         window.showAndWait();
-
     }
 
+    /**
+     * This method return an HBox that contains the icon image and the explanation of this icon.
+     *
+     * @param path  The main identifying path of the icon.
+     * @param info  The explanation.
+     * @return The HBox with the icon image and explanation.
+     */
     private static HBox getHBoxOf(String path, String info) {
+        // Get the icon image
         String augmentedPath = "/icons/" + path + ".png";
         ImageView i = new ImageView(new Image(augmentedPath));
         i.setFitHeight(50);
@@ -139,10 +155,12 @@ public class QuBoDocumentation {
         HBox box = new HBox(30);
         Region r1 = new Region();
         Region r2 = new Region();
+
         Label msg = new Label(info);
         VBox msgBox = new VBox();
         msgBox.getChildren().add(msg);
         msgBox.getStyleClass().add("msgBox");
+
         box.getChildren().addAll(i, r1, msgBox, r2);
         box.setMinHeight(Region.USE_PREF_SIZE);
         box.getStyleClass().add("hBox-group");

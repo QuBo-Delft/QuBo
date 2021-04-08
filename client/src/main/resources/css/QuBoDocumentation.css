@@ -4,8 +4,6 @@
 }
 
 .layout {
-    /*-fx-background-color: #f6f2ef;*/
-    /*-fx-background-color: #f16a00;*/
     -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
     -fx-alignment: center;
     -fx-padding: 10, 10, 10, 10;
@@ -40,7 +38,6 @@
     -fx-background-color: #fcf4da;
     -fx-background-radius: 6;
     -fx-effect: dropshadow(gaussian, #8D8776 , 2,0,0,1);
-    /*-fx-padding: 10, 10, 10, 10;*/
 }
 
 .hBox-group:hover {
