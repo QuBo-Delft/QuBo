@@ -12,6 +12,7 @@
 - As a lecturer I want to mark questions as answered so that they appear separately in the question board.
 - As a lecturer I want to delete inappropriate questions quickly so that they don't interfere with my lecture.
 - As a lecturer I want to receive two separate codes, one for students and one with moderation rights, so that I can keep the board secure.
+- As a lecturer I want to run a question board at the same time as other lecturers so that lectures don't interfere with each other.
 ---
 - As a student I want to see questions that students have asked so that I don't ask the same question again.
 - As a student I want to ask questions during a lecture so that the lecturer can answer them.
@@ -32,6 +33,9 @@
 - As a lecturer I want to export questions and written answers in textual format so that I can easily upload them elsewhere.
 - As a lecturer I want to add written answers to questions so that I can respond to unanswered questions after the lecture has ended.
 - As a lecturer I want to ban specific IP addresses so that they are not able to influence the state of the question board and do not distract others.
+- As a lecturer I want to see unanswered questions and the pace of the lecture in a clear way so that the interface does not distract me.
+- As a lecturer I want to close the question board after the lecture is done so that students can't ask new questions.
+- As a lecturer I want students to enter their names before asking questions so that I know who has asked each question.
 ---
 - As a student I want to upvote questions so that I can tell the lecturer which questions I would like to see answered first.
 - As a student I want to have new questions appear automatically so that I don't have to manually refresh the question board.
@@ -45,9 +49,12 @@
 - As a TA I want to join question boards using the lecture codes after the lectures so that I can see all questions and written answers, if any.
 - As a TA I want to ban specific IP addresses so that they are not able to influence the state of the question board and do not distract others.
 ---
+- As an admin I want logs of all requests containing the request payload and the IP it originates from to be saved to a file so that I can review them if an incident occurs.
+- As an admin I want to limit the number of actions allowed per user per time period so that the server does not get overloaded.
+---
 ### Could have
 ---
-- As a lecturer I want to schedule question boards to open and close as specified so that I don't need to manually do that.
+- As a lecturer I want to schedule question boards to open as specified so that I don't need to manually do that.
 - As a lecturer I want to see the most popular questions based upon multiple factors so that I can answer those questions first.
 - As a lecturer I want to set up a poll and receive statistics in real time so that I can directly ask my students questions.
 - As a lecturer I want to close a poll once the voting has concluded so that the results are accurate.
@@ -71,7 +78,6 @@
 ---
 ### Won't have
 ---
-- As a lecturer I want students to enter their names before asking questions so that I know who has asked each question.
 - As a lecturer I want there to be a personal timeout after a student asks a question so that they can't ask questions in quick succession.
 - As a lecturer I want to reject questions so that the questions on the board stay relevant.
 - As a lecturer I want to reject questions so that the students know not to ask this question again.
@@ -89,6 +95,4 @@
 - As a TA I want to highlight relevant questions so that the lecturer can answer them first.
 - As a TA I want to merge similar questions, by either writing a summarised question myself or choosing the most relevant one so that the board will stay concise.
 - As a TA I want to see when another moderator is answering or rephrasing a question so that I know that this task is already being taken care of.
----
-- As an admin I want to limit the number of actions per user per time period so that the server does not overload.
 ---

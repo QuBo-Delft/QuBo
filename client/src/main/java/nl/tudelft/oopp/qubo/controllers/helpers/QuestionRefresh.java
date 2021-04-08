@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
+import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
+import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.controllers.structures.QuestionItem;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
@@ -19,6 +21,9 @@ import java.util.UUID;
  * The Question refreshing helper.
  */
 public class QuestionRefresh {
+    private static StudentViewController thisStuController;
+    private static ModeratorViewController thisModController;
+
     private static QuestionBoardDetailsDto thisQuBoId;
     
     private static QuestionDetailsDto[] answeredQuestions;
@@ -50,9 +55,13 @@ public class QuestionRefresh {
      * @param unAnsScrollPane ScrollPane containing the VBox that contains the list of unanswered questions.
      * @param ansScrollPane   ScrollPane containing the VBox that contains the list of answered questions.
      */
-    public static void studentRefresh(QuestionBoardDetailsDto quBo, VBox unAnsVbox, VBox ansVbox, HashMap<UUID,
-                                        UUID> upvote, HashMap<UUID, UUID> secret, ScrollPane unAnsScrollPane,
-                                        ScrollPane ansScrollPane) {
+    public static void studentRefresh(StudentViewController controller,
+                                      QuestionBoardDetailsDto quBo, VBox unAnsVbox, VBox ansVbox, HashMap<UUID,
+                                      UUID> upvote, HashMap<UUID, UUID> secret, ScrollPane unAnsScrollPane,
+                                      ScrollPane ansScrollPane) {
+        thisStuController = controller;
+        thisModController = null;
+
         thisQuBoId = quBo;
 
         unAnsQuVbox = unAnsVbox;
@@ -80,9 +89,13 @@ public class QuestionRefresh {
      * @param unAnsScrollPane ScrollPane containing the VBox that contains the list of unanswered questions.
      * @param ansScrollPane   ScrollPane containing the VBox that contains the list of answered questions.
      */
-    public static void modRefresh(QuestionBoardDetailsDto quBo, UUID code, VBox unAnsVbox, VBox ansVbox,
+    public static void modRefresh(ModeratorViewController controller, QuestionBoardDetailsDto quBo, UUID code,
+                                  VBox unAnsVbox, VBox ansVbox,
                                   HashMap<UUID, UUID> upvote, ScrollPane unAnsScrollPane,
                                   ScrollPane ansScrollPane) {
+        thisStuController = null;
+        thisModController = controller;
+
         thisQuBoId = quBo;
 
         unAnsQuVbox = unAnsVbox;
@@ -183,8 +196,14 @@ public class QuestionRefresh {
         for (QuestionDetailsDto question : questionList) {
             QuestionItem newQu = new QuestionItem(question.getId(), question.getUpvotes(),
                 question.getText(), question.getAuthorName(), question.getAnswers(),
-                question.getAnswered(), questionVbox, scrollpane);
+                question.getAnswered(), scrollpane, thisQuBoId);
 
+            //Set controller
+            if (thisStuController != null) {
+                newQu.setStuController(thisStuController);
+            } else {
+                newQu.setModController(thisModController);
+            }
             //Display the upvotes and the options menu
             newQu.newUpvoteVbox(upvoteMap);
             newQu.displayOptions(secretCodeMap, modCode);

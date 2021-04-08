@@ -8,7 +8,6 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class InQuestionDialog {
@@ -31,17 +30,19 @@ public class InQuestionDialog {
 
         //Create new label
         Label confirmation = new Label(message);
-        confirmation.setPadding(new Insets(0, 5, 0, 0));
+        confirmation.setPadding(new Insets(5, 5, 5, 5));
         confirmation.setWrapText(true);
         //Set width bounds to the dialogue so it doesn't overflow the question box
-        confirmation.prefWidthProperty().bind(questionBody.wrappingWidthProperty().subtract(50));
-        confirmation.minWidthProperty().bind(questionBody.wrappingWidthProperty().subtract(50));
-        confirmation.maxWidthProperty().bind(questionBody.wrappingWidthProperty().subtract(50));
+        confirmation.prefWidthProperty().bind(questionBody.wrappingWidthProperty().subtract(55));
+        confirmation.minWidthProperty().bind(questionBody.wrappingWidthProperty().subtract(55));
+        confirmation.maxWidthProperty().bind(questionBody.wrappingWidthProperty().subtract(55));
         HBox.setHgrow(confirmation, Priority.ALWAYS);
 
         //Create buttons
         yes = new Button("Yes");
+        yes.getStyleClass().add("inQuestionConfirmationYes");
         cancel = new Button("Cancel");
+        cancel.getStyleClass().add("inQuestionConfirmationCancel");
         dialogue = new HBox(confirmation, yes, cancel);
 
         //Set layouts

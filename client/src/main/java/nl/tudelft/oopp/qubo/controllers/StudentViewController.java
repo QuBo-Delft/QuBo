@@ -2,6 +2,7 @@ package nl.tudelft.oopp.qubo.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -41,7 +42,10 @@ import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Controller for the StudentView.fxml sheet.
@@ -99,11 +103,13 @@ public class StudentViewController {
     @FXML
     private ToggleButton polls;
 
-    // The VBox pace votes are placed in, and their toggle group
+    // The VBox pace votes are placed in, their toggle group, and the "All right" button.
     @FXML
     private VBox paceVbox;
     @FXML
     ToggleGroup pace;
+    @FXML
+    RadioButton justRight;
 
     /**
     * Records if the side menu was open before hiding.
@@ -151,6 +157,17 @@ public class StudentViewController {
 
     private QuestionBoardDetailsDto quBo;
 
+
+    private AtomicBoolean refreshing = new AtomicBoolean(true);
+    private Timer timer = new Timer();
+    private TimerTask refreshQuestions = new TimerTask() {
+        @Override
+        public void run() {
+            Platform.runLater(() -> conditionalRefresh(refreshing.get()));
+        }
+    };
+
+
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
      *
@@ -175,7 +192,7 @@ public class StudentViewController {
      * which actually sets their values.
      */
     public void setBoardDetails() {
-        new QuBoInformation().setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
+        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
     }
 
     /**
@@ -230,15 +247,38 @@ public class StudentViewController {
             (observable, oldValue, newValue) -> previouslyPressed = oldValue);
 
         startUpProperties();
+        timer.scheduleAtFixedRate(refreshQuestions, 0, 2000);
     }
 
     /**
      * Refresh the student view by refreshing the question list.
      */
     public void refresh() {
-        QuestionRefresh.studentRefresh(quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap, unAnsQuScPane,
-            sideMenuPane);
+        QuestionRefresh.studentRefresh(this, quBo, unAnsQuVbox, ansQuVbox, upvoteMap, secretCodeMap,
+            unAnsQuScPane, sideMenuPane);
+
+        //Add a Just Right vote on the first refresh of the question board after the student joined.
+        if (previouslyPressed == null) {
+            justRight.setSelected(true);
+            previouslyPressed = justRight;
+            paceVoteOkay();
+        }
         PollRefresh.studentRefresh(quBo, pollVbox, sideMenuPane,this);
+
+        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText);
+    }
+
+    /**
+     * Conditional refresh.
+     */
+    public void conditionalRefresh(boolean condition) {
+        if (condition) {
+            refresh();
+        }
+    }
+
+    public void setRefreshing(Boolean bool) {
+        refreshing.set(bool);
     }
 
     private void startUpProperties() {
@@ -294,6 +334,11 @@ public class StudentViewController {
     }
 
     private void paceVoteHandler(PaceType paceType) {
+        // If the question board is closed, block this action and reset the toggle group
+        if (QuBoInformation.isQuBoClosed(quBo)) {
+            pace.selectToggle(previouslyPressed);
+            return;
+        }
         // Disables radio button input when processing pace vote by disabling entire VBox
         paceVbox.setDisable(true);
         // Checks whether the user has already made a pace vote. If this is the case we should
@@ -365,6 +410,10 @@ public class StudentViewController {
      * to the askedQuestionList, and map the returned secretCode (value) to the question ID (key).
      */
     public void addQuestion() {
+        // If the question board is closed, block this action
+        if (QuBoInformation.isQuBoClosed(quBo)) {
+            return;
+        }
         // Display a dialog to extract the user's question text,
         // and ensure it is at least 8 characters long
         String questionText = GetTextDialog.display("Write your question here...",
@@ -533,6 +582,7 @@ public class StudentViewController {
                 // Deletes set pace vote and do not show an error message on failure
                 deletePaceVote(false);
             }
+            timer.cancel();
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
     }
