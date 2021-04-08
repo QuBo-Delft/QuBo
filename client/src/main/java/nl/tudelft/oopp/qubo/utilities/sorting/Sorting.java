@@ -161,7 +161,7 @@ public class Sorting {
          *
          * @return 0 if they were answered at the same time, -1 if o1 was answered before o2,
          *      and 1 if o1 was answered after o2. This ensures that the list of answers starts with
-         *      the answer that was post first.
+         *      the answer that was posted first.
          */
         @Override
         public int compare(AnswerDetailsDto o1, AnswerDetailsDto o2) {
