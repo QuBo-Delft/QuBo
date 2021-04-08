@@ -252,4 +252,64 @@ public class QuestionBoardTests {
         assertNotNull(result.getResolvedException());
         assertEquals("This QuestionBoard is already closed", result.getResolvedException().getMessage());
     }
+
+    @Test
+    public void retrieveQuestionBoardByModeratorCode_withValidCode_returnsCorrectBoard() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(true);
+        questionBoardRepository.save(qb);
+
+        QuestionBoard qb2 = new QuestionBoard();
+        qb2.setModeratorCode(UUID.randomUUID());
+        qb2.setStartTime(Timestamp.valueOf("2021-03-02 00:00:00"));
+        qb2.setTitle("Test board 2");
+        qb2.setClosed(false);
+        questionBoardRepository.save(qb2);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(get("/api/board/moderator")
+            .queryParam("code", qb.getModeratorCode().toString())
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isOk())
+            .andReturn();
+
+        QuestionBoardDetailsDto dto = deserialize(result.getResponse().getContentAsString(),
+            QuestionBoardDetailsDto.class);
+
+        assertEquals(qb.getId(), dto.getId());
+        assertEquals(qb.getTitle(), dto.getTitle());
+        assertEquals(qb.getStartTime(), dto.getStartTime());
+        assertEquals(qb.isClosed(), dto.isClosed());
+    }
+
+    @Test
+    public void retrieveQuestionBoardByModeratorCode_withNonexistentCode_returns404() throws Exception {
+        // Arrange
+        QuestionBoard qb = new QuestionBoard();
+        qb.setModeratorCode(UUID.randomUUID());
+        qb.setStartTime(Timestamp.valueOf("2021-03-01 00:00:00"));
+        qb.setTitle("Test board");
+        qb.setClosed(true);
+        questionBoardRepository.save(qb);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(get("/api/board/moderator")
+            .queryParam("code", UUID.randomUUID().toString())
+            .contentType(MediaType.APPLICATION_JSON));
+
+        // Assert
+        MvcResult result = resultActions
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+        assertEquals("Unable to find resource", result.getResponse().getErrorMessage());
+    }
+
 }
