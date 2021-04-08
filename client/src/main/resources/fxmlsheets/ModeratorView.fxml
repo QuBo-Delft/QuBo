@@ -94,7 +94,7 @@
                 </tooltip>
             </ToggleButton>
             <Pane prefWidth="40.0" VBox.vgrow="ALWAYS" />
-         <Button fx:id="export" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" styleClass="exportBtn" />
+         <Button fx:id="export" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" styleClass="exportBtn" onAction="#exportQuestions" />
             <Button fx:id="leaveQuBo" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#leaveQuBo" styleClass="exitBtn">
                 <tooltip>
                     <Tooltip text="Leave Question Board" />
