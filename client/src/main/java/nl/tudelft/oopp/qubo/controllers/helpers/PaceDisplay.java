@@ -65,7 +65,7 @@ public class PaceDisplay {
 
         //Calculate the pace bar modifier
         double paceBarModifier = calculatePace(pace.getTooFastVotes(), pace.getJustRightVotes(),
-                pace.getTooSlowVotes());
+            pace.getTooSlowVotes());
 
         //Move the pace bar cursor
         movePaceCursor(paceBar, paceCursor, paceBarModifier);
