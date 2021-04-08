@@ -291,6 +291,8 @@ public class ModeratorViewController {
             "You will have to use your code to join again.");
         if (backHome) {
             timer.cancel();
+            //Reset the pace bar modifier.
+            PaceDisplay.resetPaceBarMod();
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
     }
