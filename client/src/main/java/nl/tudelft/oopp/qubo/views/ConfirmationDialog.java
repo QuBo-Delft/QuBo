@@ -78,6 +78,7 @@ public class ConfirmationDialog {
 
         // Create VBox to arrange title, message and hbox with buttons
         VBox vbox = new VBox(title, message, hbox);
+        vbox.setPrefHeight(VBox.USE_COMPUTED_SIZE);
         vbox.setAlignment(Pos.CENTER);
         vbox.setSpacing(15);
         vbox.setMinHeight(Region.USE_PREF_SIZE);
