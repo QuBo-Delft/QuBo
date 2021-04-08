@@ -398,7 +398,8 @@ public class QuestionBoardTests {
 
         assertEquals(2, dtos.length);
 
-        QuestionDetailsDto actualQ1, actualQ2;
+        QuestionDetailsDto actualQ1;
+        QuestionDetailsDto actualQ2;
         if (dtos[0].getId().equals(question1.getId())) {
             actualQ1 = dtos[0];
             actualQ2 = dtos[1];
@@ -417,7 +418,8 @@ public class QuestionBoardTests {
         AnswerDetailsDto[] actualAnswers = actualQ1.getAnswers().toArray(new AnswerDetailsDto[0]);
 
         assertEquals(2, actualAnswers.length);
-        AnswerDetailsDto actualA1, actualA2;
+        AnswerDetailsDto actualA1;
+        AnswerDetailsDto actualA2;
         if (actualAnswers[0].getId().equals(answer1.getId())) {
             actualA1 = actualAnswers[0];
             actualA2 = actualAnswers[1];
