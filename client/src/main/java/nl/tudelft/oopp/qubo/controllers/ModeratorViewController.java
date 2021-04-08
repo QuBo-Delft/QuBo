@@ -1,5 +1,7 @@
 package nl.tudelft.oopp.qubo.controllers;
 
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
@@ -34,7 +36,10 @@ import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The Moderator view controller.
@@ -116,6 +121,14 @@ public class ModeratorViewController {
     private ClipboardContent clipboardContent = new ClipboardContent();
 
     private QuestionBoardDetailsDto quBo;
+    private AtomicBoolean refreshing = new AtomicBoolean(true);
+    private Timer timer = new Timer();
+    private TimerTask refreshQuestions = new TimerTask() {
+        @Override
+        public void run() {
+            Platform.runLater(() -> conditionalRefresh(refreshing.get()));
+        }
+    };
 
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
@@ -159,17 +172,36 @@ public class ModeratorViewController {
     @FXML
     private void initialize() {
         startUpProperties();
+        //Display the questions and pace
+        timer.scheduleAtFixedRate(refreshQuestions, 0, 2000);
     }
 
     /**
      * This method refreshes the questions and pace bar.
      */
     public void refresh() {
-        QuestionRefresh.modRefresh(quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
+        QuestionRefresh.modRefresh(this, quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
 
         //Refresh the pace
         PaceDisplay.displayPace(quBo, modCode, paceBar, paceCursor);
+
+        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText);
+    }
+
+
+
+    /**
+     * Conditional refresh.
+     */
+    public void conditionalRefresh(boolean condition) {
+        if (condition) {
+            refresh();
+        }
+    }
+
+    public void setRefreshing(Boolean bool) {
+        refreshing.set(bool);
     }
 
     private void startUpProperties() {
@@ -255,6 +287,7 @@ public class ModeratorViewController {
         boolean backHome = ConfirmationDialog.display("Leave Question Board?",
             "You will have to use your code to join again.");
         if (backHome) {
+            timer.cancel();
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
     }

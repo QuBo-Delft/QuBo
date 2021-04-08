@@ -1,7 +1,9 @@
 package nl.tudelft.oopp.qubo.utilities.sorting;
 
+import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -77,14 +79,16 @@ public class Sorting {
          * @param o1    The QuestionDetailsDto that is to be compared with o2.
          * @param o2    The QuestionDetailsDto that is to be compared with o1.
          *
-         * @return 0 if the number of votes are equal, 1 if the number of votes of o1 is smaller than that
-         *      of o2, and -1 if the number of votes of o1 is greater than that of o2. This ensures that the
-         *      list of questions starts with the question with the greatest number of upvotes.
+         * @return the inverse of the comparason of timestamps if the upvotes are equal,
+         *      1 if the number of votes of o1 is smaller than that of o2,
+         *      and -1 if the number of votes of o1 is greater than that of o2. This ensures that the
+         *      list of questions starts with the question with the greatest number of upvotes,
+         *      and secondly the order of equal upvotes is goes from recent to longest ago.
          */
         @Override
         public int compare(QuestionDetailsDto o1, QuestionDetailsDto o2) {
             if (o1.getUpvotes() == o2.getUpvotes()) {
-                return 0;
+                return o1.getTimestamp().compareTo(o2.getTimestamp()) * -1;
             } else if (o1.getUpvotes() < o2.getUpvotes()) {
                 return 1;
             } else {
@@ -105,7 +109,7 @@ public class Sorting {
 
         //Sort the list in non-decreasing order. The question that was answered last is placed at the
         //front of the list.
-        Collections.sort(sortList, new QuestionTimeAnsweredComparator());
+        sortList.sort(new QuestionTimeAnsweredComparator());
     }
 
     /**
@@ -136,5 +140,38 @@ public class Sorting {
         //Sort the list in non-decreasing order. The question that has the highest number of upvotes
         //is placed at the front of the list.
         Collections.sort(sortList, new QuestionVotesComparator());
+    }
+
+    /**
+     * Sorts the list of questions based on the TimeStamp they have been posted.
+     *
+     * @param answers   The list of answers that should be sorted.
+     */
+    public static void sortAnswersOnTime(List<AnswerDetailsDto> answers) {
+        answers.sort(new AnswerTimePostedComparator());
+    }
+
+    public static class AnswerTimePostedComparator implements Comparator<AnswerDetailsDto> {
+
+        /**
+         * This method compares the time at which two textual answers were posted, and returns an integer.
+         *
+         * @param o1    A AnswerDetailsDto that is to be compared with o2.
+         * @param o2    A AnswerDetailsDto that is to be compared with o1.
+         *
+         * @return 0 if they were answered at the same time, -1 if o1 was answered before o2,
+         *      and 1 if o1 was answered after o2. This ensures that the list of answers starts with
+         *      the answer that was posted first.
+         */
+        @Override
+        public int compare(AnswerDetailsDto o1, AnswerDetailsDto o2) {
+            if (o1.getTimestamp().equals(o2.getTimestamp())) {
+                return 0;
+            } else if (o1.getTimestamp().before(o2.getTimestamp())) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
     }
 }
