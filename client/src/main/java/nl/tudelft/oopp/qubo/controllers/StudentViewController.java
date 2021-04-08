@@ -472,6 +472,7 @@ public class StudentViewController {
                 // Deletes set pace vote and do not show an error message on failure
                 deletePaceVote(false);
             }
+            timer.cancel();
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
         }
     }
