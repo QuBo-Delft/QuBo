@@ -1,13 +1,3 @@
-Client: ![Client coverage](https://gitlab.ewi.tudelft.nl/cse1105/2019-2020/organisation/repository-template/badges/master/coverage.svg?job=client-test)
-Server: ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/2019-2020/organisation/repository-template/badges/master/coverage.svg?job=server-test)
-
-
-# Starting template
-
-This README will need to contain a description of your project, how to run it, how to set up the development environment, and who worked on it.
-This information can be added throughout the course, except for the names of the group members.
-Add your own name (do not add the names for others!) to the section below.
-
 ## Description of project
 
 ## Group members
@@ -24,5 +14,3 @@ Add your own name (do not add the names for others!) to the section below.
 ## How to run it
 
 ## How to contribute to it
-
-## Copyright / License (opt.)
