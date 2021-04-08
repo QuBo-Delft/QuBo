@@ -50,7 +50,7 @@ public class PollVoteServiceTests {
 
     @BeforeEach
     public void setup() {
-        now = Timestamp.from(Instant.now());
+        now = Timestamp.valueOf("2021-04-01 00:00:00");
     }
 
     @Test
@@ -75,15 +75,35 @@ public class PollVoteServiceTests {
         pollOptionRepository.save(pollOption1);
 
         // Act
-        PollVote pollVote = pollVoteService.registerVote(pollOption1.getId());
+        PollVote result = pollVoteService.registerVote(pollOption1.getId());
 
         // Assert
-        assertNotNull(pollVote);
-        assertEquals(pollVote.getPollOption().getId(), pollOption1.getId());
+        assertNotNull(result);
+        assertEquals(result.getPollOption().getId(), pollOption1.getId());
+        assertEquals(result, pollVoteRepository.getById(result.getId()));
     }
 
     @Test
     public void registerVote_withNonExistentPoll_returnsNotFoundException() {
+        // Arrange
+        QuestionBoard questionBoard = new QuestionBoard();
+        questionBoard.setModeratorCode(UUID.randomUUID());
+        questionBoard.setTitle("Test Board");
+        questionBoard.setStartTime(now);
+        questionBoard.setClosed(false);
+        questionBoardRepository.save(questionBoard);
+
+        Poll poll = new Poll();
+        poll.setText("Test Poll");
+        poll.setOpen(true);
+        poll.setQuestionBoard(questionBoard);
+        pollRepository.save(poll);
+
+        PollOption pollOption1 = new PollOption();
+        pollOption1.setText("Option 1");
+        pollOption1.setPoll(poll);
+        pollOptionRepository.save(pollOption1);
+
         // Act
         Exception exception = assertThrows(NotFoundException.class,
             () -> pollVoteService.registerVote(UUID.randomUUID()));
@@ -122,7 +142,7 @@ public class PollVoteServiceTests {
     }
 
     @Test
-    public void getPollVote_withValidDate_worksCorrectly() {
+    public void getPollVote_withValidData_worksCorrectly() {
         // Arrange
         QuestionBoard questionBoard = new QuestionBoard();
         questionBoard.setModeratorCode(UUID.randomUUID());
@@ -155,6 +175,33 @@ public class PollVoteServiceTests {
 
     @Test
     public void getPollVote_withNonExistentPollVote_returnsNull() {
+        // Arrange
+        QuestionBoard questionBoard = new QuestionBoard();
+        questionBoard.setModeratorCode(UUID.randomUUID());
+        questionBoard.setTitle("Test Board");
+        questionBoard.setStartTime(now);
+        questionBoard.setClosed(false);
+        questionBoardRepository.save(questionBoard);
+
+        Poll poll = new Poll();
+        poll.setText("Test Poll");
+        poll.setOpen(false);
+        poll.setQuestionBoard(questionBoard);
+        pollRepository.save(poll);
+
+        PollOption pollOption1 = new PollOption();
+        pollOption1.setText("Option 1");
+        pollOption1.setPoll(poll);
+        pollOptionRepository.save(pollOption1);
+
+        PollVote pollVote1 = new PollVote();
+        pollVote1.setPollOption(pollOption1);
+        pollVoteRepository.save(pollVote1);
+
+        PollVote pollVote2 = new PollVote();
+        pollVote2.setPollOption(pollOption1);
+        pollVoteRepository.save(pollVote2);
+
         // Act
         PollVote result = pollVoteService.getPollVote(UUID.randomUUID());
 
