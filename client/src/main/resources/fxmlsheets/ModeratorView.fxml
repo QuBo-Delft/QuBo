@@ -51,9 +51,9 @@
             <HBox prefHeight="100.0" prefWidth="200.0">
             <StackPane fx:id="paceBar" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" styleClass="paceBar" HBox.hgrow="NEVER">
                <VBox alignment="CENTER" StackPane.alignment="CENTER">
-                     <Label text="Fast" styleClass="paceLabel"/>
+                   <Label styleClass="paceLabel" text="Fast"/>
                      <Pane VBox.vgrow="ALWAYS" />
-                     <Label text="Slow" styleClass="paceLabel"/>
+                   <Label styleClass="paceLabel" text="Slow"/>
                   <padding>
                      <Insets bottom="5.0" top="5.0" />
                   </padding>
@@ -101,7 +101,7 @@
                 </tooltip>
             </ToggleButton>
             <Pane prefWidth="40.0" VBox.vgrow="ALWAYS" />
-         <Button fx:id="export" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" styleClass="exportBtn" onAction="#exportQuestions" />
+         <Button fx:id="export" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#exportQuestions" styleClass="exportBtn" />
             <Button fx:id="leaveQuBo" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#leaveQuBo" styleClass="exitBtn">
                 <tooltip>
                     <Tooltip text="Leave Question Board" />
