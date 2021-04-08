@@ -7,7 +7,7 @@
 
 .pacingText {
     -fx-font-family: "Arial";
-    -fx-font-size: 18;
+    -fx-font-size: 1.3em;
     -fx-translate-x: 17;
 }
 
@@ -63,16 +63,17 @@
 }
 
 .askBtn {
+    -fx-background-image: url(../icons/btn_ask.png);
     -fx-background-color: transparent;
-    -fx-graphic: url(../icons/btn_ask.png);
-
-    -fx-translate-x: 12;
-    -fx-translate-y: -28;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 85px 85px;
+    -fx-background-radius: 45px;
 }
 
 .askBtn:hover {
-    -fx-graphic: url(../icons/btn_ask_hover.png);
-    -fx-background-size: 30px 30px;
+    -fx-background-image: url(../icons/btn_ask_hover.png);
+    -fx-background-size: 90px 90px;
     -fx-cursor: hand;
 }
 

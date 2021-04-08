@@ -6,41 +6,47 @@
 .label {
     -fx-font-family: "Arial";
     -fx-font-weight: bold;
-    -fx-text-fill: #000000;
 
-    -fx-translate-x: 10;
     -fx-padding: 2, 2, 2, 2;
 }
 
+.text-area {
+    -fx-control-inner-background: #f4f2ee;
+}
+
+.button:hover {
+    -fx-cursor: hand;
+}
+
 .lecTitleText {
-    -fx-font-size: 17;
+    -fx-font-size: 1.3em;
+    -fx-text-fill: #3E1502;
 }
 
 .openText {
-    -fx-font-size: 13;
+    -fx-font-size: 1em;
+    -fx-text-fill: #3E1502;
 }
 
 .sideBarBtn {
     -fx-background-radius: 0;
-    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
+    -fx-background-color: transparent;
 
     -fx-background-image: url(../icons/hamburger.png);
     -fx-background-size: 27px 27px;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-
-    -fx-translate-x: 0.2;
-    -fx-translate-y: -0.2;
 }
 
 .sideBarBtn:hover {
-    -fx-background-color: #cd7000;
+    -fx-background-color: #d66c16;
     -fx-background-size: 30px 30px;
     -fx-cursor: hand;
 }
 
 .sideBarBtn:selected {
     -fx-background-image: url(../icons/close_sidebar.png);
+    -fx-background-color: #d66c16;
     -fx-background-size: 27px 27px;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
@@ -48,7 +54,7 @@
 
 .helpBtn {
     -fx-background-radius: 0;
-    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
+    -fx-background-color: transparent;
 
     -fx-background-image: url(../icons/help.png);
     -fx-background-size: 27px 27px;
@@ -57,14 +63,14 @@
 }
 
 .helpBtn:hover {
-    -fx-background-color: #cd7000;
+    -fx-background-color: #d66c16;
     -fx-background-size: 30px 30px;
     -fx-cursor: hand;
 }
 
 .boardInfoBtn {
     -fx-background-radius: 0;
-    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
+    -fx-background-color: transparent;
 
     -fx-background-image: url(../icons/board_details.png);
     -fx-background-size: 27px 27px;
@@ -73,7 +79,7 @@
 }
 
 .boardInfoBtn:hover {
-    -fx-background-color: #cd7000;
+    -fx-background-color: #d66c16;
     -fx-background-size: 30px 30px;
     -fx-cursor: hand;
 }
@@ -110,6 +116,11 @@
     -fx-cursor: hand;
 }
 
+.pollBtn:selected {
+    -fx-background-color: #3c3837;
+    -fx-background-size: 27px 27px;
+}
+
 .answeredBtn {
     -fx-background-radius: 0;
     -fx-background-color: #736d69;
@@ -126,15 +137,19 @@
     -fx-cursor: hand;
 }
 
+.answeredBtn:selected {
+    -fx-background-color: #3c3837;
+    -fx-background-size: 27px 27px;
+}
+
 .upperBox {
-    -fx-effect: dropshadow( three-pass-box, #626234, 4.0, 0.0, 0.0, 0.0);
-    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
+    -fx-effect: dropshadow( three-pass-box, #964C2A, 2.0, 0.0, -2.0, 0.0);
+    -fx-background-color: linear-gradient(to top, #FF8B3E 20%, #FF986E 80%);
 }
 
 .upperBar {
     -fx-min-height: 54;
-    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
-    -fx-effect: dropshadow( three-pass-box, #626234, 5.0, 0.0, 0.0, 0.0);
+    -fx-background-color: linear-gradient(to top, #FF8B3E 20%, #FF986E 80%);
 }
 
 .sideBar {
@@ -150,13 +165,10 @@
     -fx-background-color: #c3b9ad;
 }
 
-.qList {
-    -fx-background-color: #f1efe8;
-}
-
 .qPane {
     -fx-background-color: #fefefe;
-    -fx-effect: dropshadow( three-pass-box, #80665d, 3.0, 0.0, 0.0, 0.2);
+    -fx-effect: dropshadow( three-pass-box, rgba(76, 40, 28, 0.2), 3, 0.0, 2, 2);
+    -fx-background-radius: 0 0 10 0;
     -fx-font-family: "Arial";
     -fx-text-fill: #b39288;
     -fx-grid-lines-visible: false;
@@ -169,14 +181,14 @@
 
 .qContent {
     -fx-font-family: "Arial";
-    -fx-font-size: 17;
+    -fx-font-size: 1.2em;
     -fx-text-fill: #b39288;
     -fx-background-color: black;
 }
 
 .qVotes {
     -fx-font-family: "Arial";
-    -fx-font-size: 16;
+    -fx-font-size: 1.2em;
     -fx-text-fill: #7e6461;
 }
 
@@ -198,4 +210,145 @@
 
 .upvoteBtn:hover {
     -fx-cursor: hand;
+}
+
+.sidePaneBackground {
+    -fx-background: #c3b9ad;
+    -fx-background-color: #c3b9ad;
+}
+
+/*Scrollbar stuff*/
+.scroll-bar .thumb {
+    -fx-background-color: #736d69;
+    -fx-background-radius : 8px;
+}
+
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .track {
+    -fx-opacity: 0;
+}
+
+.scroll-bar .track-background {
+    -fx-opacity: 0;
+}
+
+.scroll-bar .increment-button {
+    -fx-opacity: 0;
+}
+
+.scroll-bar .decrement-button {
+    -fx-opacity: 0;
+}
+/**/
+
+/*Options MenuButton stuff*/
+.optionsMenu {
+    -fx-background-color: transparent;
+    -fx-background-image: url(../icons/options.png);
+    -fx-background-size: 20px 20px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.optionsMenu:hover {
+    -fx-cursor: hand;
+}
+
+.optionsMenu:showing {
+    -fx-background-color: rgba(210, 210, 210, 0.80);
+    -fx-background: rgba(210, 210, 210, 0.80);
+}
+
+.menu-button > .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.menu-button > .arrow-button > .arrow {
+    -fx-background-color: transparent;
+}
+/**/
+
+.answers {
+    -fx-background-color: #979288;
+    -fx-background: #7a7469;
+}
+
+.mainContentBackGround {
+    -fx-background-color: #ebe7db;
+    -fx-background: #ebe7db;
+}
+
+.context-menu {
+    -fx-background-color: rgba(210, 210, 210, 0.80);
+    -fx-background: rgba(210, 210, 210, 0.80);
+    -fx-background-radius: 0 0 8 8;
+}
+
+.menu-item:focused {
+    -fx-background-color: rgba(120, 120, 120, 0.90);
+    -fx-cursor: hand;
+}
+
+.inQuestionConfirmationYes {
+    -fx-background-color: #454545;
+    -fx-background: #454545;
+    -fx-text-fill: #efefef;
+    -fx-background-radius: 10px;
+}
+
+.inQuestionConfirmationYes:hover {
+    -fx-background-color: #3a3a3a;
+    -fx-background: #3a3a3a;
+}
+
+.inQuestionConfirmationYes:pressed {
+    -fx-background-color: #2f2f2f;
+    -fx-background: #2f2f2f;
+}
+
+.inQuestionConfirmationCancel {
+    -fx-background-color: rgba(0, 0, 0, 0.15);
+    -fx-background: rgba(0, 0, 0, 0.15);
+    -fx-background-radius: 10px;
+}
+
+.inQuestionConfirmationCancel:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.22);
+    -fx-background: rgba(0, 0, 0, 0.22);
+}
+.inQuestionConfirmationCancel:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.30);
+    -fx-background: rgba(0, 0, 0, 0.30);
+}
+
+.textAreaButtonConfirm {
+    -fx-background-color: #b8a788;
+    -fx-text-fill: #FAF7F4;
+    -fx-background-radius: 8px;
+}
+
+.textAreaButtonConfirm:hover {
+    -fx-background-color: #A99777;
+}
+
+.textAreaButtonConfirm:pressed {
+    -fx-background-color: #9A8764;
+}
+
+.textAreaButtonCancel {
+    -fx-background-color: #ece7e1;
+    -fx-text-fill: #8F7E5F;
+    -fx-background-radius: 8px;
+}
+
+.textAreaButtonCancel:hover {
+    -fx-background-color: #D9CFC4;
+}
+
+.textAreaButtonCancel:pressed {
+    -fx-background-color: #C4B7A8;
 }

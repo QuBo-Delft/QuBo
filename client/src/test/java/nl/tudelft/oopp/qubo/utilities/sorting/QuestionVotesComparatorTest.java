@@ -40,25 +40,6 @@ public class QuestionVotesComparatorTest {
         assertEquals(compare, 0);
     }
 
-    //Test if the comparison of two equal questions will return 0.
-    @Test
-    public void testEqualQuestions() {
-        //Arrange
-        QuestionDetailsDto question2 = new QuestionDetailsDto();
-        question2.setText("Why did the chicken cross the road?");
-        question2.setAuthorName("Chicken Two");
-        question2.setTimestamp(Timestamp.from(Instant.now()));
-        question2.setAnswered(Timestamp.from(Instant.now()));
-        question2.setAnswers(new HashSet<AnswerDetailsDto>());
-        question2.setUpvotes(25);
-
-        //Act
-        int compare = comparator.compare(question1, question2);
-
-        //Assert
-        assertEquals(compare, 0);
-    }
-
     //Test if the comparison of a question with a question that has a higher number of votes
     //will return 1.
     @Test

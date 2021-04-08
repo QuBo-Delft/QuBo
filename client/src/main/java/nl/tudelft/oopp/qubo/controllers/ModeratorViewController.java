@@ -1,9 +1,15 @@
 package nl.tudelft.oopp.qubo.controllers;
 
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
@@ -12,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
@@ -19,7 +26,9 @@ import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
+import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
+import nl.tudelft.oopp.qubo.utilities.QuestionToStringConverter;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
@@ -28,7 +37,10 @@ import javafx.scene.image.ImageView;
 import nl.tudelft.oopp.qubo.views.QuBoDocumentation;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The Moderator view controller.
@@ -42,8 +54,6 @@ public class ModeratorViewController {
     private Button helpDoc;
     @FXML
     private StackPane content;
-    @FXML
-    private BorderPane paceVotePane;
 
     //Nodes used to display the pace
     @FXML
@@ -112,6 +122,14 @@ public class ModeratorViewController {
     private ClipboardContent clipboardContent = new ClipboardContent();
 
     private QuestionBoardDetailsDto quBo;
+    private AtomicBoolean refreshing = new AtomicBoolean(true);
+    private Timer timer = new Timer();
+    private TimerTask refreshQuestions = new TimerTask() {
+        @Override
+        public void run() {
+            Platform.runLater(() -> conditionalRefresh(refreshing.get()));
+        }
+    };
 
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
@@ -146,7 +164,7 @@ public class ModeratorViewController {
      * which actually sets their values.
      */
     public void setBoardDetails() {
-        new QuBoInformation().setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
+        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
     }
 
     /**
@@ -156,24 +174,41 @@ public class ModeratorViewController {
     private void initialize() {
         startUpProperties();
         //Display the questions and pace
-        refresh();
+        timer.scheduleAtFixedRate(refreshQuestions, 0, 2000);
     }
 
     /**
      * This method refreshes the questions and pace bar.
      */
     public void refresh() {
-        QuestionRefresh.modRefresh(quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
+        QuestionRefresh.modRefresh(this, quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
 
         //Refresh the pace
         PaceDisplay.displayPace(quBo, modCode, paceBar, paceCursor);
+
+        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText);
+    }
+
+
+
+    /**
+     * Conditional refresh.
+     */
+    public void conditionalRefresh(boolean condition) {
+        if (condition) {
+            refresh();
+        }
+    }
+
+    public void setRefreshing(Boolean bool) {
+        refreshing.set(bool);
     }
 
     private void startUpProperties() {
         //Hide side menu and sidebar
         LayoutProperties.startupProperties(content, sideBar, sideMenu, pollVbox, ansQuVbox, unAnsQuVbox,
-            paceVotePane);
+            null);
         LayoutProperties.modStartUpProperties(paceBar, paceCursor);
     }
 
@@ -254,7 +289,49 @@ public class ModeratorViewController {
         boolean backHome = ConfirmationDialog.display("Leave Question Board?",
             "You will have to use your code to join again.");
         if (backHome) {
+            timer.cancel();
             SceneLoader.defaultLoader((Stage) leaveQuBo.getScene().getWindow(), "JoinQuBo");
+        }
+    }
+
+    /**
+     * Method that runs when the Export button is clicked.
+     * Shows a file picker dialogue.
+     * If the user selects a destination file -> Questions are exported to that file.
+     * If the user clicks cancel -> Dialogue closes and user returns to the question board.
+     */
+    public void exportQuestions() {
+        String jsonQuestions = QuestionBoardCommunication.retrieveQuestions(quBo.getId());
+
+        if (jsonQuestions == null) {
+            AlertDialog.display("Unsuccessful Request",
+                "Failed to retrieve questions, please try again.");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export questions");
+        fileChooser.setInitialFileName(quBo.getTitle() + ".txt");
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Text file (*.txt)", "*.txt"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        File file = fileChooser.showSaveDialog(boardTitle.getScene().getWindow());
+
+        if (file == null) {
+            return;
+        }
+
+        Gson gson = (new GsonBuilder()).create();
+
+        QuestionDetailsDto[] questions = gson.fromJson(jsonQuestions, QuestionDetailsDto[].class);
+
+        String asString = QuestionToStringConverter.convertToString(questions);
+
+        try {
+            Files.write(file.toPath(), asString.getBytes());
+        } catch (IOException e) {
+            AlertDialog.display("Error",
+                "Failed to save questions to file, please try again.");
         }
     }
 
@@ -278,7 +355,6 @@ public class ModeratorViewController {
                 // Null returned, the question board was not closed
                 AlertDialog.display("Unsuccessful Request",
                         "Failed to close the question board, please try again.");
-                return;
             } else {
                 AlertDialog.display("Successful Request",
                         "The question board has been closed.");
@@ -287,5 +363,4 @@ public class ModeratorViewController {
         }
 
     }
-
 }
