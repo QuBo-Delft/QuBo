@@ -10,8 +10,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SortingTest {
 
@@ -190,6 +193,90 @@ public class SortingTest {
         //Assert
         assertTrue(questions[0].getUpvotes() >= questions[1].getUpvotes());
         assertTrue(questions[1].getUpvotes() >= questions[2].getUpvotes());
+    }
+
+    //Tests if a long mixed array will be sorted correctly by sortOnTimestamp.
+    @Test
+    public void testSortOnTimestampMixed() {
+        //Arrange
+        questions = new QuestionDetailsDto[10];
+        questions[0] = new QuestionDetailsDto();
+        questions[1] = new QuestionDetailsDto();
+        questions[2] = new QuestionDetailsDto();
+        questions[3] = new QuestionDetailsDto();
+        questions[4] = new QuestionDetailsDto();
+        questions[5] = new QuestionDetailsDto();
+        questions[6] = new QuestionDetailsDto();
+        questions[7] = new QuestionDetailsDto();
+        questions[8] = new QuestionDetailsDto();
+        questions[9] = new QuestionDetailsDto();
+
+        questions[0].setTimestamp(new Timestamp(now.getTime() + 8 * 1000));
+        questions[1].setTimestamp(new Timestamp(now.getTime() + 1000));
+        questions[2].setTimestamp(new Timestamp(now.getTime() + 2 * 1000));
+        questions[3].setTimestamp(now);
+        questions[4].setTimestamp(new Timestamp(now.getTime() + 4 * 1000));
+        questions[5].setTimestamp(new Timestamp(now.getTime() + 7 * 1000));
+        questions[6].setTimestamp(new Timestamp(now.getTime() + 3 * 1000));
+        questions[7].setTimestamp(new Timestamp(now.getTime() + 6 * 1000));
+        questions[8].setTimestamp(new Timestamp(now.getTime() + 4 * 1000));
+        questions[9].setTimestamp(new Timestamp(now.getTime() + 5 * 1000));
+
+        //Act
+        Sorting.sortOnTimestamp(questions);
+
+        //Assert
+        assertTrue(questions[0].getTimestamp().getTime() <= questions[1].getTimestamp().getTime());
+        assertTrue(questions[1].getTimestamp().getTime() <= questions[2].getTimestamp().getTime());
+        assertTrue(questions[2].getTimestamp().getTime() <= questions[3].getTimestamp().getTime());
+        assertTrue(questions[3].getTimestamp().getTime() <= questions[4].getTimestamp().getTime());
+        assertTrue(questions[4].getTimestamp().getTime() <= questions[5].getTimestamp().getTime());
+        assertTrue(questions[5].getTimestamp().getTime() <= questions[6].getTimestamp().getTime());
+        assertTrue(questions[6].getTimestamp().getTime() <= questions[7].getTimestamp().getTime());
+        assertTrue(questions[7].getTimestamp().getTime() <= questions[8].getTimestamp().getTime());
+        assertTrue(questions[8].getTimestamp().getTime() <= questions[9].getTimestamp().getTime());
+    }
+
+    //Tests if a sorted array will stay sorted by sortOnTimestamp.
+    @Test
+    public void testSortOnTimestampSorted() {
+        //Arrange
+        questions = new QuestionDetailsDto[3];
+        questions[0] = new QuestionDetailsDto();
+        questions[1] = new QuestionDetailsDto();
+        questions[2] = new QuestionDetailsDto();
+
+        questions[0].setTimestamp(new Timestamp(now.getTime() + 2 * 1000));
+        questions[1].setTimestamp(new Timestamp(now.getTime() + 1000));
+        questions[2].setTimestamp(now);
+
+        //Act
+        Sorting.sortOnTimestamp(questions);
+
+        //Assert
+        assertTrue(questions[0].getTimestamp().getTime() <= questions[1].getTimestamp().getTime());
+        assertTrue(questions[1].getTimestamp().getTime() <= questions[2].getTimestamp().getTime());
+    }
+
+    //Tests if an array sorted in reverse order will be sorted correctly by sortOnTimestamp.
+    @Test
+    public void testSortOnTimestampReversed() {
+        //Arrange
+        questions = new QuestionDetailsDto[3];
+        questions[0] = new QuestionDetailsDto();
+        questions[1] = new QuestionDetailsDto();
+        questions[2] = new QuestionDetailsDto();
+
+        questions[0].setTimestamp(now);
+        questions[1].setTimestamp(new Timestamp(now.getTime() + 1000));
+        questions[2].setTimestamp(new Timestamp(now.getTime() + 2 * 1000));
+
+        //Act
+        Sorting.sortOnTimestamp(questions);
+
+        //Assert
+        assertTrue(questions[0].getTimestamp().getTime() <= questions[1].getTimestamp().getTime());
+        assertTrue(questions[1].getTimestamp().getTime() <= questions[2].getTimestamp().getTime());
     }
 
     @Test

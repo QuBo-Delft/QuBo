@@ -169,7 +169,9 @@ public class QuBoActionEvents {
 
         //Create the Cancel and Update buttons
         Button cancel = new Button("Cancel");
+        cancel.getStyleClass().add("textAreaButtonCancel");
         Button update = new Button("Update");
+        update.getStyleClass().add("textAreaButtonConfirm");
 
         //Add the buttons and label to an HBox, and set the way this HBox is displayed on the screen
         HBox buttons = new HBox(warning, cancel, update);
@@ -232,14 +234,8 @@ public class QuBoActionEvents {
             AlertDialog.display("Unsuccessful Request", "Failed to update your question, please try again.");
         } else {
             //If request successful
-            //Remove text area and buttons
-            questionVbox.getChildren().remove(input);
-            questionVbox.getChildren().remove(buttons);
-            //Set edited text to question content area and show
             questionBody.setText(text);
-            questionBody.setVisible(true);
-            //Enable options menu as editing has been completed successfully
-            options.setDisable(false);
+            cancelEdit(options, questionVbox, input, buttons, questionBody);
         }
     }
 
@@ -375,17 +371,14 @@ public class QuBoActionEvents {
     /**
      * This method runs when the user selects Reply from the options Menu.
      *
-     * @param content      GridPane of the cell. (Needed to get the row count and display the new reply
-     *                     after all other replies.)
      * @param questionPane GridPane of the question. (Needed to add a row for the reply Pane.)
      * @param questionId   The UUID of the question that is being replied to.
      * @param code         The moderator code of the board.
      * @param options      The options menu node. (Needs to be disabled when replying.)
      * @param questionBody Text node of the question content. (Needed to bind the width of the answer to.)
      */
-    public static void replyToQuestionOption(GridPane content, GridPane questionPane,
-                                             UUID questionId, UUID code, MenuButton options,
-                                             Text questionBody) {
+    public static void replyToQuestionOption(GridPane questionPane, UUID questionId, UUID code,
+                                             MenuButton options, Text questionBody) {
         //Disable options menu
         options.setDisable(true);
 
@@ -396,7 +389,9 @@ public class QuBoActionEvents {
 
         //Create the buttons and set their alignments
         Button cancel = new Button("Cancel");
+        cancel.getStyleClass().add("textAreaButtonCancel");
         Button reply = new Button("Reply");
+        reply.getStyleClass().add("textAreaButtonConfirm");
         HBox buttons = new HBox(cancel, reply);
         buttons.setAlignment(Pos.CENTER_RIGHT);
         buttons.setSpacing(15);
@@ -407,8 +402,8 @@ public class QuBoActionEvents {
         answerBox.setSpacing(10);
 
         //Set actions events for the buttons
-        reply.setOnAction(event -> replyToQuestion(content, questionPane, answerBox, questionBody,
-            options, questionId, code, input.getText().trim()));
+        reply.setOnAction(event -> replyToQuestion(questionPane, answerBox, options,
+            questionId, code, input.getText().trim()));
         cancel.setOnAction(event -> cancelReply(questionPane, answerBox, options));
 
         //Make the answerBox span the remaining columns so it displays fully
@@ -419,18 +414,14 @@ public class QuBoActionEvents {
     /**
      * This method runs when the Reply button (created in replyToQuestionOption) is clicked.
      *
-     * @param content      GridPane of the cell. (Needed to get the row count and display the new reply
-     *                     after all other replies.)
      * @param questionPane GridPane of the question. (Needed to add a row for the reply Pane.)
      * @param answerBox    VBox containing the TextArea and buttons for the reply interface.
-     * @param questionBody Text node of the question content. (Needed to bind the width of the answer to.)
      * @param options      The options menu node. (Needs to be enabled after successful reply.)
      * @param questionId   The UUID of the question that is being replied to.
      * @param modCode      The moderator code of the board.
      * @param text         Text body of the reply.
      */
-    private static void replyToQuestion(GridPane content, GridPane questionPane, VBox answerBox,
-                                        Text questionBody, MenuButton options,
+    private static void replyToQuestion(GridPane questionPane, VBox answerBox, MenuButton options,
                                         UUID questionId, UUID modCode, String text) {
         String response = QuestionCommunication.addAnswer(questionId, modCode, text);
 
@@ -441,15 +432,8 @@ public class QuBoActionEvents {
         } else {
             //If the request was successful
             cancelReply(questionPane, answerBox, options);
-
-            //Create Text node to contain the reply
-            Text answer = new Text(text);
-            BorderPane answerPane = new BorderPane(answer);
-            answerPane.setPadding(new Insets(10, 15, 10, 15));
-            answer.wrappingWidthProperty().bind(questionBody.wrappingWidthProperty().add(40));
-
-            //Add answer to the VBox containing the questions (and answers)
-            content.addRow(content.getRowCount(), answerPane);
+            AlertDialog.display("Successful Request", "Your answer has been added to the"
+                + "question.");
 
             options.setDisable(false);
         }

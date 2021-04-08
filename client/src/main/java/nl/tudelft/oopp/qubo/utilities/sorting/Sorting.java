@@ -42,6 +42,33 @@ public class Sorting {
     }
 
     /**
+     * This inner class contains the method that sets the sorting order used in sortOnTimestamp.
+     */
+    public static class QuestionTimestampComparator implements Comparator<QuestionDetailsDto> {
+
+        /**
+         * This method compares the time at which two questions were asked, and returns an integer.
+         *
+         * @param o1    A QuestionDetailsDto that is to be compared with o2.
+         * @param o2    A QuestionDetailsDto that is to be compared with o1.
+         *
+         * @return 0 if they were asked at the same time, -1 if o1 was asked before o2,
+         *      and 1 if o1 was asked after o2. This ensures that the list of questions starts with
+         *      the question that was asked first.
+         */
+        @Override
+        public int compare(QuestionDetailsDto o1, QuestionDetailsDto o2) {
+            if (o1.getTimestamp().equals(o2.getTimestamp())) {
+                return 0;
+            } else if (o1.getTimestamp().before(o2.getTimestamp())) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    }
+
+    /**
      * This inner class contains the method that sets the sorting order used in sortOnUpvotes.
      */
     public static class QuestionVotesComparator implements Comparator<QuestionDetailsDto> {
@@ -83,6 +110,21 @@ public class Sorting {
         //Sort the list in non-decreasing order. The question that was answered last is placed at the
         //front of the list.
         sortList.sort(new QuestionTimeAnsweredComparator());
+    }
+
+    /**
+     * Sorts the array of questions in-place based on the time at which they were asked. The
+     * question that was asked first will be placed at the front of the returned array.
+     *
+     * @param questions The array of questions that should be sorted.
+     */
+    public static void sortOnTimestamp(QuestionDetailsDto[] questions) {
+        //Convert the array to a list
+        List<QuestionDetailsDto> sortList = Arrays.asList(questions);
+
+        //Sort the list in non-increasing order. The question that was asked first is placed at the
+        //front of the list.
+        Collections.sort(sortList, new QuestionTimestampComparator());
     }
 
     /**

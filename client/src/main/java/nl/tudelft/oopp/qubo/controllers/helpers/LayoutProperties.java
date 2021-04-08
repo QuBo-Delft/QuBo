@@ -34,7 +34,9 @@ public class LayoutProperties {
         sideMenu.prefWidthProperty().bind(content.widthProperty().multiply(0.45));
         //Bind the visibility of the paceVotePane to the visibility of the sideMenu to auto-hide when
         //sideMenu is visible
-        paceVotePane.visibleProperty().bind(sideMenu.visibleProperty().not());
+        if (paceVotePane != null) {
+            paceVotePane.visibleProperty().bind(sideMenu.visibleProperty().not());
+        }
 
         //Make the children in the ScrollPane fill the width of said ScrollPane
         ansQuVbox.setFillWidth(true);
