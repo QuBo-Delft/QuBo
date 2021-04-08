@@ -2,27 +2,19 @@ package nl.tudelft.oopp.qubo.repositories;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 import nl.tudelft.oopp.qubo.entities.Ban;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.Set;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -197,5 +189,64 @@ public class BanRepositoryTests {
         // Assert
         assertNotNull(result);
         assertEquals(Set.of(ban1, ban2), result);
+    }
+
+    @Test
+    public void getBanByQuestionBoardAndIp_withValidBoardAndIp_returnsCorrectBan() {
+        // Arrange
+        QuestionBoard board1 = new QuestionBoard();
+        board1.setModeratorCode(UUID.randomUUID());
+        board1.setStartTime(Timestamp.from(Instant.now()));
+        board1.setTitle("Test board1");
+        questionBoardRepository.save(board1);
+
+        QuestionBoard board2 = new QuestionBoard();
+        board2.setModeratorCode(UUID.randomUUID());
+        board2.setStartTime(Timestamp.from(Instant.now()));
+        board2.setTitle("Test board2");
+        questionBoardRepository.save(board2);
+
+        Ban ban = new Ban();
+        ban.setQuestionBoard(board1);
+        ban.setIp("192.168.0.1");
+        banRepository.save(ban);
+
+        Ban ban2 = new Ban();
+        ban2.setQuestionBoard(board2);
+        ban2.setIp("192.168.0.1");
+        banRepository.save(ban2);
+
+        Ban ban3 = new Ban();
+        ban3.setQuestionBoard(board1);
+        ban3.setIp("192.168.0.2");
+        banRepository.save(ban3);
+
+        // Act
+        Ban result = banRepository.getBanByQuestionBoardAndIp(board1, ban.getIp());
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(ban, result);
+    }
+
+    @Test
+    public void getByQuestionBoard_withNonexistentIp_returnsNull() {
+        // Arrange
+        QuestionBoard board = new QuestionBoard();
+        board.setModeratorCode(UUID.randomUUID());
+        board.setStartTime(Timestamp.from(Instant.now()));
+        board.setTitle("Test board1");
+        questionBoardRepository.save(board);
+
+        Ban ban1 = new Ban();
+        ban1.setQuestionBoard(board);
+        ban1.setIp("192.168.0.1");
+        banRepository.save(ban1);
+
+        // Act
+        Ban result = banRepository.getBanByQuestionBoardAndIp(board, "192.168.0.2");
+
+        // Assert
+        assertNull(result);
     }
 }

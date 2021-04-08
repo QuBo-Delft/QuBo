@@ -2,6 +2,7 @@ package nl.tudelft.oopp.qubo.views;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
+import javafx.scene.layout.Region;
 import javafx.stage.StageStyle;
 
 /**
@@ -23,6 +24,7 @@ public class AlertDialog {
         alert.setContentText(message);
 
         DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setMinHeight(Region.USE_PREF_SIZE);
         dialogPane.getStylesheets().add("/css/AlertDialog.css");
         dialogPane.getStyleClass().add("aDialog");
         alert.showAndWait();
