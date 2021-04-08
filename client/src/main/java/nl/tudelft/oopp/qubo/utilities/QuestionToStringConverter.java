@@ -24,15 +24,14 @@ public class QuestionToStringConverter {
         var dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         for (QuestionDetailsDto q : questions) {
-            sb.append('[');
-            sb.append(dateFormat.format(q.getTimestamp()));
-            sb.append("] ");
             sb.append(q.getAuthorName());
-            sb.append(": (");
-            sb.append(q.getUpvotes());
-            sb.append("↑)\n  ");
+            sb.append(":\n  ");
             sb.append(q.getText());
-            sb.append('\n');
+            sb.append(" (");
+            sb.append(q.getUpvotes());
+            sb.append("↑) [");
+            sb.append(dateFormat.format(q.getTimestamp()));
+            sb.append("]\n");
 
             for (AnswerDetailsDto a : q.getAnswers()) {
                 sb.append("    - ");
