@@ -284,6 +284,7 @@ public class ModeratorViewController {
         fileChooser.setInitialFileName(quBo.getTitle() + ".txt");
         fileChooser.getExtensionFilters().add(
             new FileChooser.ExtensionFilter("Text file (*.txt)", "*.txt"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         File file = fileChooser.showSaveDialog(boardTitle.getScene().getWindow());
 
         if (file == null) {
