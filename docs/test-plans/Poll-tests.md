@@ -30,7 +30,7 @@ After creating a Poll as a moderator, now switch to this same QuBo but log in as
 
 ### Task 1: Making a vote
 - 1. Click the poll you want to vote on.
-- If you don't see an error you have succesfully made a poll vote.
+- 2. If you don't see an error you have succesfully made a poll vote.
 
 ## Test closing polls
 
