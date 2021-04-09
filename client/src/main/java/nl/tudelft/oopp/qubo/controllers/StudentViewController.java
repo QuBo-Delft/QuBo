@@ -501,7 +501,8 @@ public class StudentViewController {
      * @return Boolean of whether or not the sideMenu is still showing.
      */
     public boolean sidebarLogic(ToggleButton select, ToggleButton deselect) {
-        return SideBarControl.showHideSelected(select, deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox);
+        return SideBarControl.showHideSelected(select,
+            deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox, null, null);
     }
 
     /**
