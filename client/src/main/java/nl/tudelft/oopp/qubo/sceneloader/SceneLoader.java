@@ -145,10 +145,8 @@ public class SceneLoader {
                 break;
         }
 
-        stage.close();
         stage.setScene(newScene);
         stage.centerOnScreen();
-        stage.show();
         return stage;
     }
 
