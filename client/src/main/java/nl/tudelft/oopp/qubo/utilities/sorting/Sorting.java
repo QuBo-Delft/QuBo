@@ -1,9 +1,10 @@
 package nl.tudelft.oopp.qubo.utilities.sorting;
 
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -168,6 +169,54 @@ public class Sorting {
             if (o1.getTimestamp().equals(o2.getTimestamp())) {
                 return 0;
             } else if (o1.getTimestamp().before(o2.getTimestamp())) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    }
+
+    public static class PollOptionDetailsComparator implements Comparator<PollOptionDetailsDto> {
+
+        /**
+         * This method compares the length of the Poll Options' text and returns an integer.
+         *
+         * @param o1    A PollOptionDetailsDto that is to be compared with o2.
+         * @param o2    A PollOptionDetailsDto that is to be compared with o1.
+         *
+         * @return 0 if they had the same text, -1 if o1's text was shorter than o2's text,
+         *      and 1 if o1's text was longer than o2. This ensures that the list of options starts with
+         *      the poll option with the shortest option text.
+         */
+        @Override
+        public int compare(PollOptionDetailsDto o1, PollOptionDetailsDto o2) {
+            if (o1.getOptionText().equals(o2.getOptionText())) {
+                return 0;
+            } else if (o1.getOptionText().length() < o2.getOptionText().length()) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    }
+
+    public static class PollOptionResultsComparator implements Comparator<PollOptionResultDto> {
+
+        /**
+         * This method compares the length of the Poll Option Results' text and returns an integer.
+         *
+         * @param o1    A PollOptionResultDto that is to be compared with o2.
+         * @param o2    A PollOptionResultDto that is to be compared with o1.
+         *
+         * @return 0 if they had the same text, -1 if o1's text was shorter than o2's text,
+         *      and 1 if o1's text was longer than o2. This ensures that the list of options starts with
+         *      the poll option with the shortest option text.
+         */
+        @Override
+        public int compare(PollOptionResultDto o1, PollOptionResultDto o2) {
+            if (o1.getText().equals(o2.getText())) {
+                return 0;
+            } else if (o1.getText().length() < o2.getText().length()) {
                 return -1;
             } else {
                 return 1;

@@ -11,6 +11,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
+import nl.tudelft.oopp.qubo.utilities.sorting.Sorting;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PollResultItem extends GridPane {
     private GridPane pollResultPane;
@@ -90,6 +95,10 @@ public class PollResultItem extends GridPane {
     private void addOptions() {
         int i = 1;
 
+        //Sort the options on lexicographical order.
+        List<PollOptionResultDto> pollOptionResults = new ArrayList<>(Arrays.asList(this.pollOptionResults));
+        pollOptionResults.sort(new Sorting.PollOptionResultsComparator());
+
         for (PollOptionResultDto option : pollOptionResults) {
             //Add the option text to an HBox.
             Text optionText = new Text(option.getText());
@@ -162,7 +171,7 @@ public class PollResultItem extends GridPane {
             optionBox.setStyle("-fx-background-color: white");
         } else {
             //Add the linear gradient to colour the VBox
-            optionBox.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #3690ad, #3690ad "
+            optionBox.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #e97c28, #e97c28 "
                 + vote + "%, white " + (vote + 1) + "%, white)");
         }
     }

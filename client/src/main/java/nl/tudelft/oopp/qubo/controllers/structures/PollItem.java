@@ -18,8 +18,11 @@ import javafx.scene.text.TextAlignment;
 import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
+import nl.tudelft.oopp.qubo.utilities.sorting.Sorting;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -171,6 +174,10 @@ public class PollItem extends GridPane {
      * @param moderator The boolean that represents the type of user.
      */
     private void addOptions(boolean moderator) {
+        //Sort the options on the length of their poll text.
+        List<PollOptionDetailsDto> options = new ArrayList<>(this.options);
+        options.sort(new Sorting.PollOptionDetailsComparator());
+
         //Set up the toggle group to which all poll option radio buttons will be bound.
         if (!moderator) {
             optionGroup = new ToggleGroup();
