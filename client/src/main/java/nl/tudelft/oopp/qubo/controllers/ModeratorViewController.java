@@ -134,6 +134,12 @@ public class ModeratorViewController {
             Platform.runLater(() -> conditionalRefresh(refreshing.get()));
         }
     };
+    private TimerTask refreshPace = new TimerTask() {
+        @Override
+        public void run() {
+            Platform.runLater(() -> conditionalPaceRefresh(refreshing.get()));
+        }
+    };
 
     /**
      * Method that sets the QuestionBoardDetailsDto of the student view.
@@ -179,19 +185,26 @@ public class ModeratorViewController {
         startUpProperties();
         //Display the questions and pace
         timer.scheduleAtFixedRate(refreshQuestions, 0, 2000);
+        timer.scheduleAtFixedRate(refreshPace, 0, 4000);
+
     }
 
     /**
-     * This method refreshes the questions and pace bar.
+     * This method refreshes the questions.
      */
     public void refresh() {
         QuestionRefresh.modRefresh(this, quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
 
+        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText, closeQuBo);
+    }
+
+    /**
+     * This method refreshes the pace bar.
+     */
+    public void refreshPace() {
         //Refresh the pace
         PaceDisplay.displayPace(quBo, modCode, paceBar, paceCursor);
-
-        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText, closeQuBo);
     }
 
     /**
@@ -200,6 +213,15 @@ public class ModeratorViewController {
     public void conditionalRefresh(boolean condition) {
         if (condition) {
             refresh();
+        }
+    }
+
+    /**
+     * Conditional refresh.
+     */
+    public void conditionalPaceRefresh(boolean condition) {
+        if (condition) {
+            refreshPace();
         }
     }
 
