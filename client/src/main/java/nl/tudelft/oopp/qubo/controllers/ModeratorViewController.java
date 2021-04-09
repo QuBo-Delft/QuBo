@@ -58,6 +58,12 @@ public class ModeratorViewController {
     @FXML
     private MenuItem studentCodeItem;
     @FXML
+    private MenuItem moderatorCodeItem;
+    @FXML
+    private MenuItem studentCodeItemBtn;
+    @FXML
+    private MenuItem moderatorCodeItemBtn;
+    @FXML
     private Label boardStatusText;
 
     //Nodes from the unanswered question list
@@ -198,6 +204,14 @@ public class ModeratorViewController {
      */
     public void copyStudentCode() {
         clipboardContent.putString(quBo.getId().toString());
+        clipboard.setContent(clipboardContent);
+    }
+
+    /**
+     * Copy moderator code.
+     */
+    public void copyModeratorCode() {
+        clipboardContent.putString(modCode.toString());
         clipboard.setContent(clipboardContent);
     }
 
