@@ -534,7 +534,7 @@ public class StudentViewController {
             if (response != null) {
                 boolean failed = addPollVote(optionButton, poll);
 
-                if (failed) {
+                if (!failed) {
                     selectedOption = null;
                     optionVote = null;
                 }
