@@ -47,6 +47,7 @@ public class QuestionRefresh {
     /**
      * This method takes in the information and nodes to be able to refresh the question lists for students.
      *
+     * @param controller      Controller of the student view.
      * @param quBo            QuestionBoardDetailsDto of the board.
      * @param unAnsVbox       VBox containing the list of unanswered questions.
      * @param ansVbox         VBox containing the list of answered questions.
@@ -81,6 +82,7 @@ public class QuestionRefresh {
     /**
      * This method takes in the information and nodes to be able to refresh the question lists for mods.
      *
+     * @param controller      Controller of the moderator view.
      * @param quBo            QuestionBoardDetailsDto of the board.
      * @param code            Moderator code of the board.
      * @param unAnsVbox       VBox containing the list of unanswered questions.
@@ -205,7 +207,7 @@ public class QuestionRefresh {
                 newQu.setModController(thisModController);
             }
             //Display the upvotes and the options menu
-            newQu.newUpvoteVbox(upvoteMap);
+            newQu.newUpvoteVbox(upvoteMap, (modCode != null));
             newQu.displayOptions(secretCodeMap, modCode);
 
             //Add the question to the ObservableList

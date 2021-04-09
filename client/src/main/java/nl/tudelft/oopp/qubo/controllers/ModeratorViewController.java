@@ -99,6 +99,11 @@ public class ModeratorViewController {
     @FXML
     private ScrollPane sideMenuPane;
 
+    @FXML
+    public Button export;
+    @FXML
+    private Button closeQuBo;
+
     /**
     * Records if the side menu was open before hiding.
     */
@@ -169,7 +174,7 @@ public class ModeratorViewController {
      * which actually sets their values.
      */
     public void setBoardDetails() {
-        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
+        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle, closeQuBo);
     }
 
     /**
@@ -191,7 +196,7 @@ public class ModeratorViewController {
         QuestionRefresh.modRefresh(this, quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
 
-        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText);
+        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText, closeQuBo);
     }
 
     /**

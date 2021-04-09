@@ -2,6 +2,7 @@ package nl.tudelft.oopp.qubo.controllers.helpers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,56 +30,70 @@ public class QuBoInformation {
      * Sets the board details of the respective view by setting appropriate values to the input
      * parameters.
      *
-     * @param quBo  The Question BoardDetailsDto.
-     * @param icon  The board status icon (red/yellow/green).
-     * @param text  The status text.
-     * @param title The board title.
+     * @param quBo      The Question BoardDetailsDto.
+     * @param icon      The board status icon (red/yellow/green).
+     * @param text      The status text.
+     * @param title     The board title.
+     * @param button    Button to be hidden when the board is closed.
      */
-    public static void setBoardDetails(QuestionBoardDetailsDto quBo, ImageView icon, Label text, Label title) {
+    public static void setBoardDetails(QuestionBoardDetailsDto quBo, ImageView icon, Label text,
+                                       Label title, Button button) {
         // Sets the board title
         title.setText(quBo.getTitle());
-        displayBoardStatus(quBo, icon, text);
+        displayBoardStatus(quBo, icon, text, button);
     }
 
     /**
      * Sets the board status and changes the display accordingly.
      *
-     * @param quBo  The Question BoardDetailsDto.
-     * @param icon  The board status icon (red/yellow/green).
-     * @param text  The status text.
+     * @param quBo      The Question BoardDetailsDto.
+     * @param icon      The board status icon (red/yellow/green).
+     * @param text      The status text.
+     * @param button    Button to be hidden when the board is closed.
      */
-    public static void displayBoardStatus(QuestionBoardDetailsDto quBo, ImageView icon, Label text) {
+    public static void displayBoardStatus(QuestionBoardDetailsDto quBo, ImageView icon, Label text,
+                                          Button button) {
         String iconImage;
+        boolean showCloseBtn;
 
         if (quBo.isClosed()) {
             // Sets the board icon to be a closed indicator (red), board is closed
             iconImage = "status_closed";
             // Sets the following text below the board's title
             text.setText("Question board is closed, making changes is no longer possible ");
+            showCloseBtn = false;
         } else if (quBo.getStartTime().toLocalDateTime().isAfter(LocalDateTime.now())) {
             // Sets the board icon to be a scheduled indicator (yellow), board not open yet
             iconImage = "status_scheduled";
             // Calls the getTimeText method to determine which text to display below the board's title
             text.setText(getTimeText(quBo));
+            showCloseBtn = false;
         } else {
             // Sets the board icon to be a scheduled indicator (green), board is open
             iconImage = "status_open";
             // Calls the getTimeText method to determine which text to display below the board's title
             text.setText(getTimeText(quBo));
+            showCloseBtn = true;
         }
         // Sets the actual board icon, the path is relative to the resources folder
         icon.setImage(new Image("/icons/" + iconImage + ".png"));
+
+        if (button.isVisible() != showCloseBtn) {
+            button.setVisible(showCloseBtn);
+            button.setManaged(showCloseBtn);
+        }
     }
 
     /**
      * Sends a request to the server to retrieve the new board details and display them.
      *
-     * @param quBo  The Question BoardDetailsDto.
-     * @param icon  The board status icon (red/yellow/green).
-     * @param text  The status text.
+     * @param quBo      The Question BoardDetailsDto.
+     * @param icon      The board status icon (red/yellow/green).
+     * @param text      The status text.
+     * @param button    Button to be hidden when the board is closed.
      */
     public static QuestionBoardDetailsDto refreshBoardStatus(QuestionBoardDetailsDto quBo,
-                                                             ImageView icon, Label text) {
+                                                             ImageView icon, Label text, Button button) {
         String response = QuestionBoardCommunication.retrieveBoardDetails(quBo.getId());
         QuestionBoardDetailsDto newQuBo = gson.fromJson(response, QuestionBoardDetailsDto.class);
 
@@ -86,7 +101,7 @@ public class QuBoInformation {
             AlertDialog.display("Unsuccessful request", "Could not fetch board details.");
             return quBo;
         } else {
-            displayBoardStatus(newQuBo, icon, text);
+            displayBoardStatus(newQuBo, icon, text, button);
             return newQuBo;
         }
     }
