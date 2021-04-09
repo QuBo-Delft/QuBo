@@ -31,6 +31,21 @@ Online education makes communication between students and lecturers more difficu
     - The back end uses service-oriented architecture for separation of concerns. Common DTOs are shared between the client and the server to make communication easier. ModelMapper is used to convert entities to DTOs and vice versa. All repositories and services are fully tested through the use of unit tests. The majority of all endpoints, including the most important ones, as well as the parts of the back end they communicate with, are tested via integration tests.
 - **Front end**
     - The front end adopts the basic structure of a JavaFX project such that most logic and views are separated into layers. FXML files abstract most user interface designs from the programming logic and view controllers contains the logic to control views. Server communication classes are used to exchange data between the server and the client, all communication methods are fully tested through the use of unit testing. CSS stylesheets are used to enable the separation of effect presentation and view content. The user interface can be automatically tested by using sophisticated robots which mimic real user interactions. Based on these interactions we can assert various expectations, which can easily be tested for.
+
+#### Development process
+- Issues
+    - The expected outcome and any failure cases are clearly outlined.
+    - All relevant user stories are included in the body (if applicable).
+    - Big issues are converted into epics and smaller issues are created.
+    - All issues have the appropriate labels, including priority, current status and issue type. Labels are updated as necessary.
+    - All issues are assigned a sprint as a milestone depending on when they are to be completed.
+    - Team members are assigned to issues during team meetings.
+    - The effort needed for an issue (in terms of both time necessary and difficulty) is estimated and entered as its weight. The initial weight is decided democratically by least two team members. The assignee of an issue updates the weight when they start working on the issue if it turns out to be too high or too low.
+- Merge requests
+    - All merge requests are linked to the corresponding issue(s).
+    - Labels are assigned.
+    - Merge requests contain a short summary of the changes made.
+    - Merge requests must always be approved by at least 2 other team members, including at least one person working on the part of the application the request concerns (front end / back end), unless such a person is currently unavailable and the unmerged request blocks other work from being done.
 ## Group members
 
 | 📸 | Name | Email |
