@@ -105,8 +105,12 @@ public class PollRefresh {
         //If the poll is open, display the poll with voting functionality.
         if (current.isOpen()) {
             if (moderator) {
+                //Create a new poll item and display it.
+                PollItem currentPoll = new PollItem(current.getText(), current.getOptions(), pollsScrollPane,
+                    mController);
+                pollsVbox.getChildren().add(currentPoll);
+
                 return;
-                //TODO: Add moderator open poll refresh.
             }
 
             PollItem previousPoll = sController.getPollItem();

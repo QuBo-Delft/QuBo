@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -26,6 +28,8 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import nl.tudelft.oopp.qubo.communication.PollCommunication;
+import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
@@ -35,6 +39,7 @@ import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
+import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.utilities.QuestionToStringConverter;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
@@ -43,6 +48,8 @@ import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -293,21 +300,34 @@ public class ModeratorViewController {
      * Gets called by the create poll button.
      */
     public void createPoll() {
+            if (PollCommunication.retrievePollDetails(quBo.getId()) != null) {
+                AlertDialog.display("Poll creation failed",
+                    "Please close the current poll, before creating a new one.");
+                return;
+            }
         // Shows the create poll VBox, or hides it when it was already showing
         createPollVbox.setVisible(!createPollVbox.isVisible());
+    }
+
+    public void createPollOptionDelete(Button optionButton) {
+        ((VBox) optionButton.getParent().getParent()).getChildren().remove(optionButton.getParent());
+        optionCounter--;
     }
 
     public void createPollNewOption() {
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
         optionCounter++;
         char labelChar = alphabet.charAt(optionCounter);
-        Label optionLabel = new Label(String.valueOf(labelChar).toUpperCase() + ":");
+        Label optionLabel = new Label(String.valueOf(labelChar).toUpperCase());
 
         TextField optionField = new TextField();
         HBox.setHgrow(optionField, Priority.ALWAYS);
 
+        Button optionButton = new Button("Delete");
+        optionButton.setOnAction(event -> createPollOptionDelete(optionButton));
+
         HBox newOptionContainer = new HBox();
-        newOptionContainer.getChildren().addAll(optionLabel, optionField);
+        newOptionContainer.getChildren().addAll(optionLabel, optionField, optionButton);
         newOptionContainer.setSpacing(10);
         newOptionContainer.setAlignment(Pos.CENTER);
 
@@ -316,11 +336,17 @@ public class ModeratorViewController {
     }
 
     public void createPollCancel() {
-
+        createPollVbox.setVisible(false);
+        //createPollVbox.getChildren().removeAll(HBox)
     }
 
     public void createPollCreate() {
-        //PollCommunication.addPoll(quBo.getId(), modCode.toString(), createPollTitle.getText(), )
+        createPollVbox.setVisible(false);
+
+        Set<String> stringSet = new HashSet<>();
+        stringSet.add("wow!");
+        stringSet.add("Amazing!");
+        PollCommunication.addPoll(quBo.getId(), modCode, "poll text", stringSet);
     }
 
     /**

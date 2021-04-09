@@ -1,11 +1,8 @@
 package nl.tudelft.oopp.qubo.controllers.structures;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleGroup;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -79,13 +76,7 @@ public class PollItem extends GridPane {
      * @param controller    The Moderator View Controller associated with the client.
      */
     public PollItem(String text, Set<PollOptionDetailsDto> pollOptions, ScrollPane scrollPane,
-                    ModeratorViewController controller, PollItem previous) {
-        //Only set the previousPollItem if it did not have a prior value.
-        if (previousPollItem == null) {
-            previousPollItem = previous;
-        }
-        //Set the temporary PollItem variable to the previous poll.
-        temp = previous;
+                    ModeratorViewController controller) {
 
         this.pollQuestion = new Text(text);
         this.options = pollOptions;
@@ -195,8 +186,13 @@ public class PollItem extends GridPane {
         } else {
             int i = 1;
             HBox optionBox = null;
-
-            //TODO: Add labels for moderators and align them
+            //Add all PollOptionDetailsDtos to the grid pane.
+            for (PollOptionDetailsDto option : options) {
+                optionBox = createOption(option);
+                optionBox.setPadding(new Insets(5, 5, 5, 5));
+                this.addRow((i + 1), optionBox);
+                i++;
+            }
         }
 
         //Update the previous poll item variable if the poll has not changed.
@@ -205,6 +201,25 @@ public class PollItem extends GridPane {
                 previousPollItem = temp;
             }
         }
+    }
+
+    /**
+     * This method creates a poll option radio button, and retains the option selection.
+     *
+     * @param option            The poll option that should be added to the VBox.
+     * @return An HBox containing the radio button and a label with its associated text.
+     */
+    private HBox createOption(PollOptionDetailsDto option) {
+        //Add the radio button to the left of the label with its option text.
+        Label optionText = new Label(option.getOptionText());
+        optionText.setWrapText(true);
+
+        //Add the button and its associated text to an HBox and return this.
+        HBox optionBox = new HBox(optionText);
+        optionBox.maxWidthProperty().bind(pollScPane.widthProperty().subtract(9));
+        optionBox.minWidthProperty().bind(pollScPane.widthProperty().subtract(9));
+
+        return optionBox;
     }
 
     /**
@@ -260,6 +275,18 @@ public class PollItem extends GridPane {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Adds the moderator buttons to a poll item.
+     */
+    public void addButtons() {
+        HBox buttonBox = new HBox();
+        Button delete = new Button();
+        Button close = new Button();
+        buttonBox.getChildren().addAll(delete, close);
+        buttonBox.setSpacing(10);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
     }
 
 }
