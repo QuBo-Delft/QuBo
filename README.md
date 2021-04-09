@@ -30,8 +30,7 @@ Online education makes communication between students and lecturers more difficu
 - **Back end**
     - The back end uses service-oriented architecture for separation of concerns. Common DTOs are shared between the client and the server to make communication easier. ModelMapper is used to convert entities to DTOs and vice versa. All repositories and services are fully tested through the use of unit tests. The majority of all endpoints, including the most important ones, as well as the parts of the back end they communicate with, are tested via integration tests.
 - **Front end**
-    - The front end is nice too :)
-
+    - The front end adopts the basic structure of a JavaFX project such that most logic and views are separated into layers. FXML files abstract most user interface designs from the programming logic and view controllers contains the logic to control views. Sever communication classes are used to exchange data between the server and the client, all communication methods are fully tested through the use of unit testing. CSS stylesheets are used to enable the separation of effect presentation and view content. The user interface can be automatically tested by using sophisticated robots which mimic real user interactions. Based on these interactions we can assert various expectations, which can easily be tested for.
 ## Group members
 
 | 📸 | Name | Email |
