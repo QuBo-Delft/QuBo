@@ -13,7 +13,7 @@ Online education makes communication between students and lecturers more difficu
 - Banning users who misbehave from interacting with a board, as well as the option to set up rate limiting.
 
 - Real-time poll creation.
-    - _To add another interactive element to lectures, there is the option to do a live poll in the board, which students can respond to. This will help lecturers in taking students’ opinion into account. This can also be used to test students’ knowledge._
+    - _To add another interactive element to lectures, there is the option to do a live poll in the board, which students can respond to. This will help lecturers in taking students’ opinions into account. This can also be used to test students’ knowledge._
 
 - Anonymity mode
     - _The application can be set up to store questions in a completely anonymous way by unlinking them from users and IPs without compromising on functionality via single-use tokens. This could be used to make students feel more comfortable when expressing their opinions while giving feedback._
