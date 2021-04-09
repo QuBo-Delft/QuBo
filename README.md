@@ -48,19 +48,19 @@ Online education makes communication between students and lecturers more difficu
 
 Navigate to the folder (main repository) that contains the .gradle folder.
 
-For MacOS/Linux users: 
-1. Use the command "./gradlew server:bootRun" for running the server application;
-2. Use the command "./gradlew client:run" for running the client application;
+- macOS/Linux: 
+    1. Use the command `./gradlew server:bootRun` to start the server;
+    2. Use the command `./gradlew client:run` to run the client application.
 
-For Window users:
-1. Use the command "gradlew server:bootRun" for running the server application;
-2. Use the command "gradlew client:run" for running the client application;
+- Windows:
+    1. Use the command "gradlew server:bootRun" to start the server;
+    2. Use the command "gradlew client:run" to run the client application;
 
 ---
 - Run with Intellij:
-1. Import the project;
-2. Run /server/src/main/java/nl/tudelft/oopp/qubo/QuBo.java (server application);
-3. Run /client/src/main/java/nl/tudelft/oopp/qubo/MainApp.java (client application);
+    1. Import the project;
+    2. Run /server/src/main/java/nl/tudelft/oopp/qubo/QuBo.java (server application);
+    3. Run /client/src/main/java/nl/tudelft/oopp/qubo/MainApp.java (client application);
 
 (The gradle version of this application is 6.3)
 
