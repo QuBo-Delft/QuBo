@@ -270,13 +270,12 @@ public class QuestionItem extends GridPane {
         //Create the edit menu item and set action event
         MenuItem edit = newIconItem("Edit", editImage);
         edit.setOnAction(event -> {
-            if (QuBoInformation.isQuBoClosed(quBo)) {
+            if (!isMod && QuBoInformation.isQuBoClosed(quBo)) {
                 event.consume();
-                return;
+            } else {
+                QuBoActionEvents.editQuestionOption(
+                    questionBody, questionVbox, options, questionId, code);
             }
-            QuBoActionEvents
-                .editQuestionOption(questionBody, questionVbox, options, questionId,
-                    code);
         });
         options.getItems().add(edit);
 
@@ -288,12 +287,12 @@ public class QuestionItem extends GridPane {
         //Create the delete menu item and set action event
         MenuItem delete = newIconItem("Delete", deleteImage);
         delete.setOnAction(event -> {
-            if (QuBoInformation.isQuBoClosed(quBo)) {
+            if (!isMod && QuBoInformation.isQuBoClosed(quBo)) {
                 event.consume();
-                return;
+            } else {
+                QuBoActionEvents.deleteQuestionOption(
+                    this, questionPane, questionBody, options, questionId, code);
             }
-            QuBoActionEvents.deleteQuestionOption(
-                this, questionPane, questionBody, options, questionId, code);
         });
         options.getItems().add(delete);
 
@@ -361,8 +360,9 @@ public class QuestionItem extends GridPane {
      * Constructs and returns a new upvote box.
      *
      * @param upvoteMap HashMap of questionId:upvoteId.
+     * @param isMod     Boolean value of whether the user is a mod.
      */
-    public void newUpvoteVbox(HashMap<UUID, UUID> upvoteMap) {
+    public void newUpvoteVbox(HashMap<UUID, UUID> upvoteMap, boolean isMod) {
         upvoteTriangle.setPrefWidth(30);
         upvoteTriangle.setPrefHeight(20);
 
@@ -372,14 +372,13 @@ public class QuestionItem extends GridPane {
 
         //Set event listener
         upvoteTriangle.setOnAction(event -> {
-            if (QuBoInformation.isQuBoClosed(quBo)) {
+            if (!isMod && QuBoInformation.isQuBoClosed(quBo)) {
                 event.consume();
-                boolean select = upvoteTriangle.isSelected();
-                upvoteTriangle.setSelected(!select);
-                return;
+                upvoteTriangle.setSelected(!upvoteTriangle.isSelected());
+            } else {
+                QuBoActionEvents.upvoteQuestion(questionId, upvoteMap,
+                    upvoteTriangle, upvoteNumber);
             }
-            QuBoActionEvents.upvoteQuestion(questionId, upvoteMap,
-                upvoteTriangle, upvoteNumber);
         });
 
         //Set upvote triangle to selected if question has been upvoted

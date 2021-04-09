@@ -103,6 +103,11 @@ public class ModeratorViewController {
     @FXML
     private ScrollPane sideMenuPane;
 
+    @FXML
+    public Button export;
+    @FXML
+    private Button closeQuBo;
+
     /**
     * Records if the side menu was open before hiding.
     */
@@ -131,6 +136,12 @@ public class ModeratorViewController {
         @Override
         public void run() {
             Platform.runLater(() -> conditionalRefresh(refreshing.get()));
+        }
+    };
+    private TimerTask refreshPace = new TimerTask() {
+        @Override
+        public void run() {
+            Platform.runLater(() -> conditionalPaceRefresh(refreshing.get()));
         }
     };
 
@@ -167,7 +178,7 @@ public class ModeratorViewController {
      * which actually sets their values.
      */
     public void setBoardDetails() {
-        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
+        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle, closeQuBo);
     }
 
     /**
@@ -178,25 +189,30 @@ public class ModeratorViewController {
         startUpProperties();
         //Display the questions and pace
         timer.scheduleAtFixedRate(refreshQuestions, 0, 2000);
+        timer.scheduleAtFixedRate(refreshPace, 0, 4000);
+
     }
 
     /**
-     * This method refreshes the questions and pace bar.
+     * This method refreshes the questions.
      */
     public void refresh() {
         QuestionRefresh.modRefresh(this, quBo, modCode, unAnsQuVbox, ansQuVbox, upvoteMap, unAnsQuScPane,
             sideMenuPane);
 
-        //Refresh the pace.
-        PaceDisplay.displayPace(quBo, modCode, paceBar, paceCursor);
-
-        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText);
+        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText, closeQuBo);
 
         //Refresh the list of polls.
         PollRefresh.modRefresh(quBo, pollVbox, sideMenuPane, this);
     }
 
-
+    /**
+     * This method refreshes the pace bar.
+     */
+    public void refreshPace() {
+        //Refresh the pace
+        PaceDisplay.displayPace(quBo, modCode, paceBar, paceCursor);
+    }
 
     /**
      * Conditional refresh.
@@ -204,6 +220,15 @@ public class ModeratorViewController {
     public void conditionalRefresh(boolean condition) {
         if (condition) {
             refresh();
+        }
+    }
+
+    /**
+     * Conditional refresh.
+     */
+    public void conditionalPaceRefresh(boolean condition) {
+        if (condition) {
+            refreshPace();
         }
     }
 

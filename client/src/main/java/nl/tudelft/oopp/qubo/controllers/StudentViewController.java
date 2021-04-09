@@ -52,6 +52,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class StudentViewController {
     @FXML
+    public Button askBtn;
+    @FXML
     private HBox topBar;
     @FXML
     private Button boardInfo;
@@ -192,7 +194,7 @@ public class StudentViewController {
      * which actually sets their values.
      */
     public void setBoardDetails() {
-        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
+        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle, askBtn);
     }
 
     /**
@@ -265,7 +267,7 @@ public class StudentViewController {
         }
         PollRefresh.studentRefresh(quBo, pollVbox, sideMenuPane,this);
 
-        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText);
+        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText, askBtn);
     }
 
     /**
