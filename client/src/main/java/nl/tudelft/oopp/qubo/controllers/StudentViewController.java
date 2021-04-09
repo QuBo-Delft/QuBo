@@ -505,6 +505,11 @@ public class StudentViewController {
      * there was any.
      */
     public void handlePollChoice(RadioButton optionButton, PollItem poll) {
+        //If the question board is closed, show an alert and return.
+        if (QuBoInformation.isQuBoClosed(quBo)) {
+            return;
+        }
+
         //If there are no previous votes, add the new vote.
         if (optionVote == null) {
             addPollVote(optionButton, poll);
