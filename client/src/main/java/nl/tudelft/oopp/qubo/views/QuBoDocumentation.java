@@ -29,6 +29,7 @@ public class QuBoDocumentation {
         window.setWidth(870);
 
         Button returnButton = new Button("Return");
+        returnButton.setId("returnButton");
         returnButton.setOnAction(e -> {
             window.close();
         });
