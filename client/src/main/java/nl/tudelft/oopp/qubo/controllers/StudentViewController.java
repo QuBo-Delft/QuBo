@@ -40,6 +40,7 @@ import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import nl.tudelft.oopp.qubo.views.GetTextDialog;
+import nl.tudelft.oopp.qubo.views.QuBoDocumentation;
 
 import java.util.HashMap;
 import java.util.Timer;
@@ -51,6 +52,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Controller for the StudentView.fxml sheet.
  */
 public class StudentViewController {
+    @FXML
+    public Button askBtn;
     @FXML
     private HBox topBar;
     @FXML
@@ -192,7 +195,7 @@ public class StudentViewController {
      * which actually sets their values.
      */
     public void setBoardDetails() {
-        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle);
+        QuBoInformation.setBoardDetails(quBo, boardStatusIcon, boardStatusText, boardTitle, askBtn);
     }
 
     /**
@@ -265,7 +268,7 @@ public class StudentViewController {
         }
         PollRefresh.studentRefresh(quBo, pollVbox, sideMenuPane,this);
 
-        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText);
+        quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText, askBtn);
     }
 
     /**
@@ -403,6 +406,7 @@ public class StudentViewController {
      * Displays help documentation.
      */
     public void displayHelpDoc() {
+        QuBoDocumentation.display(true);
     }
 
     /**
@@ -535,7 +539,7 @@ public class StudentViewController {
             if (response != null) {
                 boolean failed = addPollVote(optionButton, poll);
 
-                if (failed) {
+                if (!failed) {
                     selectedOption = null;
                     optionVote = null;
                 }

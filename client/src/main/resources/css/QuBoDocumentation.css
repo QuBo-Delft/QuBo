@@ -1,0 +1,69 @@
+.root {
+    -fx-background-color: #f6f2ef;
+    -fx-padding: 10, 15, 10, 15;
+}
+
+.layout {
+    -fx-background-color: linear-gradient(to top, #ffa13b 20%, rgb(255, 164, 105) 80%);
+    -fx-alignment: center;
+    -fx-padding: 10, 10, 10, 10;
+}
+
+.scrollPane {
+    -fx-background-color: #f6f2ef;
+    -fx-padding: 10, 10, 10, 10;
+    -fx-alignment: center;
+}
+
+.label {
+    -fx-font-family: "Arial";
+    -fx-font-size: 16;
+    -fx-text-fill: #9b4500;
+}
+
+.label:hover {
+    -fx-text-fill: #4e2100;
+}
+
+.msgBox {
+    -fx-alignment: center;
+}
+
+.image-group {
+    -fx-scale-x: 0.7;
+    -fx-scale-y: 0.7;
+}
+
+.hBox-group {
+    -fx-background-color: #fcf4da;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(gaussian, #8D8776 , 2,0,0,1);
+}
+
+.hBox-group:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.bottomBox {
+    -fx-alignment: center;
+}
+
+.button {
+    -fx-background-radius: 6;
+    -fx-min-height: 40;
+    -fx-min-width: 80;
+    -fx-background-color: #cdbd9d;
+    -fx-effect: dropshadow(gaussian, #8D8776 , 2,0,0,1);
+
+    -fx-font-family: "Arial";
+    -fx-font-size: 18;
+    -fx-text-fill: #fffdfd;
+}
+
+.button:hover {
+    -fx-background-color: #fffdfd;
+    -fx-effect: dropshadow( three-pass-box, #988d7c, 10.0, 0.0, 0.5, 3.0);
+    -fx-font-weight: bold;
+    -fx-text-fill: #726959;
+}
