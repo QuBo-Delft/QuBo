@@ -22,6 +22,7 @@ public class AlertDialog {
         alert.initStyle(StageStyle.UNDECORATED);
         alert.setHeaderText(title);
         alert.setContentText(message);
+        alert.setTitle("Error");
 
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.setMinHeight(Region.USE_PREF_SIZE);
