@@ -16,6 +16,8 @@ import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 import nl.tudelft.oopp.qubo.utilities.sorting.Sorting;
+import nl.tudelft.oopp.qubo.views.AlertDialog;
+import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +49,7 @@ public class PollItem extends GridPane {
      * @param pollOptions   The options that students can select.
      * @param scrollPane    ScrollPane containing the VBox that will contain the poll.
      * @param controller    The Student View Controller associated with the client.
+     * @param previous      The previous Poll Item that was created.
      */
     public PollItem(String text, Set<PollOptionDetailsDto> pollOptions, ScrollPane scrollPane,
                     StudentViewController controller, PollItem previous) {
@@ -278,15 +281,45 @@ public class PollItem extends GridPane {
     }
 
     /**
-     * Adds the moderator buttons to a poll item.
+     * Adds the moderator buttons to a poll item, and sets the method that they call when clicked.
      */
     public void addButtons() {
         HBox buttonBox = new HBox();
+
+        //Add a button that deletes the current poll when the user clicks it and confirms that they want
+        //to delete the poll.
         Button delete = new Button();
+        delete.setOnAction(e -> {
+            boolean deleteConfirm = ConfirmationDialog.display("Poll Deletion",
+                "Are you sure you want to delete this poll?");
+            if(!deleteConfirm) {
+                e.consume();
+                return;
+            }
+
+            mController.deletePoll();
+        });
+
+        //Add a button that closes the current poll when the user clicks it and confirms that they want
+        //to close the poll.
         Button close = new Button();
+        close.setOnAction(e -> {
+            boolean closeConfirm = ConfirmationDialog.display("Close Poll",
+                    "Are you sure you want to close this poll?");
+            if(!closeConfirm) {
+                e.consume();
+                return;
+            }
+
+            mController.closePoll();
+        });
+
+        //Add the buttons to the PollItem.
         buttonBox.getChildren().addAll(delete, close);
         buttonBox.setSpacing(10);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+        this.addRow(3,  buttonBox);
     }
 
 }

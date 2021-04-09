@@ -353,6 +353,34 @@ public class ModeratorViewController {
     }
 
     /**
+     * This method deletes the poll that is currently in the poll.
+     */
+    public void deletePoll() {
+        String pollDelete = PollCommunication.deletePoll(quBo.getId(), modCode);
+
+        if (pollDelete == null) {
+            AlertDialog.display("Failed to delete the poll", "Please try again later.");
+            return;
+        }
+
+        AlertDialog.display("", "The poll was deleted successfully");
+    }
+
+    /**
+     * This method closes the poll that is currently in the poll.
+     */
+    public void closePoll() {
+        String pollClose = PollCommunication.closePoll(quBo.getId(), modCode);
+
+        if (pollClose == null) {
+            AlertDialog.display("Failed to close the poll", "Please try again later.");
+            return;
+        }
+
+        AlertDialog.display("", "The poll was closed successfully");
+    }
+
+    /**
      * Toggles the visibility of the sideBar.
      */
     public void showHideSideBar() {
