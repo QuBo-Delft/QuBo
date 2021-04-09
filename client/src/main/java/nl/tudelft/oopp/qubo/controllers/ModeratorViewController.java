@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.qubo.controllers;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -9,11 +10,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
@@ -101,7 +98,9 @@ public class ModeratorViewController {
     @FXML
     private VBox createPollVbox;
     @FXML
-    private GridPane createPollGrid;
+    private TextField optionA;
+    @FXML
+    private TextField optionB;
     @FXML
     private TextField createPollTitle;
     @FXML
@@ -115,6 +114,10 @@ public class ModeratorViewController {
     * Records if the side menu was open before hiding.
     */
     private boolean sideMenuOpen;
+    /**
+     * The number of options displayed when creating a new poll, 2 by default.
+     */
+    int optionCounter = 1;
 
     /**
      * Stage to be shown when the QuBo details button is clicked.
@@ -245,14 +248,25 @@ public class ModeratorViewController {
      * Gets called by the create poll button.
      */
     public void createPoll() {
-        if (createPollVbox.isVisible()) {
-            createPollVbox.setVisible(false);
-        } else {
-            createPollVbox.setVisible(true);
-        }
+        // Shows the create poll VBox, or hides it when it was already showing
+        createPollVbox.setVisible(!createPollVbox.isVisible());
     }
 
     public void createPollNewOption() {
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        optionCounter++;
+        char labelChar = alphabet.charAt(optionCounter);
+        Label optionLabel = new Label(String.valueOf(labelChar).toUpperCase() + ":");
+
+        TextField optionField = new TextField();
+        HBox.setHgrow(optionField, Priority.ALWAYS);
+
+        HBox newOptionContainer = new HBox();
+        newOptionContainer.getChildren().addAll(optionLabel, optionField);
+        newOptionContainer.setSpacing(10);
+        newOptionContainer.setAlignment(Pos.CENTER);
+
+        createPollVbox.getChildren().add(1 + optionCounter, newOptionContainer);
 
     }
 
@@ -261,7 +275,7 @@ public class ModeratorViewController {
     }
 
     public void createPollCreate() {
-
+        //PollCommunication.addPoll(quBo.getId(), modCode.toString(), createPollTitle.getText(), )
     }
 
     /**
