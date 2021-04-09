@@ -129,6 +129,8 @@ public class ModeratorViewController {
     @FXML
     private TextField optionB;
     @FXML
+    private Label pollCreateNewLabel;
+    @FXML
     private TextField createPollTitle;
     @FXML
     private Button createPollNewOptionBtn;
@@ -340,23 +342,43 @@ public class ModeratorViewController {
         createPollVbox.setVisible(!createPollVbox.isVisible());
     }
 
+    /**
+     * Gets called by the poll option delete button and will delete the row of the option completely.
+     *
+     * @param optionButton The option button that is calling this method.
+     */
     public void createPollOptionDelete(Button optionButton) {
         ((VBox) optionButton.getParent().getParent()).getChildren().remove(optionButton.getParent());
-        optionCounter--;
+        int newLabelNumber = 0;
+        for (Node node : createPollVbox.getChildren()) {
+            if (node instanceof HBox) {
+                HBox optionBox = (HBox) node;
+                // If a HBox is found, iterate through all its children as well.
+                for (Node nodeChild : optionBox.getChildren()) {
+                    if (nodeChild instanceof Label) {
+                        // If it has found a label, correct the text
+                        newLabelNumber++;
+                        if (nodeChild.getId().equals("pollCreateNewLabel")) {
+                            return;
+                        }
+                        ((Label) nodeChild).setText(newLabelNumber + ":");
+                    }
+                }
+            }
+        }
     }
 
     /**
      * This method gets called by the create poll button.
      */
     public void createPollNewOption() {
-        String alphabet = "abcdefghijklmnopqrstuvwxyz";
-        optionCounter++;
-        // Get a not yet set letter of the alphabet.
-        char labelChar = alphabet.charAt(optionCounter);
-        // Assign that letter to the label
-        Label optionLabel = new Label(String.valueOf(labelChar).toUpperCase() + ":");
+        // Gets the number of currently displayed options by getting all children
+        // and by substracting the children that contain buttons and labels, non-option items
+        int veBoxChildren = createPollVbox.getChildren().size() - 2;
+        // Assign that number to the label
+        Label optionLabel = new Label(veBoxChildren + ":");
 
-        // Set a new textfield for option text input.
+        // Set a new text field for option text input.
         TextField optionField = new TextField();
         HBox.setHgrow(optionField, Priority.ALWAYS);
 
@@ -372,7 +394,7 @@ public class ModeratorViewController {
         newOptionContainer.setAlignment(Pos.CENTER);
 
         // Add the above HBox to the VBox.
-        createPollVbox.getChildren().add(1 + optionCounter, newOptionContainer);
+        createPollVbox.getChildren().add(veBoxChildren, newOptionContainer);
 
     }
 
@@ -397,7 +419,6 @@ public class ModeratorViewController {
      * Gets called when the create poll button is clicked. Creates a new poll item.
      */
     public void createPollCreate() {
-        createPollVbox.setVisible(false);
         Set<String> stringSet = new HashSet<>();
 
         // Iterate to all children of the VBox.
@@ -409,7 +430,7 @@ public class ModeratorViewController {
                     if (nodeChild instanceof TextField) {
                         // If it has found a text field that is not empty, add it to the board options set.
                         if (((TextField) nodeChild).getText().equals("")) {
-                            AlertDialog.display("option empty",
+                            AlertDialog.display("Empty poll option",
                                 "An empty poll option was found, please fill in every option.");
                             return;
                         }
@@ -420,13 +441,17 @@ public class ModeratorViewController {
         }
         // Check that the poll title is not empty.
         if (createPollTitle.getText().equals("")) {
-            AlertDialog.display("Title empty", "Poll title cannot be empty.");
+            AlertDialog.display("Empty poll title",
+                "The poll title was found to be empty, please fill in every option.");
+            return;
         }
         // Check that no duplicates have been added, as this will not work for a set.
         if (stringSet.size() < 2) {
-            AlertDialog.display("Duplicate options",
+            AlertDialog.display("Duplicate poll options",
                 "The poll contained duplicate options which is not allowed. Please change them.");
+            return;
         }
+        createPollVbox.setVisible(false);
         // Creates a new poll based on the input title and the added text fields.
         PollCommunication.addPoll(quBo.getId(), modCode, createPollTitle.getText(), stringSet);
     }
@@ -474,7 +499,7 @@ public class ModeratorViewController {
         }
 
         if (showMessage) {
-            AlertDialog.display("", "The poll was deleted successfully");
+            AlertDialog.display("Success", "The poll was deleted successfully");
         }
     }
 
@@ -489,7 +514,7 @@ public class ModeratorViewController {
             return;
         }
 
-        AlertDialog.display("", "The poll was closed successfully");
+        AlertDialog.display("Success", "The poll was closed successfully");
     }
 
     /**
