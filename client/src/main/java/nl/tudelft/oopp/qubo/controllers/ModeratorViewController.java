@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
@@ -23,6 +24,7 @@ import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
+import nl.tudelft.oopp.qubo.controllers.helpers.PollRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
@@ -54,6 +56,8 @@ public class ModeratorViewController {
     private Button helpDoc;
     @FXML
     private StackPane content;
+    @FXML
+    private BorderPane paceVotePane;
 
     //Nodes used to display the pace
     @FXML
@@ -198,6 +202,9 @@ public class ModeratorViewController {
             sideMenuPane);
 
         quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText, closeQuBo);
+
+        //Refresh the list of polls.
+        PollRefresh.modRefresh(quBo, pollVbox, sideMenuPane, this);
     }
 
     /**

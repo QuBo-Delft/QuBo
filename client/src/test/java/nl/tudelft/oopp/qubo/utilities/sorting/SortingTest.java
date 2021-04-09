@@ -1,6 +1,8 @@
 package nl.tudelft.oopp.qubo.utilities.sorting;
 
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -355,5 +358,155 @@ public class SortingTest {
         assertTrue(answerList.get(1).getTimestamp().getTime() <= answerList.get(2).getTimestamp().getTime());
         assertTrue(answerList.get(2).getTimestamp().getTime() <= answerList.get(3).getTimestamp().getTime());
         assertTrue(answerList.get(3).getTimestamp().getTime() <= answerList.get(4).getTimestamp().getTime());
+    }
+
+    //Tests if mixed list will be sorted correctly by sortPollOptionsOnId.
+    @Test
+    public void testPollOptionDetailsSortOnIdPostedMixed() {
+        //Arrange
+        PollOptionDetailsDto option1 = new PollOptionDetailsDto();
+        option1.setOptionId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionDetailsDto option2 = new PollOptionDetailsDto();
+        option2.setOptionId(UUID.fromString("2b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionDetailsDto option3 = new PollOptionDetailsDto();
+        option3.setOptionId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
+
+        List<PollOptionDetailsDto> optionList = new ArrayList<>();
+        optionList.add(option1);
+        optionList.add(option2);
+        optionList.add(option3);
+
+        //Act
+        Sorting.sortPollOptionsOnId(optionList);
+
+        //Assert
+        assertEquals(optionList.get(0), option3);
+        assertEquals(optionList.get(1), option1);
+        assertEquals(optionList.get(2), option2);
+    }
+
+    //Tests if a list sorted in reversed order will be sorted correctly by sortPollOptionsOnId.
+    @Test
+    public void testPollOptionDetailsSortOnIdReversed() {
+        //Arrange
+        PollOptionDetailsDto option1 = new PollOptionDetailsDto();
+        option1.setOptionId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionDetailsDto option2 = new PollOptionDetailsDto();
+        option2.setOptionId(UUID.fromString("2b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionDetailsDto option3 = new PollOptionDetailsDto();
+        option3.setOptionId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
+
+        List<PollOptionDetailsDto> optionList = new ArrayList<>();
+        optionList.add(option2);
+        optionList.add(option1);
+        optionList.add(option3);
+
+        //Act
+        Sorting.sortPollOptionsOnId(optionList);
+
+        //Assert
+        assertEquals(optionList.get(0), option3);
+        assertEquals(optionList.get(1), option1);
+        assertEquals(optionList.get(2), option2);
+    }
+
+    //Tests if a sorted list will be sorted correctly by sortPollOptionsOnId.
+    @Test
+    public void testPollOptionDetailsSortOnIdSorted() {
+        //Arrange
+        PollOptionDetailsDto option1 = new PollOptionDetailsDto();
+        option1.setOptionId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionDetailsDto option2 = new PollOptionDetailsDto();
+        option2.setOptionId(UUID.fromString("2b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionDetailsDto option3 = new PollOptionDetailsDto();
+        option3.setOptionId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
+
+        List<PollOptionDetailsDto> optionList = new ArrayList<>();
+        optionList.add(option3);
+        optionList.add(option1);
+        optionList.add(option2);
+
+        //Act
+        Sorting.sortPollOptionsOnId(optionList);
+
+        //Assert
+        assertEquals(optionList.get(0), option3);
+        assertEquals(optionList.get(1), option1);
+        assertEquals(optionList.get(2), option2);
+    }
+
+    //Tests if mixed list will be sorted correctly by sortPollOptionResultsOnId.
+    @Test
+    public void testPollOptionResultsSortOnIdPostedMixed() {
+        //Arrange
+        PollOptionResultDto option1 = new PollOptionResultDto();
+        option1.setId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionResultDto option2 = new PollOptionResultDto();
+        option2.setId(UUID.fromString("2b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionResultDto option3 = new PollOptionResultDto();
+        option3.setId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
+
+        List<PollOptionResultDto> optionList = new ArrayList<>();
+        optionList.add(option1);
+        optionList.add(option2);
+        optionList.add(option3);
+
+        //Act
+        Sorting.sortPollOptionResultsOnId(optionList);
+
+        //Assert
+        assertEquals(optionList.get(0), option3);
+        assertEquals(optionList.get(1), option1);
+        assertEquals(optionList.get(2), option2);
+    }
+
+    //Tests if a list sorted in reversed order will be sorted correctly by sortPollOptionResultsOnId.
+    @Test
+    public void testPollOptionResultSortOnIdReversed() {
+        //Arrange
+        PollOptionResultDto option1 = new PollOptionResultDto();
+        option1.setId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionResultDto option2 = new PollOptionResultDto();
+        option2.setId(UUID.fromString("2b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionResultDto option3 = new PollOptionResultDto();
+        option3.setId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
+
+        List<PollOptionResultDto> optionList = new ArrayList<>();
+        optionList.add(option2);
+        optionList.add(option1);
+        optionList.add(option3);
+
+        //Act
+        Sorting.sortPollOptionResultsOnId(optionList);
+
+        //Assert
+        assertEquals(optionList.get(0), option3);
+        assertEquals(optionList.get(1), option1);
+        assertEquals(optionList.get(2), option2);
+    }
+
+    //Tests if a sorted list will be sorted correctly by sortPollOptionResultsOnId.
+    @Test
+    public void testPollOptionResultsSortOnIdSorted() {
+        //Arrange
+        PollOptionResultDto option1 = new PollOptionResultDto();
+        option1.setId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionResultDto option2 = new PollOptionResultDto();
+        option2.setId(UUID.fromString("2b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionResultDto option3 = new PollOptionResultDto();
+        option3.setId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
+
+        List<PollOptionResultDto> optionList = new ArrayList<>();
+        optionList.add(option3);
+        optionList.add(option1);
+        optionList.add(option2);
+
+        //Act
+        Sorting.sortPollOptionResultsOnId(optionList);
+
+        //Assert
+        assertEquals(optionList.get(0), option3);
+        assertEquals(optionList.get(1), option1);
+        assertEquals(optionList.get(2), option2);
     }
 }

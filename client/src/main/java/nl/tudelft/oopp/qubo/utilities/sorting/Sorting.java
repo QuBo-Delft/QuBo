@@ -1,9 +1,10 @@
 package nl.tudelft.oopp.qubo.utilities.sorting;
 
 import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -143,12 +144,30 @@ public class Sorting {
     }
 
     /**
-     * Sorts the list of questions based on the TimeStamp they have been posted.
+     * Sorts the list of answers based on the TimeStamp they have been posted.
      *
      * @param answers   The list of answers that should be sorted.
      */
     public static void sortAnswersOnTime(List<AnswerDetailsDto> answers) {
         answers.sort(new AnswerTimePostedComparator());
+    }
+
+    /**
+     * Sorts the list of poll option details based on the length of their text.
+     *
+     * @param options   The list of poll options that should be sorted.
+     */
+    public static void sortPollOptionsOnId(List<PollOptionDetailsDto> options) {
+        options.sort(new PollOptionDetailsComparator());
+    }
+
+    /**
+     * Sorts the list of poll option results based on the length of their text.
+     *
+     * @param options   The list of poll results that should be sorted.
+     */
+    public static void sortPollOptionResultsOnId(List<PollOptionResultDto> options) {
+        options.sort(new PollOptionResultsComparator());
     }
 
     public static class AnswerTimePostedComparator implements Comparator<AnswerDetailsDto> {
@@ -172,6 +191,42 @@ public class Sorting {
             } else {
                 return 1;
             }
+        }
+    }
+
+    public static class PollOptionDetailsComparator implements Comparator<PollOptionDetailsDto> {
+
+        /**
+         * This method compares the IDs of the Poll Options' text and returns an integer.
+         *
+         * @param o1    A PollOptionDetailsDto that is to be compared with o2.
+         * @param o2    A PollOptionDetailsDto that is to be compared with o1.
+         *
+         * @return 0 if they had the same ID, -1 if o1's ID is less than o2's ID, and 1 if o1's ID was
+         *      greater than o2's ID. This ensures that the list of options starts with the poll option with
+         *      the shortest option text.
+         */
+        @Override
+        public int compare(PollOptionDetailsDto o1, PollOptionDetailsDto o2) {
+            return o1.getOptionId().compareTo(o2.getOptionId());
+        }
+    }
+
+    public static class PollOptionResultsComparator implements Comparator<PollOptionResultDto> {
+
+        /**
+         * This method compares the length of the Poll Option Results' text and returns an integer.
+         *
+         * @param o1    A PollOptionResultDto that is to be compared with o2.
+         * @param o2    A PollOptionResultDto that is to be compared with o1.
+         *
+         * @return 0 if they had the same ID, -1 if o1's ID is less than o2's ID, and 1 if o1's ID was
+         *          greater than o2's ID. This ensures that the list of options starts with the poll option with
+         *          the shortest option text.
+         */
+        @Override
+        public int compare(PollOptionResultDto o1, PollOptionResultDto o2) {
+            return o1.getId().compareTo(o2.getId());
         }
     }
 }

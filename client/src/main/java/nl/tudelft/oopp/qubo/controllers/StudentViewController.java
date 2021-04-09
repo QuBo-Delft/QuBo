@@ -9,24 +9,28 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.communication.PaceVoteCommunication;
+import nl.tudelft.oopp.qubo.communication.PollCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
+import nl.tudelft.oopp.qubo.controllers.helpers.PollRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
 import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
+import nl.tudelft.oopp.qubo.controllers.structures.PollItem;
+import nl.tudelft.oopp.qubo.dtos.pollvote.PollVoteDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceType;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionCreationDto;
@@ -130,6 +134,13 @@ public class StudentViewController {
 
     private String authorName;
 
+    /**
+     * Variables used to keep track of the student's poll choice.
+     */
+    private UUID optionVote;
+    private RadioButton selectedOption;
+    private PollItem pollItem;
+
     private static final Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
             .create();
@@ -198,6 +209,37 @@ public class StudentViewController {
     }
 
     /**
+     * This method is called by a PollRefresh method and returns the current PollItem.
+     */
+    public PollItem getPollItem() {
+        return pollItem;
+    }
+
+    /**
+     * This method is called by a PollRefresh method and sets the current PollItem.
+     */
+    public void setPollItem(PollItem pollItem) {
+        this.pollItem = pollItem;
+    }
+
+    /**
+     * Returns the selected option. It is used by the PollItem class to re-select the selected poll option
+     * when refreshing the polls.
+     *
+     * @return  The RadioButton associated with the option that the student voted for.
+     */
+    public RadioButton getSelectedOption() {
+        return selectedOption;
+    }
+
+    /**
+     * This method is called by the PollItem addOptions method and sets the current selected option.
+     */
+    public void setSelectedOption(RadioButton selectedOption) {
+        this.selectedOption = selectedOption;
+    }
+
+    /**
      * Code that is run upon loading StudentView.fxml
      */
     @FXML
@@ -224,6 +266,7 @@ public class StudentViewController {
             previouslyPressed = justRight;
             paceVoteOkay();
         }
+        PollRefresh.studentRefresh(quBo, pollVbox, sideMenuPane,this);
 
         quBo = QuBoInformation.refreshBoardStatus(quBo, boardStatusIcon, boardStatusText, askBtn);
     }
@@ -459,6 +502,78 @@ public class StudentViewController {
      */
     public boolean sidebarLogic(ToggleButton select, ToggleButton deselect) {
         return SideBarControl.showHideSelected(select, deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox);
+    }
+
+    /**
+     * This method is called when a radio button of an open poll is pressed. It deletes the current poll vote if
+     * there was any.
+     */
+    public void handlePollChoice(RadioButton optionButton, PollItem poll) {
+        //If the question board is closed, show an alert and return.
+        if (QuBoInformation.isQuBoClosed(quBo)) {
+            return;
+        }
+
+        //If there are no previous votes, add the new vote.
+        if (optionVote == null) {
+            addPollVote(optionButton, poll);
+
+        //If there was a previous vote, handle this vote by deleting it or resetting the variables.
+        } else {
+            UUID currentOption = poll.findOptionId(selectedOption);
+
+            //If the "current" option was of a past poll, set all values to null and add the new poll vote.
+            if (currentOption == null) {
+                selectedOption = null;
+                optionVote = null;
+
+                addPollVote(optionButton, poll);
+                return;
+            }
+
+            //Remove the poll vote.
+            String response = PollCommunication.removePollVote(quBo.getId(), optionVote);
+
+            //If the request did not fail, attempt to add the new vote.
+            if (response != null) {
+                boolean failed = addPollVote(optionButton, poll);
+
+                if (!failed) {
+                    selectedOption = null;
+                    optionVote = null;
+                }
+
+            //If the request failed, display an alert and reset the selection.
+            } else {
+                optionButton.setSelected(false);
+                selectedOption.setSelected(true);
+                AlertDialog.display("", "The poll vote could not be deleted.\nPlease try again.");
+            }
+        }
+    }
+
+    /**
+     * This method handles the addition of a poll vote. If the request to add one fails, it shows an alert and
+     * resets the poll option selection.
+     *
+     * @param optionButton  The selected RadioButton.
+     * @param poll          The PollItem that the RadioButton was part of.
+     */
+    private boolean addPollVote(RadioButton optionButton, PollItem poll) {
+        String response = PollCommunication.addPollVote(quBo.getId(), poll.findOptionId(optionButton));
+
+        //If the request did not fail, update the poll variables
+        if (response != null) {
+            optionVote = gson.fromJson(response, PollVoteDetailsDto.class).getId();
+            selectedOption = optionButton;
+            return true;
+        //If the request did fail, display an alert and reset the selection.
+        } else {
+            optionButton.setSelected(false);
+            selectedOption.setSelected(true);
+            AlertDialog.display("", "The poll vote could not be added.\nPlease try again.");
+            return false;
+        }
     }
 
     /**
