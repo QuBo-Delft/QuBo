@@ -22,6 +22,16 @@ public class PaceDisplay {
     private static final Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
             .create();
+    //Used for storing the previous pace bar modifier
+    private static double paceBarMod = Integer.MIN_VALUE;
+
+    /**
+     * Resets the pace bar modifier. Called when the user leaves a question board.
+     *
+     */
+    public static void resetPaceBarMod() {
+        paceBarMod = Integer.MIN_VALUE;
+    }
 
     /**
      * This method displays the pace of the lecture as perceived by students.
@@ -32,7 +42,7 @@ public class PaceDisplay {
      * @param paceCursor The image view used to display the current pace of the lecture.
      */
     public static void displayPace(QuestionBoardDetailsDto quBo, UUID modCode,
-                            StackPane paceBar, ImageView paceCursor) {
+                                   StackPane paceBar, ImageView paceCursor) {
         //If the question board is null, return
         if (quBo == null) {
             return;
@@ -54,7 +64,8 @@ public class PaceDisplay {
         }
 
         //Calculate the pace bar modifier
-        double paceBarModifier = calculatePace(pace);
+        double paceBarModifier = calculatePace(pace.getTooFastVotes(), pace.getJustRightVotes(),
+            pace.getTooSlowVotes());
 
         //Move the pace bar cursor
         movePaceCursor(paceBar, paceCursor, paceBarModifier);
@@ -65,30 +76,39 @@ public class PaceDisplay {
      * top left of the screen, this method assigns a higher value to the tooSlowVotes and a lower value to
      * the tooFastVotes. This ensures that the double returned will transform the cursor appropriately.
      *
-     * @param pace  The PaceDetailsDto containing integers of the number of votes per pace type.
+     * @param tooFast   The amount of too fast votes.
+     * @param justRight The amount of just right votes.
+     * @param tooSlow   The amount of too slow votes.
      * @return A double between 0 and 1.
      */
-    private static double calculatePace(PaceDetailsDto pace) {
-        int numberOfVotes = pace.getTooSlowVotes() + pace.getJustRightVotes() + pace.getTooSlowVotes();
-
-        //If there are no pace votes, set the pace to "Just Right"
-        if (numberOfVotes == 0) {
+    private static double calculatePace(double tooFast, double justRight, double tooSlow) {
+        //If two values are equal to 0, return 0, 1, or 0.5 depending on the pace type.
+        if (tooFast == 0 && tooSlow == 0 || tooFast == tooSlow) {
             return 0.5;
+        } else if (justRight == 0 && tooFast == 0) {
+            return 1;
+        } else if (justRight == 0 && tooSlow == 0) {
+            return 0;
         }
 
-        //Set too slow votes equal to 2
-        double tooSlow = pace.getTooSlowVotes() * 2;
-        //Set just right votes equal to 1.5
-        double justRight = pace.getJustRightVotes() * 1.5;
-        //Set too fast votes equal to 1
-        double tooFast = pace.getTooFastVotes();
+        double location;
 
-        //Calculate the average pace by adding all votes (with relative weights) and dividing it by the total
-        //number of votes
-        double aggregatedPaceVotes = (tooSlow + justRight + tooFast) / numberOfVotes;
+        //If there were no too slow votes, return the fraction that the too fast votes contributed.
+        if (tooSlow == 0) {
+            location = 0.5 - (0.5 * tooFast) / (tooFast + justRight);
 
-        //Return a double between 0 and 1
-        return aggregatedPaceVotes - 1;
+        //If there were no too fast votes, return the fraction that the too slow votes contributed.
+        } else if (tooFast == 0) {
+            location = 0.5 + (0.5 * tooSlow) / (tooSlow + justRight);
+
+        //Calculate the relative fractions of the too slow and too fast votes and return the combined fractions.
+        } else {
+            double lowLoc = 0.5  - tooSlow / (tooFast + tooSlow + justRight);
+            location = 1 - (tooFast / (tooFast + tooSlow + justRight));
+
+            location -= lowLoc;
+        }
+        return location;
     }
 
     /**
@@ -99,24 +119,35 @@ public class PaceDisplay {
      * @param paceBarModifier   The modifier used to calculate the new position of the pace cursor.
      */
     private static void movePaceCursor(StackPane paceBar, ImageView paceCursor, double paceBarModifier) {
-        //Get the local bounds of the pace bar and its cursor relative to the pace bar and its parent
+        //Check if the average pace has changed
+        if (paceBarModifier == paceBarMod) {
+            return;
+        }
+        paceBarMod = paceBarModifier;
+
+        //Calculate the current position of the pace cursor
         Bounds paceBarBounds = paceBar.getBoundsInParent();
         Bounds paceCursorBounds = paceCursor.getBoundsInParent();
 
-        //Calculate the new position of the pace cursor
         double paceBarHeight = paceBarBounds.getHeight();
-        double imageSize = paceCursorBounds.getMaxY() - paceCursorBounds.getMinY();
-        double adjustTranslation = imageSize / 2 + paceCursorBounds.getMinY();
+        double newPosition = paceBarModifier * paceBarHeight - 0.5 * paceBarHeight;
 
-        double newPosition = paceBarModifier * paceBarHeight - adjustTranslation;
+        //Make sure the pace cursor stays inside of the window.
+        if (paceBarModifier == 0) {
+            newPosition += paceCursorBounds.getHeight() / 2 + 9;
+        } else if (paceBarModifier == 1) {
+            newPosition -= paceCursorBounds.getHeight() / 2 + 7;
+        }
 
-        //Set up a Transition to move the cursor visibly
+        //Set up the transition.
         TranslateTransition translate = new TranslateTransition(Duration.seconds(0.5), paceCursor);
         translate.setFromY(paceCursor.getY());
-        System.out.println(paceCursorBounds.getMinY());
         translate.setToY(newPosition);
 
-        //Move the cursor
+        //Move the cursor and set its new Y coordinate attributes.
         translate.play();
+        paceCursor.setLayoutY(translate.getToY());
+        paceCursor.setY(translate.getToY());
+        paceCursor.setTranslateY(0);
     }
 }

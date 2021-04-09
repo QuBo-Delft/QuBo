@@ -36,6 +36,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
                 "/api/board/*",
                 "/api/board/*/questions",
                 "/api/board/*/pace",
-                "/api/board/*/poll");
+                "/api/board/*/poll",
+                "/api/board/*/poll/results");
     }
 }

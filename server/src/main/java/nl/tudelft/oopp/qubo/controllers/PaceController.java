@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.qubo.controllers;
 
 import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import nl.tudelft.oopp.qubo.dtos.pace.PaceDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationBindingModel;
@@ -8,6 +9,7 @@ import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteCreationDto;
 import nl.tudelft.oopp.qubo.dtos.pacevote.PaceVoteDetailsDto;
 import nl.tudelft.oopp.qubo.entities.PaceVote;
 import nl.tudelft.oopp.qubo.entities.QuestionBoard;
+import nl.tudelft.oopp.qubo.services.BanService;
 import nl.tudelft.oopp.qubo.services.PaceVoteService;
 import nl.tudelft.oopp.qubo.services.QuestionBoardService;
 import org.modelmapper.ModelMapper;
@@ -32,6 +34,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class PaceController {
     private final QuestionBoardService questionBoardService;
     private final PaceVoteService paceVoteService;
+    private final BanService banService;
     private final ModelMapper modelMapper;
 
     /**
@@ -39,12 +42,15 @@ public class PaceController {
      *
      * @param questionBoardService The QuestionBoardService.
      * @param paceVoteService      The PaceVoteService
+     * @param banService           The BanService.
      * @param modelMapper          The ModelMapper.
      */
     public PaceController(QuestionBoardService questionBoardService,
-                          PaceVoteService paceVoteService, ModelMapper modelMapper) {
+                          PaceVoteService paceVoteService, BanService banService,
+                          ModelMapper modelMapper) {
         this.questionBoardService = questionBoardService;
         this.paceVoteService = paceVoteService;
+        this.banService = banService;
         this.modelMapper = modelMapper;
     }
 
@@ -83,13 +89,20 @@ public class PaceController {
      *
      * @param boardId       The board ID.
      * @param paceVoteModel The PaceVote model.
+     * @param request       The HTTPServletRequest to get the IP of the user.
      * @return The paceVote DTO.
      */
     @RequestMapping(value = "/{boardid}/pace", method = POST, consumes = "application/json")
     @ResponseBody
     public PaceVoteCreationDto registerPaceVote(
         @PathVariable("boardid") UUID boardId,
-        @Valid @RequestBody PaceVoteCreationBindingModel paceVoteModel) {
+        @Valid @RequestBody PaceVoteCreationBindingModel paceVoteModel,
+        HttpServletRequest request) {
+        QuestionBoard qb = questionBoardService.getBoardById(boardId);
+        if (qb == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        }
+        banService.performBanCheck(qb, request.getRemoteAddr());
         PaceVote paceVote = paceVoteService.registerVote(paceVoteModel, boardId);
         return modelMapper.map(paceVote, PaceVoteCreationDto.class);
     }

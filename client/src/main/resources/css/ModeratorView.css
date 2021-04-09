@@ -1,0 +1,40 @@
+.exportBtn {
+    -fx-background-radius: 0;
+    -fx-background-color: #736d69;
+
+    -fx-background-image: url(../icons/btn_export.png);
+    -fx-background-size: 27px 27px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.exportBtn:hover {
+    -fx-background-color: #3c3837;
+    -fx-background-size: 30px 30px;
+    -fx-cursor: hand;
+}
+
+.closeBoardBtn {
+    -fx-background-radius: 0;
+    -fx-background-color: #736d69;
+
+    -fx-background-image: url(../icons/btn_closeBoard.png);
+    -fx-background-size: 27px 27px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.closeBoardBtn:hover {
+    -fx-background-color: #3c3837;
+    -fx-background-size: 30px 30px;
+    -fx-cursor: hand;
+}
+
+.paceBar {
+    -fx-background-color: linear-gradient(#F36F47 0%, #F7A13E 50%, #F36F47 100%);
+}
+
+.paceLabel {
+    -fx-text-fill: #4f1f1f;
+    -fx-font-size: 1.1em;
+}

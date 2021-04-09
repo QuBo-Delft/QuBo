@@ -1,14 +1,23 @@
 package nl.tudelft.oopp.qubo.utilities.sorting;
 
+import nl.tudelft.oopp.qubo.dtos.answer.AnswerDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
+import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SortingTest {
 
@@ -16,6 +25,7 @@ public class SortingTest {
     private final Sorting.QuestionTimeAnsweredComparator comparatorAnswered = new Sorting
             .QuestionTimeAnsweredComparator();
     private QuestionDetailsDto[] questions;
+    private List<AnswerDetailsDto> answerList;
     private Timestamp now;
 
     /**
@@ -123,11 +133,17 @@ public class SortingTest {
         questions[5] = new QuestionDetailsDto();
 
         questions[0].setUpvotes(10);
+        questions[0].setTimestamp(Timestamp.valueOf("2020-11-01 22:22:22"));
         questions[1].setUpvotes(1);
+        questions[1].setTimestamp(Timestamp.valueOf("2020-11-01 22:22:22"));
         questions[2].setUpvotes(3);
-        questions[3].setUpvotes(5);
-        questions[4].setUpvotes(0);
+        questions[2].setTimestamp(Timestamp.valueOf("2020-11-01 22:22:22"));
+        questions[3].setUpvotes(3);
+        questions[3].setTimestamp(Timestamp.valueOf("2020-11-01 22:23:22"));
+        questions[4].setUpvotes(9);
+        questions[4].setTimestamp(Timestamp.valueOf("2020-11-01 22:22:22"));
         questions[5].setUpvotes(10);
+        questions[5].setTimestamp(Timestamp.valueOf("2020-11-01 22:22:22"));
 
         //Act
         Sorting.sortOnUpvotes(questions);
@@ -135,7 +151,7 @@ public class SortingTest {
         //Assert
         assertTrue(questions[0].getUpvotes() >= questions[1].getUpvotes());
         assertTrue(questions[1].getUpvotes() >= questions[2].getUpvotes());
-        assertTrue(questions[2].getUpvotes() >= questions[3].getUpvotes());
+        assertTrue(questions[2].getUpvotes() > questions[3].getUpvotes());
         assertTrue(questions[3].getUpvotes() >= questions[4].getUpvotes());
         assertTrue(questions[4].getUpvotes() >= questions[5].getUpvotes());
     }
@@ -180,5 +196,317 @@ public class SortingTest {
         //Assert
         assertTrue(questions[0].getUpvotes() >= questions[1].getUpvotes());
         assertTrue(questions[1].getUpvotes() >= questions[2].getUpvotes());
+    }
+
+    //Tests if a long mixed array will be sorted correctly by sortOnTimestamp.
+    @Test
+    public void testSortOnTimestampMixed() {
+        //Arrange
+        questions = new QuestionDetailsDto[10];
+        questions[0] = new QuestionDetailsDto();
+        questions[1] = new QuestionDetailsDto();
+        questions[2] = new QuestionDetailsDto();
+        questions[3] = new QuestionDetailsDto();
+        questions[4] = new QuestionDetailsDto();
+        questions[5] = new QuestionDetailsDto();
+        questions[6] = new QuestionDetailsDto();
+        questions[7] = new QuestionDetailsDto();
+        questions[8] = new QuestionDetailsDto();
+        questions[9] = new QuestionDetailsDto();
+
+        questions[0].setTimestamp(new Timestamp(now.getTime() + 8 * 1000));
+        questions[1].setTimestamp(new Timestamp(now.getTime() + 1000));
+        questions[2].setTimestamp(new Timestamp(now.getTime() + 2 * 1000));
+        questions[3].setTimestamp(now);
+        questions[4].setTimestamp(new Timestamp(now.getTime() + 4 * 1000));
+        questions[5].setTimestamp(new Timestamp(now.getTime() + 7 * 1000));
+        questions[6].setTimestamp(new Timestamp(now.getTime() + 3 * 1000));
+        questions[7].setTimestamp(new Timestamp(now.getTime() + 6 * 1000));
+        questions[8].setTimestamp(new Timestamp(now.getTime() + 4 * 1000));
+        questions[9].setTimestamp(new Timestamp(now.getTime() + 5 * 1000));
+
+        //Act
+        Sorting.sortOnTimestamp(questions);
+
+        //Assert
+        assertTrue(questions[0].getTimestamp().getTime() <= questions[1].getTimestamp().getTime());
+        assertTrue(questions[1].getTimestamp().getTime() <= questions[2].getTimestamp().getTime());
+        assertTrue(questions[2].getTimestamp().getTime() <= questions[3].getTimestamp().getTime());
+        assertTrue(questions[3].getTimestamp().getTime() <= questions[4].getTimestamp().getTime());
+        assertTrue(questions[4].getTimestamp().getTime() <= questions[5].getTimestamp().getTime());
+        assertTrue(questions[5].getTimestamp().getTime() <= questions[6].getTimestamp().getTime());
+        assertTrue(questions[6].getTimestamp().getTime() <= questions[7].getTimestamp().getTime());
+        assertTrue(questions[7].getTimestamp().getTime() <= questions[8].getTimestamp().getTime());
+        assertTrue(questions[8].getTimestamp().getTime() <= questions[9].getTimestamp().getTime());
+    }
+
+    //Tests if a sorted array will stay sorted by sortOnTimestamp.
+    @Test
+    public void testSortOnTimestampSorted() {
+        //Arrange
+        questions = new QuestionDetailsDto[3];
+        questions[0] = new QuestionDetailsDto();
+        questions[1] = new QuestionDetailsDto();
+        questions[2] = new QuestionDetailsDto();
+
+        questions[0].setTimestamp(new Timestamp(now.getTime() + 2 * 1000));
+        questions[1].setTimestamp(new Timestamp(now.getTime() + 1000));
+        questions[2].setTimestamp(now);
+
+        //Act
+        Sorting.sortOnTimestamp(questions);
+
+        //Assert
+        assertTrue(questions[0].getTimestamp().getTime() <= questions[1].getTimestamp().getTime());
+        assertTrue(questions[1].getTimestamp().getTime() <= questions[2].getTimestamp().getTime());
+    }
+
+    //Tests if an array sorted in reverse order will be sorted correctly by sortOnTimestamp.
+    @Test
+    public void testSortOnTimestampReversed() {
+        //Arrange
+        questions = new QuestionDetailsDto[3];
+        questions[0] = new QuestionDetailsDto();
+        questions[1] = new QuestionDetailsDto();
+        questions[2] = new QuestionDetailsDto();
+
+        questions[0].setTimestamp(now);
+        questions[1].setTimestamp(new Timestamp(now.getTime() + 1000));
+        questions[2].setTimestamp(new Timestamp(now.getTime() + 2 * 1000));
+
+        //Act
+        Sorting.sortOnTimestamp(questions);
+
+        //Assert
+        assertTrue(questions[0].getTimestamp().getTime() <= questions[1].getTimestamp().getTime());
+        assertTrue(questions[1].getTimestamp().getTime() <= questions[2].getTimestamp().getTime());
+    }
+
+    @Test
+    public void testAnswerSortOnTimePostedMixed() {
+        //Arrange
+        answerList = new ArrayList<>();
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+
+        answerList.get(0).setTimestamp(new Timestamp(now.getTime() + 2 * 1000));
+        answerList.get(1).setTimestamp(new Timestamp(now.getTime()));
+        answerList.get(2).setTimestamp(new Timestamp(now.getTime() + 6 * 1000));
+        answerList.get(3).setTimestamp(new Timestamp(now.getTime() + 4 * 1000));
+        answerList.get(4).setTimestamp(new Timestamp(now.getTime() + 8 * 1000));
+
+        //Act
+        Sorting.sortAnswersOnTime(answerList);
+
+        //Assert
+        assertTrue(answerList.get(0).getTimestamp().getTime() <= answerList.get(1).getTimestamp().getTime());
+        assertTrue(answerList.get(1).getTimestamp().getTime() <= answerList.get(2).getTimestamp().getTime());
+        assertTrue(answerList.get(2).getTimestamp().getTime() <= answerList.get(3).getTimestamp().getTime());
+        assertTrue(answerList.get(3).getTimestamp().getTime() <= answerList.get(4).getTimestamp().getTime());
+    }
+
+    @Test
+    public void testAnswerSortOnTimePostedReversed() {
+        //Arrange
+        answerList = new ArrayList<>();
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+
+        answerList.get(0).setTimestamp(new Timestamp(now.getTime() + 8 * 1000));
+        answerList.get(1).setTimestamp(new Timestamp(now.getTime() + 6 * 1000));
+        answerList.get(2).setTimestamp(new Timestamp(now.getTime() + 4 * 1000));
+        answerList.get(3).setTimestamp(new Timestamp(now.getTime() + 2 * 1000));
+        answerList.get(4).setTimestamp(new Timestamp(now.getTime()));
+
+        //Act
+        Sorting.sortAnswersOnTime(answerList);
+
+        //Assert
+        assertTrue(answerList.get(0).getTimestamp().getTime() <= answerList.get(1).getTimestamp().getTime());
+        assertTrue(answerList.get(1).getTimestamp().getTime() <= answerList.get(2).getTimestamp().getTime());
+        assertTrue(answerList.get(2).getTimestamp().getTime() <= answerList.get(3).getTimestamp().getTime());
+        assertTrue(answerList.get(3).getTimestamp().getTime() <= answerList.get(4).getTimestamp().getTime());
+    }
+
+    @Test
+    public void testAnswerSortOnTimePostedSorted() {
+        //Arrange
+        answerList = new ArrayList<>();
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+        answerList.add(new AnswerDetailsDto());
+
+        answerList.get(0).setTimestamp(new Timestamp(now.getTime()));
+        answerList.get(1).setTimestamp(new Timestamp(now.getTime() + 2 * 1000));
+        answerList.get(2).setTimestamp(new Timestamp(now.getTime() + 4 * 1000));
+        answerList.get(3).setTimestamp(new Timestamp(now.getTime() + 6 * 1000));
+        answerList.get(4).setTimestamp(new Timestamp(now.getTime() + 8 * 1000));
+
+        //Act
+        Sorting.sortAnswersOnTime(answerList);
+
+        //Assert
+        assertTrue(answerList.get(0).getTimestamp().getTime() <= answerList.get(1).getTimestamp().getTime());
+        assertTrue(answerList.get(1).getTimestamp().getTime() <= answerList.get(2).getTimestamp().getTime());
+        assertTrue(answerList.get(2).getTimestamp().getTime() <= answerList.get(3).getTimestamp().getTime());
+        assertTrue(answerList.get(3).getTimestamp().getTime() <= answerList.get(4).getTimestamp().getTime());
+    }
+
+    //Tests if mixed list will be sorted correctly by sortPollOptionsOnId.
+    @Test
+    public void testPollOptionDetailsSortOnIdPostedMixed() {
+        //Arrange
+        List<PollOptionDetailsDto> optionList = new ArrayList<>();
+        PollOptionDetailsDto option1 = new PollOptionDetailsDto();
+        option1.setOptionId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionDetailsDto option2 = new PollOptionDetailsDto();
+        option2.setOptionId(UUID.fromString("2b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionDetailsDto option3 = new PollOptionDetailsDto();
+        option3.setOptionId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
+
+        optionList.add(option1);
+        optionList.add(option2);
+        optionList.add(option3);
+
+        //Act
+        Sorting.sortPollOptionsOnId(optionList);
+
+        //Assert
+        assertEquals(optionList.get(0), option3);
+        assertEquals(optionList.get(1), option1);
+        assertEquals(optionList.get(2), option2);
+    }
+
+    //Tests if a list sorted in reversed order will be sorted correctly by sortPollOptionsOnId.
+    @Test
+    public void testPollOptionDetailsSortOnIdReversed() {
+        //Arrange
+        List<PollOptionDetailsDto> optionList = new ArrayList<>();
+        PollOptionDetailsDto option1 = new PollOptionDetailsDto();
+        option1.setOptionId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionDetailsDto option2 = new PollOptionDetailsDto();
+        option2.setOptionId(UUID.fromString("2b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionDetailsDto option3 = new PollOptionDetailsDto();
+        option3.setOptionId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
+
+        optionList.add(option2);
+        optionList.add(option1);
+        optionList.add(option3);
+
+        //Act
+        Sorting.sortPollOptionsOnId(optionList);
+
+        //Assert
+        assertEquals(optionList.get(0), option3);
+        assertEquals(optionList.get(1), option1);
+        assertEquals(optionList.get(2), option2);
+    }
+
+    //Tests if a sorted list will be sorted correctly by sortPollOptionsOnId.
+    @Test
+    public void testPollOptionDetailsSortOnIdSorted() {
+        //Arrange
+        List<PollOptionDetailsDto> optionList = new ArrayList<>();
+        PollOptionDetailsDto option1 = new PollOptionDetailsDto();
+        option1.setOptionId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionDetailsDto option2 = new PollOptionDetailsDto();
+        option2.setOptionId(UUID.fromString("2b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionDetailsDto option3 = new PollOptionDetailsDto();
+        option3.setOptionId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
+
+        optionList.add(option3);
+        optionList.add(option1);
+        optionList.add(option2);
+
+        //Act
+        Sorting.sortPollOptionsOnId(optionList);
+
+        //Assert
+        assertEquals(optionList.get(0), option3);
+        assertEquals(optionList.get(1), option1);
+        assertEquals(optionList.get(2), option2);
+    }
+
+    //Tests if mixed list will be sorted correctly by sortPollOptionResultsOnId.
+    @Test
+    public void testPollOptionResultsSortOnIdPostedMixed() {
+        //Arrange
+        List<PollOptionResultDto> optionList = new ArrayList<>();
+        PollOptionResultDto option1 = new PollOptionResultDto();
+        option1.setId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionResultDto option2 = new PollOptionResultDto();
+        option2.setId(UUID.fromString("2b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionResultDto option3 = new PollOptionResultDto();
+        option3.setId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
+
+        optionList.add(option1);
+        optionList.add(option2);
+        optionList.add(option3);
+
+        //Act
+        Sorting.sortPollOptionResultsOnId(optionList);
+
+        //Assert
+        assertEquals(optionList.get(0), option3);
+        assertEquals(optionList.get(1), option1);
+        assertEquals(optionList.get(2), option2);
+    }
+
+    //Tests if a list sorted in reversed order will be sorted correctly by sortPollOptionResultsOnId.
+    @Test
+    public void testPollOptionResultSortOnIdReversed() {
+        //Arrange
+        List<PollOptionResultDto> optionList = new ArrayList<>();
+        PollOptionResultDto option1 = new PollOptionResultDto();
+        option1.setId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionResultDto option2 = new PollOptionResultDto();
+        option2.setId(UUID.fromString("2b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionResultDto option3 = new PollOptionResultDto();
+        option3.setId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
+
+        optionList.add(option2);
+        optionList.add(option1);
+        optionList.add(option3);
+
+        //Act
+        Sorting.sortPollOptionResultsOnId(optionList);
+
+        //Assert
+        assertEquals(optionList.get(0), option3);
+        assertEquals(optionList.get(1), option1);
+        assertEquals(optionList.get(2), option2);
+    }
+
+    //Tests if a sorted list will be sorted correctly by sortPollOptionResultsOnId.
+    @Test
+    public void testPollOptionResultsSortOnIdSorted() {
+        //Arrange
+        List<PollOptionResultDto> optionList = new ArrayList<>();
+        PollOptionResultDto option1 = new PollOptionResultDto();
+        option1.setId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionResultDto option2 = new PollOptionResultDto();
+        option2.setId(UUID.fromString("2b219900-27c0-4e40-9d0a-a0fa3951b224"));
+        PollOptionResultDto option3 = new PollOptionResultDto();
+        option3.setId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
+
+        optionList.add(option3);
+        optionList.add(option1);
+        optionList.add(option2);
+
+        //Act
+        Sorting.sortPollOptionResultsOnId(optionList);
+
+        //Assert
+        assertEquals(optionList.get(0), option3);
+        assertEquals(optionList.get(1), option1);
+        assertEquals(optionList.get(2), option2);
     }
 }

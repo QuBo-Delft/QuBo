@@ -11,6 +11,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
+import nl.tudelft.oopp.qubo.utilities.sorting.Sorting;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PollResultItem extends GridPane {
     private GridPane pollResultPane;
@@ -49,7 +54,7 @@ public class PollResultItem extends GridPane {
         pollText.managedProperty().bind(pollText.visibleProperty());
 
         //Set padding for the cell that will contain the Poll.
-        this.setPadding(new Insets(0,0,20,0));
+        this.setPadding(new Insets(3,0,20,3));
 
         //Construct a new pollPane to hold the poll, and add it to the content pane.
         pollResultPane = newPollPane();
@@ -71,7 +76,7 @@ public class PollResultItem extends GridPane {
         pollVbox = PollItem.newPollVbox(pollText, pollScPane);
 
         //Set padding for individual cells.
-        this.setPadding(new Insets(3, 3, 3, 3));
+        this.setPadding(new Insets(3, 0, 3, 2));
 
         //Add the pollVbox to the grid pane.
         gridpane.addColumn(1, pollVbox);
@@ -79,7 +84,7 @@ public class PollResultItem extends GridPane {
         //Set the column constraints.
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setHgrow(Priority.ALWAYS);
-        gridpane.getColumnConstraints().addAll(new ColumnConstraints(5), col2);
+        gridpane.getColumnConstraints().addAll(col2);
 
         return gridpane;
     }
@@ -89,6 +94,11 @@ public class PollResultItem extends GridPane {
      */
     private void addOptions() {
         int i = 1;
+
+        //Sort the options on lexicographical order.
+        List<PollOptionResultDto> pollOptionResults = new ArrayList<>(Arrays.asList(this.pollOptionResults));
+        Sorting.sortPollOptionResultsOnId(pollOptionResults);
+
         for (PollOptionResultDto option : pollOptionResults) {
             //Add the option text to an HBox.
             Text optionText = new Text(option.getText());
@@ -108,9 +118,9 @@ public class PollResultItem extends GridPane {
 
             //Set the wrapping width,and padding properties for layout purposes.
             optionText.wrappingWidthProperty().bind(pollScPane.widthProperty().subtract(
-                votePercentageLabel.getWidth() + 42));
-            optionBox.setPadding(new Insets(5, 5, 5, 5));
-            HBox.setHgrow(optionText, Priority.ALWAYS);
+                votePercentageLabel.getWidth() + 70));
+            optionBox.setPadding(new Insets(5, 3, 5, 2));
+            HBox.setHgrow(optionText, Priority.SOMETIMES);
 
             //Add the horizontal box to the grid pane.
             this.addRow((i++ + 1), optionBox);
@@ -161,7 +171,7 @@ public class PollResultItem extends GridPane {
             optionBox.setStyle("-fx-background-color: white");
         } else {
             //Add the linear gradient to colour the VBox
-            optionBox.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #3690ad, #3690ad "
+            optionBox.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #e97c28, #e97c28 "
                 + vote + "%, white " + (vote + 1) + "%, white)");
         }
     }

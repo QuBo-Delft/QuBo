@@ -21,7 +21,6 @@ public class PollRefresh {
 
     private static VBox pollsVbox;
     private static ScrollPane pollsScrollPane;
-    private static List<PollResult> polls;
     private static StudentViewController sController;
     private static ModeratorViewController mController;
 
@@ -62,7 +61,7 @@ public class PollRefresh {
         pollsScrollPane = pollScrollPane;
         mController = controller;
 
-        //displayPolls(true);
+        displayPolls(true);
     }
 
     /**
