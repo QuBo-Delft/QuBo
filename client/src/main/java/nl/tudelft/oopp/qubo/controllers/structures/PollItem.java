@@ -116,7 +116,9 @@ public class PollItem extends GridPane {
         addOptions(moderator);
 
         //Add the buttons
-        addButtons();
+        if (moderator) {
+            addButtons();
+        }
 
         this.setGridLinesVisible(true);
     }
@@ -291,11 +293,10 @@ public class PollItem extends GridPane {
      * Adds the moderator buttons to a poll item, and sets the method that they call when clicked.
      */
     public void addButtons() {
-        HBox buttonBox = new HBox();
-
         //Add a button that deletes the current poll when the user clicks it and confirms that they want
         //to delete the poll.
         Button delete = new Button("Delete");
+        delete.getStyleClass().add("closeBtn");
         delete.setOnAction(e -> {
             boolean deleteConfirm = ConfirmationDialog.display("Poll Deletion",
                 "Are you sure you want to delete this poll?");
@@ -310,6 +311,7 @@ public class PollItem extends GridPane {
         //Add a button that closes the current poll when the user clicks it and confirms that they want
         //to close the poll.
         Button close = new Button("Close");
+        delete.getStyleClass().add("normalBtn");
         close.setOnAction(e -> {
             boolean closeConfirm = ConfirmationDialog.display("Close Poll",
                     "Are you sure you want to close this poll?");
@@ -322,7 +324,9 @@ public class PollItem extends GridPane {
         });
 
         //Add the buttons to the PollItem.
+        HBox buttonBox = new HBox();
         buttonBox.getChildren().addAll(delete, close);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
         //Calculate the index of the options.
         int i = 2 + options.size();

@@ -189,11 +189,13 @@ public class PollResultItem extends GridPane {
      * Adds the moderator buttons to a poll item.
      */
     public void addButtons() {
-        HBox buttonBox = new HBox();
         Button delete = new Button("Delete");
+        delete.getStyleClass().add("closeBtn");
         delete.setOnAction(event -> modController.deletePoll(true));
         Button redo = new Button("Redo");
+        delete.getStyleClass().add("normalBtn");
         redo.setOnAction(event -> modController.redoPoll());
+        HBox buttonBox = new HBox();
         buttonBox.getChildren().addAll(delete, redo);
         buttonBox.setSpacing(10);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);

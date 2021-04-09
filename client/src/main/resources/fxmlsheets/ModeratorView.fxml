@@ -90,32 +90,32 @@
                     <padding>
                         <Insets left="20.0" right="5.0" top="20.0" />
                     </padding>
-               <HBox alignment="CENTER">
+               <HBox fx:id="createPollTitleHbox" alignment="CENTER">
                           <Label fx:id="sideMenuTitle" text="Title" />
                      <Region HBox.hgrow="ALWAYS" />
-                  <Button fx:id="createPollBtn" mnemonicParsing="false" onAction="#createPoll" text="Create Poll" />
+                  <Button fx:id="createPollBtn" mnemonicParsing="false" onAction="#createPoll" styleClass="normalBtn" text="Create Poll" />
                </HBox>
                <VBox fx:id="createPollVbox" spacing="5.0">
                         <TextField fx:id="createPollTitle" promptText="New Poll Title" />
-                  <HBox alignment="CENTER" spacing="10.0">
+                  <HBox fx:id="optionFirstHbox" alignment="CENTER" spacing="10.0">
                         <Label text="1:" />
                         <TextField fx:id="optionA" HBox.hgrow="ALWAYS" />
                   </HBox>
-                  <HBox alignment="CENTER" spacing="10.0">
+                  <HBox fx:id="optionSecondHbox" alignment="CENTER" spacing="10.0">
                               <Label text="2:" />
                               <TextField fx:id="optionB" HBox.hgrow="ALWAYS" />
                   </HBox>
                   <HBox fx:id="pollVoteHbox" alignment="CENTER_LEFT" spacing="10.0">
-                              <Button fx:id="createPollNewOptionBtn" mnemonicParsing="false" onAction="#createPollNewOption" text="+" />
+                              <Button fx:id="createPollNewOptionBtn" mnemonicParsing="false" onAction="#createPollNewOption" styleClass="normalBtn" text="+" />
                         <Label fx:id="pollCreateNewLabel" alignment="CENTER" text="Click to add a new poll option." textAlignment="CENTER" />
                   </HBox>
                      <HBox fx:id="pollVoteBtn" alignment="CENTER_RIGHT">
-                           <Button fx:id="createPollCancelBtn" mnemonicParsing="false" onAction="#createPollCancel" text="Cancel">
+                           <Button fx:id="createPollCancelBtn" mnemonicParsing="false" onAction="#createPollCancel" styleClass="closeBtn" text="Cancel">
                               <HBox.margin>
                                  <Insets right="7.0" />
                               </HBox.margin>
                            </Button>
-                           <Button fx:id="createPollCreateBtn" mnemonicParsing="false" onAction="#createPollCreate" text="Create">
+                           <Button fx:id="createPollCreateBtn" mnemonicParsing="false" onAction="#createPollCreate" styleClass="normalBtn" text="Create">
                               <HBox.margin>
                                  <Insets left="7.0" />
                               </HBox.margin>
