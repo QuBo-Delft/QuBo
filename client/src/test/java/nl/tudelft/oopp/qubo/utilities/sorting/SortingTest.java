@@ -364,7 +364,6 @@ public class SortingTest {
     @Test
     public void testPollOptionDetailsSortOnIdPostedMixed() {
         //Arrange
-        List<PollOptionDetailsDto> optionList = new ArrayList<>();
         PollOptionDetailsDto option1 = new PollOptionDetailsDto();
         option1.setOptionId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
         PollOptionDetailsDto option2 = new PollOptionDetailsDto();
@@ -372,6 +371,7 @@ public class SortingTest {
         PollOptionDetailsDto option3 = new PollOptionDetailsDto();
         option3.setOptionId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
 
+        List<PollOptionDetailsDto> optionList = new ArrayList<>();
         optionList.add(option1);
         optionList.add(option2);
         optionList.add(option3);
@@ -389,7 +389,6 @@ public class SortingTest {
     @Test
     public void testPollOptionDetailsSortOnIdReversed() {
         //Arrange
-        List<PollOptionDetailsDto> optionList = new ArrayList<>();
         PollOptionDetailsDto option1 = new PollOptionDetailsDto();
         option1.setOptionId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
         PollOptionDetailsDto option2 = new PollOptionDetailsDto();
@@ -397,6 +396,7 @@ public class SortingTest {
         PollOptionDetailsDto option3 = new PollOptionDetailsDto();
         option3.setOptionId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
 
+        List<PollOptionDetailsDto> optionList = new ArrayList<>();
         optionList.add(option2);
         optionList.add(option1);
         optionList.add(option3);
@@ -414,7 +414,6 @@ public class SortingTest {
     @Test
     public void testPollOptionDetailsSortOnIdSorted() {
         //Arrange
-        List<PollOptionDetailsDto> optionList = new ArrayList<>();
         PollOptionDetailsDto option1 = new PollOptionDetailsDto();
         option1.setOptionId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
         PollOptionDetailsDto option2 = new PollOptionDetailsDto();
@@ -422,6 +421,7 @@ public class SortingTest {
         PollOptionDetailsDto option3 = new PollOptionDetailsDto();
         option3.setOptionId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
 
+        List<PollOptionDetailsDto> optionList = new ArrayList<>();
         optionList.add(option3);
         optionList.add(option1);
         optionList.add(option2);
@@ -439,7 +439,6 @@ public class SortingTest {
     @Test
     public void testPollOptionResultsSortOnIdPostedMixed() {
         //Arrange
-        List<PollOptionResultDto> optionList = new ArrayList<>();
         PollOptionResultDto option1 = new PollOptionResultDto();
         option1.setId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
         PollOptionResultDto option2 = new PollOptionResultDto();
@@ -447,6 +446,7 @@ public class SortingTest {
         PollOptionResultDto option3 = new PollOptionResultDto();
         option3.setId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
 
+        List<PollOptionResultDto> optionList = new ArrayList<>();
         optionList.add(option1);
         optionList.add(option2);
         optionList.add(option3);
@@ -464,7 +464,6 @@ public class SortingTest {
     @Test
     public void testPollOptionResultSortOnIdReversed() {
         //Arrange
-        List<PollOptionResultDto> optionList = new ArrayList<>();
         PollOptionResultDto option1 = new PollOptionResultDto();
         option1.setId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
         PollOptionResultDto option2 = new PollOptionResultDto();
@@ -472,6 +471,7 @@ public class SortingTest {
         PollOptionResultDto option3 = new PollOptionResultDto();
         option3.setId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
 
+        List<PollOptionResultDto> optionList = new ArrayList<>();
         optionList.add(option2);
         optionList.add(option1);
         optionList.add(option3);
@@ -489,7 +489,6 @@ public class SortingTest {
     @Test
     public void testPollOptionResultsSortOnIdSorted() {
         //Arrange
-        List<PollOptionResultDto> optionList = new ArrayList<>();
         PollOptionResultDto option1 = new PollOptionResultDto();
         option1.setId(UUID.fromString("1b219900-27c0-4e40-9d0a-a0fa3951b224"));
         PollOptionResultDto option2 = new PollOptionResultDto();
@@ -497,6 +496,7 @@ public class SortingTest {
         PollOptionResultDto option3 = new PollOptionResultDto();
         option3.setId(UUID.fromString("0b219900-27c0-4e40-9d0a-a0fa3951b224"));
 
+        List<PollOptionResultDto> optionList = new ArrayList<>();
         optionList.add(option3);
         optionList.add(option1);
         optionList.add(option2);
