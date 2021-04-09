@@ -295,7 +295,7 @@ public class PollItem extends GridPane {
 
         //Add a button that deletes the current poll when the user clicks it and confirms that they want
         //to delete the poll.
-        Button delete = new Button();
+        Button delete = new Button("Delete");
         delete.setOnAction(e -> {
             boolean deleteConfirm = ConfirmationDialog.display("Poll Deletion",
                 "Are you sure you want to delete this poll?");
@@ -309,7 +309,7 @@ public class PollItem extends GridPane {
 
         //Add a button that closes the current poll when the user clicks it and confirms that they want
         //to close the poll.
-        Button close = new Button();
+        Button close = new Button("Close");
         close.setOnAction(e -> {
             boolean closeConfirm = ConfirmationDialog.display("Close Poll",
                     "Are you sure you want to close this poll?");

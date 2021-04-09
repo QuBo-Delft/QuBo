@@ -131,6 +131,10 @@ public class ModeratorViewController {
     @FXML
     private Label pollCreateNewLabel;
     @FXML
+    private HBox pollVoteBtn;
+    @FXML
+    private HBox pollVoteHbox;
+    @FXML
     private TextField createPollTitle;
     @FXML
     private Button createPollNewOptionBtn;
@@ -358,7 +362,7 @@ public class ModeratorViewController {
                     if (nodeChild instanceof Label) {
                         // If it has found a label, correct the text
                         newLabelNumber++;
-                        if (nodeChild.getId().equals("pollCreateNewLabel")) {
+                        if (nodeChild.getId().equals(pollCreateNewLabel.getId())) {
                             return;
                         }
                         ((Label) nodeChild).setText(newLabelNumber + ":");
@@ -407,7 +411,8 @@ public class ModeratorViewController {
         for (Node node : createPollVbox.getChildren()) {
             if (node instanceof HBox) {
                 toBeRemoved++;
-                if (node.getId().equals("pollVoteBtn") || node.getId().equals("pollVoteHbox")) {
+                HBox heBox = (HBox) node;
+                if (heBox.getId().equals(pollVoteBtn.getId()) || heBox.getId().equals(pollVoteHbox.getId())) {
                     return;
                 }
                 createPollVbox.getChildren().remove(toBeRemoved);
@@ -454,6 +459,10 @@ public class ModeratorViewController {
         createPollVbox.setVisible(false);
         // Creates a new poll based on the input title and the added text fields.
         PollCommunication.addPoll(quBo.getId(), modCode, createPollTitle.getText(), stringSet);
+        createPollCancel();
+        createPollTitle.setText("");
+        optionA.setText("");
+        optionB.setText("");
     }
 
     /**
