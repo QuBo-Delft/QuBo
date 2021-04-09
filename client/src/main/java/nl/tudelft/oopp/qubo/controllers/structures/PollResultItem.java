@@ -97,7 +97,7 @@ public class PollResultItem extends GridPane {
 
         //Sort the options on lexicographical order.
         List<PollOptionResultDto> pollOptionResults = new ArrayList<>(Arrays.asList(this.pollOptionResults));
-        pollOptionResults.sort(new Sorting.PollOptionResultsComparator());
+        Sorting.sortPollOptionResultsOnId(pollOptionResults);
 
         for (PollOptionResultDto option : pollOptionResults) {
             //Add the option text to an HBox.

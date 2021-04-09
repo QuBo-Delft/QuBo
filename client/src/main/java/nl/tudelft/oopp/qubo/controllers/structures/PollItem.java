@@ -176,7 +176,7 @@ public class PollItem extends GridPane {
     private void addOptions(boolean moderator) {
         //Sort the options on the length of their poll text.
         List<PollOptionDetailsDto> options = new ArrayList<>(this.options);
-        options.sort(new Sorting.PollOptionDetailsComparator());
+        Sorting.sortPollOptionsOnId(options);
 
         //Set up the toggle group to which all poll option radio buttons will be bound.
         if (!moderator) {

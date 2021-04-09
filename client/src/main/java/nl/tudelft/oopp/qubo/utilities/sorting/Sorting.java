@@ -144,12 +144,30 @@ public class Sorting {
     }
 
     /**
-     * Sorts the list of questions based on the TimeStamp they have been posted.
+     * Sorts the list of answers based on the TimeStamp they have been posted.
      *
      * @param answers   The list of answers that should be sorted.
      */
     public static void sortAnswersOnTime(List<AnswerDetailsDto> answers) {
         answers.sort(new AnswerTimePostedComparator());
+    }
+
+    /**
+     * Sorts the list of poll option details based on the length of their text.
+     *
+     * @param options   The list of poll options that should be sorted.
+     */
+    public static void sortPollOptionsOnId(List<PollOptionDetailsDto> options) {
+        options.sort(new PollOptionDetailsComparator());
+    }
+
+    /**
+     * Sorts the list of poll option results based on the length of their text.
+     *
+     * @param options   The list of poll results that should be sorted.
+     */
+    public static void sortPollOptionResultsOnId(List<PollOptionResultDto> options) {
+        options.sort(new PollOptionResultsComparator());
     }
 
     public static class AnswerTimePostedComparator implements Comparator<AnswerDetailsDto> {
@@ -179,24 +197,18 @@ public class Sorting {
     public static class PollOptionDetailsComparator implements Comparator<PollOptionDetailsDto> {
 
         /**
-         * This method compares the length of the Poll Options' text and returns an integer.
+         * This method compares the IDs of the Poll Options' text and returns an integer.
          *
          * @param o1    A PollOptionDetailsDto that is to be compared with o2.
          * @param o2    A PollOptionDetailsDto that is to be compared with o1.
          *
-         * @return 0 if they had the same text, -1 if o1's text was shorter than o2's text,
-         *      and 1 if o1's text was longer than o2. This ensures that the list of options starts with
-         *      the poll option with the shortest option text.
+         * @return 0 if they had the same ID, -1 if o1's ID is less than o2's ID, and 1 if o1's ID was
+         *      greater than o2's ID. This ensures that the list of options starts with the poll option with
+         *      the shortest option text.
          */
         @Override
         public int compare(PollOptionDetailsDto o1, PollOptionDetailsDto o2) {
-            if (o1.getOptionText().equals(o2.getOptionText())) {
-                return 0;
-            } else if (o1.getOptionText().length() < o2.getOptionText().length()) {
-                return -1;
-            } else {
-                return 1;
-            }
+            return o1.getOptionId().compareTo(o2.getOptionId());
         }
     }
 
@@ -208,19 +220,13 @@ public class Sorting {
          * @param o1    A PollOptionResultDto that is to be compared with o2.
          * @param o2    A PollOptionResultDto that is to be compared with o1.
          *
-         * @return 0 if they had the same text, -1 if o1's text was shorter than o2's text,
-         *      and 1 if o1's text was longer than o2. This ensures that the list of options starts with
-         *      the poll option with the shortest option text.
+         * @return 0 if they had the same ID, -1 if o1's ID is less than o2's ID, and 1 if o1's ID was
+         *          greater than o2's ID. This ensures that the list of options starts with the poll option with
+         *          the shortest option text.
          */
         @Override
         public int compare(PollOptionResultDto o1, PollOptionResultDto o2) {
-            if (o1.getText().equals(o2.getText())) {
-                return 0;
-            } else if (o1.getText().length() < o2.getText().length()) {
-                return -1;
-            } else {
-                return 1;
-            }
+            return o1.getId().compareTo(o2.getId());
         }
     }
 }
