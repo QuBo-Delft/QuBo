@@ -463,8 +463,10 @@ public class ModeratorViewController {
 
     /**
      * This method deletes the poll that is currently in the poll.
+     * @param showMessage   If this boolean is true, the successful deletion method will be shown.
+     *                      This is set to false for reopening polls.
      */
-    public void deletePoll() {
+    public void deletePoll(boolean showMessage) {
         String pollDelete = PollCommunication.deletePoll(quBo.getId(), modCode);
 
         if (pollDelete == null) {
@@ -472,7 +474,9 @@ public class ModeratorViewController {
             return;
         }
 
-        AlertDialog.display("", "The poll was deleted successfully");
+        if (showMessage) {
+            AlertDialog.display("", "The poll was deleted successfully");
+        }
     }
 
     /**

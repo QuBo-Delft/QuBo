@@ -115,6 +115,9 @@ public class PollItem extends GridPane {
         //Add the poll options.
         addOptions(moderator);
 
+        //Add the buttons
+        addButtons();
+
         this.setGridLinesVisible(true);
     }
 
@@ -301,7 +304,7 @@ public class PollItem extends GridPane {
                 return;
             }
 
-            mController.deletePoll();
+            mController.deletePoll(true);
         });
 
         //Add a button that closes the current poll when the user clicks it and confirms that they want
@@ -320,10 +323,10 @@ public class PollItem extends GridPane {
 
         //Add the buttons to the PollItem.
         buttonBox.getChildren().addAll(delete, close);
-        buttonBox.setSpacing(10);
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
-        this.addRow(3,  buttonBox);
+        //Calculate the index of the options.
+        int i = 2 + options.size();
+        this.addRow(i, buttonBox);
     }
 
 }
