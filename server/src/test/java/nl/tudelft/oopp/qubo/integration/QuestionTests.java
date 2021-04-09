@@ -505,8 +505,8 @@ public class QuestionTests {
             .andExpect(status().isForbidden())
             .andReturn();
         assertEquals("The provided code is neither the "
-            + "secret code of this question nor the moderator code of its board."
-            , result.getResponse().getErrorMessage());
+            + "secret code of this question nor the moderator code of its board.",
+            result.getResponse().getErrorMessage());
     }
 
     // registerQuestionVote
@@ -658,6 +658,7 @@ public class QuestionTests {
         assertEquals("This Question was not voted on"
             + " with this QuestionVote", result.getResponse().getErrorMessage());
     }
+
     @Test
     public void deleteQuestionVote_withInvalidVoteId_returns404() throws Exception {
         // Arrange
@@ -749,6 +750,7 @@ public class QuestionTests {
         Question inDb = questionRepository.getQuestionById(question.getId());
         assertNotNull(inDb.getAnswered());
     }
+
     @Test
     public void markQuestionAsAnswered_withInvalidQuestionId_returns404() throws Exception {
         // Arrange
@@ -790,6 +792,7 @@ public class QuestionTests {
 
         assertEquals("Question does not exist", result.getResponse().getErrorMessage());
     }
+
     @Test
     public void markQuestionAsAnswered_withInvalidModCode_returns403() throws Exception {
         // Arrange
@@ -869,10 +872,11 @@ public class QuestionTests {
 
         // Assert
         resultActions.andExpect(status().isOk());
-        Ban inDb = banRepository.getBanByQuestionBoardAndIp(qb ,question.getIp());
+        Ban inDb = banRepository.getBanByQuestionBoardAndIp(qb, question.getIp());
         assertEquals(question.getIp(), inDb.getIp());
         assertEquals(qb.getId(), inDb.getQuestionBoard().getId());
     }
+
     @Test
     public void banUserByIp_withInvalidQuestionId_returns404() throws Exception {
         // Arrange
@@ -914,6 +918,7 @@ public class QuestionTests {
 
         assertEquals("Question does not exist", result.getResponse().getErrorMessage());
     }
+
     @Test
     public void banUserByIp_withInvalidModeCode_returns403() throws Exception {
         // Arrange
