@@ -1,5 +1,7 @@
 # QuBo
 
+![QuBo logo](/docs/img/cover.png "QuBo logo")
+
 ## Description of project
 **QuBo** is an application aiming to improve interaction between students and lecturers to make the learning environment better and increase the quality of education.
 Online education makes communication between students and lecturers more difficult. QuBo alleviates this problem by organising the questions asked by students in an easy-to-follow way so that no question is accidentally looked over. It also has other useful functionality such as live polls and a pace indicator for the lecturer. Its clean user interface and versatile features make it an essential tool for any lecture.
