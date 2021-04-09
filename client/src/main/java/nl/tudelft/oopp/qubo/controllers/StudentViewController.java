@@ -449,7 +449,7 @@ public class StudentViewController {
      */
     public boolean sidebarLogic(ToggleButton select, ToggleButton deselect) {
         return SideBarControl.showHideSelected(select,
-            deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox, null);
+            deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox, null, null);
     }
 
     /**

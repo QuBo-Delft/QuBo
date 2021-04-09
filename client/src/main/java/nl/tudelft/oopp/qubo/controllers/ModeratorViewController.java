@@ -1,17 +1,19 @@
 package nl.tudelft.oopp.qubo.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
 import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
@@ -95,6 +97,19 @@ public class ModeratorViewController {
     private VBox pollVbox;
     @FXML
     private ScrollPane sideMenuPane;
+    // Poll creation
+    @FXML
+    private VBox createPollVbox;
+    @FXML
+    private GridPane createPollGrid;
+    @FXML
+    private TextField createPollTitle;
+    @FXML
+    private Button createPollNewOptionBtn;
+    @FXML
+    private Button createPollCancelBtn;
+    @FXML
+    private Button createPollCreateBtn;
 
     /**
     * Records if the side menu was open before hiding.
@@ -160,6 +175,9 @@ public class ModeratorViewController {
      */
     @FXML
     private void initialize() {
+        // Binds the visible and managed property of the create poll VBox together.
+        createPollVbox.visibleProperty().bindBidirectional(createPollVbox.managedProperty());
+        createPollVbox.setVisible(false);
         startUpProperties();
         //Display the questions and pace
         refresh();
@@ -227,6 +245,22 @@ public class ModeratorViewController {
      * Gets called by the create poll button.
      */
     public void createPoll() {
+        if (createPollVbox.isVisible()) {
+            createPollVbox.setVisible(false);
+        } else {
+            createPollVbox.setVisible(true);
+        }
+    }
+
+    public void createPollNewOption() {
+
+    }
+
+    public void createPollCancel() {
+
+    }
+
+    public void createPollCreate() {
 
     }
 
@@ -268,7 +302,7 @@ public class ModeratorViewController {
      */
     public boolean sidebarLogic(ToggleButton select, ToggleButton deselect) {
         return SideBarControl.showHideSelected(select,
-            deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox, createPollBtn);
+            deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox, createPollBtn, createPollVbox);
     }
 
     /**
