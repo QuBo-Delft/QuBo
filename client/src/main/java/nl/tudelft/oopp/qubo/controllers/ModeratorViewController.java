@@ -454,8 +454,7 @@ public class ModeratorViewController {
             for (PollOptionDetailsDto pollOptionsDto : optionList) {
                 stringSet.add(pollOptionsDto.getOptionText());
             }
-            //TODO: uncomment
-            //deletePoll(false);
+            deletePoll(false);
 
             PollCommunication.addPoll(quBo.getId(), modCode, pollDetailsDto.getText(), stringSet);
         }

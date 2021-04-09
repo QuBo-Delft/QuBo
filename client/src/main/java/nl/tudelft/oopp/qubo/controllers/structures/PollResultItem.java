@@ -191,8 +191,7 @@ public class PollResultItem extends GridPane {
     public void addButtons() {
         HBox buttonBox = new HBox();
         Button delete = new Button("Delete");
-        //TODO: uncomment
-        //delete.setOnAction(event -> modController.deletePoll());
+        delete.setOnAction(event -> modController.deletePoll(true));
         Button redo = new Button("Redo");
         redo.setOnAction(event -> modController.redoPoll());
         buttonBox.getChildren().addAll(delete, redo);
