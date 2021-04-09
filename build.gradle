@@ -62,6 +62,7 @@ subprojects {
 
 
     test {
+        // Excludes the client-side controller tests from the GitLab CI Pipeline as they are not compatible
         exclude 'nl/tudelft/oopp/qubo/controllers/**'
         outputs.dir snippetsDir
         useJUnitPlatform()

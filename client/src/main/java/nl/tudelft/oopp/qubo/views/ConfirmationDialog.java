@@ -58,8 +58,10 @@ public class ConfirmationDialog {
         // Create the buttons
         Button yesButton = new Button("Yes");
         yesButton.getStyleClass().add("yesBtn");
+        yesButton.setId("yesBtn");
         Button noButton = new Button("No");
         noButton.getStyleClass().add("noBtn");
+        noButton.setId("noBtn");
         // Set button click action
         yesButton.setOnAction(e -> {
             answer = true;

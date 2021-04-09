@@ -21,7 +21,7 @@
         <Label fx:id="errorMessageLabel" prefHeight="34.0" text="Error: Could not find the requested question board!&#10;Please check if you inserted the code correctly!" textAlignment="CENTER" textFill="RED" visible="false" VBox.vgrow="ALWAYS" />
         <TextField fx:id="questionBoardCode" alignment="CENTER" promptText="Enter code here..." />
       <TextField fx:id="userName" alignment="CENTER" onInputMethodTextChanged="#userTextHandler" onKeyTyped="#userTextHandler" promptText="Enter user name here..." />
-        <Button id="join-button" mnemonicParsing="false" onAction="#joinButtonClicked" styleClass="joinBtn" text="Join" textAlignment="CENTER" />
+        <Button fx:id="joinBtn" mnemonicParsing="false" onAction="#joinButtonClicked" styleClass="joinBtn" text="Join" textAlignment="CENTER" />
         <opaqueInsets>
             <Insets />
         </opaqueInsets>

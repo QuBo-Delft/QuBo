@@ -28,10 +28,10 @@ public class JoinQuBoController {
     // Error message shown on incorrect question board code entered or empty username
     @FXML
     private Label errorMessageLabel;
-    // Button to be clicked when wanting to join a question board
+    // Button to be clicked when wanting to join a question board, used for TestFX testing
     @FXML
     private Button joinBtn;
-    // Button to be clicked when wanting to create a question board
+    // Button to be clicked when wanting to create a question board, used for TestFX testing
     @FXML
     private Button createBtn;
 

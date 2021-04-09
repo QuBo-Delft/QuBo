@@ -3,6 +3,7 @@ package nl.tudelft.oopp.qubo.controllers;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardCreationDto;
+import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.api.FxRobot;
@@ -11,35 +12,24 @@ import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.matcher.base.WindowMatchers;
 import org.testfx.matcher.control.LabeledMatchers;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
-import java.util.UUID;
-
 /**
  * This class tests the QuBoCodesController which controls QuBoCodes.fxml.
  */
 class QuBoCodesControllerTest extends TestFxBase {
 
     /*
-        These elements are used for the clipBoardTest method.
+        Retrieve the QuestionBoardCreationDto of a new Question Board.
      */
-    String clipboard;
-    UUID clipboardUuid;
-
-    QuestionBoardCreationDto qc = createOpenQuBo();
+    QuestionBoardCreationDto qc = createQuBoCreation();
 
     /**
      * Initiate testing done through the TestFX library.
      *
      * @param stage Test stage created by the TestFX library.
-     * @throws IOException Thrown by incorrect load in start method.
      */
     @Start
-    void start(Stage stage) throws IOException {
-        String fxmlSheet = "QuBoCodes";
-        startCreation(stage, fxmlSheet, qc);
+    void start(Stage stage) {
+        SceneLoader.loadQuBoCodes(qc, stage);
     }
 
     /**
@@ -111,10 +101,10 @@ class QuBoCodesControllerTest extends TestFxBase {
     @Test
     void copyBothCodes(FxRobot robot) {
         robot.clickOn("#copyAdminBtn");
+        FxAssert.verifyThat("#adminCopySuccessful", Node::isVisible);
+        clipboardTest();
         robot.clickOn("#copyStudentBtn");
         FxAssert.verifyThat("#studentCopySuccessful", Node::isVisible);
-        clipboardTest();
-        FxAssert.verifyThat("#adminCopySuccessful", Node::isVisible);
         clipboardTest();
     }
 
@@ -136,22 +126,5 @@ class QuBoCodesControllerTest extends TestFxBase {
     void backToHome(FxRobot robot) {
         robot.clickOn("#backToHome");
         FxAssert.verifyThat(robot.window("(QuBo)"), WindowMatchers.isShowing());
-    }
-
-    /**
-     * This method checks whether the clipboard actually contains the correct code after copying it.
-     * When this method fails, an IOException or UnsupportedFlavorException shall be thrown.
-     * Either of these exceptions will make the test calling this method fail automatically.
-     */
-    private void clipboardTest() {
-        if (!Boolean.getBoolean("headless")) {
-            try {
-                clipboard = (String) Toolkit.getDefaultToolkit().getSystemClipboard()
-                    .getData(DataFlavor.stringFlavor);
-                clipboardUuid = UUID.fromString(clipboard);
-            } catch (IOException | UnsupportedFlavorException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
