@@ -14,7 +14,6 @@ import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 
-import java.util.List;
 
 public class PollRefresh {
     private static QuestionBoardDetailsDto thisQuBo;
@@ -130,7 +129,14 @@ public class PollRefresh {
             PollResult closedPoll = new PollResult(current.getText(), optionResults);
 
             //Create a new poll result item and display it.
-            PollResultItem pollResultItem = new PollResultItem(closedPoll, pollsVbox, pollsScrollPane);
+            PollResultItem pollResultItem;
+            if (moderator) {
+                pollResultItem =
+                    new PollResultItem(closedPoll, pollsVbox, pollsScrollPane, mController);
+            } else {
+                pollResultItem =
+                    new PollResultItem(closedPoll, pollsVbox, pollsScrollPane, null);
+            }
             pollsVbox.getChildren().add(pollResultItem);
         }
     }

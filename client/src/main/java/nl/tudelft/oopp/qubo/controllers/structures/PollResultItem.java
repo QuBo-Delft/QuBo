@@ -2,6 +2,7 @@ package nl.tudelft.oopp.qubo.controllers.structures;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -10,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionResultDto;
 import nl.tudelft.oopp.qubo.utilities.sorting.Sorting;
 
@@ -21,6 +23,8 @@ public class PollResultItem extends GridPane {
     private GridPane pollResultPane;
     private VBox pollVbox;
     private Text pollText;
+
+    private ModeratorViewController modController;
 
     private PollOptionResultDto[] pollOptionResults;
 
@@ -35,13 +39,16 @@ public class PollResultItem extends GridPane {
      * @param scrollPane    ScrollPane containing the VBox that contains the poll results.
      */
     public PollResultItem(PollResult poll, VBox pollContainer,
-                        ScrollPane scrollPane) {
+                        ScrollPane scrollPane, ModeratorViewController modController) {
         this.pollText = new Text(poll.getText());
         this.pollOptionResults = poll.getPollOptionResults();
 
         this.pollContainer = pollContainer;
         pollScPane = scrollPane;
 
+        if (modController != null) {
+            this.modController = modController;
+        }
         construct();
     }
 
@@ -64,6 +71,10 @@ public class PollResultItem extends GridPane {
         addOptions();
 
         this.setGridLinesVisible(true);
+
+        if (modController != null) {
+            addButtons();
+        }
     }
 
     /**
@@ -174,5 +185,21 @@ public class PollResultItem extends GridPane {
             optionBox.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #e97c28, #e97c28 "
                 + vote + "%, white " + (vote + 1) + "%, white)");
         }
+    }
+
+    /**
+     * Adds the moderator buttons to a poll item.
+     */
+    public void addButtons() {
+        HBox buttonBox = new HBox();
+        Button delete = new Button();
+        //TODO: uncomment
+        //delete.setOnAction(event -> modController.deletePoll());
+        Button redo = new Button();
+        redo.setOnAction(event -> modController.redoPoll());
+        buttonBox.getChildren().addAll(delete, redo);
+        buttonBox.setSpacing(10);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        this.addRow(2 + pollOptionResults.length, buttonBox);
     }
 }

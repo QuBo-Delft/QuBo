@@ -1,58 +1,33 @@
 package nl.tudelft.oopp.qubo.controllers;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.communication.PollCommunication;
-import nl.tudelft.oopp.qubo.communication.ServerCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
-import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
-import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
-import nl.tudelft.oopp.qubo.controllers.helpers.PollRefresh;
-import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
-import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
-import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
+import nl.tudelft.oopp.qubo.controllers.helpers.*;
+import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
+import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 import nl.tudelft.oopp.qubo.sceneloader.SceneLoader;
-import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.utilities.QuestionToStringConverter;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
-import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 
-import javafx.scene.image.ImageView;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -138,9 +113,13 @@ public class ModeratorViewController {
     @FXML
     private Button createPollCreateBtn;
 
+    private static final Gson gson = new GsonBuilder()
+        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+        .create();
+
     /**
-    * Records if the side menu was open before hiding.
-    */
+     * Records if the side menu was open before hiding.
+     */
     private boolean sideMenuOpen;
     /**
      * The number of options displayed when creating a new poll, 2 by default.
@@ -155,9 +134,10 @@ public class ModeratorViewController {
     private UUID modCode;
     private String authorName;
 
+
     /**
-    * HashMap of questionId:upvoteId, needed when deleting vote.
-    */
+     * HashMap of questionId:upvoteId, needed when deleting vote.
+     */
     private HashMap<UUID, UUID> upvoteMap = new HashMap<>();
 
     private Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -239,7 +219,6 @@ public class ModeratorViewController {
     }
 
 
-
     /**
      * Conditional refresh.
      */
@@ -300,11 +279,11 @@ public class ModeratorViewController {
      * Gets called by the create poll button.
      */
     public void createPoll() {
-            if (PollCommunication.retrievePollDetails(quBo.getId()) != null) {
-                AlertDialog.display("Poll creation failed",
-                    "Please close the current poll, before creating a new one.");
-                return;
-            }
+        if (PollCommunication.retrievePollDetails(quBo.getId()) != null) {
+            AlertDialog.display("Poll creation failed",
+                "Please close the current poll, before creating a new one.");
+            return;
+        }
         // Shows the create poll VBox, or hides it when it was already showing
         createPollVbox.setVisible(!createPollVbox.isVisible());
     }
@@ -347,6 +326,30 @@ public class ModeratorViewController {
         stringSet.add("wow!");
         stringSet.add("Amazing!");
         PollCommunication.addPoll(quBo.getId(), modCode, "poll text", stringSet);
+    }
+
+    public void redoPoll() {
+        boolean confirmed = ConfirmationDialog.display("Redo Poll",
+            "Would you like to redo this poll? This will delete the results and re-open it.");
+
+        if (confirmed) {
+            String resBody = PollCommunication.retrievePollDetails(quBo.getId());
+
+            if (resBody == null) {
+                AlertDialog.display("", "no!");
+                return;
+            }
+            PollDetailsDto pollDetailsDto = gson.fromJson(resBody, PollDetailsDto.class);
+
+            List<PollOptionDetailsDto> optionList = new ArrayList<>(pollDetailsDto.getOptions());
+            Set<String> stringSet = new HashSet<>();
+
+            for (PollOptionDetailsDto pollOptionsDto : optionList) {
+                stringSet.add(pollOptionsDto.getOptionText());
+            }
+
+            PollCommunication.addPoll(quBo.getId(), modCode, pollDetailsDto.getText(), stringSet);
+        }
     }
 
     /**
@@ -457,20 +460,20 @@ public class ModeratorViewController {
      */
     public void closeQuBo() {
         boolean closeConfirmed = ConfirmationDialog.display("Close Question Board?",
-                "This question board will be closed.");
+            "This question board will be closed.");
 
         // The user confirmed to close the question board
         if (closeConfirmed) {
             String questionBoardDetailsDto = QuestionBoardCommunication
-                    .closeBoardRequest(quBo.getId(), modCode);
+                .closeBoardRequest(quBo.getId(), modCode);
 
             if (questionBoardDetailsDto == null) {
                 // Null returned, the question board was not closed
                 AlertDialog.display("Unsuccessful Request",
-                        "Failed to close the question board, please try again.");
+                    "Failed to close the question board, please try again.");
             } else {
                 AlertDialog.display("Successful Request",
-                        "The question board has been closed.");
+                    "The question board has been closed.");
             }
 
         }
