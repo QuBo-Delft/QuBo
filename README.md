@@ -9,6 +9,8 @@ Online education makes communication between students and lecturers more difficu
 ### Features
 
 - Asking, editing, and deleting questions.
+![mod](docs/img/ReplyEdit.png "mod")
+![enter_question](/docs/img/EnterQuestion.png "enter_question")
 - Upvoting questions to have them show up first.
 - Adding textual answers and marking questions as answered to keep the board relevant.
 - Separate question boards for each lecture, secured with unique keys.
@@ -16,7 +18,7 @@ Online education makes communication between students and lecturers more difficu
 
 - Real-time poll creation.
     - _To add another interactive element to lectures, there is the option to do a live poll in the board, which students can respond to. This will help lecturers in taking students’ opinions into account. This can also be used to test students’ knowledge._
-
+![finished_poll](/docs/img/FinishedPoll.png "finished_poll")
 - Anonymity mode
     - _The application can be set up to store questions in a completely anonymous way by unlinking them from users and IPs without compromising on functionality via single-use tokens. This could be used to make students feel more comfortable when expressing their opinions while giving feedback._
 
@@ -80,6 +82,7 @@ Navigate to the folder (main repository) that contains the .gradle folder.
 
 ## Documentation
 ![documentation](/docs/img/documentation.png "documentation")
+
 
 ## How to contribute to it
 
