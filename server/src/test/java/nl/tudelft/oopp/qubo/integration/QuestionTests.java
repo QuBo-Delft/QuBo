@@ -116,7 +116,8 @@ public class QuestionTests {
         model.setText("Yes, this is correct.");
 
         // Act
-        ResultActions resultActions = mockMvc.perform(post("/api/question/{questionid}/answer", question.getId())
+        ResultActions resultActions = mockMvc
+            .perform(post("/api/question/{questionid}/answer", question.getId())
             .with(req -> {
                 req.setRemoteAddr("1.1.1.2");
                 return req;
@@ -168,7 +169,8 @@ public class QuestionTests {
         model.setText("Yes, this is correct.");
 
         // Act
-        ResultActions resultActions = mockMvc.perform(post("/api/question/{questionid}/answer", UUID.randomUUID())
+        ResultActions resultActions = mockMvc
+            .perform(post("/api/question/{questionid}/answer", UUID.randomUUID())
             .with(req -> {
                 req.setRemoteAddr("1.1.1.2");
                 return req;
@@ -212,7 +214,8 @@ public class QuestionTests {
         model.setText("Yes, this is correct.");
 
         // Act
-        ResultActions resultActions = mockMvc.perform(post("/api/question/{questionid}/answer", question.getId())
+        ResultActions resultActions = mockMvc
+            .perform(post("/api/question/{questionid}/answer", question.getId())
             .with(req -> {
                 req.setRemoteAddr("1.1.1.2");
                 return req;
@@ -265,7 +268,8 @@ public class QuestionTests {
 
 
         // Act
-        ResultActions resultActions = mockMvc.perform(delete("/api/question/{questionid}", question.getId())
+        ResultActions resultActions = mockMvc
+            .perform(delete("/api/question/{questionid}", question.getId())
             .with(req -> {
                 req.setRemoteAddr("1.1.1.2");
                 return req;
@@ -362,8 +366,8 @@ public class QuestionTests {
             .andReturn();
 
         assertEquals("The provided code is neither the "
-            + "secret code of this question nor the moderator code of its board."
-            , result.getResponse().getErrorMessage());
+            + "secret code of this question nor the moderator code of its board.",
+            result.getResponse().getErrorMessage());
     }
 
     // editQuestion
@@ -418,6 +422,7 @@ public class QuestionTests {
         Question inDb = questionRepository.getQuestionById(dto.getId());
         assertEquals(model.getText(), inDb.getText());
     }
+
     @Test
     public void editQuestion_withInvalidQuestionId_returns404() throws Exception {
         // Arrange
@@ -463,6 +468,7 @@ public class QuestionTests {
         assertEquals("Question does not exist", result.getResponse().getErrorMessage());
 
     }
+
     @Test
     public void editQuestion_withInvalidSecretCode_returns403() throws Exception {
         // Arrange
