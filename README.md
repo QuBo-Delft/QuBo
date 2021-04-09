@@ -26,7 +26,7 @@ Online education makes communication between students and lecturers more difficu
 
 ### Project structure
 - **Back end**
-    - The back end uses service-oriented architecture for separation of concerns. Common DTOs are shared between the client and the server to make communication easier. ModelMapper is used to convert between All repositories and services are fully tested through the use of unit tests. The majority of all endpoints, including the most important ones, as well as the parts of the back end they communicate with, are tested via integration tests.
+    - The back end uses service-oriented architecture for separation of concerns. Common DTOs are shared between the client and the server to make communication easier. ModelMapper is used to convert entities to DTOs and vice versa. All repositories and services are fully tested through the use of unit tests. The majority of all endpoints, including the most important ones, as well as the parts of the back end they communicate with, are tested via integration tests.
 - **Front end**
     - The front end is nice too :)
 
