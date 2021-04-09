@@ -67,7 +67,7 @@ public class GetTextDialog {
         Button submitButton = new Button(submitBtnText);
         submitButton.setId("submitbutton");
         submitButton.setOnAction(e -> {
-            userInput = inputField.getText();
+            userInput = inputField.getText().trim();
             // Check if it is required to check if the user input is at least 8 characters long
             if (checkMinEightChars) {
                 if (isAtLeastEightChars(messageLabel)) {

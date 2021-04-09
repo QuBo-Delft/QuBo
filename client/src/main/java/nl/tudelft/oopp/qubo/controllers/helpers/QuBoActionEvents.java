@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import java.util.HashMap;
 import java.util.UUID;
 import javafx.beans.value.ObservableDoubleValue;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -22,6 +23,8 @@ import javafx.scene.text.Text;
 import nl.tudelft.oopp.qubo.communication.BanUserCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionVoteCommunication;
+import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
+import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.dtos.questionvote.QuestionVoteDetailsDto;
 import nl.tudelft.oopp.qubo.views.AlertDialog;
 
@@ -182,7 +185,7 @@ public class QuBoActionEvents {
         TextArea input = newTextArea(questionBody.wrappingWidthProperty());
 
         //Set action listeners for the buttons
-        update.setOnAction(event -> updateQuestion(options, questionId, code, input.getText(),
+        update.setOnAction(event -> updateQuestion(options, questionId, code, input.getText().trim(),
             questionBody, questionVbox, input, buttons, warning));
         cancel.setOnAction(event -> cancelEdit(options, questionVbox, input, buttons, questionBody));
 
@@ -272,12 +275,14 @@ public class QuBoActionEvents {
      */
     public static void deleteQuestionOption(GridPane content, GridPane questionPane, Text questionBody,
                                             MenuButton options, UUID questionId, UUID code) {
+        options.setDisable(true);
+
         //Create new InQuestionDialog
         InQuestionDialog dialog = new InQuestionDialog(options, questionBody,
             questionPane, "Are you sure you want to delete this question?");
 
         //Set action listeners
-        dialog.yes.setOnAction(event -> deleteQuestion(content, questionId, code));
+        dialog.yes.setOnAction(event -> deleteQuestion(options, content, questionId, code));
         dialog.cancel.setOnAction(event -> cancelDialog(options, questionPane, dialog.dialogue));
     }
 
@@ -290,11 +295,12 @@ public class QuBoActionEvents {
      * If the request is successful -> Displays an alert.
      * If the request fails -> Displays successful removal label and icon.
      *
+     * @param options    The options menu node.
      * @param content    GridPane of the cell. (Needs to be hidden after deletion.)
      * @param questionId The UUID of the question that is being edited.
      * @param code       Secret code of the question.
      */
-    public static void deleteQuestion(GridPane content, UUID questionId, UUID code) {
+    public static void deleteQuestion(MenuButton options, GridPane content, UUID questionId, UUID code) {
         //Send a request to the server
         String response = QuestionCommunication.deleteQuestion(questionId, code);
 
@@ -303,9 +309,7 @@ public class QuBoActionEvents {
             AlertDialog.display("Unsuccessful Request", "Failed to delete your question, please try again.");
         } else {
             //If the request was successful
-            AlertDialog.display("", "Question deletion successful.");
-            content.setVisible(false);
-            content.setManaged(false);
+            options.setDisable(false);
         }
     }
 
@@ -333,9 +337,12 @@ public class QuBoActionEvents {
      */
     public static void markAsAnsOption(MenuButton options, Text questionBody, GridPane questionPane,
                                        UUID questionId, UUID code) {
+        options.setDisable(true);
+
         InQuestionDialog dialog =  new InQuestionDialog(options, questionBody, questionPane,
             "Are you sure you want to mark this question as answered?");
-        dialog.yes.setOnAction(event -> markAsAns(questionId, code));
+        dialog.yes.setOnAction(event -> markAsAns(options, questionId, code, questionPane,
+            dialog.dialogue));
         dialog.cancel.setOnAction(event -> cancelDialog(options, questionPane, dialog.dialogue));
     }
 
@@ -346,7 +353,8 @@ public class QuBoActionEvents {
      * @param questionId    The UUID of the question that is being marked as answered.
      * @param code          The moderator code of the board.
      */
-    private static void markAsAns(UUID questionId, UUID code) {
+    private static void markAsAns(MenuButton options, UUID questionId, UUID code,
+                                  GridPane questionPane, HBox dialogue) {
         String response = QuestionCommunication.markQuestionAsAnswered(questionId, code);
 
         if (response == null) {
@@ -355,7 +363,8 @@ public class QuBoActionEvents {
                 + "please try again.");
         } else {
             //If the request was successful
-            AlertDialog.display("", "Question has been marked as answered.");
+            cancelDialog(options, questionPane, dialogue);
+            options.setDisable(false);
         }
     }
 
@@ -423,9 +432,7 @@ public class QuBoActionEvents {
         } else {
             //If the request was successful
             cancelReply(questionPane, answerBox, options);
-
-            AlertDialog.display("Successful Request", "Your answer has been added to the"
-                + "question.");
+            options.setDisable(false);
         }
     }
 
@@ -452,6 +459,8 @@ public class QuBoActionEvents {
      */
     public static void banUserOption(MenuButton options, GridPane questionPane,
                                      Text questionBody, UUID questionId, UUID modCode) {
+        options.setDisable(true);
+
         InQuestionDialog dialog =  new InQuestionDialog(options, questionBody, questionPane,
             "Are you sure you want to ban the user who posted this question?");
 
@@ -466,18 +475,19 @@ public class QuBoActionEvents {
      *
      * @param options       The options menu node. (Needs to be enabled after successful ban.)
      * @param questionPane  GridPane of the question. (Needed to add a row for the ban dialogue.)
-     * @param questionVbox  VBox containing the questionBody and the authorName.
+     * @param dialogue      The confirmation dialogue. (Needs to be removed.)
      * @param questionId    The UUID of the question where a ban is being requested.
      * @param modCode       The moderator code of the board.
      */
-    private static void banUser(MenuButton options, GridPane questionPane, HBox questionVbox,
+    private static void banUser(MenuButton options, GridPane questionPane, HBox dialogue,
                                 UUID questionId, UUID modCode) {
         boolean successful = BanUserCommunication.banUser(questionId, modCode);
 
         if (successful) {
             //If the request was successful
-            cancelDialog(options, questionPane, questionVbox);
+            cancelDialog(options, questionPane, dialogue);
             AlertDialog.display("", "User IP successfully banned.");
+            options.setDisable(false);
         } else {
             //If the request failed
             AlertDialog.display("Unsuccessful Request",

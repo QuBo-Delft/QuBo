@@ -262,6 +262,7 @@ public class SceneLoader {
                 // Deletes set pace vote and do not show an error message on failure
                 controllerS.deletePaceVote(false);
             }
+            System.exit(0);
         }
     }
 }
