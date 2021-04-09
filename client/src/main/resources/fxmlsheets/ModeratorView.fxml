@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -86,7 +87,11 @@
                     <padding>
                         <Insets left="20.0" right="20.0" top="20.0" />
                     </padding>
-                    <Label fx:id="sideMenuTitle" text="Title" />
+               <HBox alignment="CENTER">
+                          <Label fx:id="sideMenuTitle" text="Title" />
+                     <Region HBox.hgrow="ALWAYS" />
+                     <Button fx:id="createPollBtn" mnemonicParsing="false" onAction="#createPoll" text="Create Poll" textAlignment="CENTER" />
+               </HBox>
                     <ScrollPane fx:id="sideMenuPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                             <VBox>
                                 <VBox fx:id="ansQuVbox" spacing="15.0" VBox.vgrow="ALWAYS">

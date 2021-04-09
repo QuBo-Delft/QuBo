@@ -81,6 +81,8 @@ public class ModeratorViewController {
     private VBox sideMenu;
     //Buttons
     @FXML
+    private Button createPollBtn;
+    @FXML
     private ToggleButton ansQuestions;
     @FXML
     private ToggleButton polls;
@@ -222,6 +224,13 @@ public class ModeratorViewController {
     }
 
     /**
+     * Gets called by the create poll button.
+     */
+    public void createPoll() {
+
+    }
+
+    /**
      * Toggles the visibility of the sideBar.
      */
     public void showHideSideBar() {
@@ -238,6 +247,7 @@ public class ModeratorViewController {
      * Toggles the visibility of the answered questions menu.
      */
     public void showHideAnsQuestions() {
+        createPollBtn.setVisible(false);
         sideMenuOpen = sidebarLogic(ansQuestions, polls);
     }
 
@@ -245,6 +255,7 @@ public class ModeratorViewController {
      * Toggles the visibility of the poll menu.
      */
     public void showHidePolls() {
+        createPollBtn.setVisible(false);
         sideMenuOpen = sidebarLogic(polls, ansQuestions);
     }
 
@@ -256,7 +267,8 @@ public class ModeratorViewController {
      * @return result
      */
     public boolean sidebarLogic(ToggleButton select, ToggleButton deselect) {
-        return SideBarControl.showHideSelected(select, deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox);
+        return SideBarControl.showHideSelected(select,
+            deselect, sideMenu, sideMenuTitle, ansQuVbox, pollVbox, createPollBtn);
     }
 
     /**
