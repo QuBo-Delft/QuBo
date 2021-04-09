@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.TimerTask;
 import java.util.UUID;
-import javafx.scene.image.ImageView;
 import nl.tudelft.oopp.qubo.views.QuBoDocumentation;
 
 import java.util.HashMap;
@@ -455,7 +454,8 @@ public class ModeratorViewController {
             for (PollOptionDetailsDto pollOptionsDto : optionList) {
                 stringSet.add(pollOptionsDto.getOptionText());
             }
-            deletePoll(false);
+            //TODO: uncomment
+            //deletePoll(false);
 
             PollCommunication.addPoll(quBo.getId(), modCode, pollDetailsDto.getText(), stringSet);
         }
