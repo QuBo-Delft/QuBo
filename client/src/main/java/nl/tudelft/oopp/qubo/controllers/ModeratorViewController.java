@@ -5,16 +5,31 @@ import com.google.gson.GsonBuilder;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import nl.tudelft.oopp.qubo.communication.PollCommunication;
 import nl.tudelft.oopp.qubo.communication.QuestionBoardCommunication;
-import nl.tudelft.oopp.qubo.controllers.helpers.*;
+import nl.tudelft.oopp.qubo.controllers.helpers.LayoutProperties;
+import nl.tudelft.oopp.qubo.controllers.helpers.PollRefresh;
+import nl.tudelft.oopp.qubo.controllers.helpers.SideBarControl;
+import nl.tudelft.oopp.qubo.controllers.helpers.PaceDisplay;
+import nl.tudelft.oopp.qubo.controllers.helpers.QuBoInformation;
+import nl.tudelft.oopp.qubo.controllers.helpers.QuestionRefresh;
 import nl.tudelft.oopp.qubo.dtos.poll.PollDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 import nl.tudelft.oopp.qubo.dtos.question.QuestionDetailsDto;
@@ -27,7 +42,14 @@ import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.TimerTask;
+import java.util.UUID;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -293,41 +315,96 @@ public class ModeratorViewController {
         optionCounter--;
     }
 
+    /**
+     * This method gets called by the create poll button.
+     */
     public void createPollNewOption() {
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
         optionCounter++;
+        // Get a not yet set letter of the alphabet.
         char labelChar = alphabet.charAt(optionCounter);
-        Label optionLabel = new Label(String.valueOf(labelChar).toUpperCase());
+        // Assign that letter to the label
+        Label optionLabel = new Label(String.valueOf(labelChar).toUpperCase() + ":");
 
+        // Set a new textfield for option text input.
         TextField optionField = new TextField();
         HBox.setHgrow(optionField, Priority.ALWAYS);
 
+        // Set a delete button for this option, as the minimum is two this option is not required.
         Button optionButton = new Button("Delete");
         optionButton.setOnAction(event -> createPollOptionDelete(optionButton));
 
+        // Create a new HBox.
         HBox newOptionContainer = new HBox();
+        // Assign the above elements to such HBox.
         newOptionContainer.getChildren().addAll(optionLabel, optionField, optionButton);
         newOptionContainer.setSpacing(10);
         newOptionContainer.setAlignment(Pos.CENTER);
 
+        // Add the above HBox to the VBox.
         createPollVbox.getChildren().add(1 + optionCounter, newOptionContainer);
 
     }
 
+    /**
+     * Gets called by the cancel button.
+     */
     public void createPollCancel() {
         createPollVbox.setVisible(false);
-        //createPollVbox.getChildren().removeAll(HBox)
+        int toBeRemoved = 1;
+        for (Node node : createPollVbox.getChildren()) {
+            if (node instanceof HBox) {
+                toBeRemoved++;
+                if (node.getId().equals("pollVoteBtn") || node.getId().equals("pollVoteHbox")) {
+                    return;
+                }
+                createPollVbox.getChildren().remove(toBeRemoved);
+            }
+        }
     }
 
+    /**
+     * Gets called when the create poll button is clicked. Creates a new poll item.
+     */
     public void createPollCreate() {
         createPollVbox.setVisible(false);
-
         Set<String> stringSet = new HashSet<>();
-        stringSet.add("wow!");
-        stringSet.add("Amazing!");
-        PollCommunication.addPoll(quBo.getId(), modCode, "poll text", stringSet);
+
+        // Iterate to all children of the VBox.
+        for (Node node : createPollVbox.getChildren()) {
+            if (node instanceof HBox) {
+                HBox optionBox = (HBox) node;
+                // If a HBox is found, iterate through all its children as well.
+                for (Node nodeChild : optionBox.getChildren()) {
+                    if (nodeChild instanceof TextField) {
+                        // If it has found a text field that is not empty, add it to the board options set.
+                        if (((TextField) nodeChild).getText().equals("")) {
+                            AlertDialog.display("option empty",
+                                "An empty poll option was found, please fill in every option.");
+                            return;
+                        }
+                        stringSet.add(((TextField) nodeChild).getText());
+                    }
+                }
+            }
+        }
+        // Check that the poll title is not empty.
+        if (createPollTitle.getText().equals("")) {
+            AlertDialog.display("Title empty", "Poll title cannot be empty.");
+        }
+        // Check that no duplicates have been added, as this will not work for a set.
+        if (stringSet.size() < 2) {
+            AlertDialog.display("Duplicate options",
+                "The poll contained duplicate options which is not allowed. Please change them.");
+        }
+        // Creates a new poll based on the input title and the added text fields.
+        PollCommunication.addPoll(quBo.getId(), modCode, createPollTitle.getText(), stringSet);
     }
 
+    /**
+     * This method gets the title and options of the currently closed poll and re-opens a new poll
+     * with that information. By re-opening a poll, it deletes the old one and creates a new one.
+     */
     public void redoPoll() {
         boolean confirmed = ConfirmationDialog.display("Redo Poll",
             "Would you like to redo this poll? This will delete the results and re-open it.");
@@ -336,7 +413,7 @@ public class ModeratorViewController {
             String resBody = PollCommunication.retrievePollDetails(quBo.getId());
 
             if (resBody == null) {
-                AlertDialog.display("", "no!");
+                AlertDialog.display("Unsuccessful request", "Please try again.");
                 return;
             }
             PollDetailsDto pollDetailsDto = gson.fromJson(resBody, PollDetailsDto.class);
@@ -347,6 +424,7 @@ public class ModeratorViewController {
             for (PollOptionDetailsDto pollOptionsDto : optionList) {
                 stringSet.add(pollOptionsDto.getOptionText());
             }
+            deletePoll(false);
 
             PollCommunication.addPoll(quBo.getId(), modCode, pollDetailsDto.getText(), stringSet);
         }

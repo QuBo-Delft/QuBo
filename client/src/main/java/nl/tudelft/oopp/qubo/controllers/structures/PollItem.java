@@ -2,7 +2,12 @@ package nl.tudelft.oopp.qubo.controllers.structures;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -16,7 +21,6 @@ import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 import nl.tudelft.oopp.qubo.utilities.sorting.Sorting;
-import nl.tudelft.oopp.qubo.views.AlertDialog;
 import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 
 import java.util.ArrayList;
@@ -188,7 +192,7 @@ public class PollItem extends GridPane {
             }
         } else {
             int i = 1;
-            HBox optionBox = null;
+            HBox optionBox;
             //Add all PollOptionDetailsDtos to the grid pane.
             for (PollOptionDetailsDto option : options) {
                 optionBox = createOption(option);
@@ -292,7 +296,7 @@ public class PollItem extends GridPane {
         delete.setOnAction(e -> {
             boolean deleteConfirm = ConfirmationDialog.display("Poll Deletion",
                 "Are you sure you want to delete this poll?");
-            if(!deleteConfirm) {
+            if (!deleteConfirm) {
                 e.consume();
                 return;
             }
@@ -306,7 +310,7 @@ public class PollItem extends GridPane {
         close.setOnAction(e -> {
             boolean closeConfirm = ConfirmationDialog.display("Close Poll",
                     "Are you sure you want to close this poll?");
-            if(!closeConfirm) {
+            if (!closeConfirm) {
                 e.consume();
                 return;
             }

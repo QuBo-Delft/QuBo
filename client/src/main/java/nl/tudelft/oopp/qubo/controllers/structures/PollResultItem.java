@@ -162,9 +162,7 @@ public class PollResultItem extends GridPane {
         }
 
         //Return the amount of votes of the option divided by the total number of votes
-        double relativeVotes = (double) option.getVotes() / (double) totalVoteNumber;
-
-        return relativeVotes;
+        return (double) option.getVotes() / (double) totalVoteNumber;
     }
 
     /**
@@ -192,10 +190,9 @@ public class PollResultItem extends GridPane {
      */
     public void addButtons() {
         HBox buttonBox = new HBox();
-        Button delete = new Button();
-        //TODO: uncomment
-        //delete.setOnAction(event -> modController.deletePoll());
-        Button redo = new Button();
+        Button delete = new Button("Delete");
+        delete.setOnAction(event -> modController.deletePoll());
+        Button redo = new Button("Redo");
         redo.setOnAction(event -> modController.redoPoll());
         buttonBox.getChildren().addAll(delete, redo);
         buttonBox.setSpacing(10);

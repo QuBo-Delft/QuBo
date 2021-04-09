@@ -85,24 +85,18 @@
                <VBox fx:id="createPollVbox" spacing="5.0">
                         <TextField fx:id="createPollTitle" promptText="New Poll Title" />
                   <HBox alignment="CENTER" spacing="10.0">
-                     <children>
                         <Label text="A:" />
                         <TextField fx:id="optionA" HBox.hgrow="ALWAYS" />
-                     </children>
                   </HBox>
                   <HBox alignment="CENTER" spacing="10.0">
-                     <children>
                               <Label text="B:" />
                               <TextField fx:id="optionB" HBox.hgrow="ALWAYS" />
-                     </children>
                   </HBox>
-                  <HBox spacing="10.0">
-                     <children>
+                  <HBox fx:id="pollVoteHbox" alignment="CENTER_LEFT" spacing="10.0">
                               <Button fx:id="createPollNewOptionBtn" mnemonicParsing="false" onAction="#createPollNewOption" text="+" />
-                              <TextField disable="true" editable="false" HBox.hgrow="ALWAYS" />
-                     </children>
+                        <Label alignment="CENTER" text="Click to add a new poll option." textAlignment="CENTER" />
                   </HBox>
-                     <HBox alignment="CENTER_RIGHT">
+                     <HBox fx:id="pollVoteBtn" alignment="CENTER_RIGHT">
                            <Button fx:id="createPollCancelBtn" mnemonicParsing="false" onAction="#createPollCancel" text="Cancel">
                               <HBox.margin>
                                  <Insets right="7.0" />
