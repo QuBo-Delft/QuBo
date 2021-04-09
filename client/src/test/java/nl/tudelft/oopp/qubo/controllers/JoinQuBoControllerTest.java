@@ -35,7 +35,7 @@ class JoinQuBoControllerTest extends TestFxBase {
      */
     private final String errorBoard = "Error: Could not find the requested question board!\nPlease "
         + "check if you inserted the code correctly!";
-    private final String errorUsername = "Error: No username was entered. Please enter a username";
+    private final String errorUsername = "Error: No username was entered!\nPlease enter a username!";
 
     /**
      * Initiate testing done through the TestFX library.
