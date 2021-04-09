@@ -1,11 +1,13 @@
 package nl.tudelft.oopp.qubo.controllers.structures;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.ContentDisplay;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -19,6 +21,7 @@ import nl.tudelft.oopp.qubo.controllers.ModeratorViewController;
 import nl.tudelft.oopp.qubo.controllers.StudentViewController;
 import nl.tudelft.oopp.qubo.dtos.polloption.PollOptionDetailsDto;
 import nl.tudelft.oopp.qubo.utilities.sorting.Sorting;
+import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +53,7 @@ public class PollItem extends GridPane {
      * @param pollOptions   The options that students can select.
      * @param scrollPane    ScrollPane containing the VBox that will contain the poll.
      * @param controller    The Student View Controller associated with the client.
+     * @param previous      The previous Poll Item that was created.
      */
     public PollItem(String text, Set<PollOptionDetailsDto> pollOptions, ScrollPane scrollPane,
                     StudentViewController controller, PollItem previous) {
@@ -79,13 +83,7 @@ public class PollItem extends GridPane {
      * @param controller    The Moderator View Controller associated with the client.
      */
     public PollItem(String text, Set<PollOptionDetailsDto> pollOptions, ScrollPane scrollPane,
-                    ModeratorViewController controller, PollItem previous) {
-        //Only set the previousPollItem if it did not have a prior value.
-        if (previousPollItem == null) {
-            previousPollItem = previous;
-        }
-        //Set the temporary PollItem variable to the previous poll.
-        temp = previous;
+                    ModeratorViewController controller) {
 
         this.pollQuestion = new Text(text);
         this.options = pollOptions;
@@ -116,6 +114,11 @@ public class PollItem extends GridPane {
 
         //Add the poll options.
         addOptions(moderator);
+
+        //Add the buttons
+        if (moderator) {
+            addButtons();
+        }
 
         this.setGridLinesVisible(true);
     }
@@ -194,9 +197,14 @@ public class PollItem extends GridPane {
             }
         } else {
             int i = 1;
-            HBox optionBox = null;
-
-            //TODO: Add labels for moderators and align them
+            HBox optionBox;
+            //Add all PollOptionDetailsDtos to the grid pane.
+            for (PollOptionDetailsDto option : options) {
+                optionBox = createOption(option);
+                optionBox.setPadding(new Insets(5, 5, 5, 5));
+                this.addRow((i + 1), optionBox);
+                i++;
+            }
         }
 
         //Update the previous poll item variable if the poll has not changed.
@@ -205,6 +213,25 @@ public class PollItem extends GridPane {
                 previousPollItem = temp;
             }
         }
+    }
+
+    /**
+     * This method creates a poll option radio button, and retains the option selection.
+     *
+     * @param option            The poll option that should be added to the VBox.
+     * @return An HBox containing the radio button and a label with its associated text.
+     */
+    private HBox createOption(PollOptionDetailsDto option) {
+        //Add the radio button to the left of the label with its option text.
+        Label optionText = new Label(option.getOptionText());
+        optionText.setWrapText(true);
+
+        //Add the button and its associated text to an HBox and return this.
+        HBox optionBox = new HBox(optionText);
+        optionBox.maxWidthProperty().bind(pollScPane.widthProperty().subtract(9));
+        optionBox.minWidthProperty().bind(pollScPane.widthProperty().subtract(9));
+
+        return optionBox;
     }
 
     /**
@@ -260,6 +287,50 @@ public class PollItem extends GridPane {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Adds the moderator buttons to a poll item, and sets the method that they call when clicked.
+     */
+    public void addButtons() {
+        //Add a button that deletes the current poll when the user clicks it and confirms that they want
+        //to delete the poll.
+        Button delete = new Button("Delete");
+        delete.getStyleClass().add("closeBtn");
+        delete.setOnAction(e -> {
+            boolean deleteConfirm = ConfirmationDialog.display("Poll Deletion",
+                "Are you sure you want to delete this poll?");
+            if (!deleteConfirm) {
+                e.consume();
+                return;
+            }
+
+            mController.deletePoll(true);
+        });
+
+        //Add a button that closes the current poll when the user clicks it and confirms that they want
+        //to close the poll.
+        Button close = new Button("Close");
+        delete.getStyleClass().add("normalBtn");
+        close.setOnAction(e -> {
+            boolean closeConfirm = ConfirmationDialog.display("Close Poll",
+                    "Are you sure you want to close this poll?");
+            if (!closeConfirm) {
+                e.consume();
+                return;
+            }
+
+            mController.closePoll();
+        });
+
+        //Add the buttons to the PollItem.
+        HBox buttonBox = new HBox();
+        buttonBox.getChildren().addAll(delete, close);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+        //Calculate the index of the options.
+        int i = 2 + options.size();
+        this.addRow(i, buttonBox);
     }
 
 }

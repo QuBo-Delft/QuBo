@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
@@ -14,6 +15,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -29,11 +31,12 @@
                         <ContextMenu>
                             <items>
                                 <MenuItem fx:id="studentCodeItem" mnemonicParsing="false" onAction="#copyStudentCode" text="Copy Student Code" />
+                                <MenuItem fx:id="moderatorCodeItem" mnemonicParsing="false" onAction="#copyModeratorCode" text="Copy Moderator Code" />
                             </items>
                         </ContextMenu>
                     </contextMenu>
                     <tooltip>
-                        <Tooltip text="Right-click to copy student code" />
+                        <Tooltip text="Right-click to copy student or moderator code" />
                     </tooltip>
                 </Label>
                 <Label fx:id="boardStatusText" maxWidth="1.7976931348623157E308" styleClass="openText" text="open" />
@@ -41,9 +44,21 @@
                <Insets left="6.0" top="6.0" />
             </padding>
             </VBox>
-            <Button fx:id="boardInfo" maxHeight="54.0" maxWidth="51.0" minHeight="40.0" minWidth="51.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="40.0" prefWidth="40.0" styleClass="boardInfoBtn" />
+            <Button fx:id="boardInfo" maxHeight="54.0" maxWidth="51.0" minHeight="40.0" minWidth="51.0" mnemonicParsing="false" onAction="#displayBoardInfo" prefHeight="40.0" prefWidth="40.0" styleClass="boardInfoBtn">
+            <tooltip>
+               <Tooltip text="Right-click to copy student or moderator code" />
+            </tooltip>
+            <contextMenu>
+               <ContextMenu>
+                 <items>
+                     <MenuItem fx:id="studentCodeItemBtn" mnemonicParsing="false" onAction="#copyStudentCode" text="Copy Student Code" />
+                     <MenuItem fx:id="moderatorCodeItemBtn" mnemonicParsing="false" onAction="#copyModeratorCode" text="Copy Moderator Code" />
+                 </items>
+               </ContextMenu>
+            </contextMenu></Button>
+            <Pane maxHeight="40.0" maxWidth="150.0" minHeight="40.0" minWidth="40.0" prefHeight="40.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
             <Button fx:id="helpDoc" maxHeight="54.0" maxWidth="51.0" minHeight="40.0" minWidth="51.0" mnemonicParsing="false" onAction="#displayHelpDoc" prefHeight="40.0" prefWidth="40.0" styleClass="helpBtn" />
-            <ToggleButton fx:id="hamburger" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#showHideSideBar" prefWidth="40.0" styleClass="sideBarBtn" HBox.hgrow="NEVER" />
+            <ToggleButton fx:id="hamburger" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="50.0" minHeight="40.0" minWidth="50.0" mnemonicParsing="false" onAction="#showHideSideBar" prefHeight="40.0" prefWidth="40.0" styleClass="sideBarBtn" HBox.hgrow="NEVER" />
         </HBox>
     </top>
     <center>
@@ -51,9 +66,9 @@
             <HBox prefHeight="100.0" prefWidth="200.0">
             <StackPane fx:id="paceBar" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" styleClass="paceBar" HBox.hgrow="NEVER">
                <VBox alignment="CENTER" StackPane.alignment="CENTER">
-                   <Label styleClass="paceLabel" text="Fast"/>
+                   <Label styleClass="paceLabel" text="Fast" />
                      <Pane VBox.vgrow="ALWAYS" />
-                   <Label styleClass="paceLabel" text="Slow"/>
+                   <Label styleClass="paceLabel" text="Slow" />
                   <padding>
                      <Insets bottom="5.0" top="5.0" />
                   </padding>
@@ -75,7 +90,38 @@
                     <padding>
                         <Insets left="20.0" right="5.0" top="20.0" />
                     </padding>
-                    <Label fx:id="sideMenuTitle" text="Title" />
+               <HBox fx:id="createPollTitleHbox" alignment="CENTER">
+                          <Label fx:id="sideMenuTitle" text="Title" />
+                     <Region HBox.hgrow="ALWAYS" />
+                  <Button fx:id="createPollBtn" mnemonicParsing="false" onAction="#createPoll" styleClass="normalBtn" text="Create Poll" />
+               </HBox>
+               <VBox fx:id="createPollVbox" spacing="5.0">
+                        <TextField fx:id="createPollTitle" promptText="New Poll Title" />
+                  <HBox fx:id="optionFirstHbox" alignment="CENTER" spacing="10.0">
+                        <Label text="1:" />
+                        <TextField fx:id="optionA" HBox.hgrow="ALWAYS" />
+                  </HBox>
+                  <HBox fx:id="optionSecondHbox" alignment="CENTER" spacing="10.0">
+                              <Label text="2:" />
+                              <TextField fx:id="optionB" HBox.hgrow="ALWAYS" />
+                  </HBox>
+                  <HBox fx:id="pollVoteHbox" alignment="CENTER_LEFT" spacing="10.0">
+                              <Button fx:id="createPollNewOptionBtn" mnemonicParsing="false" onAction="#createPollNewOption" styleClass="normalBtn" text="+" />
+                        <Label fx:id="pollCreateNewLabel" alignment="CENTER" text="Click to add a new poll option." textAlignment="CENTER" />
+                  </HBox>
+                     <HBox fx:id="pollVoteBtn" alignment="CENTER_RIGHT">
+                           <Button fx:id="createPollCancelBtn" mnemonicParsing="false" onAction="#createPollCancel" styleClass="closeBtn" text="Cancel">
+                              <HBox.margin>
+                                 <Insets right="7.0" />
+                              </HBox.margin>
+                           </Button>
+                           <Button fx:id="createPollCreateBtn" mnemonicParsing="false" onAction="#createPollCreate" styleClass="normalBtn" text="Create">
+                              <HBox.margin>
+                                 <Insets left="7.0" />
+                              </HBox.margin>
+                           </Button>
+                     </HBox>
+               </VBox>
                     <ScrollPane fx:id="sideMenuPane" prefHeight="200.0" prefWidth="200.0" styleClass="sidePaneBackground" VBox.vgrow="ALWAYS">
                             <VBox>
                                 <VBox fx:id="ansQuVbox" spacing="15.0" styleClass="sidePaneBackground" VBox.vgrow="ALWAYS">

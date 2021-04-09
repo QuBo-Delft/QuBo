@@ -48,8 +48,8 @@ public class QuBoDocumentation {
         if (!isStudentView) {
             window.setTitle("QuBo Documentation for Moderators");
             layout.getChildren().add(getHBoxOf("triangle_pace_bar",
-                    "Indicates the pace of this lecture as students experienced, "
-                            + "the higher it locates the faster the lecture is experienced."));
+                    "Indicates the pace of this lecture as students experienced it, "
+                            + "the higher the indicator, the faster the pace."));
         }
 
         if (isStudentView) {
@@ -61,7 +61,7 @@ public class QuBoDocumentation {
         layout.getChildren().add(getHBoxOf("upvote_true",
                 "Click to upvote a question, click again to cancel the previous upvote."));
         layout.getChildren().add(getHBoxOf("upvote_false",
-                "Indicates that this question has not been voted by the user."));
+                "Indicates that this question has not been upvoted by the user."));
 
         layout.getChildren().add(getHBoxOf("options",
                 "Click to open the option menu for the question."));
@@ -79,20 +79,10 @@ public class QuBoDocumentation {
         layout.getChildren().add(getHBoxOf("board_details",
                 "Click to display the details of this question board."));
 
-        if (isStudentView) {
-            layout.getChildren().add(getHBoxOf("help",
-                    "Click to display the guide of using this question board as a student."));
-        }
-
-        if (!isStudentView) {
-            layout.getChildren().add(getHBoxOf("help",
-                    "Click to display the guide of using this question board as a moderator."));
-        }
-
         layout.getChildren().add(getHBoxOf("hamburger",
-                "Click to open the additional option menu on the right side of the window."));
+                "Click to open the sidebar on the right side of the window."));
         layout.getChildren().add(getHBoxOf("close_sidebar",
-                "Click to hide the additional option menu."));
+                "Click to hide the sidebar."));
 
         layout.getChildren().add(getHBoxOf("ans_q",
                 "Click to open a section that displays all answered questions, "
@@ -108,7 +98,7 @@ public class QuBoDocumentation {
         }
 
         layout.getChildren().add(getHBoxOf("leave",
-                "Click to choose to leave this question board."));
+                "Click to leave this question board."));
 
         if (!isStudentView) {
             layout.getChildren().add(getHBoxOf("btn_closeBoard",
