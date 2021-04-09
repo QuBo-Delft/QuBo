@@ -24,6 +24,12 @@ Online education makes communication between students and lecturers more difficu
 - Exporting all questions of a board to a file
     - _At the end of a lecture, lecturers can export all questions and answers to a neatly formatted file and upload them to Brightspace._
 
+### Project structure
+- **Back end**
+    - The back end uses service-oriented architecture for separation of concerns. Common DTOs are shared between the client and the server to make communication easier. ModelMapper is used to convert between All repositories and services are fully tested through the use of unit tests. The majority of all endpoints, including the most important ones, as well as the parts of the back end they communicate with, are tested via integration tests.
+- **Front end**
+    - The front end is nice too :)
+
 ## Group members
 
 | 📸 | Name | Email |
