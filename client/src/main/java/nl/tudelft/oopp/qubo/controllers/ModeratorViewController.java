@@ -34,6 +34,7 @@ import nl.tudelft.oopp.qubo.views.ConfirmationDialog;
 import nl.tudelft.oopp.qubo.dtos.questionboard.QuestionBoardDetailsDto;
 
 import javafx.scene.image.ImageView;
+import nl.tudelft.oopp.qubo.views.QuBoDocumentation;
 
 import java.util.HashMap;
 import java.util.Timer;
@@ -262,6 +263,7 @@ public class ModeratorViewController {
      * Display help doc.
      */
     public void displayHelpDoc() {
+        QuBoDocumentation.display(true);
     }
 
     /**
