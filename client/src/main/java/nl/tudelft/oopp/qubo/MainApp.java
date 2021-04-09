@@ -40,8 +40,6 @@ public class MainApp {
      * @param args Parameters passed by the user.
      */
     public static void main(String[] args) {
-        UUID boardId = UUID.fromString("020ba1e8-48ee-488c-9908-1ebbc3ab083d");
-        UUID modCode = UUID.fromString("38c03865-1257-4eda-86f0-42e804319c3f");
         //Display the application homepage
         SceneDisplay.main(new String[0]);
     }
