@@ -50,14 +50,14 @@ Online education makes communication between students and lecturers more difficu
     - Merge requests must always be approved by at least 2 other team members, including at least one person working on the part of the application the request concerns (front end / back end), unless such a person is currently unavailable and the unmerged request blocks other work from being done.
 ## Group members
 
-| 📸 | Name | Email |
-|---|---|---|
-| <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3532/avatar.png?width=400" width="50">  | Cassandra Visser | C.M.S.Visser@student.tudelft.nl |
+| 📸 | Name | 
+|---|---|
+| <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3532/avatar.png?width=400" width="50">  | Cassandra Visser | 
 | <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3531/avatar.png?width=400" width="50"> | Dorothy Zhang | D.L.Zhang@student.tudelft.nl |
-| <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3096/avatar.png?width=400" width="50"/> | Gijs van de Linde | G.vandeLinde@student.tudelft.nl |
-| <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3534/avatar.png?width=400" width="50"/> | Jort van Leenen | J.P.vanLeenen@student.tudelft.nl |
-| <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3404/avatar.png?width=400" width="50"> | Martin Mladenov | M.Mladenov@student.tudelft.nl |
-| <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3533/avatar.png?width=400" width="50"/> | Yunhan Wang | Y.Wang-128@student.tudelft.nl |
+| <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3096/avatar.png?width=400" width="50"/> | Gijs van de Linde |
+| <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3534/avatar.png?width=400" width="50"/> | Jort van Leenen |
+| <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3404/avatar.png?width=400" width="50"> | Martin Mladenov | 
+| <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/3533/avatar.png?width=400" width="50"/> | Yunhan Wang |
 
 ## How to run it
 - Run with terminal:
